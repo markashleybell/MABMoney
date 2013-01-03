@@ -7,27 +7,27 @@ using System.Web.Http;
 using MABMoney.Services;
 using MABMoney.Domain;
 
-namespace MABMoney.Web.Controllers
+namespace MABMoney.Web.Controllers.Api
 {
-    public class PeopleController : ApiController
+    public class UsersController : ApiController
     {
-        private IUserServices _personServices;
+        private IUserServices _userServices;
 
-        public PeopleController(IUserServices personServices)
+        public UsersController(IUserServices userServices)
         {
-            _personServices = personServices;
+            _userServices = userServices;
         }
 
         // GET api/people
         public IEnumerable<User> Get()
         {
-            return _personServices.GetAllUsers();
+            return _userServices.GetAllUsers();
         }
 
         // GET api/people/5
         public User Get(int id)
         {
-            return _personServices.GetUserByID(id);
+            return _userServices.GetUserByID(id);
         }
 
         // POST api/people

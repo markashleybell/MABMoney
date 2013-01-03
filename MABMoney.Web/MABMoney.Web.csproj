@@ -120,13 +120,23 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\AccountsController.cs" />
+    <Compile Include="Controllers\Api\AccountsController.cs" />
+    <Compile Include="Controllers\Api\BudgetsController.cs" />
+    <Compile Include="Controllers\Api\CategoriesController.cs" />
+    <Compile Include="Controllers\Api\TransactionsController.cs" />
+    <Compile Include="Controllers\BudgetsController.cs" />
+    <Compile Include="Controllers\CategoriesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\PeopleController.cs" />
+    <Compile Include="Controllers\Api\UsersController.cs" />
+    <Compile Include="Controllers\TransactionsController.cs" />
+    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\ServiceResolverAdapter.cs" />
     <Compile Include="Infrastructure\UnityDependencyResolver.cs" />
+    <Compile Include="Models\Home\IndexViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -145,7 +155,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -163,6 +172,12 @@
       <Project>{ED8B4EEF-38A1-4847-93D9-4FFA83038E0E}</Project>
       <Name>MABMoney.Services</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\Master.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

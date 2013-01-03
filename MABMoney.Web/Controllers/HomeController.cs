@@ -5,23 +5,30 @@ using System.Web;
 using System.Web.Mvc;
 using MABMoney.Domain;
 using MABMoney.Services;
+using MABMoney.Web.Models;
 
 namespace MABMoney.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private IUserServices _personServices;
+        private IUserServices _userServices;
 
-        public HomeController(IUserServices personServices)
+        public HomeController(IUserServices userServices)
         {
-            _personServices = personServices;
+            _userServices = userServices;
         }
 
         public ActionResult Index()
         {
-            var people = _personServices.GetAllUsers();
+            var users = _userServices.GetAllUsers().Select(x => new { 
+                Forename = x.Forename,
+                Surname = x.Surname,
+                Email = x.Email
+            });
 
-            return View();
+            // return Json(users, JsonRequestBehavior.AllowGet);
+
+            return View(new IndexViewModel());
         }
     }
 }

@@ -1,0 +1,15 @@
+﻿@model MABMoney.Web.Models.IndexViewModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/Master.cshtml";
+}
+
+<h2>Account Overview</h2>
+
+<ul>
+    <li>@Html.ActionLink("Edit Accounts", "Index", "Account")</li>
+    <li>@Html.ActionLink("Edit Categories", "Index", "Category")</li>
+    <li>@Html.ActionLink("Edit Transactions", "Index", "Transaction")</li>
+    <li>@Html.ActionLink("Edit Budgets", "Index", "Budget")</li>
+</ul>

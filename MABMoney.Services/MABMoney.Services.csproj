@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="mab.lib.SimpleMapper">
+      <HintPath>..\packages\mab.lib.SimpleMapper.2.0.0.0\lib\mab.lib.SimpleMapper.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -40,6 +43,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IAccountServices.cs" />
+    <Compile Include="IBudgetServices.cs" />
+    <Compile Include="ICategoryServices.cs" />
+    <Compile Include="ITransactionServices.cs" />
     <Compile Include="IUserServices.cs" />
     <Compile Include="UserServices.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -53,6 +60,9 @@
       <Project>{7D408CE3-980C-4BC3-986F-436B9B44F10C}</Project>
       <Name>MABMoney.Domain</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
