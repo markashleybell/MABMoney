@@ -35,6 +35,7 @@
       <HintPath>..\packages\mab.lib.SimpleMapper.2.0.0.0\lib\mab.lib.SimpleMapper.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -43,6 +44,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AccountServices.cs" />
+    <Compile Include="BudgetServices.cs" />
+    <Compile Include="CategoryServices.cs" />
+    <Compile Include="TransactionServices.cs" />
+    <Compile Include="DTO\AccountDTO.cs" />
+    <Compile Include="DTO\BudgetDTO.cs" />
+    <Compile Include="DTO\CategoryDTO.cs" />
+    <Compile Include="DTO\TransactionDTO.cs" />
+    <Compile Include="DTO\UserDTO.cs" />
     <Compile Include="IAccountServices.cs" />
     <Compile Include="IBudgetServices.cs" />
     <Compile Include="ICategoryServices.cs" />

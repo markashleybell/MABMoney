@@ -36,11 +36,13 @@ namespace MABMoney.Data
         public virtual void Add(Type entity)
         {
             _dbset.Add(entity);
+            _unitOfWork.Commit();
         }
 
         public virtual void Remove(KeyType key)
         {
             _dbset.Remove(_dbset.Find(key));
+            _unitOfWork.Commit();
         }
     }
 }

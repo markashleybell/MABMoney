@@ -2,14 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using MABMoney.Domain;
+using MABMoney.Services.DTO;
 
 namespace MABMoney.Services
 {
     public interface IUserServices
     {
-        User GetUserByID(int id);
-        User GetUserByEmailAddress(string email);
-        IEnumerable<User> GetAllUsers();
+        IEnumerable<UserDTO> All();
+        UserDTO Get(int id);
+        UserDTO GetByEmailAddress(string email);
+        void Save(UserDTO dto);
+        void Delete(int id);
     }
 }

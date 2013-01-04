@@ -5,7 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using MABMoney.Services;
-using MABMoney.Domain;
+using MABMoney.Services.DTO;
 
 namespace MABMoney.Web.Controllers.Api
 {
@@ -19,25 +19,25 @@ namespace MABMoney.Web.Controllers.Api
         }
 
         // GET api/people
-        public IEnumerable<User> Get()
+        public IEnumerable<UserDTO> Get()
         {
-            return _userServices.GetAllUsers();
+            return _userServices.All();
         }
 
         // GET api/people/5
-        public User Get(int id)
+        public UserDTO Get(int id)
         {
-            return _userServices.GetUserByID(id);
+            return _userServices.Get(id);
         }
 
         // POST api/people
-        public void Post(User person)
+        public void Post(UserDTO person)
         {
             
         }
 
         // PUT api/people/5
-        public void Put(int id, User person)
+        public void Put(int id, UserDTO person)
         {
             
         }

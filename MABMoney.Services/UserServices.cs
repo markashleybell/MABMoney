@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using MABMoney.Domain;
 using MABMoney.Data;
+using MABMoney.Services.DTO;
+using mab.lib.SimpleMapper;
 
 namespace MABMoney.Services
 {
@@ -16,19 +18,30 @@ namespace MABMoney.Services
             _users = users;
         }
 
-        public User GetUserByID(int id)
+        public IEnumerable<UserDTO> All()
         {
-            return _users.Get(id);
+            return _users.All().ToList().MapToList<UserDTO>();
         }
 
-        public User GetUserByEmailAddress(string email)
+        public UserDTO Get(int id)
         {
-            return _users.Query(x => x.Email == email).FirstOrDefault();
+            return _users.Get(id).MapTo<UserDTO>();
         }
 
-        public IEnumerable<User> GetAllUsers()
+        public UserDTO GetByEmailAddress(string email)
         {
-            return _users.All().ToList();
+            return _users.Query(x => x.Email == email).FirstOrDefault().MapTo<UserDTO>();
+        }
+
+        public void Save(UserDTO dto)
+        {
+            var entity = dto.MapTo<User>();
+            _users.Add(entity);
+        }
+
+        public void Delete(int id)
+        {
+            _users.Remove(id);
         }
     }
 }

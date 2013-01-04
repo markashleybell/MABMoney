@@ -32,7 +32,14 @@ namespace MABMoney.Web
             // TODO: Look into object lifetime management
             container.RegisterType<IRepository<User, int>, Repository<User, int>>()
                      .RegisterType<IRepository<Account, int>, Repository<Account, int>>()
+                     .RegisterType<IRepository<Transaction, int>, Repository<Transaction, int>>()
+                     .RegisterType<IRepository<Budget, int>, Repository<Budget, int>>()
+                     .RegisterType<IRepository<Category, int>, Repository<Category, int>>()
                      .RegisterType<IUserServices, UserServices>()
+                     .RegisterType<IAccountServices, AccountServices>()
+                     .RegisterType<ITransactionServices, TransactionServices>()
+                     .RegisterType<IBudgetServices, BudgetServices>()
+                     .RegisterType<ICategoryServices, CategoryServices>()
                      .RegisterType<IUnitOfWork, UnitOfWork>()
                      .RegisterType<IDataStoreFactory, DataStoreFactory>();
 

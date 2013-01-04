@@ -9,25 +9,20 @@ using MABMoney.Web.Models;
 
 namespace MABMoney.Web.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
-        private IUserServices _userServices;
-
-        public HomeController(IUserServices userServices)
-        {
-            _userServices = userServices;
-        }
+        public HomeController(IUserServices userServices,
+                              IAccountServices accountServices,
+                              ICategoryServices categoryServices,
+                              ITransactionServices transactionServices,
+                              IBudgetServices budgetServices) : base(userServices,
+                                                                     accountServices,
+                                                                     categoryServices,
+                                                                     transactionServices, 
+                                                                     budgetServices) { }
 
         public ActionResult Index()
         {
-            var users = _userServices.GetAllUsers().Select(x => new { 
-                Forename = x.Forename,
-                Surname = x.Surname,
-                Email = x.Email
-            });
-
-            // return Json(users, JsonRequestBehavior.AllowGet);
-
             return View(new IndexViewModel());
         }
     }
