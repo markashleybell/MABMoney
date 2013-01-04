@@ -28,20 +28,20 @@ namespace MABMoney.Web
 
             // Set up object mappings for Unity DI
             var container = new UnityContainer();
- 
+
             // TODO: Look into object lifetime management
-            container.RegisterType<IRepository<User, int>, Repository<User, int>>()
-                     .RegisterType<IRepository<Account, int>, Repository<Account, int>>()
-                     .RegisterType<IRepository<Transaction, int>, Repository<Transaction, int>>()
-                     .RegisterType<IRepository<Budget, int>, Repository<Budget, int>>()
-                     .RegisterType<IRepository<Category, int>, Repository<Category, int>>()
-                     .RegisterType<IUserServices, UserServices>()
-                     .RegisterType<IAccountServices, AccountServices>()
-                     .RegisterType<ITransactionServices, TransactionServices>()
-                     .RegisterType<IBudgetServices, BudgetServices>()
-                     .RegisterType<ICategoryServices, CategoryServices>()
-                     .RegisterType<IUnitOfWork, UnitOfWork>()
-                     .RegisterType<IDataStoreFactory, DataStoreFactory>();
+            container.RegisterType<IRepository<User, int>, Repository<User, int>>(new HttpContextLifetimeManager<User>())
+                     .RegisterType<IRepository<Account, int>, Repository<Account, int>>(new HttpContextLifetimeManager<Account>())
+                     .RegisterType<IRepository<Transaction, int>, Repository<Transaction, int>>(new HttpContextLifetimeManager<Transaction>())
+                     .RegisterType<IRepository<Budget, int>, Repository<Budget, int>>(new HttpContextLifetimeManager<Budget>())
+                     .RegisterType<IRepository<Category, int>, Repository<Category, int>>(new HttpContextLifetimeManager<Category>())
+                     .RegisterType<IUserServices, UserServices>(new HttpContextLifetimeManager<UserServices>())
+                     .RegisterType<IAccountServices, AccountServices>(new HttpContextLifetimeManager<AccountServices>())
+                     .RegisterType<ITransactionServices, TransactionServices>(new HttpContextLifetimeManager<TransactionServices>())
+                     .RegisterType<IBudgetServices, BudgetServices>(new HttpContextLifetimeManager<BudgetServices>())
+                     .RegisterType<ICategoryServices, CategoryServices>(new HttpContextLifetimeManager<CategoryServices>())
+                     .RegisterType<IUnitOfWork, UnitOfWork>(new HttpContextLifetimeManager<UnitOfWork>())
+                     .RegisterType<IDataStoreFactory, DataStoreFactory>(new HttpContextLifetimeManager<DataStoreFactory>());
 
             var resolver = new UnityDependencyResolver(container);
 

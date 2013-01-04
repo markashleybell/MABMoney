@@ -1,21 +1,19 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Web;
 using System.ComponentModel.DataAnnotations;
 
-namespace MABMoney.Services.DTO
+namespace MABMoney.Web.Models.Users
 {
-    public class UserDTO
+    public class CreateViewModel
     {
-        public int UserID { get; set; }
         [Required]
         public string Forename { get; set; }
         [Required]
         public string Surname { get; set; }
         [Required]
         public string Email { get; set; }
-
-        public virtual List<AccountDTO> Accounts { get; set; }
     }
 }

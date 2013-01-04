@@ -1,4 +1,4 @@
-﻿@model MABMoney.Web.Models.IndexViewModel
+﻿@model MABMoney.Web.Models.Home.IndexViewModel
 
 @{
     ViewBag.Title = "Index";
@@ -8,8 +8,9 @@
 <h2>Account Overview</h2>
 
 <ul>
-    <li>@Html.ActionLink("Edit Accounts", "Index", "Account")</li>
-    <li>@Html.ActionLink("Edit Categories", "Index", "Category")</li>
-    <li>@Html.ActionLink("Edit Transactions", "Index", "Transaction")</li>
-    <li>@Html.ActionLink("Edit Budgets", "Index", "Budget")</li>
+    <li>@Html.ActionLink("Edit Users", "Index", "Users")</li>
+    <li>@Html.ActionLink("Edit Accounts", "Index", "Accounts")</li>
+    <li>@Html.ActionLink("Edit Categories", "Index", "Categories")</li>
+    <li>@Html.ActionLink("Edit Transactions", "Index", "Transactions")</li>
+    <li>@Html.ActionLink("Edit Budgets", "Index", "Budgets")</li>
 </ul>

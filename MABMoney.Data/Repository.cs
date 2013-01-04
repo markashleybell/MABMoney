@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Data.Entity;
 using System.Linq.Expressions;
+using System.Reflection;
+using System.ComponentModel.DataAnnotations;
 
 namespace MABMoney.Data
 {
@@ -36,13 +38,44 @@ namespace MABMoney.Data
         public virtual void Add(Type entity)
         {
             _dbset.Add(entity);
-            _unitOfWork.Commit();
         }
 
         public virtual void Remove(KeyType key)
         {
             _dbset.Remove(_dbset.Find(key));
-            _unitOfWork.Commit();
         }
+
+        //public virtual IEnumerable<E> SqlQuery<E>(string sql, params object[] parameters)
+        //{
+        //    var paramList = new List<SqlParameter>();
+
+        //    for (var i = 0; i < parameters.Length; i++)
+        //    {
+        //        paramList.Add(new SqlParameter("@p" + i, parameters[i]));
+        //    }
+
+        //    if (paramList.Count > 0)
+        //        return _unitOfWork.Database.RawData.SqlQuery<E>(sql, paramList.ToArray());
+        //    else
+        //        return _unitOfWork.Database.RawData.SqlQuery<E>(sql);
+        //}
+
+        //public virtual void ExecuteSqlCommand(string sql, params object[] parameters)
+        //{
+        //    var paramList = new List<SqlParameter>();
+
+        //    for (var i = 0; i < parameters.Length; i++)
+        //    {
+        //        if (parameters[i] == null)
+        //            paramList.Add(new SqlParameter("@p" + i, DBNull.Value));
+        //        else
+        //            paramList.Add(new SqlParameter("@p" + i, parameters[i]));
+        //    }
+
+        //    if (paramList.Count > 0)
+        //        _unitOfWork.Database.RawData.ExecuteSqlCommand(sql, paramList.ToArray());
+        //    else
+        //        _unitOfWork.Database.RawData.ExecuteSqlCommand(sql);
+        //}
     }
 }

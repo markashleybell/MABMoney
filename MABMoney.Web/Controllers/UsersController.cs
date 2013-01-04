@@ -4,6 +4,9 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using MABMoney.Services;
+using MABMoney.Web.Models.Users;
+using mab.lib.SimpleMapper;
+using MABMoney.Services.DTO;
 
 namespace MABMoney.Web.Controllers
 {
@@ -24,7 +27,9 @@ namespace MABMoney.Web.Controllers
 
         public ActionResult Index()
         {
-            return Content("WEB");
+            return View(new IndexViewModel { 
+                Users = _userServices.All().ToList()
+            });
         }
 
         //
@@ -40,25 +45,22 @@ namespace MABMoney.Web.Controllers
 
         public ActionResult Create()
         {
-            return View();
+            return View(new CreateViewModel());
         }
 
         //
         // POST: /Users/Create
 
         [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        public ActionResult Create(CreateViewModel model)
         {
-            try
-            {
-                // TODO: Add insert logic here
+            if (!ModelState.IsValid)
+                return View(model);
 
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
+            var dto = model.MapTo<UserDTO>();
+            _userServices.Save(dto);
+
+            return RedirectToAction("Index");
         }
 
         //

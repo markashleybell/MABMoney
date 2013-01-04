@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using MABMoney.Domain;
 using MABMoney.Services;
-using MABMoney.Web.Models;
+using MABMoney.Web.Models.Home;
 
 namespace MABMoney.Web.Controllers
 {
