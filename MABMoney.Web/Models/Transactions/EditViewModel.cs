@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Web;
 using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
 
-namespace MABMoney.Services.DTO
+namespace MABMoney.Web.Models.Transactions
 {
-    public class TransactionDTO
+    public class EditViewModel
     {
         [Required]
+        [HiddenInput(DisplayValue = false)]
         public int TransactionID { get; set; }
         [Required]
         public DateTime Date { get; set; }
@@ -16,7 +18,5 @@ namespace MABMoney.Services.DTO
         public string Description { get; set; }
         [Required]
         public decimal Amount { get; set; }
-
-        public CategoryDTO Category { get; set; }
     }
 }

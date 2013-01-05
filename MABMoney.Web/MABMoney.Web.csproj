@@ -129,11 +129,11 @@
     <Compile Include="Controllers\Api\CategoriesController.cs" />
     <Compile Include="Controllers\Api\TransactionsController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
-    <Compile Include="Controllers\BudgetsController.cs" />
     <Compile Include="Controllers\CategoriesController.cs" />
+    <Compile Include="Controllers\TransactionsController.cs" />
+    <Compile Include="Controllers\BudgetsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\Api\UsersController.cs" />
-    <Compile Include="Controllers\TransactionsController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -144,6 +144,15 @@
     <Compile Include="Models\Accounts\CreateViewModel.cs" />
     <Compile Include="Models\Accounts\EditViewModel.cs" />
     <Compile Include="Models\Accounts\IndexViewModel.cs" />
+    <Compile Include="Models\Categories\CreateViewModel.cs" />
+    <Compile Include="Models\Categories\EditViewModel.cs" />
+    <Compile Include="Models\Categories\IndexViewModel.cs" />
+    <Compile Include="Models\Transactions\CreateViewModel.cs" />
+    <Compile Include="Models\Transactions\EditViewModel.cs" />
+    <Compile Include="Models\Transactions\IndexViewModel.cs" />
+    <Compile Include="Models\Budgets\CreateViewModel.cs" />
+    <Compile Include="Models\Budgets\EditViewModel.cs" />
+    <Compile Include="Models\Budgets\IndexViewModel.cs" />
     <Compile Include="Models\Home\IndexViewModel.cs" />
     <Compile Include="Models\Users\EditViewModel.cs" />
     <Compile Include="Models\Users\CreateViewModel.cs" />
@@ -207,6 +216,37 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Accounts\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Categories\Create.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Categories\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Categories\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Transactions\Create.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Transactions\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Transactions\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Budgets\Create.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Budgets\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Budgets\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\EditorTemplates\DateTime.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\NullableDateTime.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

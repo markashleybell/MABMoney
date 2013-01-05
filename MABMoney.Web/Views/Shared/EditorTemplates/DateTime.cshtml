@@ -1,0 +1,12 @@
+﻿@model DateTime
+
+@{
+    
+    var par = new { 
+        @class = "date-picker" + ((ViewData["id"] != null) ? " " + ViewData["class"] : ""),
+        id = (ViewData["id"] != null) ? ViewData["id"] : ViewData.TemplateInfo.GetFullHtmlFieldId("")
+    };
+    
+}
+
+@Html.TextBox("", Model.ToString("dd/MM/yyyy"), par)

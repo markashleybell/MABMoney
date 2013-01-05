@@ -4,6 +4,9 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using MABMoney.Services;
+using MABMoney.Web.Models.Transactions;
+using MABMoney.Services.DTO;
+using mab.lib.SimpleMapper;
 
 namespace MABMoney.Web.Controllers
 {
@@ -20,15 +23,17 @@ namespace MABMoney.Web.Controllers
                                                                              budgetServices) { }
 
         //
-        // GET: /Transactions/
+        // GET: /Transaction/
 
         public ActionResult Index()
         {
-            return View();
+            return View(new IndexViewModel {
+                Transactions = _transactionServices.All().ToList()
+            });
         }
 
         //
-        // GET: /Transactions/Details/5
+        // GET: /Transaction/Details/5
 
         public ActionResult Details(int id)
         {
@@ -36,81 +41,60 @@ namespace MABMoney.Web.Controllers
         }
 
         //
-        // GET: /Transactions/Create
+        // GET: /Transaction/Create
 
         public ActionResult Create()
         {
-            return View();
+            return View(new CreateViewModel());
         }
 
         //
-        // POST: /Transactions/Create
+        // POST: /Transaction/Create
 
         [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        public ActionResult Create(CreateViewModel model)
         {
-            try
-            {
-                // TODO: Add insert logic here
+            if (!ModelState.IsValid)
+                return View(model);
 
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
+            var dto = model.MapTo<TransactionDTO>();
+            _transactionServices.Save(dto);
+
+            return RedirectToAction("Index");
         }
 
         //
-        // GET: /Transactions/Edit/5
+        // GET: /Transaction/Edit/5
 
         public ActionResult Edit(int id)
         {
-            return View();
+            var model = _transactionServices.Get(id).MapTo<EditViewModel>();
+            return View(model);
         }
 
         //
-        // POST: /Transactions/Edit/5
+        // POST: /Transaction/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        public ActionResult Edit(EditViewModel model)
         {
-            try
-            {
-                // TODO: Add update logic here
+            if (!ModelState.IsValid)
+                return View(model);
 
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
+            var dto = model.MapTo<TransactionDTO>();
+            _transactionServices.Save(dto);
+
+            return RedirectToAction("Index");
         }
 
         //
-        // GET: /Transactions/Delete/5
+        // POST: /Transaction/Delete/5
 
+        [HttpPost]
         public ActionResult Delete(int id)
         {
-            return View();
-        }
-
-        //
-        // POST: /Transactions/Delete/5
-
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
+            _transactionServices.Delete(id);
+            return RedirectToAction("Index");
         }
     }
 }

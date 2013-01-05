@@ -1,0 +1,19 @@
+﻿@model MABMoney.Web.Models.Budgets.IndexViewModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/Master.cshtml";
+}
+
+<h2>Budgets</h2>
+
+<ul>
+
+@foreach (var budget in Model.Budgets)
+{
+    <li>@budget.Start.ToString("dd/MM/yyyy")-@budget.End.ToString("dd/MM/yyyy") - @Html.ActionLink("Edit", "Edit", new { id = budget.BudgetID })</li>
+}
+
+</ul>
+
+<p>@Html.ActionLink("Add New Budget", "Create")</p>

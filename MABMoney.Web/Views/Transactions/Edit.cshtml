@@ -1,0 +1,20 @@
+﻿@model MABMoney.Web.Models.Transactions.EditViewModel
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/Master.cshtml";
+}
+
+<h2>Edit Transaction</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.EditorForModel()
+
+    <p><input type="submit" value="Save" /></p>
+}
+
+@using (Html.BeginForm("Delete", "Transactions"))
+{
+    <p><input type="hidden" name="id" value="@Model.TransactionID" /><input type="submit" value="Delete" /></p>
+}

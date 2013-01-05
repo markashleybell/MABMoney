@@ -4,6 +4,9 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using MABMoney.Services;
+using MABMoney.Web.Models.Categories;
+using MABMoney.Services.DTO;
+using mab.lib.SimpleMapper;
 
 namespace MABMoney.Web.Controllers
 {
@@ -20,15 +23,17 @@ namespace MABMoney.Web.Controllers
                                                                            budgetServices) { }
 
         //
-        // GET: /Category/
+        // GET: /Account/
 
         public ActionResult Index()
         {
-            return View();
+            return View(new IndexViewModel {
+                Categories = _categoryServices.All().ToList()
+            });
         }
 
         //
-        // GET: /Category/Details/5
+        // GET: /Account/Details/5
 
         public ActionResult Details(int id)
         {
@@ -36,81 +41,60 @@ namespace MABMoney.Web.Controllers
         }
 
         //
-        // GET: /Category/Create
+        // GET: /Account/Create
 
         public ActionResult Create()
         {
-            return View();
+            return View(new CreateViewModel());
         }
 
         //
-        // POST: /Category/Create
+        // POST: /Account/Create
 
         [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        public ActionResult Create(CreateViewModel model)
         {
-            try
-            {
-                // TODO: Add insert logic here
+            if (!ModelState.IsValid)
+                return View(model);
 
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
+            var dto = model.MapTo<CategoryDTO>();
+            _categoryServices.Save(dto);
+
+            return RedirectToAction("Index");
         }
 
         //
-        // GET: /Category/Edit/5
+        // GET: /Account/Edit/5
 
         public ActionResult Edit(int id)
         {
-            return View();
+            var model = _categoryServices.Get(id).MapTo<EditViewModel>();
+            return View(model);
         }
 
         //
-        // POST: /Category/Edit/5
+        // POST: /Account/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        public ActionResult Edit(EditViewModel model)
         {
-            try
-            {
-                // TODO: Add update logic here
+            if (!ModelState.IsValid)
+                return View(model);
 
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
+            var dto = model.MapTo<CategoryDTO>();
+            _categoryServices.Save(dto);
+
+            return RedirectToAction("Index");
         }
 
         //
-        // GET: /Category/Delete/5
+        // POST: /Account/Delete/5
 
+        [HttpPost]
         public ActionResult Delete(int id)
         {
-            return View();
-        }
-
-        //
-        // POST: /Category/Delete/5
-
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
+            _categoryServices.Delete(id);
+            return RedirectToAction("Index");
         }
     }
 }

@@ -1,0 +1,20 @@
+﻿@model MABMoney.Web.Models.Budgets.EditViewModel
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/Master.cshtml";
+}
+
+<h2>Edit Budget</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.EditorForModel()
+
+    <p><input type="submit" value="Save" /></p>
+}
+
+@using (Html.BeginForm("Delete", "Budgets"))
+{
+    <p><input type="hidden" name="id" value="@Model.BudgetID" /><input type="submit" value="Delete" /></p>
+}

@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Web;
 using System.ComponentModel.DataAnnotations;
 
-namespace MABMoney.Services.DTO
+namespace MABMoney.Web.Models.Transactions
 {
-    public class TransactionDTO
+    public class CreateViewModel
     {
-        [Required]
-        public int TransactionID { get; set; }
         [Required]
         public DateTime Date { get; set; }
         [Required]
@@ -17,6 +15,9 @@ namespace MABMoney.Services.DTO
         [Required]
         public decimal Amount { get; set; }
 
-        public CategoryDTO Category { get; set; }
+        public CreateViewModel()
+        {
+            Date = DateTime.Now;
+        }
     }
 }

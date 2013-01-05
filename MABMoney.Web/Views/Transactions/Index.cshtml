@@ -1,0 +1,19 @@
+﻿@model MABMoney.Web.Models.Transactions.IndexViewModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/Master.cshtml";
+}
+
+<h2>Transactions</h2>
+
+<ul>
+
+@foreach (var transaction in Model.Transactions)
+{
+    <li>@transaction.Date.ToString("dd/MM/yyyy") (@transaction.Amount.ToString("c")) - @Html.ActionLink("Edit", "Edit", new { id = transaction.TransactionID })</li>
+}
+
+</ul>
+
+<p>@Html.ActionLink("Add New Transaction", "Create")</p>
