@@ -9,9 +9,16 @@
 
 @using (Html.BeginForm())
 {
-    @Html.EditorForModel()
+    <p>@Html.LabelFor(x => x.Name)
+    @Html.TextBoxFor(x => x.Name)
+    @Html.ValidationMessageFor(x => x.Name)</p>
+    
+    <p>@Html.LabelFor(x => x.Account_AccountID)
+    @Html.DropDownListFor(x => x.Account_AccountID, Model.Accounts, "Please select...")
+    @Html.ValidationMessageFor(x => x.Account_AccountID)</p>
 
-    <p><input type="submit" value="Save" /></p>
+    <p>@Html.HiddenFor(x => x.CategoryID)
+    <input type="submit" value="Save" /></p>
 }
 
 @using (Html.BeginForm("Delete", "Categories"))

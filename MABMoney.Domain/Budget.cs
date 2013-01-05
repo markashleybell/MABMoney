@@ -9,8 +9,8 @@ namespace MABMoney.Domain
     public class Budget
     {
         [Key]
+        [Required]
         public int BudgetID { get; set; }
-
         [Required]
         public DateTime Start { get; set; }
         [Required]

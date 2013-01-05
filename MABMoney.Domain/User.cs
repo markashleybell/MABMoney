@@ -9,6 +9,7 @@ namespace MABMoney.Domain
     public class User
     {
         [Key]
+        [Required]
         public int UserID { get; set; }
         [Required]
         public string Forename { get; set; }

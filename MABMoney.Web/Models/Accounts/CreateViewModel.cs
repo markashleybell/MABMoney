@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
 
 namespace MABMoney.Web.Models.Accounts
 {
@@ -10,5 +11,8 @@ namespace MABMoney.Web.Models.Accounts
     {
         [Required]
         public string Name { get; set; }
+        [Required]
+        [HiddenInput(DisplayValue = false)]
+        public int User_UserID { get; set; }
     }
 }

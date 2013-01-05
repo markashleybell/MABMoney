@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
+using System.ComponentModel;
 
 namespace MABMoney.Web.Models.Categories
 {
@@ -14,5 +15,9 @@ namespace MABMoney.Web.Models.Categories
         public int CategoryID { get; set; }
         [Required]
         public string Name { get; set; }
+        [Required]
+        [DisplayName("Account")]
+        public int Account_AccountID { get; set; }
+        public IQueryable<SelectListItem> Accounts { get; set; }
     }
 }

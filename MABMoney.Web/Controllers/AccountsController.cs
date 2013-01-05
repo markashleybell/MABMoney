@@ -45,7 +45,9 @@ namespace MABMoney.Web.Controllers
 
         public ActionResult Create()
         {
-            return View(new CreateViewModel());
+            return View(new CreateViewModel { 
+                User_UserID = 1
+            });
         }
 
         //

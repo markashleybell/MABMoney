@@ -8,6 +8,7 @@ namespace MABMoney.Services.DTO
 {
     public class UserDTO
     {
+        [Required]
         public int UserID { get; set; }
         [Required]
         public string Forename { get; set; }
