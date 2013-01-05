@@ -17,5 +17,14 @@ namespace MABMoney.Web.Helpers
                                       Text = x.Name
                                   }).AsQueryable();
         }
+
+        public static IQueryable<SelectListItem> GetCategorySelectOptions(ICategoryServices categoryServices)
+        {
+            return categoryServices.All()
+                                   .Select(x => new SelectListItem {
+                                       Value = x.CategoryID.ToString(),
+                                       Text = x.Name
+                                   }).AsQueryable();
+        }
     }
 }

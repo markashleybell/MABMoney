@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
+using System.ComponentModel;
 
 namespace MABMoney.Web.Models.Transactions
 {
@@ -18,5 +19,9 @@ namespace MABMoney.Web.Models.Transactions
         public string Description { get; set; }
         [Required]
         public decimal Amount { get; set; }
+        [Required]
+        [DisplayName("Category")]
+        public int Category_CategoryID { get; set; }
+        public IQueryable<SelectListItem> Categories { get; set; }
     }
 }

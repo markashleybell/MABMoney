@@ -9,7 +9,21 @@
 
 @using (Html.BeginForm())
 {
-    @Html.EditorForModel()
+    <p>@Html.LabelFor(x => x.Date)
+    @Html.EditorFor(x => x.Date)
+    @Html.ValidationMessageFor(x => x.Date)</p>
+   
+    <p>@Html.LabelFor(x => x.Description)
+    @Html.TextBoxFor(x => x.Description)
+    @Html.ValidationMessageFor(x => x.Description)</p>
+    
+    <p>@Html.LabelFor(x => x.Amount)
+    @Html.TextBoxFor(x => x.Amount)
+    @Html.ValidationMessageFor(x => x.Amount)</p>
+    
+    <p>@Html.LabelFor(x => x.Category_CategoryID)
+    @Html.DropDownListFor(x => x.Category_CategoryID, Model.Categories, "Please select...")
+    @Html.ValidationMessageFor(x => x.Category_CategoryID)</p>
 
     <p><input type="submit" value="Save" /></p>
 }

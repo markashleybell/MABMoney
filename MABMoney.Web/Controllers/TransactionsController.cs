@@ -7,6 +7,7 @@ using MABMoney.Services;
 using MABMoney.Web.Models.Transactions;
 using MABMoney.Services.DTO;
 using mab.lib.SimpleMapper;
+using MABMoney.Web.Helpers;
 
 namespace MABMoney.Web.Controllers
 {
@@ -45,7 +46,9 @@ namespace MABMoney.Web.Controllers
 
         public ActionResult Create()
         {
-            return View(new CreateViewModel());
+            return View(new CreateViewModel {
+                Categories = DataHelpers.GetCategorySelectOptions(_categoryServices)
+            });
         }
 
         //
@@ -55,7 +58,10 @@ namespace MABMoney.Web.Controllers
         public ActionResult Create(CreateViewModel model)
         {
             if (!ModelState.IsValid)
+            {
+                model.Categories = DataHelpers.GetCategorySelectOptions(_categoryServices);
                 return View(model);
+            }
 
             var dto = model.MapTo<TransactionDTO>();
             _transactionServices.Save(dto);
@@ -69,6 +75,7 @@ namespace MABMoney.Web.Controllers
         public ActionResult Edit(int id)
         {
             var model = _transactionServices.Get(id).MapTo<EditViewModel>();
+            model.Categories = DataHelpers.GetCategorySelectOptions(_categoryServices);
             return View(model);
         }
 
@@ -79,7 +86,10 @@ namespace MABMoney.Web.Controllers
         public ActionResult Edit(EditViewModel model)
         {
             if (!ModelState.IsValid)
+            {
+                model.Categories = DataHelpers.GetCategorySelectOptions(_categoryServices);
                 return View(model);
+            }
 
             var dto = model.MapTo<TransactionDTO>();
             _transactionServices.Save(dto);
