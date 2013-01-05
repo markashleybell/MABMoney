@@ -68,51 +68,33 @@ namespace MABMoney.Web.Controllers
 
         public ActionResult Edit(int id)
         {
-            return View();
+            var model = _userServices.Get(id).MapTo<EditViewModel>();
+            return View(model);
         }
 
         //
         // POST: /Users/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        public ActionResult Edit(EditViewModel model)
         {
-            try
-            {
-                // TODO: Add update logic here
+            if (!ModelState.IsValid)
+                return View(model);
 
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
+            var dto = model.MapTo<UserDTO>();
+            _userServices.Save(dto);
 
-        //
-        // GET: /Users/Delete/5
-
-        public ActionResult Delete(int id)
-        {
-            return View();
+            return RedirectToAction("Index");
         }
 
         //
         // POST: /Users/Delete/5
 
         [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        public ActionResult Delete(int id)
         {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
+            _userServices.Delete(id);
+            return RedirectToAction("Index");
         }
     }
 }

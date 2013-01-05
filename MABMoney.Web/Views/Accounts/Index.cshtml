@@ -1,0 +1,19 @@
+﻿@model MABMoney.Web.Models.Accounts.IndexViewModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/Master.cshtml";
+}
+
+<h2>Accounts</h2>
+
+<ul>
+
+@foreach (var account in Model.Accounts)
+{
+    <li>@account.Name @Html.ActionLink("Edit", "Edit", new { id = account.AccountID })</li>
+}
+
+</ul>
+
+<p>@Html.ActionLink("Add New Account", "Create")</p>

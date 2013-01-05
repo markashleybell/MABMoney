@@ -1,0 +1,15 @@
+﻿@model MABMoney.Web.Models.Accounts.CreateViewModel
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/Master.cshtml";
+}
+
+<h2>Create Account</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.EditorForModel()
+
+    <p><input type="submit" value="Save" /></p>
+}

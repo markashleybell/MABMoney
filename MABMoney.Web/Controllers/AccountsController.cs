@@ -4,6 +4,9 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using MABMoney.Services;
+using MABMoney.Web.Models.Accounts;
+using MABMoney.Services.DTO;
+using mab.lib.SimpleMapper;
 
 namespace MABMoney.Web.Controllers
 {
@@ -24,7 +27,9 @@ namespace MABMoney.Web.Controllers
 
         public ActionResult Index()
         {
-            return View();
+            return View(new IndexViewModel {
+                Accounts = _accountServices.All().ToList()
+            });
         }
 
         //
@@ -40,25 +45,22 @@ namespace MABMoney.Web.Controllers
 
         public ActionResult Create()
         {
-            return View();
+            return View(new CreateViewModel());
         }
 
         //
         // POST: /Account/Create
 
         [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        public ActionResult Create(CreateViewModel model)
         {
-            try
-            {
-                // TODO: Add insert logic here
+            if (!ModelState.IsValid)
+                return View(model);
 
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
+            var dto = model.MapTo<AccountDTO>();
+            _accountServices.Save(dto);
+
+            return RedirectToAction("Index");
         }
 
         //
@@ -66,51 +68,33 @@ namespace MABMoney.Web.Controllers
 
         public ActionResult Edit(int id)
         {
-            return View();
+            var model = _accountServices.Get(id).MapTo<EditViewModel>();
+            return View(model);
         }
 
         //
         // POST: /Account/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        public ActionResult Edit(EditViewModel model)
         {
-            try
-            {
-                // TODO: Add update logic here
+            if (!ModelState.IsValid)
+                return View(model);
 
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
+            var dto = model.MapTo<AccountDTO>();
+            _accountServices.Save(dto);
 
-        //
-        // GET: /Account/Delete/5
-
-        public ActionResult Delete(int id)
-        {
-            return View();
+            return RedirectToAction("Index");
         }
 
         //
         // POST: /Account/Delete/5
 
         [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        public ActionResult Delete(int id)
         {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
+            _accountServices.Delete(id);
+            return RedirectToAction("Index");
         }
     }
 }

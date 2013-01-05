@@ -3,8 +3,19 @@
     <head>
         <meta name="viewport" content="width=device-width" />
         <title>Master</title>
+        <style type="text/css">
+            #nav li { display: inline; }
+        </style>
     </head>
     <body>
+        <ul id="nav">
+            <li>@Html.ActionLink("Edit Users", "Index", "Users")</li>
+            <li>@Html.ActionLink("Edit Accounts", "Index", "Accounts")</li>
+            <li>@Html.ActionLink("Edit Categories", "Index", "Categories")</li>
+            <li>@Html.ActionLink("Edit Transactions", "Index", "Transactions")</li>
+            <li>@Html.ActionLink("Edit Budgets", "Index", "Budgets")</li>
+        </ul>
+        <hr />
         @RenderBody()
     </body>
 </html>

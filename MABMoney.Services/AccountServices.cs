@@ -3,29 +3,54 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using MABMoney.Services.DTO;
+using MABMoney.Data;
+using MABMoney.Domain;
+using mab.lib.SimpleMapper;
 
 namespace MABMoney.Services
 {
     public class AccountServices : IAccountServices
     {
+        private IRepository<Account, int> _accounts;
+        private IUnitOfWork _unitOfWork;
+
+        public AccountServices(IRepository<Account, int> accounts, IUnitOfWork unitOfWork)
+        {
+            _accounts = accounts;
+            _unitOfWork = unitOfWork;
+        }
+
         public IEnumerable<AccountDTO> All()
         {
-            throw new NotImplementedException();
+            return _accounts.All().ToList().MapToList<AccountDTO>();
         }
 
         public AccountDTO Get(int id)
         {
-            throw new NotImplementedException();
+            return _accounts.Get(id).MapTo<AccountDTO>();
         }
 
         public void Save(AccountDTO dto)
         {
-            throw new NotImplementedException();
+            if (dto.AccountID == 0)
+            {
+                var entity = dto.MapTo<Account>();
+                _accounts.Add(entity);
+                _unitOfWork.Commit();
+                dto.AccountID = entity.AccountID;
+            }
+            else
+            {
+                var entity = _accounts.Get(dto.AccountID);
+                dto.MapTo(entity);
+                _unitOfWork.Commit();
+            }
         }
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            _accounts.Remove(id);
+            _unitOfWork.Commit();
         }
     }
 }
