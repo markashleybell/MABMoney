@@ -45,7 +45,12 @@ namespace MABMoney.Web.Controllers
 
         public ActionResult Create()
         {
-            return View(new CreateViewModel());
+            return View(new CreateViewModel {
+                Categories = _categoryServices.All().ToList().Select(x => new Category_BudgetViewModel { 
+                    Category_CategoryID = x.CategoryID,
+                    Name = x.Name
+                }).ToList()
+            });
         }
 
         //
@@ -60,6 +65,15 @@ namespace MABMoney.Web.Controllers
             var dto = model.MapTo<BudgetDTO>();
             _budgetServices.Save(dto);
 
+            foreach (var category in model.Categories)
+            {
+                _budgetServices.SaveCategoryBudget(new Category_BudgetDTO { 
+                    Budget_BudgetID = dto.BudgetID,
+                    Category_CategoryID = category.Category_CategoryID,
+                    Amount = category.Amount
+                });
+            }
+
             return RedirectToAction("Index");
         }
 
@@ -68,7 +82,14 @@ namespace MABMoney.Web.Controllers
 
         public ActionResult Edit(int id)
         {
-            var model = _budgetServices.Get(id).MapTo<EditViewModel>();
+            var dto = _budgetServices.Get(id);
+            var model = dto.MapTo<EditViewModel>();
+            model.Categories = dto.Category_Budgets.Select(x => new Category_BudgetViewModel { 
+                Name = x.Category.Name,
+                Budget_BudgetID = x.Budget_BudgetID,
+                Category_CategoryID = x.Category_CategoryID,
+                Amount = x.Amount
+            }).ToList();
             return View(model);
         }
 
@@ -83,6 +104,15 @@ namespace MABMoney.Web.Controllers
 
             var dto = model.MapTo<BudgetDTO>();
             _budgetServices.Save(dto);
+
+            foreach (var category in model.Categories)
+            {
+                _budgetServices.SaveCategoryBudget(new Category_BudgetDTO {
+                    Budget_BudgetID = dto.BudgetID,
+                    Category_CategoryID = category.Category_CategoryID,
+                    Amount = category.Amount
+                });
+            }
 
             return RedirectToAction("Index");
         }

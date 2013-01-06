@@ -15,6 +15,6 @@ namespace MABMoney.Services.DTO
         [Required]
         public DateTime End { get; set; }
 
-        public virtual List<CategoryDTO> Categories { get; set; }
+        public List<Category_BudgetDTO> Category_Budgets { get; set; }
     }
 }

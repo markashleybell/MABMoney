@@ -13,6 +13,8 @@ namespace MABMoney.Web.Models.Budgets
         [Required]
         public DateTime End { get; set; }
 
+        public List<Category_BudgetViewModel> Categories { get; set; }
+
         public CreateViewModel()
         {
             Start = DateTime.Now;

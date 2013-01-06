@@ -12,11 +12,13 @@ namespace MABMoney.Services
     public class BudgetServices : IBudgetServices
     {
         private IRepository<Budget, int> _budgets;
+        private IRepository<Category_Budget, int> _categories_budgets;
         private IUnitOfWork _unitOfWork;
 
-        public BudgetServices(IRepository<Budget, int> budgets, IUnitOfWork unitOfWork)
+        public BudgetServices(IRepository<Budget, int> budgets, IRepository<Category_Budget, int> categories_budgets, IUnitOfWork unitOfWork)
         {
             _budgets = budgets;
+            _categories_budgets = categories_budgets;
             _unitOfWork = unitOfWork;
         }
 
@@ -27,7 +29,18 @@ namespace MABMoney.Services
 
         public BudgetDTO Get(int id)
         {
-            return _budgets.Get(id).MapTo<BudgetDTO>();
+            var budget = _budgets.Get(id);
+
+            var dto = budget.MapTo<BudgetDTO>();
+            dto.Category_Budgets = budget.Category_Budgets.ToList().Select(x => new Category_BudgetDTO { 
+                Budget_BudgetID = x.Budget_BudgetID,
+                Category_CategoryID = x.Category_CategoryID,
+                Budget = x.Budget.MapTo<BudgetDTO>(),
+                Category = x.Category.MapTo<CategoryDTO>(),
+                Amount = x.Amount
+            }).ToList();
+
+            return dto;
         }
 
         public void Save(BudgetDTO dto)
@@ -50,6 +63,30 @@ namespace MABMoney.Services
         public void Delete(int id)
         {
             _budgets.Remove(id);
+            _unitOfWork.Commit();
+        }
+
+        public void SaveCategoryBudget(Category_BudgetDTO dto)
+        {
+            var entity = _categories_budgets.Query(x => x.Budget_BudgetID == dto.Budget_BudgetID && x.Category_CategoryID == dto.Category_CategoryID)
+                                            .FirstOrDefault();
+
+            if (entity == null)
+            {
+                entity = dto.MapTo<Category_Budget>();
+                _categories_budgets.Add(entity);
+            }
+            else
+            {
+                dto.MapTo(entity);
+            }
+
+            _unitOfWork.Commit();
+        }
+
+        public void DeleteCategoryBudget(int id)
+        {
+            _categories_budgets.Remove(id);
             _unitOfWork.Commit();
         }
     }

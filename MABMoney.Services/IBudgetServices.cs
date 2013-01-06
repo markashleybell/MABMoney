@@ -12,5 +12,8 @@ namespace MABMoney.Services
         BudgetDTO Get(int id);
         void Save(BudgetDTO dto);
         void Delete(int id);
+
+        void SaveCategoryBudget(Category_BudgetDTO dto);
+        void DeleteCategoryBudget(int id);
     }
 }

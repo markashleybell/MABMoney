@@ -47,6 +47,7 @@
     <Compile Include="AccountServices.cs" />
     <Compile Include="BudgetServices.cs" />
     <Compile Include="CategoryServices.cs" />
+    <Compile Include="DTO\Category_BudgetDTO.cs" />
     <Compile Include="TransactionServices.cs" />
     <Compile Include="DTO\AccountDTO.cs" />
     <Compile Include="DTO\BudgetDTO.cs" />

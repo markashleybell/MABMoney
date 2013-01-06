@@ -1,0 +1,7 @@
+﻿@model MABMoney.Web.Models.Budgets.Category_BudgetViewModel
+
+<p>@Html.LabelFor(x => x.Amount, Model.Name)
+@Html.TextBoxFor(x => x.Amount)
+@Html.ValidationMessageFor(x => x.Amount)
+@Html.HiddenFor(x => x.Budget_BudgetID)
+@Html.HiddenFor(x => x.Category_CategoryID)</p>

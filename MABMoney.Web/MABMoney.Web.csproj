@@ -145,6 +145,7 @@
     <Compile Include="Models\Accounts\CreateViewModel.cs" />
     <Compile Include="Models\Accounts\EditViewModel.cs" />
     <Compile Include="Models\Accounts\IndexViewModel.cs" />
+    <Compile Include="Models\Budgets\Category_BudgetViewModel.cs" />
     <Compile Include="Models\Categories\CreateViewModel.cs" />
     <Compile Include="Models\Categories\EditViewModel.cs" />
     <Compile Include="Models\Categories\IndexViewModel.cs" />
@@ -248,6 +249,9 @@
   <ItemGroup>
     <Content Include="Views\Shared\EditorTemplates\DateTime.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\NullableDateTime.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\EditorTemplates\Category_BudgetViewModel.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -16,5 +16,7 @@ namespace MABMoney.Web.Models.Budgets
         public DateTime Start { get; set; }
         [Required]
         public DateTime End { get; set; }
+
+        public List<Category_BudgetViewModel> Categories { get; set; }
     }
 }

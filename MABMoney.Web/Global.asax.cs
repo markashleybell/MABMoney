@@ -35,6 +35,7 @@ namespace MABMoney.Web
                      .RegisterType<IRepository<Transaction, int>, Repository<Transaction, int>>(new HttpContextLifetimeManager<Transaction>())
                      .RegisterType<IRepository<Budget, int>, Repository<Budget, int>>(new HttpContextLifetimeManager<Budget>())
                      .RegisterType<IRepository<Category, int>, Repository<Category, int>>(new HttpContextLifetimeManager<Category>())
+                     .RegisterType<IRepository<Category_Budget, int>, Repository<Category_Budget, int>>(new HttpContextLifetimeManager<Category_Budget>())
                      .RegisterType<IUserServices, UserServices>(new HttpContextLifetimeManager<UserServices>())
                      .RegisterType<IAccountServices, AccountServices>(new HttpContextLifetimeManager<AccountServices>())
                      .RegisterType<ITransactionServices, TransactionServices>(new HttpContextLifetimeManager<TransactionServices>())

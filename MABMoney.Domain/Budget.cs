@@ -16,6 +16,6 @@ namespace MABMoney.Domain
         [Required]
         public DateTime End { get; set; }
 
-        public virtual ICollection<Category> Categories { get; set; }
+        public virtual ICollection<Category_Budget> Category_Budgets { get; set; }
     }
 }

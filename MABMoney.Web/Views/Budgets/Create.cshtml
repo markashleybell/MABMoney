@@ -9,7 +9,15 @@
 
 @using (Html.BeginForm())
 {
-    @Html.EditorForModel()
+    <p>@Html.LabelFor(x => x.Start)
+    @Html.EditorFor(x => x.Start)
+    @Html.ValidationMessageFor(x => x.Start)</p>
+    
+    <p>@Html.LabelFor(x => x.End)
+    @Html.EditorFor(x => x.End)
+    @Html.ValidationMessageFor(x => x.End)</p>
+    
+    @Html.EditorFor(x => x.Categories)
 
     <p><input type="submit" value="Save" /></p>
 }
