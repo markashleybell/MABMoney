@@ -16,5 +16,7 @@ namespace MABMoney.Services.DTO
         public virtual CategoryDTO Category { get; set; }
         [Required]
         public decimal Amount { get; set; }
+
+        public decimal Spent { get; set; }
     }
 }

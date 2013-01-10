@@ -11,7 +11,7 @@
 
 @foreach (var budget in Model.Budgets)
 {
-    <li>@budget.Start.ToString("dd/MM/yyyy")-@budget.End.ToString("dd/MM/yyyy") - @Html.ActionLink("Edit", "Edit", new { id = budget.BudgetID })</li>
+    <li>@Html.ActionLink(budget.Start.ToString("dd/MM/yyyy") + "-" + budget.End.ToString("dd/MM/yyyy"), "Details", new { id = budget.BudgetID }) - @Html.ActionLink("Edit", "Edit", new { id = budget.BudgetID })</li>
 }
 
 </ul>

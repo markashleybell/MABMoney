@@ -16,6 +16,10 @@
     <p>@Html.LabelFor(x => x.End)
     @Html.EditorFor(x => x.End)
     @Html.ValidationMessageFor(x => x.End)</p>
+
+    <p>@Html.LabelFor(x => x.Account_AccountID)
+    @Html.DropDownListFor(x => x.Account_AccountID, Model.Accounts, "Please select...")
+    @Html.ValidationMessageFor(x => x.Account_AccountID)</p>
     
     @Html.EditorFor(x => x.Categories)
 

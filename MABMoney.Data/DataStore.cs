@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Data.Entity;
 using MABMoney.Domain;
+using System.Data.Entity.ModelConfiguration.Conventions;
 
 namespace MABMoney.Data
 {
@@ -24,6 +25,13 @@ namespace MABMoney.Data
         public virtual void Commit()
         {
             base.SaveChanges();
+        }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

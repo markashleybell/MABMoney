@@ -15,5 +15,7 @@ namespace MABMoney.Web.Models.Budgets
         public string Name { get; set; }
         [Required]
         public decimal Amount { get; set; }
+
+        public decimal Spent { get; set; }
     }
 }

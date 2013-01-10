@@ -7,6 +7,7 @@ using MABMoney.Services;
 using MABMoney.Web.Models.Budgets;
 using MABMoney.Services.DTO;
 using mab.lib.SimpleMapper;
+using MABMoney.Web.Helpers;
 
 namespace MABMoney.Web.Controllers
 {
@@ -37,7 +38,17 @@ namespace MABMoney.Web.Controllers
 
         public ActionResult Details(int id)
         {
-            return View();
+            var dto = _budgetServices.Get(id);
+            var model = dto.MapTo<DetailsViewModel>();
+            model.Categories = dto.Category_Budgets.Select(x => new Category_BudgetViewModel { 
+                Name = x.Category.Name,
+                Budget_BudgetID = x.Budget_BudgetID,
+                Category_CategoryID = x.Category_CategoryID,
+                Amount = x.Amount,
+                Spent = x.Spent
+            }).ToList();
+
+            return View(model);
         }
 
         //
@@ -46,6 +57,7 @@ namespace MABMoney.Web.Controllers
         public ActionResult Create()
         {
             return View(new CreateViewModel {
+                Accounts = DataHelpers.GetAccountSelectOptions(_accountServices),
                 Categories = _categoryServices.All().ToList().Select(x => new Category_BudgetViewModel { 
                     Category_CategoryID = x.CategoryID,
                     Name = x.Name
@@ -60,7 +72,10 @@ namespace MABMoney.Web.Controllers
         public ActionResult Create(CreateViewModel model)
         {
             if (!ModelState.IsValid)
+            {
+                model.Accounts = DataHelpers.GetAccountSelectOptions(_accountServices);
                 return View(model);
+            }
 
             var dto = model.MapTo<BudgetDTO>();
             _budgetServices.Save(dto);
@@ -84,6 +99,7 @@ namespace MABMoney.Web.Controllers
         {
             var dto = _budgetServices.Get(id);
             var model = dto.MapTo<EditViewModel>();
+            model.Accounts = DataHelpers.GetAccountSelectOptions(_accountServices);
             model.Categories = dto.Category_Budgets.Select(x => new Category_BudgetViewModel { 
                 Name = x.Category.Name,
                 Budget_BudgetID = x.Budget_BudgetID,
@@ -100,7 +116,10 @@ namespace MABMoney.Web.Controllers
         public ActionResult Edit(EditViewModel model)
         {
             if (!ModelState.IsValid)
+            {
+                model.Accounts = DataHelpers.GetAccountSelectOptions(_accountServices);
                 return View(model);
+            }
 
             var dto = model.MapTo<BudgetDTO>();
             _budgetServices.Save(dto);

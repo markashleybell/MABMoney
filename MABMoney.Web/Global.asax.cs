@@ -86,6 +86,24 @@ namespace MABMoney.Web
 
             foreach (var account in accounts)
                 context.Accounts.Add(account);
+
+            var categories = new List<Category> {
+                new Category {
+                    Account = accounts[0],
+                    Name = "Rent"
+                },
+                new Category {
+                    Account = accounts[0],
+                    Name = "Food"
+                },
+                new Category {
+                    Account = accounts[0],
+                    Name = "Fuel"
+                }
+            };
+
+            foreach (var category in categories)
+                context.Categories.Add(category);
         }
     }
 }
