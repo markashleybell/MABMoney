@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MABMoney.Domain
 {
+    [Table("Categories_Budgets")]
     public class Category_Budget
     {
         [Key, Column(Order = 0)]
