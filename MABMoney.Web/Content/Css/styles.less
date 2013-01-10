@@ -1,0 +1,47 @@
+﻿.clearfix() {
+	zoom: 1;
+	&:before { 
+		content: ''; 
+		display: block; 
+	}
+	&:after { 
+		content: ''; 
+		display: table; 
+		clear: both; 
+	}
+}
+
+#nav li { display: inline; }
+            
+#budget { 
+	> div {
+		display: block;
+		width: 580px;
+		margin: 5px 0;
+		.clearfix();
+		.category-label { 
+			display: block;
+			width: 150px;
+			float: left;
+			font-weight: bold;
+			border: solid 1px #fff;
+		}
+		.category-bar { 
+			position: relative;
+			width: 400px;
+			float: left;
+			border: solid 1px #999;
+			background-color: #e0e0e0;
+		}
+		.category-stats { 
+			position: absolute;
+			left: 0;
+			top: 0;
+		}
+		.category-progress { 
+			display: block;
+			float: left;
+			background-color: #00ff00;
+		}
+	}
+}

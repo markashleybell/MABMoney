@@ -7,3 +7,14 @@
 
 <h2>Budget Details</h2>
 
+<p>@Model.Start.ToString("dd/MM/yyyy") to @Model.End.ToString("dd/MM/yyyy")</p>
+
+<div id="budget">
+@foreach (var category in Model.Categories)
+{
+    var percentage = (category.Spent == 0) ? 0 : 100 - (category.Spent / category.Amount * 100);
+    var barwidth = Math.Floor(percentage) * 4;
+    
+    <div><span class="category-label">@category.Name</span><span class="category-bar"><span class="category-stats">@((category.Amount - category.Spent).ToString("#0.00")) of @category.Amount.ToString("#0.00") (@percentage%)</span><span class="category-progress" style="width: @(barwidth)px;">&nbsp;</span></span></div>
+}
+</div>
