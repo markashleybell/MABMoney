@@ -23,5 +23,8 @@ namespace MABMoney.Web.Models.Transactions
         [DisplayName("Category")]
         public int Category_CategoryID { get; set; }
         public IQueryable<SelectListItem> Categories { get; set; }
+        [DisplayName("Account")]
+        public int Account_AccountID { get; set; }
+        public IQueryable<SelectListItem> Accounts { get; set; }
     }
 }

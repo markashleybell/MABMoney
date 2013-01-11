@@ -45,7 +45,7 @@ namespace MABMoney.Web.Controllers
                 Budget_BudgetID = x.Budget_BudgetID,
                 Category_CategoryID = x.Category_CategoryID,
                 Amount = x.Amount,
-                Spent = x.Spent
+                Total = x.Total
             }).ToList();
 
             return View(model);

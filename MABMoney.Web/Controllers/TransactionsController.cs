@@ -8,6 +8,7 @@ using MABMoney.Web.Models.Transactions;
 using MABMoney.Services.DTO;
 using mab.lib.SimpleMapper;
 using MABMoney.Web.Helpers;
+using Microsoft.VisualBasic.FileIO;
 
 namespace MABMoney.Web.Controllers
 {
@@ -47,7 +48,8 @@ namespace MABMoney.Web.Controllers
         public ActionResult Create()
         {
             return View(new CreateViewModel {
-                Categories = DataHelpers.GetCategorySelectOptions(_categoryServices)
+                Categories = DataHelpers.GetCategorySelectOptions(_categoryServices),
+                Accounts = DataHelpers.GetAccountSelectOptions(_accountServices)
             });
         }
 
@@ -60,6 +62,7 @@ namespace MABMoney.Web.Controllers
             if (!ModelState.IsValid)
             {
                 model.Categories = DataHelpers.GetCategorySelectOptions(_categoryServices);
+                model.Accounts = DataHelpers.GetAccountSelectOptions(_accountServices);
                 return View(model);
             }
 
@@ -76,6 +79,7 @@ namespace MABMoney.Web.Controllers
         {
             var model = _transactionServices.Get(id).MapTo<EditViewModel>();
             model.Categories = DataHelpers.GetCategorySelectOptions(_categoryServices);
+            model.Accounts = DataHelpers.GetAccountSelectOptions(_accountServices);
             return View(model);
         }
 
@@ -88,6 +92,7 @@ namespace MABMoney.Web.Controllers
             if (!ModelState.IsValid)
             {
                 model.Categories = DataHelpers.GetCategorySelectOptions(_categoryServices);
+                model.Accounts = DataHelpers.GetAccountSelectOptions(_accountServices);
                 return View(model);
             }
 
@@ -109,28 +114,56 @@ namespace MABMoney.Web.Controllers
 
         public ActionResult Import()
         {
-            return View(new ImportViewModel {
-                DoImport = false,
-                Imported = false
+            return View(new ImportViewModel { 
+                Accounts = DataHelpers.GetAccountSelectOptions(_accountServices)
             });
         }
 
         [HttpPost]
         public ActionResult Import(ImportViewModel model)
         {
-            if(!model.DoImport)
+            var transactions = new List<TransactionDTO>();
+
+            using (var myCsvFile = new TextFieldParser(model.File.InputStream))
             {
-                model.File.SaveAs(@"E:\Inetpub\myapps\MABMoney\MABMoney.Web\Content");
-                model.DoImport = true;
-                return View(model);
+                myCsvFile.TextFieldType = FieldType.Delimited;
+                myCsvFile.SetDelimiters(",");
+                // myCsvFile.CommentTokens = new[] { "HEADER", "COMMENT: ", "TRAILER" };
+
+                myCsvFile.ReadFields();
+
+                while (!myCsvFile.EndOfData)
+                {
+                        
+                    try
+                    {
+                        string[] fieldArray = myCsvFile.ReadFields();
+
+                        transactions.Add(new TransactionDTO { 
+                            Account_AccountID = model.Account_AccountID,
+                            Date = DateTime.ParseExact(fieldArray[0], "dd/MM/yyyy", null),
+                            Description = fieldArray[1].Trim(new char[] { '"' }),
+                            Amount = Convert.ToDecimal(fieldArray[2])
+                        });
+                    }
+                    catch (MalformedLineException ex)
+                    {
+                        // not a valid delimited line - log, terminate, or ignore
+                        continue;
+                    }
+                    // process values in fieldArray
+                }
             }
-            else
-            {
-                
-                model.DoImport = false;
-                model.Imported = true;
-                return View(model);
-            }
+
+            // model.File.SaveAs(@"E:\Inetpub\myapps\MABMoney\MABMoney.Web\Content");
+
+            foreach (var transaction in transactions)
+                _transactionServices.Save(transaction);
+
+            return View(new ImportViewModel {
+                RecordsImported = transactions.Count,
+                Accounts = DataHelpers.GetAccountSelectOptions(_accountServices)
+            });
         }
     }
 }

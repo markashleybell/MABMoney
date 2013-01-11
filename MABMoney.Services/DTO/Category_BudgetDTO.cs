@@ -17,6 +17,6 @@ namespace MABMoney.Services.DTO
         [Required]
         public decimal Amount { get; set; }
 
-        public decimal Spent { get; set; }
+        public decimal Total { get; set; }
     }
 }

@@ -7,12 +7,20 @@
 
 <h2>Import</h2>
 
+@if (Model.RecordsImported != 0)
+{
+    <p>@Model.RecordsImported transactions imported.</p>
+}
 
-@using(Html.BeginForm("Import", "Transactions", FormMethod.Post, new { enctype="multipart/form-data" }))
+@using (Html.BeginForm("Import", "Transactions", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     <p>@Html.LabelFor(x => x.File)
     <input type="file" name="File" id="File" value="" />
-    @Html.HiddenFor(x => x.DoImport)
-    @Html.HiddenFor(x => x.Imported)</p>
+    @Html.HiddenFor(x => x.RecordsImported)</p>
+    
+    <p>@Html.LabelFor(x => x.Account_AccountID)
+    @Html.DropDownListFor(x => x.Account_AccountID, Model.Accounts, "Please select...")
+    @Html.ValidationMessageFor(x => x.Account_AccountID)</p>
+    
     <p><input type="submit" value="Upload" /></p>
 }

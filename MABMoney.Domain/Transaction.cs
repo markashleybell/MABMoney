@@ -20,5 +20,9 @@ namespace MABMoney.Domain
         public int? Category_CategoryID { get; set; }
         [ForeignKey("Category_CategoryID")]
         public virtual Category Category { get; set; }
+        [Required]
+        public int Account_AccountID { get; set; }
+        [ForeignKey("Account_AccountID")]
+        public virtual Account Account { get; set; }
     }
 }

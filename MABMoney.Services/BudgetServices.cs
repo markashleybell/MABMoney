@@ -43,7 +43,7 @@ namespace MABMoney.Services
                 Budget = x.Budget.MapTo<BudgetDTO>(),
                 Category = x.Category.MapTo<CategoryDTO>(),
                 Amount = x.Amount,
-                Spent = transactions.Where(t => t.Category_CategoryID == x.Category_CategoryID).Sum(t => t.Amount)
+                Total = transactions.Where(t => t.Category_CategoryID == x.Category_CategoryID).Sum(t => Math.Abs(t.Amount))
             }).ToList();
 
             return dto;

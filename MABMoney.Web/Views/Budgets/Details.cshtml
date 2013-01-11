@@ -14,13 +14,13 @@
 
 @foreach (var category in Model.Categories)
 {
-    var percentage = (category.Spent == 0) ? 0 : 100 - (category.Spent / category.Amount * 100);
-    var barwidth = Math.Floor(percentage) / 2;
+    var percentage = (category.Total / category.Amount * 100);
+    var barwidth = Math.Abs(percentage) / 2;
     
     <div class="row-fluid">
         <div class="span3"><div class="category-label">@category.Name</div></div>
         <div class="span9">
-            <div class="category-bar"><div class="category-stats">@((category.Amount - category.Spent).ToString("#0.00")) of @category.Amount.ToString("#0.00") (@percentage%)</div><div class="category-progress" style="width: @(barwidth)%;">&nbsp;</div></div>
+            <div class="category-bar"><div class="category-stats">@((category.Total).ToString("#0.00")) of @category.Amount.ToString("#0.00") (@percentage.ToString("#0.00")%)</div><div class="category-progress" style="width: @(barwidth)%;">&nbsp;</div></div>
         </div>
     </div>
 }
