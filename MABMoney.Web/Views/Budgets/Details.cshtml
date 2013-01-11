@@ -5,16 +5,22 @@
     Layout = "~/Views/Shared/Master.cshtml";
 }
 
-<h2>Budget Details</h2>
+<div class="row-fluid">
+    <div class="span12">
+        <h2>Budget Details</h2>
+        <p>@Model.Start.ToString("dd/MM/yyyy") to @Model.End.ToString("dd/MM/yyyy")</p>
+    </div>
+</div>
 
-<p>@Model.Start.ToString("dd/MM/yyyy") to @Model.End.ToString("dd/MM/yyyy")</p>
-
-<div id="budget">
 @foreach (var category in Model.Categories)
 {
     var percentage = (category.Spent == 0) ? 0 : 100 - (category.Spent / category.Amount * 100);
-    var barwidth = Math.Floor(percentage) * 4;
+    var barwidth = Math.Floor(percentage) / 2;
     
-    <div><span class="category-label">@category.Name</span><span class="category-bar"><span class="category-stats">@((category.Amount - category.Spent).ToString("#0.00")) of @category.Amount.ToString("#0.00") (@percentage%)</span><span class="category-progress" style="width: @(barwidth)px;">&nbsp;</span></span></div>
+    <div class="row-fluid">
+        <div class="span3"><div class="category-label">@category.Name</div></div>
+        <div class="span9">
+            <div class="category-bar"><div class="category-stats">@((category.Amount - category.Spent).ToString("#0.00")) of @category.Amount.ToString("#0.00") (@percentage%)</div><div class="category-progress" style="width: @(barwidth)%;">&nbsp;</div></div>
+        </div>
+    </div>
 }
-</div>
