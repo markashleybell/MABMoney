@@ -17,8 +17,7 @@ namespace MABMoney.Domain
         public string Description { get; set; }
         [Required]
         public decimal Amount { get; set; }
-        [Required]
-        public int Category_CategoryID { get; set; }
+        public int? Category_CategoryID { get; set; }
         [ForeignKey("Category_CategoryID")]
         public virtual Category Category { get; set; }
     }

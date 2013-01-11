@@ -1,0 +1,18 @@
+﻿@model MABMoney.Web.Models.Transactions.ImportViewModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/Master.cshtml";
+}
+
+<h2>Import</h2>
+
+
+@using(Html.BeginForm("Import", "Transactions", FormMethod.Post, new { enctype="multipart/form-data" }))
+{
+    <p>@Html.LabelFor(x => x.File)
+    <input type="file" name="File" id="File" value="" />
+    @Html.HiddenFor(x => x.DoImport)
+    @Html.HiddenFor(x => x.Imported)</p>
+    <p><input type="submit" value="Upload" /></p>
+}

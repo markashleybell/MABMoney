@@ -152,6 +152,7 @@
     <Compile Include="Models\Categories\IndexViewModel.cs" />
     <Compile Include="Models\Transactions\CreateViewModel.cs" />
     <Compile Include="Models\Transactions\EditViewModel.cs" />
+    <Compile Include="Models\Transactions\ImportViewModel.cs" />
     <Compile Include="Models\Transactions\IndexViewModel.cs" />
     <Compile Include="Models\Budgets\CreateViewModel.cs" />
     <Compile Include="Models\Budgets\EditViewModel.cs" />
@@ -261,6 +262,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Content\Css\styles.less" />
+    <Content Include="Views\Transactions\Import.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

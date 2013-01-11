@@ -106,5 +106,31 @@ namespace MABMoney.Web.Controllers
             _transactionServices.Delete(id);
             return RedirectToAction("Index");
         }
+
+        public ActionResult Import()
+        {
+            return View(new ImportViewModel {
+                DoImport = false,
+                Imported = false
+            });
+        }
+
+        [HttpPost]
+        public ActionResult Import(ImportViewModel model)
+        {
+            if(!model.DoImport)
+            {
+                model.File.SaveAs(@"E:\Inetpub\myapps\MABMoney\MABMoney.Web\Content");
+                model.DoImport = true;
+                return View(model);
+            }
+            else
+            {
+                
+                model.DoImport = false;
+                model.Imported = true;
+                return View(model);
+            }
+        }
     }
 }
