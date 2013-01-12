@@ -7,13 +7,23 @@
 
 <h2>Budgets</h2>
 
-<ul>
-
-@foreach (var budget in Model.Budgets)
-{
-    <li>@Html.ActionLink(budget.Start.ToString("dd/MM/yyyy") + "-" + budget.End.ToString("dd/MM/yyyy"), "Details", new { id = budget.BudgetID }) - @Html.ActionLink("Edit", "Edit", new { id = budget.BudgetID })</li>
-}
-
-</ul>
+<table class="table table-striped">
+    <caption>Budget List</caption>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Edit</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var budget in Model.Budgets)
+        {
+        <tr>
+            <td>@Html.ActionLink(budget.Start.ToString("dd/MM/yyyy") + "-" + budget.End.ToString("dd/MM/yyyy"), "Details", new { id = budget.BudgetID })</td>
+            <td>@Html.ActionLink("Edit", "Edit", new { id = budget.BudgetID })</td>
+        </tr>
+        }
+    </tbody>
+</table>
 
 <p>@Html.ActionLink("Add New Budget", "Create")</p>

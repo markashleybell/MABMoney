@@ -7,13 +7,23 @@
 
 <h2>Accounts</h2>
 
-<ul>
-
-@foreach (var account in Model.Accounts)
-{
-    <li>@account.Name @Html.ActionLink("Edit", "Edit", new { id = account.AccountID })</li>
-}
-
-</ul>
+<table class="table table-striped">
+    <caption>Account List</caption>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Edit</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var account in Model.Accounts)
+        {
+        <tr>
+            <td>@account.Name</td>
+            <td>@Html.ActionLink("Edit", "Edit", new { id = account.AccountID })</td>
+        </tr>
+        }
+    </tbody>
+</table>
 
 <p>@Html.ActionLink("Add New Account", "Create")</p>

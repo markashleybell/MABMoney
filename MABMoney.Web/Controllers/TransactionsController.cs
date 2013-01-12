@@ -30,7 +30,10 @@ namespace MABMoney.Web.Controllers
         public ActionResult Index()
         {
             return View(new IndexViewModel {
-                Transactions = _transactionServices.All().ToList()
+                Transactions = _transactionServices.All()
+                                                   .OrderByDescending(x => x.Date)
+                                                   .ThenByDescending(x => x.TransactionID)
+                                                   .ToList()
             });
         }
 
