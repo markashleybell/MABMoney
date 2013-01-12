@@ -14,7 +14,8 @@ namespace MABMoney.Domain
         public int AccountID { get; set; }
         [Required]
         public string Name { get; set; }
-
+        [Required]
+        public decimal StartingBalance { get; set; }
         [Required]
         public int User_UserID { get; set; }
         [ForeignKey("User_UserID")]

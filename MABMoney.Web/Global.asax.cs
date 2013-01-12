@@ -80,7 +80,18 @@ namespace MABMoney.Web
             var accounts = new List<Account> {
                 new Account {
                     Name = "Current",
-                    User = users[0]
+                    User = users[0],
+                    StartingBalance = 0
+                },
+                new Account {
+                    Name = "Savings",
+                    User = users[0],
+                    StartingBalance = 0
+                },
+                new Account {
+                    Name = "Credit Card",
+                    User = users[0],
+                    StartingBalance = 0
                 }
             };
 

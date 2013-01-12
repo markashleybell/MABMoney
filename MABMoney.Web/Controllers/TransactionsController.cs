@@ -160,6 +160,9 @@ namespace MABMoney.Web.Controllers
 
             // model.File.SaveAs(@"E:\Inetpub\myapps\MABMoney\MABMoney.Web\Content");
 
+            // Reverse the list because transactions are in reverse chronological order in CSV
+            transactions.Reverse();
+
             foreach (var transaction in transactions)
                 _transactionServices.Save(transaction);
 

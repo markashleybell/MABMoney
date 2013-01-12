@@ -23,7 +23,11 @@ namespace MABMoney.Web.Controllers
 
         public ActionResult Index()
         {
-            return View(new IndexViewModel());
+            var account = _accountServices.Get(1);
+
+            return View(new IndexViewModel { 
+                Account = account
+            });
         }
     }
 }

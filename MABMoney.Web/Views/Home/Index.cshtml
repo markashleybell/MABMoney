@@ -7,10 +7,6 @@
 
 <h2>Account Overview</h2>
 
-<ul>
-    <li>@Html.ActionLink("Edit Users", "Index", "Users")</li>
-    <li>@Html.ActionLink("Edit Accounts", "Index", "Accounts")</li>
-    <li>@Html.ActionLink("Edit Categories", "Index", "Categories")</li>
-    <li>@Html.ActionLink("Edit Transactions", "Index", "Transactions")</li>
-    <li>@Html.ActionLink("Edit Budgets", "Index", "Budgets")</li>
-</ul>
+<h3>@Model.Account.Name</h3>
+<p>Starting Balance: @Model.Account.StartingBalance.ToString("#0.00")</p>
+<p>Current Balance: @Model.Account.CurrentBalance.ToString("#0.00")</p>

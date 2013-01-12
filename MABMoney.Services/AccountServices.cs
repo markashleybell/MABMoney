@@ -12,11 +12,13 @@ namespace MABMoney.Services
     public class AccountServices : IAccountServices
     {
         private IRepository<Account, int> _accounts;
+        private IRepository<Transaction, int> _transactions;
         private IUnitOfWork _unitOfWork;
 
-        public AccountServices(IRepository<Account, int> accounts, IUnitOfWork unitOfWork)
+        public AccountServices(IRepository<Account, int> accounts, IRepository<Transaction, int> transactions, IUnitOfWork unitOfWork)
         {
             _accounts = accounts;
+            _transactions = transactions;
             _unitOfWork = unitOfWork;
         }
 
@@ -27,7 +29,11 @@ namespace MABMoney.Services
 
         public AccountDTO Get(int id)
         {
-            return _accounts.Get(id).MapTo<AccountDTO>();
+            var dto = _accounts.Get(id).MapTo<AccountDTO>();
+            var transactions = _transactions.Query(x => x.Account_AccountID == dto.AccountID).ToList();
+            dto.CurrentBalance = dto.StartingBalance + transactions.Sum(x => x.Amount);
+
+            return dto;
         }
 
         public void Save(AccountDTO dto)

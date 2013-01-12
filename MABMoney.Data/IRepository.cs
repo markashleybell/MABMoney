@@ -13,5 +13,8 @@ namespace MABMoney.Data
         Type Get(KeyType key);
         void Add(Type entity);
         void Remove(KeyType key);
+
+        //IEnumerable<E> SqlQuery<E>(string sql, params object[] parameters);
+        //void ExecuteSqlCommand(string sql, params object[] parameters);
     }
 }
