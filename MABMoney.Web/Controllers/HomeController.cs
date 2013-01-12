@@ -24,9 +24,11 @@ namespace MABMoney.Web.Controllers
         public ActionResult Index()
         {
             var account = _accountServices.Get(1);
+            var transactions = _transactionServices.All().Where(x => x.Account_AccountID == account.AccountID).ToList();
 
             return View(new IndexViewModel { 
-                Account = account
+                Account = account,
+                Transactions = transactions
             });
         }
     }

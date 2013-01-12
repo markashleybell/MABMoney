@@ -9,5 +9,6 @@ namespace MABMoney.Web.Models.Home
     public class IndexViewModel
     {
         public AccountDTO Account { get; set; }
+        public List<TransactionDTO> Transactions { get; set; }
     }
 }
