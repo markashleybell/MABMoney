@@ -5,9 +5,7 @@
     Layout = "~/Views/Shared/Master.cshtml";
 }
 
-<h2>Account Overview</h2>
-
-<h3>@Model.Account.Name</h3>
+<h2>@Model.Account.Name</h2>
 <p>Starting Balance: @Model.Account.StartingBalance.ToString("#0.00"), Current Balance: @Model.Account.CurrentBalance.ToString("#0.00")</p>
 
 <div class="row" id="test">
@@ -26,12 +24,12 @@
 </div>
 
 <ul class="nav nav-tabs lge">
-  <li class="active"><a href="#income" data-toggle="tab">Income</a></li>
-  <li><a href="#expenses" data-toggle="tab">Expenses</a></li>
+  <li class="active"><a href="#income" data-toggle="tab">Income: @Model.Transactions.Where(t => t.Amount > 0).Sum(x => x.Amount)</a></li>
+  <li><a href="#expenses" data-toggle="tab">Expenses: @Model.Transactions.Where(t => t.Amount < 0).Sum(x => Math.Abs(x.Amount))</a></li>
 </ul>
 <div class="tab-content">
     <div class="tab-pane active" id="income">
-        @using (Html.BeginForm("CreateTransaction"))
+        @using (Html.BeginForm("CreateTransaction", "Home"))
         {
             <div class="controls controls-row">
                 @Html.EditorFor(x => x.Date, new { @class = "span2", placeholder = "Date" })
@@ -56,7 +54,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var transaction in Model.Transactions.Where(t => t.Amount > 0))
+                @foreach (var transaction in Model.Transactions.Where(t => t.Amount > 0).OrderByDescending(x => x.Date).ThenByDescending(x => x.TransactionID))
                 {
                 <tr>
                     <td>@transaction.Date.ToString("dd/MM/yyyy")</td>
@@ -69,7 +67,7 @@
         </table>
     </div>
     <div class="tab-pane" id="expenses">
-        @using (Html.BeginForm("CreateTransaction"))
+        @using (Html.BeginForm("CreateTransaction", "Home"))
         {
             <div class="controls controls-row">
                 @Html.EditorFor(x => x.Date, new { @class = "span2", placeholder = "Date" })
@@ -94,7 +92,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var transaction in Model.Transactions.Where(t => t.Amount < 0))
+                @foreach (var transaction in Model.Transactions.Where(t => t.Amount < 0).OrderByDescending(x => x.Date).ThenByDescending(x => x.TransactionID))
                 {
                 <tr>
                     <td>@transaction.Date.ToString("dd/MM/yyyy")</td>

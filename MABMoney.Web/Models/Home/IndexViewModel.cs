@@ -18,13 +18,11 @@ namespace MABMoney.Web.Models.Home
 
         [Required]
         public DateTime Date { get; set; }
-        [Required]
         public string Description { get; set; }
         [Required]
         public decimal Amount { get; set; }
-        [Required]
         [DisplayName("Category")]
-        public int Category_CategoryID { get; set; }
+        public int? Category_CategoryID { get; set; }
         public IQueryable<SelectListItem> Categories { get; set; }
         [DisplayName("Account")]
         public int Account_AccountID { get; set; }

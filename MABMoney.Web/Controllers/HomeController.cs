@@ -31,6 +31,7 @@ namespace MABMoney.Web.Controllers
 
             return View(new IndexViewModel { 
                 Account = account,
+                Account_AccountID = account.AccountID,
                 Transactions = transactions,
                 Categories = DataHelpers.GetCategorySelectOptions(_categoryServices),
                 Accounts = DataHelpers.GetAccountSelectOptions(_accountServices),
@@ -47,7 +48,19 @@ namespace MABMoney.Web.Controllers
                 model.Transactions = _transactionServices.All().Where(x => x.Account_AccountID == model.Account_AccountID).ToList();
                 model.Categories = DataHelpers.GetCategorySelectOptions(_categoryServices);
                 model.Accounts = DataHelpers.GetAccountSelectOptions(_accountServices);
-                return View(model);
+                return View("Index", model);
+            }
+
+            switch (model.Type)
+            {
+                case TransactionType.Income:
+                    if (model.Amount < 0)
+                        model.Amount *= -1;
+                    break;
+                case TransactionType.Expense:
+                    if (model.Amount > 0)
+                        model.Amount *= -1;
+                    break;
             }
 
             var dto = model.MapTo<TransactionDTO>();

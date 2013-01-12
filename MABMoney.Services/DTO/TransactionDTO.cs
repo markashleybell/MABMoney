@@ -12,7 +12,6 @@ namespace MABMoney.Services.DTO
         public int TransactionID { get; set; }
         [Required]
         public DateTime Date { get; set; }
-        [Required]
         public string Description { get; set; }
         [Required]
         public decimal Amount { get; set; }
