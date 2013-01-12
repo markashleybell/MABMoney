@@ -2,8 +2,8 @@
 
 @{
     
-    var par = new { 
-        @class = "date-picker" + ((ViewData["id"] != null) ? " " + ViewData["class"] : ""),
+    var par = new {
+        @class = "date-picker" + ((ViewData["class"] != null) ? " " + ViewData["class"] : ""),
         id = (ViewData["id"] != null) ? ViewData["id"] : ViewData.TemplateInfo.GetFullHtmlFieldId("")
     };
     

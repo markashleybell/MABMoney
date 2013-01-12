@@ -6,6 +6,9 @@ using System.Web.Mvc;
 using MABMoney.Domain;
 using MABMoney.Services;
 using MABMoney.Web.Models.Home;
+using MABMoney.Web.Helpers;
+using mab.lib.SimpleMapper;
+using MABMoney.Services.DTO;
 
 namespace MABMoney.Web.Controllers
 {
@@ -28,8 +31,29 @@ namespace MABMoney.Web.Controllers
 
             return View(new IndexViewModel { 
                 Account = account,
-                Transactions = transactions
+                Transactions = transactions,
+                Categories = DataHelpers.GetCategorySelectOptions(_categoryServices),
+                Accounts = DataHelpers.GetAccountSelectOptions(_accountServices),
+                Type = TransactionType.Income
             });
+        }
+
+        [HttpPost]
+        public ActionResult CreateTransaction(IndexViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                model.Account = _accountServices.Get(model.Account_AccountID);
+                model.Transactions = _transactionServices.All().Where(x => x.Account_AccountID == model.Account_AccountID).ToList();
+                model.Categories = DataHelpers.GetCategorySelectOptions(_categoryServices);
+                model.Accounts = DataHelpers.GetAccountSelectOptions(_accountServices);
+                return View(model);
+            }
+
+            var dto = model.MapTo<TransactionDTO>();
+            _transactionServices.Save(dto);
+
+            return RedirectToAction("Index");
         }
     }
 }

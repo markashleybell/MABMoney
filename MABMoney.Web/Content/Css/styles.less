@@ -11,10 +11,6 @@
 	}
 }
 
-.container {
-    max-width: 760px;
-}
-
 #nav li { display: inline; }
             
 .category-label { 
@@ -40,3 +36,41 @@
 }
 
 caption { display: none; }
+
+.span2 {
+	.btn {
+		width: 100%;
+	}
+}
+
+@media (min-width: 768px) and (max-width: 979px) {
+
+	.navbar .brand { padding-left: 5px;}
+
+	.navbar .container {
+		width: 724px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+}
+
+@media (max-width: 767px) {
+
+	.navbar .container {
+		margin-left: 12px;
+		margin-right: 15px;
+	}
+
+}
+
+#test .span1 {
+	background-color: #e0e0e0;
+}
+
+.nav-tabs {
+	&.lge a { 
+		font-size: 2em; 
+		padding: 15px 20px;
+		margin-right: 10px;
+	}
+}

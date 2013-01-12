@@ -8,15 +8,43 @@
 <h2>Account Overview</h2>
 
 <h3>@Model.Account.Name</h3>
-<p>Starting Balance: @Model.Account.StartingBalance.ToString("#0.00")</p>
-<p>Current Balance: @Model.Account.CurrentBalance.ToString("#0.00")</p>
+<p>Starting Balance: @Model.Account.StartingBalance.ToString("#0.00"), Current Balance: @Model.Account.CurrentBalance.ToString("#0.00")</p>
 
-<ul class="nav nav-tabs">
+<div class="row" id="test">
+    <div class="span1">&nbsp;</div>
+    <div class="span1">&nbsp;</div>
+    <div class="span1">&nbsp;</div>
+    <div class="span1">&nbsp;</div>
+    <div class="span1">&nbsp;</div>
+    <div class="span1">&nbsp;</div>
+    <div class="span1">&nbsp;</div>
+    <div class="span1">&nbsp;</div>
+    <div class="span1">&nbsp;</div>
+    <div class="span1">&nbsp;</div>
+    <div class="span1">&nbsp;</div>
+    <div class="span1">&nbsp;</div>
+</div>
+
+<ul class="nav nav-tabs lge">
   <li class="active"><a href="#income" data-toggle="tab">Income</a></li>
   <li><a href="#expenses" data-toggle="tab">Expenses</a></li>
 </ul>
 <div class="tab-content">
     <div class="tab-pane active" id="income">
+        @using (Html.BeginForm("CreateTransaction"))
+        {
+            <div class="controls controls-row">
+                @Html.EditorFor(x => x.Date, new { @class = "span2", placeholder = "Date" })
+                @Html.DropDownListFor(x => x.Category_CategoryID, Model.Categories, "Category...", new { @class = "span2" })
+                @Html.TextBoxFor(x => x.Description, new { @class = "span4", placeholder = "Description (optional)" })
+                @Html.TextBoxFor(x => x.Amount, new { @class = "span2", placeholder = "Amount" })              
+                <div class="span2">
+                    <input type="submit" value="Add Income" class="btn btn-primary" />
+                </div>
+                @Html.HiddenFor(x => x.Account_AccountID)
+                <input data-val="true" data-val-required="The Type field is required." id="Type" name="Type" type="hidden" value="Income">
+            </div>
+        }
         <table class="table table-striped">
             <caption>Transaction List</caption>
             <thead>
@@ -41,6 +69,20 @@
         </table>
     </div>
     <div class="tab-pane" id="expenses">
+        @using (Html.BeginForm("CreateTransaction"))
+        {
+            <div class="controls controls-row">
+                @Html.EditorFor(x => x.Date, new { @class = "span2", placeholder = "Date" })
+                @Html.DropDownListFor(x => x.Category_CategoryID, Model.Categories, "Category", new { @class = "span2" })
+                @Html.TextBoxFor(x => x.Description, new { @class = "span4", placeholder = "Description (optional)" })
+                @Html.TextBoxFor(x => x.Amount, new { @class = "span2", placeholder = "Amount" })              
+                <div class="span2">
+                    <input type="submit" value="Add Expense" class="btn btn-primary" />
+                </div>
+                @Html.HiddenFor(x => x.Account_AccountID)
+                <input data-val="true" data-val-required="The Type field is required." id="Type" name="Type" type="hidden" value="Expense">
+            </div>
+        }
         <table class="table table-striped">
             <caption>Transaction List</caption>
             <thead>
@@ -66,3 +108,17 @@
     </div>    
  </div>
 
+ <div class="row" id="test">
+    <div class="span1">&nbsp;</div>
+    <div class="span1">&nbsp;</div>
+    <div class="span1">&nbsp;</div>
+    <div class="span1">&nbsp;</div>
+    <div class="span1">&nbsp;</div>
+    <div class="span1">&nbsp;</div>
+    <div class="span1">&nbsp;</div>
+    <div class="span1">&nbsp;</div>
+    <div class="span1">&nbsp;</div>
+    <div class="span1">&nbsp;</div>
+    <div class="span1">&nbsp;</div>
+    <div class="span1">&nbsp;</div>
+</div>
