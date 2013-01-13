@@ -9,6 +9,7 @@ using MABMoney.Web.Models.Home;
 using MABMoney.Web.Helpers;
 using mab.lib.SimpleMapper;
 using MABMoney.Services.DTO;
+using MABMoney.Web.Infrastructure;
 
 namespace MABMoney.Web.Controllers
 {
@@ -18,15 +19,20 @@ namespace MABMoney.Web.Controllers
                               IAccountServices accountServices,
                               ICategoryServices categoryServices,
                               ITransactionServices transactionServices,
-                              IBudgetServices budgetServices) : base(userServices,
-                                                                     accountServices,
-                                                                     categoryServices,
-                                                                     transactionServices, 
-                                                                     budgetServices) { }
+                              IBudgetServices budgetServices, 
+                              HttpContextBase context) : base(userServices,
+                                                              accountServices,
+                                                              categoryServices,
+                                                              transactionServices, 
+                                                              budgetServices,
+                                                              context) { }
 
+        [Authenticate]
         public ActionResult Index()
         {
-            var account = _accountServices.Get(1);
+            var user = _userServices.Get(Convert.ToInt32(_context.Items["UserID"]));
+
+            var account = _accountServices.Get(user.Accounts.First().AccountID);
             var transactions = _transactionServices.All().Where(x => x.Account_AccountID == account.AccountID).ToList();
 
             return View(new IndexViewModel { 
@@ -39,6 +45,27 @@ namespace MABMoney.Web.Controllers
             });
         }
 
+        [Authenticate]
+        [HttpPost]
+        public ActionResult Index(int account_accountId)
+        {
+            var user = _userServices.Get(Convert.ToInt32(_context.Items["UserID"]));
+
+            var account = _accountServices.Get(account_accountId);
+            var transactions = _transactionServices.All().Where(x => x.Account_AccountID == account.AccountID).ToList();
+
+            return View(new IndexViewModel
+            {
+                Account = account,
+                Account_AccountID = account.AccountID,
+                Transactions = transactions,
+                Categories = DataHelpers.GetCategorySelectOptions(_categoryServices),
+                Accounts = DataHelpers.GetAccountSelectOptions(_accountServices),
+                Type = TransactionType.Income
+            });
+        }
+
+        [Authenticate]
         [HttpPost]
         public ActionResult CreateTransaction(IndexViewModel model)
         {
@@ -66,6 +93,8 @@ namespace MABMoney.Web.Controllers
             var dto = model.MapTo<TransactionDTO>();
             _transactionServices.Save(dto);
 
+            // Change to show index view directly so we can return to the correct 
+            // account/tab without a ton of querystring params
             return RedirectToAction("Index");
         }
     }

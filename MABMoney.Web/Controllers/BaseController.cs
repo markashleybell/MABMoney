@@ -14,18 +14,21 @@ namespace MABMoney.Web.Controllers
         protected ICategoryServices _categoryServices;
         protected ITransactionServices _transactionServices;
         protected IBudgetServices _budgetServices;
+        protected HttpContextBase _context;
 
         public BaseController(IUserServices userServices,
                               IAccountServices accountServices,
                               ICategoryServices categoryServices,
                               ITransactionServices transactionServices,
-                              IBudgetServices budgetServices)
+                              IBudgetServices budgetServices,
+                              HttpContextBase context)
         {
             _userServices = userServices;
             _accountServices = accountServices;
             _categoryServices = categoryServices;
             _transactionServices = transactionServices;
             _budgetServices = budgetServices;
+            _context = context;
         }
 
     }

@@ -7,24 +7,35 @@ using MABMoney.Services;
 using MABMoney.Web.Models.Users;
 using mab.lib.SimpleMapper;
 using MABMoney.Services.DTO;
+using MABMoney.Web.Infrastructure;
+using MABMoney.Web.Helpers;
+using System.Configuration;
 
 namespace MABMoney.Web.Controllers
 {
     public class UsersController : BaseController
     {
+        private ICryptoWrapper _crypto;
+
         public UsersController(IUserServices userServices,
                                IAccountServices accountServices,
                                ICategoryServices categoryServices,
                                ITransactionServices transactionServices,
-                               IBudgetServices budgetServices) : base(userServices,
-                                                                      accountServices,
-                                                                      categoryServices,
-                                                                      transactionServices, 
-                                                                      budgetServices) { }
+                               IBudgetServices budgetServices,
+                               HttpContextBase context,
+                               ICryptoWrapper crypto) : base(userServices,
+                                                               accountServices,
+                                                               categoryServices,
+                                                               transactionServices, 
+                                                               budgetServices,
+                                                               context) 
+        {
+            _crypto = crypto;
+        }
 
         //
         // GET: /Users/
-
+        [Authenticate]
         public ActionResult Index()
         {
             return View(new IndexViewModel { 
@@ -34,7 +45,7 @@ namespace MABMoney.Web.Controllers
 
         //
         // GET: /Users/Details/5
-
+        [Authenticate]
         public ActionResult Details(int id)
         {
             return View();
@@ -42,7 +53,7 @@ namespace MABMoney.Web.Controllers
 
         //
         // GET: /Users/Create
-
+        [Authenticate]
         public ActionResult Create()
         {
             return View(new CreateViewModel());
@@ -50,7 +61,7 @@ namespace MABMoney.Web.Controllers
 
         //
         // POST: /Users/Create
-
+        [Authenticate]
         [HttpPost]
         public ActionResult Create(CreateViewModel model)
         {
@@ -65,7 +76,7 @@ namespace MABMoney.Web.Controllers
 
         //
         // GET: /Users/Edit/5
-
+        [Authenticate]
         public ActionResult Edit(int id)
         {
             var model = _userServices.Get(id).MapTo<EditViewModel>();
@@ -74,7 +85,7 @@ namespace MABMoney.Web.Controllers
 
         //
         // POST: /Users/Edit/5
-
+        [Authenticate]
         [HttpPost]
         public ActionResult Edit(EditViewModel model)
         {
@@ -89,12 +100,48 @@ namespace MABMoney.Web.Controllers
 
         //
         // POST: /Users/Delete/5
-
+        [Authenticate]
         [HttpPost]
         public ActionResult Delete(int id)
         {
             _userServices.Delete(id);
             return RedirectToAction("Index");
+        }
+
+        public ActionResult Login()
+        {
+            return View(new LoginViewModel { 
+                Email = "me@markashleybell.com",
+                Password = "test123"
+            });
+        }
+
+        [HttpPost]
+        public ActionResult Login(LoginViewModel model)
+        {
+            if(!ModelState.IsValid)
+                return View(model);
+
+            // Fetch the user
+            var user = _userServices.GetByEmailAddress(model.Email);
+
+            if(user == null || !_crypto.VerifyHashedPassword(user.Password, model.Password))
+                return View(model);
+
+            // Encrypt the ID before storing it in a cookie
+            var encryptedUserId = EncryptionHelpers.EncryptStringAES(user.UserID.ToString(), ConfigurationManager.AppSettings["SharedSecret"]);
+            _context.Response.Cookies.Add(new HttpCookie("UserID", encryptedUserId));
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet]
+        public ActionResult Logout()
+        {
+            var cookie = new HttpCookie("UserID", "");
+            cookie.Expires = DateTime.Now.AddDays(-1);
+            _context.Response.Cookies.Add(cookie);
+            return RedirectToAction("Login");
         }
     }
 }

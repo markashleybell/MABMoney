@@ -8,6 +8,7 @@ using MABMoney.Web.Models.Budgets;
 using MABMoney.Services.DTO;
 using mab.lib.SimpleMapper;
 using MABMoney.Web.Helpers;
+using MABMoney.Web.Infrastructure;
 
 namespace MABMoney.Web.Controllers
 {
@@ -17,15 +18,17 @@ namespace MABMoney.Web.Controllers
                                  IAccountServices accountServices,
                                  ICategoryServices categoryServices,
                                  ITransactionServices transactionServices,
-                                 IBudgetServices budgetServices) : base(userServices,
-                                                                        accountServices,
-                                                                        categoryServices,
-                                                                        transactionServices, 
-                                                                        budgetServices) { }
+                                 IBudgetServices budgetServices,
+                                 HttpContextBase context) : base(userServices,
+                                                                 accountServices,
+                                                                 categoryServices,
+                                                                 transactionServices, 
+                                                                 budgetServices,
+                                                                 context) { }
 
         //
         // GET: /Budget/
-
+        [AuthenticateAttribute]
         public ActionResult Index()
         {
             return View(new IndexViewModel {
@@ -35,7 +38,7 @@ namespace MABMoney.Web.Controllers
 
         //
         // GET: /Budget/Details/5
-
+        [AuthenticateAttribute]
         public ActionResult Details(int id)
         {
             var dto = _budgetServices.Get(id);
@@ -53,7 +56,7 @@ namespace MABMoney.Web.Controllers
 
         //
         // GET: /Budget/Create
-
+        [Authenticate]
         public ActionResult Create()
         {
             return View(new CreateViewModel {
@@ -67,7 +70,7 @@ namespace MABMoney.Web.Controllers
 
         //
         // POST: /Budget/Create
-
+        [Authenticate]
         [HttpPost]
         public ActionResult Create(CreateViewModel model)
         {
@@ -94,7 +97,7 @@ namespace MABMoney.Web.Controllers
 
         //
         // GET: /Budget/Edit/5
-
+        [Authenticate]
         public ActionResult Edit(int id)
         {
             var dto = _budgetServices.Get(id);
@@ -111,7 +114,7 @@ namespace MABMoney.Web.Controllers
 
         //
         // POST: /Budget/Edit/5
-
+        [Authenticate]
         [HttpPost]
         public ActionResult Edit(EditViewModel model)
         {
@@ -138,7 +141,7 @@ namespace MABMoney.Web.Controllers
 
         //
         // POST: /Budget/Delete/5
-
+        [Authenticate]
         [HttpPost]
         public ActionResult Delete(int id)
         {

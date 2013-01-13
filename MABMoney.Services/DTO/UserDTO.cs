@@ -16,7 +16,9 @@ namespace MABMoney.Services.DTO
         public string Surname { get; set; }
         [Required]
         public string Email { get; set; }
+        [Required]
+        public string Password { get; set; }
 
-        public virtual List<AccountDTO> Accounts { get; set; }
+        public List<AccountDTO> Accounts { get; set; }
     }
 }

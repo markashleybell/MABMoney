@@ -6,6 +6,12 @@
 }
 
 <h2>@Model.Account.Name</h2>
+
+@using (Html.BeginForm("", "Home", FormMethod.Post, new { @class = "form-inline" }))
+{
+    @Html.DropDownListFor(x => x.Account_AccountID, Model.Accounts) <input type="submit" class="btn" value="Go" />
+}
+
 <p>Starting Balance: @Model.Account.StartingBalance.ToString("#0.00"), Current Balance: @Model.Account.CurrentBalance.ToString("#0.00")</p>
 
 <div class="row" id="test">

@@ -42,7 +42,9 @@ namespace MABMoney.Web
                      .RegisterType<IBudgetServices, BudgetServices>(new HttpContextLifetimeManager<BudgetServices>())
                      .RegisterType<ICategoryServices, CategoryServices>(new HttpContextLifetimeManager<CategoryServices>())
                      .RegisterType<IUnitOfWork, UnitOfWork>(new HttpContextLifetimeManager<UnitOfWork>())
-                     .RegisterType<IDataStoreFactory, DataStoreFactory>(new HttpContextLifetimeManager<DataStoreFactory>());
+                     .RegisterType<IDataStoreFactory, DataStoreFactory>(new HttpContextLifetimeManager<DataStoreFactory>())
+                     .RegisterType<ICryptoWrapper>(new InjectionFactory(c => new CryptoWrapper()))
+                     .RegisterType<HttpContextBase>(new InjectionFactory(c => new HttpContextWrapper(HttpContext.Current)));
 
             var resolver = new UnityDependencyResolver(container);
 
@@ -70,7 +72,8 @@ namespace MABMoney.Web
                 new User {
                     Forename = "Mark",
                     Surname = "Bell",
-                    Email = "me@markashleybell.com"
+                    Email = "me@markashleybell.com",
+                    Password = "ALZByiJAcShmiQpEue7DR0g+RZYSWiSXJoF3VxFck96CEhW8SZakdXaJ+1PDgqGoXw==" // test123
                 }
             };
 

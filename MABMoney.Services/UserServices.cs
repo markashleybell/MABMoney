@@ -27,12 +27,25 @@ namespace MABMoney.Services
 
         public UserDTO Get(int id)
         {
-            return _users.Get(id).MapTo<UserDTO>();
+            return MapUser(_users.Get(id));
         }
 
         public UserDTO GetByEmailAddress(string email)
         {
-            return _users.Query(x => x.Email == email).FirstOrDefault().MapTo<UserDTO>();
+            return MapUser(_users.Query(x => x.Email == email).FirstOrDefault());
+        }
+
+        private UserDTO MapUser(User user)
+        {
+            if (user == null)
+                return null;
+
+            var dto = user.MapTo<UserDTO>();
+
+            if (user.Accounts != null)
+                dto.Accounts = user.Accounts.ToList().MapToList<AccountDTO>();
+
+            return dto;
         }
 
         public void Save(UserDTO dto)
