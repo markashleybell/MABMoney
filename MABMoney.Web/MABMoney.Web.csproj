@@ -149,6 +149,7 @@
     <Compile Include="Infrastructure\CryptoWrapper.cs" />
     <Compile Include="Infrastructure\HttpContextLifetimeManager.cs" />
     <Compile Include="Infrastructure\ICryptoWrapper.cs" />
+    <Compile Include="Infrastructure\ProfileModelBinder.cs" />
     <Compile Include="Infrastructure\ServiceResolverAdapter.cs" />
     <Compile Include="Infrastructure\UnityDependencyResolver.cs" />
     <Compile Include="Models\Accounts\CreateViewModel.cs" />
@@ -171,6 +172,7 @@
     <Compile Include="Models\Users\CreateViewModel.cs" />
     <Compile Include="Models\Users\IndexViewModel.cs" />
     <Compile Include="Models\Users\LoginViewModel.cs" />
+    <Compile Include="Models\ProfileViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

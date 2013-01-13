@@ -10,6 +10,7 @@ using MABMoney.Web.Helpers;
 using mab.lib.SimpleMapper;
 using MABMoney.Services.DTO;
 using MABMoney.Web.Infrastructure;
+using MABMoney.Web.Models;
 
 namespace MABMoney.Web.Controllers
 {
@@ -28,9 +29,9 @@ namespace MABMoney.Web.Controllers
                                                               context) { }
 
         [Authenticate]
-        public ActionResult Index()
+        public ActionResult Index(ProfileViewModel profile)
         {
-            var user = _userServices.Get(Convert.ToInt32(_context.Items["UserID"]));
+            var user = _userServices.Get(profile.UserID);
 
             var account = _accountServices.Get(user.Accounts.First().AccountID);
             var transactions = _transactionServices.All().Where(x => x.Account_AccountID == account.AccountID).ToList();
@@ -47,9 +48,9 @@ namespace MABMoney.Web.Controllers
 
         [Authenticate]
         [HttpPost]
-        public ActionResult Index(int account_accountId)
+        public ActionResult Index(ProfileViewModel profile, int account_accountId)
         {
-            var user = _userServices.Get(Convert.ToInt32(_context.Items["UserID"]));
+            var user = _userServices.Get(profile.UserID);
 
             var account = _accountServices.Get(account_accountId);
             var transactions = _transactionServices.All().Where(x => x.Account_AccountID == account.AccountID).ToList();
@@ -93,9 +94,20 @@ namespace MABMoney.Web.Controllers
             var dto = model.MapTo<TransactionDTO>();
             _transactionServices.Save(dto);
 
+            ModelState.Remove("Date");
+            ModelState.Remove("Category_CategoryID");
+            ModelState.Remove("Description");
+            ModelState.Remove("Amount");
+
             // Change to show index view directly so we can return to the correct 
             // account/tab without a ton of querystring params
-            return RedirectToAction("Index");
+            return View("Index", new IndexViewModel { 
+                Account = _accountServices.Get(model.Account_AccountID),
+                Transactions = _transactionServices.All().Where(x => x.Account_AccountID == model.Account_AccountID).ToList(),
+                Categories = DataHelpers.GetCategorySelectOptions(_categoryServices),
+                Accounts = DataHelpers.GetAccountSelectOptions(_accountServices),
+                Type = model.Type
+            });
         }
     }
 }

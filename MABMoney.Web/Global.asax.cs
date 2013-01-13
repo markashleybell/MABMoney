@@ -11,6 +11,7 @@ using MABMoney.Data;
 using MABMoney.Web.Infrastructure;
 using Microsoft.Practices.Unity;
 using MABMoney.Services;
+using MABMoney.Web.Models;
 
 namespace MABMoney.Web
 {
@@ -25,6 +26,8 @@ namespace MABMoney.Web
             WebApiConfig.Register(GlobalConfiguration.Configuration);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
+
+            ModelBinders.Binders.Add(typeof(ProfileViewModel), new ProfileModelBinder());
 
             // Set up object mappings for Unity DI
             var container = new UnityContainer();

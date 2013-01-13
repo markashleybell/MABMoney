@@ -1,4 +1,5 @@
 ﻿@model MABMoney.Web.Models.Home.IndexViewModel
+@using MABMoney.Web.Models.Home
 
 @{
     ViewBag.Title = "Index";
@@ -30,8 +31,8 @@
 </div>
 
 <ul class="nav nav-tabs lge">
-  <li class="active"><a href="#income" data-toggle="tab">Income: @Model.Transactions.Where(t => t.Amount > 0).Sum(x => x.Amount)</a></li>
-  <li><a href="#expenses" data-toggle="tab">Expenses: @Model.Transactions.Where(t => t.Amount < 0).Sum(x => Math.Abs(x.Amount))</a></li>
+  <li @Html.Raw((Model.Type == TransactionType.Income) ? "class=\"active\"" : "")><a href="#income" data-toggle="tab">Income: @Model.Transactions.Where(t => t.Amount > 0).Sum(x => x.Amount)</a></li>
+  <li @Html.Raw((Model.Type == TransactionType.Expense) ? "class=\"active\"" : "")><a href="#expenses" data-toggle="tab">Expenses: @Model.Transactions.Where(t => t.Amount < 0).Sum(x => Math.Abs(x.Amount))</a></li>
 </ul>
 <div class="tab-content">
     <div class="tab-pane active" id="income">
