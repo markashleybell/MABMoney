@@ -6,6 +6,7 @@ using MABMoney.Services.DTO;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using System.ComponentModel;
+using MABMoney.Web.Models.Budgets;
 
 namespace MABMoney.Web.Models.Home
 {
@@ -27,6 +28,8 @@ namespace MABMoney.Web.Models.Home
         [DisplayName("Account")]
         public int Account_AccountID { get; set; }
         public IQueryable<SelectListItem> Accounts { get; set; }
+
+        public BudgetDTO Budget { get; set; }
 
         public IndexViewModel()
         {

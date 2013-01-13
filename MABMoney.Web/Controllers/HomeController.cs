@@ -42,7 +42,8 @@ namespace MABMoney.Web.Controllers
                 Transactions = transactions,
                 Categories = DataHelpers.GetCategorySelectOptions(_categoryServices),
                 Accounts = DataHelpers.GetAccountSelectOptions(_accountServices),
-                Type = TransactionType.Income
+                Type = TransactionType.Income,
+                Budget = _budgetServices.GetLatest(account.AccountID)
             });
         }
 
@@ -62,7 +63,8 @@ namespace MABMoney.Web.Controllers
                 Transactions = transactions,
                 Categories = DataHelpers.GetCategorySelectOptions(_categoryServices),
                 Accounts = DataHelpers.GetAccountSelectOptions(_accountServices),
-                Type = TransactionType.Income
+                Type = TransactionType.Income,
+                Budget = _budgetServices.GetLatest(account.AccountID)
             });
         }
 
@@ -106,7 +108,8 @@ namespace MABMoney.Web.Controllers
                 Transactions = _transactionServices.All().Where(x => x.Account_AccountID == model.Account_AccountID).ToList(),
                 Categories = DataHelpers.GetCategorySelectOptions(_categoryServices),
                 Accounts = DataHelpers.GetAccountSelectOptions(_accountServices),
-                Type = model.Type
+                Type = model.Type,
+                Budget = _budgetServices.GetLatest(model.Account_AccountID)
             });
         }
     }

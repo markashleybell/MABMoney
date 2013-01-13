@@ -6,16 +6,19 @@
     Layout = "~/Views/Shared/Master.cshtml";
 }
 
-<h2>@Model.Account.Name</h2>
+<div class="row">
+    <div class="span10"><h2>@Model.Account.Name</h2></div> 
+    <div class="span2"><div class="heading-mimic">@Model.Account.CurrentBalance.ToString("c")</div></div>
+</div>
 
 @using (Html.BeginForm("", "Home", FormMethod.Post, new { @class = "form-inline" }))
 {
     @Html.DropDownListFor(x => x.Account_AccountID, Model.Accounts) <input type="submit" class="btn" value="Go" />
 }
 
-<p>Starting Balance: @Model.Account.StartingBalance.ToString("#0.00"), Current Balance: @Model.Account.CurrentBalance.ToString("#0.00")</p>
+@*<p>Starting Balance: @Model.Account.StartingBalance.ToString("#0.00"), Current Balance: @Model.Account.CurrentBalance.ToString("#0.00")</p>*@
 
-<div class="row" id="test">
+@*<div class="row" id="test">
     <div class="span1">&nbsp;</div>
     <div class="span1">&nbsp;</div>
     <div class="span1">&nbsp;</div>
@@ -28,11 +31,12 @@
     <div class="span1">&nbsp;</div>
     <div class="span1">&nbsp;</div>
     <div class="span1">&nbsp;</div>
-</div>
+</div>*@
 
 <ul class="nav nav-tabs lge">
-  <li @Html.Raw((Model.Type == TransactionType.Income) ? "class=\"active\"" : "")><a href="#income" data-toggle="tab">Income: @Model.Transactions.Where(t => t.Amount > 0).Sum(x => x.Amount)</a></li>
-  <li @Html.Raw((Model.Type == TransactionType.Expense) ? "class=\"active\"" : "")><a href="#expenses" data-toggle="tab">Expenses: @Model.Transactions.Where(t => t.Amount < 0).Sum(x => Math.Abs(x.Amount))</a></li>
+    <li @Html.Raw((Model.Type == TransactionType.Income) ? "class=\"active\"" : "")><a href="#income" data-toggle="tab">Income: @Model.Transactions.Where(t => t.Amount > 0).Sum(x => x.Amount)</a></li>
+    <li @Html.Raw((Model.Type == TransactionType.Expense) ? "class=\"active\"" : "")><a href="#expenses" data-toggle="tab">Expenses: @Model.Transactions.Where(t => t.Amount < 0).Sum(x => Math.Abs(x.Amount))</a></li>
+    <li><a href="#budget" data-toggle="tab">Budget</a></li>
 </ul>
 <div class="tab-content">
     <div class="tab-pane active" id="income">
@@ -111,9 +115,25 @@
             </tbody>
         </table>
     </div>    
+    <div class="tab-pane" id="budget">
+
+        @foreach (var category in Model.Budget.Category_Budgets)
+        {
+            var percentage = (category.Total / category.Amount * 100);
+            var barwidth = Math.Abs(percentage) / 2;
+    
+            <div class="row">
+                <div class="span2"><div class="category-label">@category.Category.Name</div></div>
+                <div class="span10">
+                    <div class="category-bar @((percentage > 100) ? "over" : "")"><div class="category-stats">@((category.Total).ToString("#0.00")) of @category.Amount.ToString("#0.00") (@percentage.ToString("#0.00")%)</div><div class="category-progress" style="width: @(barwidth)%;">&nbsp;</div></div>
+                </div>
+            </div>
+        }
+
+    </div>
  </div>
 
- <div class="row" id="test">
+@* <div class="row" id="test">
     <div class="span1">&nbsp;</div>
     <div class="span1">&nbsp;</div>
     <div class="span1">&nbsp;</div>
@@ -126,4 +146,4 @@
     <div class="span1">&nbsp;</div>
     <div class="span1">&nbsp;</div>
     <div class="span1">&nbsp;</div>
-</div>
+</div>*@

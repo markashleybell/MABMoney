@@ -16,23 +16,43 @@
 .category-label { 
 	border: solid 1px #fff;
 	text-align: left;
+	padding: 10px 0;
+	margin: 5px 0;
+	font-weight: bold;
 }
 .category-bar { 
 	position: relative;
 	width: 100%;
 	float: left;
-	border: solid 1px #999;
 	background: url(/Content/Img/v-line.gif) #e0e0e0 center top no-repeat;
+	margin: 5px 0;
+	-webkit-border-radius: 5px;
+-moz-border-radius: 5px;
+border-radius: 5px;
+
+
 }
 .category-stats { 
 	position: absolute;
 	left: 0;
 	top: 0;
+	padding: 10px 12px;
+	font-weight: bold;
+}
+.over {
+	.category-progress {
+		background-color: #EB8B75;
+	}
 }
 .category-progress { 
 	display: block;
 	float: left;
-	background-color: #00ff00;
+	padding: 10px 0;
+	background-color: #5FCF59;
+	
+	-webkit-border-radius: 5px;
+-moz-border-radius: 5px;
+border-radius: 5px;
 }
 
 caption { display: none; }
@@ -69,8 +89,17 @@ caption { display: none; }
 
 .nav-tabs {
 	&.lge a { 
-		font-size: 2em; 
+		font-size: 1.7em; 
+		font-weight: bold;
 		padding: 15px 20px;
 		margin-right: 10px;
 	}
+}
+
+div.heading-mimic {
+	font-size: 31.5px;
+	line-height: 40px;
+	margin: 10px 0;
+	font-weight: bold;
+	text-align: right;
 }

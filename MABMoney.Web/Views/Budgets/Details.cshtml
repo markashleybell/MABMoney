@@ -20,7 +20,7 @@
     <div class="row-fluid">
         <div class="span3"><div class="category-label">@category.Name</div></div>
         <div class="span9">
-            <div class="category-bar"><div class="category-stats">@((category.Total).ToString("#0.00")) of @category.Amount.ToString("#0.00") (@percentage.ToString("#0.00")%)</div><div class="category-progress" style="width: @(barwidth)%;">&nbsp;</div></div>
+            <div class="category-bar @((percentage > 100) ? "over" : "")"><div class="category-stats">@((category.Total).ToString("#0.00")) of @category.Amount.ToString("#0.00") (@percentage.ToString("#0.00")%)</div><div class="category-progress" style="width: @(barwidth)%;">&nbsp;</div></div>
         </div>
     </div>
 }
