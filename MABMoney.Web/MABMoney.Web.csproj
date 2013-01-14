@@ -283,7 +283,7 @@
     <Content Include="Views\Budgets\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Content\Css\styles.less" />
+    <Content Include="Content\Css\styles.less" />
     <Content Include="Views\Transactions\Import.cshtml" />
     <Content Include="Views\Users\Login.cshtml" />
   </ItemGroup>
