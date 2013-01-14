@@ -63,7 +63,8 @@ namespace MABMoney.Web
             // the correct type
             config.DependencyResolver = resolver.ToServiceResolver();
 
-            Database.SetInitializer<DataStore>(new DbInitializer());
+            // Database.SetInitializer<DataStore>(new DbInitializer());
+            Database.SetInitializer<DataStore>(null);
         }
     }
 
