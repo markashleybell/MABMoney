@@ -43,7 +43,8 @@ namespace MABMoney.Web.Controllers
                 Categories = DataHelpers.GetCategorySelectOptions(_categoryServices),
                 Accounts = DataHelpers.GetAccountSelectOptions(_accountServices),
                 Type = TransactionType.Income,
-                Budget = _budgetServices.GetLatest(account.AccountID)
+                Budget = _budgetServices.GetLatest(account.AccountID),
+                NetWorth = _accountServices.GetNetWorth(user.UserID)
             });
         }
 
@@ -64,13 +65,14 @@ namespace MABMoney.Web.Controllers
                 Categories = DataHelpers.GetCategorySelectOptions(_categoryServices),
                 Accounts = DataHelpers.GetAccountSelectOptions(_accountServices),
                 Type = TransactionType.Income,
-                Budget = _budgetServices.GetLatest(account.AccountID)
+                Budget = _budgetServices.GetLatest(account.AccountID),
+                NetWorth = _accountServices.GetNetWorth(user.UserID)
             });
         }
 
         [Authenticate]
         [HttpPost]
-        public ActionResult CreateTransaction(IndexViewModel model)
+        public ActionResult CreateTransaction(ProfileViewModel profile, IndexViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -109,7 +111,8 @@ namespace MABMoney.Web.Controllers
                 Categories = DataHelpers.GetCategorySelectOptions(_categoryServices),
                 Accounts = DataHelpers.GetAccountSelectOptions(_accountServices),
                 Type = model.Type,
-                Budget = _budgetServices.GetLatest(model.Account_AccountID)
+                Budget = _budgetServices.GetLatest(model.Account_AccountID),
+                NetWorth = _accountServices.GetNetWorth(profile.UserID)
             });
         }
     }

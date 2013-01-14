@@ -13,12 +13,14 @@ namespace MABMoney.Services
     {
         private IRepository<Account, int> _accounts;
         private IRepository<Transaction, int> _transactions;
+        private IRepository<User, int> _users;
         private IUnitOfWork _unitOfWork;
 
-        public AccountServices(IRepository<Account, int> accounts, IRepository<Transaction, int> transactions, IUnitOfWork unitOfWork)
+        public AccountServices(IRepository<Account, int> accounts, IRepository<Transaction, int> transactions, IRepository<User, int> users, IUnitOfWork unitOfWork)
         {
             _accounts = accounts;
             _transactions = transactions;
+            _users = users;
             _unitOfWork = unitOfWork;
         }
 
@@ -57,6 +59,23 @@ namespace MABMoney.Services
         {
             _accounts.Remove(id);
             _unitOfWork.Commit();
+        }
+
+        public decimal GetNetWorth(int userId)
+        {
+            var user = _users.Get(userId);
+
+            if (user == null)
+                return 0;
+
+            var netWorth = 0M;
+
+            foreach (var account in user.Accounts)
+            {
+                netWorth += Get(account.AccountID).CurrentBalance;
+            }
+
+            return netWorth;
         }
     }
 }

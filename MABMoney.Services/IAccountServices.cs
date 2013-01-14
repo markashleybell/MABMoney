@@ -12,5 +12,7 @@ namespace MABMoney.Services
         AccountDTO Get(int id);
         void Save(AccountDTO dto);
         void Delete(int id);
+
+        decimal GetNetWorth(int userId);
     }
 }
