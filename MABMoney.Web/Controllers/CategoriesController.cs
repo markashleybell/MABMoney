@@ -9,6 +9,7 @@ using MABMoney.Services.DTO;
 using mab.lib.SimpleMapper;
 using MABMoney.Web.Helpers;
 using MABMoney.Web.Infrastructure;
+using MABMoney.Web.Models;
 
 namespace MABMoney.Web.Controllers
 {
@@ -29,17 +30,17 @@ namespace MABMoney.Web.Controllers
         //
         // GET: /Account/
         [Authenticate]
-        public ActionResult Index()
+        public ActionResult Index(ProfileViewModel profile)
         {
             return View(new IndexViewModel {
-                Categories = _categoryServices.All().ToList()
+                Categories = _categoryServices.All(profile.UserID).ToList()
             });
         }
 
         //
         // GET: /Account/Details/5
         [Authenticate]
-        public ActionResult Details(int id)
+        public ActionResult Details(ProfileViewModel profile, int id)
         {
             return View();
         }
@@ -47,10 +48,10 @@ namespace MABMoney.Web.Controllers
         //
         // GET: /Account/Create
         [Authenticate]
-        public ActionResult Create()
+        public ActionResult Create(ProfileViewModel profile)
         {
             return View(new CreateViewModel {
-                Accounts = DataHelpers.GetAccountSelectOptions(_accountServices)
+                Accounts = DataHelpers.GetAccountSelectOptions(_accountServices, profile.UserID)
             });
         }
 
@@ -58,16 +59,16 @@ namespace MABMoney.Web.Controllers
         // POST: /Account/Create
         [Authenticate]
         [HttpPost]
-        public ActionResult Create(CreateViewModel model)
+        public ActionResult Create(ProfileViewModel profile, CreateViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                model.Accounts = DataHelpers.GetAccountSelectOptions(_accountServices);
+                model.Accounts = DataHelpers.GetAccountSelectOptions(_accountServices, profile.UserID);
                 return View(model);
             }
 
             var dto = model.MapTo<CategoryDTO>();
-            _categoryServices.Save(dto);
+            _categoryServices.Save(profile.UserID, dto);
 
             return RedirectToAction("Index");
         }
@@ -75,10 +76,10 @@ namespace MABMoney.Web.Controllers
         //
         // GET: /Account/Edit/5
         [Authenticate]
-        public ActionResult Edit(int id)
+        public ActionResult Edit(ProfileViewModel profile, int id)
         {
-            var model = _categoryServices.Get(id).MapTo<EditViewModel>();
-            model.Accounts = DataHelpers.GetAccountSelectOptions(_accountServices);
+            var model = _categoryServices.Get(profile.UserID, id).MapTo<EditViewModel>();
+            model.Accounts = DataHelpers.GetAccountSelectOptions(_accountServices, profile.UserID);
             return View(model);
         }
 
@@ -86,16 +87,16 @@ namespace MABMoney.Web.Controllers
         // POST: /Account/Edit/5
         [Authenticate]
         [HttpPost]
-        public ActionResult Edit(EditViewModel model)
+        public ActionResult Edit(ProfileViewModel profile, EditViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                model.Accounts = DataHelpers.GetAccountSelectOptions(_accountServices);
+                model.Accounts = DataHelpers.GetAccountSelectOptions(_accountServices, profile.UserID);
                 return View(model);
             }
 
             var dto = model.MapTo<CategoryDTO>();
-            _categoryServices.Save(dto);
+            _categoryServices.Save(profile.UserID, dto);
 
             return RedirectToAction("Index");
         }
@@ -104,9 +105,9 @@ namespace MABMoney.Web.Controllers
         // POST: /Account/Delete/5
         [Authenticate]
         [HttpPost]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(ProfileViewModel profile, int id)
         {
-            _categoryServices.Delete(id);
+            _categoryServices.Delete(profile.UserID, id);
             return RedirectToAction("Index");
         }
     }

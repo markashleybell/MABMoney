@@ -8,6 +8,7 @@ using MABMoney.Web.Models.Accounts;
 using MABMoney.Services.DTO;
 using mab.lib.SimpleMapper;
 using MABMoney.Web.Infrastructure;
+using MABMoney.Web.Models;
 
 namespace MABMoney.Web.Controllers
 {
@@ -28,17 +29,17 @@ namespace MABMoney.Web.Controllers
         //
         // GET: /Account/
         [Authenticate]
-        public ActionResult Index()
+        public ActionResult Index(ProfileViewModel profile)
         {
             return View(new IndexViewModel {
-                Accounts = _accountServices.All().ToList()
+                Accounts = _accountServices.All(profile.UserID).ToList()
             });
         }
 
         //
         // GET: /Account/Details/5
         [Authenticate]
-        public ActionResult Details(int id)
+        public ActionResult Details(ProfileViewModel profile, int id)
         {
             return View();
         }
@@ -46,10 +47,10 @@ namespace MABMoney.Web.Controllers
         //
         // GET: /Account/Create
         [Authenticate]
-        public ActionResult Create()
+        public ActionResult Create(ProfileViewModel profile)
         {
             return View(new CreateViewModel { 
-                User_UserID = 1
+                User_UserID = profile.UserID
             });
         }
 
@@ -57,13 +58,13 @@ namespace MABMoney.Web.Controllers
         // POST: /Account/Create
         [Authenticate]
         [HttpPost]
-        public ActionResult Create(CreateViewModel model)
+        public ActionResult Create(ProfileViewModel profile, CreateViewModel model)
         {
             if (!ModelState.IsValid)
                 return View(model);
 
             var dto = model.MapTo<AccountDTO>();
-            _accountServices.Save(dto);
+            _accountServices.Save(profile.UserID, dto);
 
             return RedirectToAction("Index");
         }
@@ -71,9 +72,9 @@ namespace MABMoney.Web.Controllers
         //
         // GET: /Account/Edit/5
         [Authenticate]
-        public ActionResult Edit(int id)
+        public ActionResult Edit(ProfileViewModel profile, int id)
         {
-            var model = _accountServices.Get(id).MapTo<EditViewModel>();
+            var model = _accountServices.Get(profile.UserID, id).MapTo<EditViewModel>();
             return View(model);
         }
 
@@ -81,13 +82,13 @@ namespace MABMoney.Web.Controllers
         // POST: /Account/Edit/5
         [Authenticate]
         [HttpPost]
-        public ActionResult Edit(EditViewModel model)
+        public ActionResult Edit(ProfileViewModel profile, EditViewModel model)
         {
             if (!ModelState.IsValid)
                 return View(model);
 
             var dto = model.MapTo<AccountDTO>();
-            _accountServices.Save(dto);
+            _accountServices.Save(profile.UserID, dto);
 
             return RedirectToAction("Index");
         }
@@ -96,9 +97,9 @@ namespace MABMoney.Web.Controllers
         // POST: /Account/Delete/5
         [Authenticate]
         [HttpPost]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(ProfileViewModel profile, int id)
         {
-            _accountServices.Delete(id);
+            _accountServices.Delete(profile.UserID, id);
             return RedirectToAction("Index");
         }
     }

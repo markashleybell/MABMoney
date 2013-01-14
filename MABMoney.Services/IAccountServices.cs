@@ -8,10 +8,10 @@ namespace MABMoney.Services
 {
     public interface IAccountServices
     {
-        IEnumerable<AccountDTO> All();
-        AccountDTO Get(int id);
-        void Save(AccountDTO dto);
-        void Delete(int id);
+        IEnumerable<AccountDTO> All(int userId);
+        AccountDTO Get(int userId, int id);
+        void Save(int userId, AccountDTO dto);
+        void Delete(int userId, int id);
 
         decimal GetNetWorth(int userId);
     }

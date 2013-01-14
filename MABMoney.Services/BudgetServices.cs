@@ -12,31 +12,33 @@ namespace MABMoney.Services
     public class BudgetServices : IBudgetServices
     {
         private IRepository<Budget, int> _budgets;
+        private IRepository<Account, int> _accounts;
         private IRepository<Category_Budget, int> _categories_budgets;
         private IRepository<Transaction, int> _transactions;
         private IUnitOfWork _unitOfWork;
 
-        public BudgetServices(IRepository<Budget, int> budgets, IRepository<Category_Budget, int> categories_budgets, IRepository<Transaction, int> transactions, IUnitOfWork unitOfWork)
+        public BudgetServices(IRepository<Budget, int> budgets, IRepository<Account, int> accounts, IRepository<Category_Budget, int> categories_budgets, IRepository<Transaction, int> transactions, IUnitOfWork unitOfWork)
         {
             _budgets = budgets;
+            _accounts = accounts;
             _categories_budgets = categories_budgets;
             _transactions = transactions;
             _unitOfWork = unitOfWork;
         }
 
-        public IEnumerable<BudgetDTO> All()
+        public IEnumerable<BudgetDTO> All(int userId)
         {
-            return _budgets.All().ToList().MapToList<BudgetDTO>();
+            return _budgets.Query(x => x.Account.User_UserID == userId).ToList().MapToList<BudgetDTO>();
         }
 
-        public BudgetDTO Get(int id)
+        public BudgetDTO Get(int userId, int id)
         {
-            return MapBudget(_budgets.Get(id));
+            return MapBudget(_budgets.Query(x => x.Account.User_UserID == userId && x.BudgetID == id).FirstOrDefault());
         }
 
-        public BudgetDTO GetLatest(int accountId)
+        public BudgetDTO GetLatest(int userId, int accountId)
         {
-            return MapBudget(_budgets.Query(x => x.Account_AccountID == accountId).OrderByDescending(x => x.BudgetID).FirstOrDefault());
+            return MapBudget(_budgets.Query(x => x.Account.User_UserID == userId && x.Account_AccountID == accountId).OrderByDescending(x => x.BudgetID).FirstOrDefault());
         }
 
         private BudgetDTO MapBudget(Budget budget)
@@ -64,32 +66,42 @@ namespace MABMoney.Services
             return dto;
         }
 
-        public void Save(BudgetDTO dto)
+        public void Save(int userId, BudgetDTO dto)
         {
-            if (dto.BudgetID == 0)
+            var account = _accounts.Get(dto.Account_AccountID);
+
+            if(account != null && account.User_UserID == userId)
             {
-                var entity = dto.MapTo<Budget>();
-                _budgets.Add(entity);
-                _unitOfWork.Commit();
-                dto.BudgetID = entity.BudgetID;
+                if (dto.BudgetID == 0)
+                {
+                    var entity = dto.MapTo<Budget>();
+                    _budgets.Add(entity);
+                    _unitOfWork.Commit();
+                    dto.BudgetID = entity.BudgetID;
+                }
+                else
+                {
+                    var entity = _budgets.Get(dto.BudgetID);
+                    dto.MapTo(entity);
+                    _unitOfWork.Commit();
+                }
             }
-            else
+        }
+
+        public void Delete(int userId, int id)
+        {
+            var budget = _budgets.Query(x => x.Account.User_UserID == userId && x.BudgetID == id).FirstOrDefault();
+
+            if(budget != null)
             {
-                var entity = _budgets.Get(dto.BudgetID);
-                dto.MapTo(entity);
+                _budgets.Remove(id);
                 _unitOfWork.Commit();
             }
         }
 
-        public void Delete(int id)
+        public void SaveCategoryBudget(int userId, Category_BudgetDTO dto)
         {
-            _budgets.Remove(id);
-            _unitOfWork.Commit();
-        }
-
-        public void SaveCategoryBudget(Category_BudgetDTO dto)
-        {
-            var entity = _categories_budgets.Query(x => x.Budget_BudgetID == dto.Budget_BudgetID && x.Category_CategoryID == dto.Category_CategoryID)
+            var entity = _categories_budgets.Query(x => x.Budget.Account.User_UserID == userId && x.Budget_BudgetID == dto.Budget_BudgetID && x.Category_CategoryID == dto.Category_CategoryID)
                                             .FirstOrDefault();
 
             if (entity == null)
@@ -105,10 +117,9 @@ namespace MABMoney.Services
             _unitOfWork.Commit();
         }
 
-        public void DeleteCategoryBudget(int id)
+        public void DeleteCategoryBudget(int userId, int id)
         {
-            _categories_budgets.Remove(id);
-            _unitOfWork.Commit();
+            throw new NotImplementedException();
         }
     }
 }

@@ -8,9 +8,9 @@ namespace MABMoney.Services
 {
     public interface ICategoryServices
     {
-        IEnumerable<CategoryDTO> All();
-        CategoryDTO Get(int id);
-        void Save(CategoryDTO dto);
-        void Delete(int id);
+        IEnumerable<CategoryDTO> All(int userId);
+        CategoryDTO Get(int userId, int id);
+        void Save(int userId, CategoryDTO dto);
+        void Delete(int userId, int id);
     }
 }

@@ -12,45 +12,57 @@ namespace MABMoney.Services
     public class CategoryServices : ICategoryServices
     {
         private IRepository<Category, int> _categories;
+        private IRepository<Account, int> _accounts;
         private IUnitOfWork _unitOfWork;
 
-        public CategoryServices(IRepository<Category, int> categories, IUnitOfWork unitOfWork)
+        public CategoryServices(IRepository<Category, int> categories, IRepository<Account, int> accounts, IUnitOfWork unitOfWork)
         {
             _categories = categories;
+            _accounts = accounts;
             _unitOfWork = unitOfWork;
         }
 
-        public IEnumerable<CategoryDTO> All()
+        public IEnumerable<CategoryDTO> All(int userId)
         {
-            return _categories.All().ToList().MapToList<CategoryDTO>();
+            return _categories.Query(x => x.Account.User_UserID == userId).ToList().MapToList<CategoryDTO>();
         }
 
-        public CategoryDTO Get(int id)
+        public CategoryDTO Get(int userId, int id)
         {
-            return _categories.Get(id).MapTo<CategoryDTO>();
+            return _categories.Query(x => x.Account.User_UserID == userId && x.CategoryID == id).MapTo<CategoryDTO>();
         }
 
-        public void Save(CategoryDTO dto)
+        public void Save(int userId, CategoryDTO dto)
         {
-            if (dto.CategoryID == 0)
+            var account = _accounts.Get(dto.Account_AccountID);
+
+            if(account != null && account.User_UserID == userId)
             {
-                var entity = dto.MapTo<Category>();
-                _categories.Add(entity);
-                _unitOfWork.Commit();
-                dto.CategoryID = entity.CategoryID;
-            }
-            else
-            {
-                var entity = _categories.Get(dto.CategoryID);
-                dto.MapTo(entity);
-                _unitOfWork.Commit();
+                if (dto.CategoryID == 0)
+                {
+                    var entity = dto.MapTo<Category>();
+                    _categories.Add(entity);
+                    _unitOfWork.Commit();
+                    dto.CategoryID = entity.CategoryID;
+                }
+                else
+                {
+                    var entity = _categories.Get(dto.CategoryID);
+                    dto.MapTo(entity);
+                    _unitOfWork.Commit();
+                }
             }
         }
 
-        public void Delete(int id)
+        public void Delete(int userId, int id)
         {
-            _categories.Remove(id);
-            _unitOfWork.Commit();
+            var category = _categories.Query(x => x.Account.User_UserID == userId && x.CategoryID == id).FirstOrDefault();
+
+            if(category != null)
+            {
+                _categories.Remove(id);
+                _unitOfWork.Commit();
+            }
         }
     }
 }

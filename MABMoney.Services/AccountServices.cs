@@ -24,41 +24,49 @@ namespace MABMoney.Services
             _unitOfWork = unitOfWork;
         }
 
-        public IEnumerable<AccountDTO> All()
+        public IEnumerable<AccountDTO> All(int userId)
         {
-            return _accounts.All().ToList().MapToList<AccountDTO>();
+            return _accounts.Query(x => x.User_UserID == userId).ToList().MapToList<AccountDTO>();
         }
 
-        public AccountDTO Get(int id)
+        public AccountDTO Get(int userId, int id)
         {
-            var dto = _accounts.Get(id).MapTo<AccountDTO>();
+            var dto = _accounts.Query(x => x.User_UserID == userId && x.AccountID == id).FirstOrDefault().MapTo<AccountDTO>();
             var transactions = _transactions.Query(x => x.Account_AccountID == dto.AccountID).ToList();
             dto.CurrentBalance = dto.StartingBalance + transactions.Sum(x => x.Amount);
 
             return dto;
         }
 
-        public void Save(AccountDTO dto)
+        public void Save(int userId, AccountDTO dto)
         {
-            if (dto.AccountID == 0)
+            if(userId == dto.User_UserID)
             {
-                var entity = dto.MapTo<Account>();
-                _accounts.Add(entity);
-                _unitOfWork.Commit();
-                dto.AccountID = entity.AccountID;
-            }
-            else
-            {
-                var entity = _accounts.Get(dto.AccountID);
-                dto.MapTo(entity);
-                _unitOfWork.Commit();
+                if (dto.AccountID == 0)
+                {
+                    var entity = dto.MapTo<Account>();
+                    _accounts.Add(entity);
+                    _unitOfWork.Commit();
+                    dto.AccountID = entity.AccountID;
+                }
+                else
+                {
+                    var entity = _accounts.Get(dto.AccountID);
+                    dto.MapTo(entity);
+                    _unitOfWork.Commit();
+                }
             }
         }
 
-        public void Delete(int id)
+        public void Delete(int userId, int id)
         {
-            _accounts.Remove(id);
-            _unitOfWork.Commit();
+            var account = _accounts.Query(x => x.User_UserID == userId && x.AccountID == id).FirstOrDefault();
+
+            if(account != null)
+            {
+                _accounts.Remove(id);
+                _unitOfWork.Commit();
+            }
         }
 
         public decimal GetNetWorth(int userId)
@@ -72,7 +80,7 @@ namespace MABMoney.Services
 
             foreach (var account in user.Accounts)
             {
-                netWorth += Get(account.AccountID).CurrentBalance;
+                netWorth += Get(userId, account.AccountID).CurrentBalance;
             }
 
             return netWorth;
