@@ -29,7 +29,7 @@ namespace MABMoney.Services
 
         public CategoryDTO Get(int userId, int id)
         {
-            return _categories.Query(x => x.Account.User_UserID == userId && x.CategoryID == id).MapTo<CategoryDTO>();
+            return _categories.Query(x => x.Account.User_UserID == userId && x.CategoryID == id).FirstOrDefault().MapTo<CategoryDTO>();
         }
 
         public void Save(int userId, CategoryDTO dto)

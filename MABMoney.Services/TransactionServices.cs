@@ -29,7 +29,7 @@ namespace MABMoney.Services
 
         public TransactionDTO Get(int userId, int id)
         {
-            return _transactions.Query(x => x.Account.User_UserID == userId && x.TransactionID == id).MapTo<TransactionDTO>();
+            return _transactions.Query(x => x.Account.User_UserID == userId && x.TransactionID == id).FirstOrDefault().MapTo<TransactionDTO>();
         }
 
         public void Save(int userId, TransactionDTO dto)
