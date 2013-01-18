@@ -24,13 +24,14 @@ namespace MABMoney.Tests
         private IBudgetServices _budgetServices;
         private HttpContextBase _context;
         private ICryptoWrapper _crypto;
+        private ISiteConfiguration _config;
+        private HttpCookieCollection _cookies;
+        private HttpResponseBase _response;
 
         [SetUp]
         public void SetUp()
         {
-            _userServices = MockRepository.GenerateStub<IUserServices>();
-
-            _userServices.Stub(x => x.All()).Return(new List<UserDTO> {
+            var users = new List<UserDTO> {
                 new UserDTO { 
                     UserID = 1,
                     Forename = "Bob",
@@ -45,20 +46,40 @@ namespace MABMoney.Tests
                     Email = "jane@jane.com",
                     Password = "yyyyy"
                 }
-            });
+            };
+
+            _userServices = MockRepository.GenerateStub<IUserServices>();
+            _userServices.Stub(x => x.All()).Return(users);
+            _userServices.Stub(x => x.Get(1)).Return(users[0]);
+            _userServices.Stub(x => x.GetByEmailAddress("jane@jane.com")).Return(users[1]);
 
             _accountServices = MockRepository.GenerateStub<IAccountServices>();
             _categoryServices = MockRepository.GenerateStub<ICategoryServices>();
             _transactionServices = MockRepository.GenerateStub<ITransactionServices>();
             _budgetServices = MockRepository.GenerateStub<IBudgetServices>();
             _context = MockRepository.GenerateStub<HttpContextBase>();
+
+            
+
+
+            _cookies = new HttpCookieCollection();
+
+            _context.Stub(x => x.Response.Cookies).Return(_cookies);
+
+
             _crypto = MockRepository.GenerateStub<ICryptoWrapper>();
+
+            _crypto.Stub(x => x.VerifyHashedPassword("yyyyy", "test123")).Return(true);
+
+            _config = MockRepository.GenerateStub<ISiteConfiguration>();
+
+            _config.Stub(x => x.SharedSecret).Return("SHAREDSECRET");
         }    
 
         [Test]
-        public void Index()
+        public void Index_Get()
         {
-            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, null);
+            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _crypto);
 
             var result = controller.Index() as ViewResult;
             
@@ -78,6 +99,138 @@ namespace MABMoney.Tests
             Assert.AreEqual("Smith", model.Users[1].Surname);
             Assert.AreEqual("jane@jane.com", model.Users[1].Email);
             Assert.AreEqual("yyyyy", model.Users[1].Password);
+        }
+
+        [Test]
+        public void Details_Get()
+        {
+            throw new NotImplementedException();
+        }
+
+        [Test]
+        public void Create_Get()
+        {
+            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _crypto);
+
+            var result = controller.Create() as ViewResult;
+
+            Assert.NotNull(result);
+
+            var model = result.Model as CreateViewModel;
+
+            Assert.NotNull(model);
+            Assert.AreEqual(null, model.Forename);
+            Assert.AreEqual(null, model.Surname);
+            Assert.AreEqual(null, model.Email);
+        }
+
+        [Test]
+        public void Create_Post()
+        {
+            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _crypto);
+
+            var model = new CreateViewModel {
+                Forename = "Test",
+                Surname = "User",
+                Email = "test@test.com"
+            };
+
+            var result = controller.Create(model) as RedirectToRouteResult;
+            
+            _userServices.AssertWasCalled(x => x.Save(Arg<UserDTO>.Matches(o => o.Forename == "Test" && o.Surname == "User" && o.Email == "test@test.com")));
+
+            Assert.NotNull(result);
+        }
+
+        [Test]
+        public void Edit_Get()
+        {
+            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _crypto);
+
+            var result = controller.Edit(1) as ViewResult;
+
+            Assert.NotNull(result);
+
+            var model = result.Model as EditViewModel;
+
+            Assert.NotNull(model);
+            Assert.AreEqual("Bob", model.Forename);
+            Assert.AreEqual("Jones", model.Surname);
+            Assert.AreEqual("bob@bob.com", model.Email);
+        }
+
+        [Test]
+        public void Edit_Post()
+        {
+            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _crypto);
+
+            var model = new EditViewModel {
+                UserID = 1,
+                Forename = "Test",
+                Surname = "User",
+                Email = "test@test.com"
+            };
+
+            var result = controller.Edit(model) as RedirectToRouteResult;
+            
+            _userServices.AssertWasCalled(x => x.Save(Arg<UserDTO>.Matches(o => o.Forename == "Test" && o.Surname == "User" && o.Email == "test@test.com")));
+
+            Assert.NotNull(result);
+        }
+
+        [Test]
+        public void Delete_Post()
+        {
+            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _crypto);
+
+            var result = controller.Delete(2) as RedirectToRouteResult;
+            
+            _userServices.AssertWasCalled(x => x.Delete(Arg<int>.Is.Equal(2)));
+
+            Assert.NotNull(result);
+        }
+
+        [Test]
+        public void Login_Get()
+        {
+            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _crypto);
+
+            var result = controller.Login() as ViewResult;
+
+            Assert.NotNull(result);
+
+            var model = result.Model as LoginViewModel;
+
+            Assert.NotNull(model);
+            Assert.AreEqual(null, model.Email);
+            Assert.AreEqual(null, model.Password);
+        }
+
+        [Test]
+        public void Login_Post()
+        {
+            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _crypto);
+
+            var model = new LoginViewModel {
+                Email = "jane@jane.com",
+                Password = "test123"
+            };
+
+            var result = controller.Login(model) as RedirectToRouteResult;
+            
+            _userServices.AssertWasCalled(x => x.GetByEmailAddress(model.Email));
+
+            _crypto.AssertWasCalled(x => x.VerifyHashedPassword("yyyyy", model.Password));
+
+            Assert.AreEqual(_context.Response.Cookies[0].Name, "UserID");
+
+            Assert.NotNull(result);
+        }
+
+        [Test]
+        public void Logout_Get()
+        {
+            throw new NotImplementedException();
         }
     }
 }

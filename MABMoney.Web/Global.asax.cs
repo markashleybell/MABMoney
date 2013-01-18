@@ -12,6 +12,7 @@ using MABMoney.Web.Infrastructure;
 using Microsoft.Practices.Unity;
 using MABMoney.Services;
 using MABMoney.Web.Models;
+using System.Configuration;
 
 namespace MABMoney.Web
 {
@@ -47,7 +48,8 @@ namespace MABMoney.Web
                      .RegisterType<IUnitOfWork, UnitOfWork>(new HttpContextLifetimeManager<UnitOfWork>())
                      .RegisterType<IDataStoreFactory, DataStoreFactory>(new HttpContextLifetimeManager<DataStoreFactory>())
                      .RegisterType<ICryptoWrapper>(new InjectionFactory(c => new CryptoWrapper()))
-                     .RegisterType<HttpContextBase>(new InjectionFactory(c => new HttpContextWrapper(HttpContext.Current)));
+                     .RegisterType<HttpContextBase>(new InjectionFactory(c => new HttpContextWrapper(HttpContext.Current)))
+                     .RegisterType<ISiteConfiguration>(new InjectionFactory(c => new SiteConfiguration(ConfigurationManager.AppSettings["SharedSecret"])));
 
             var resolver = new UnityDependencyResolver(container);
 

@@ -23,12 +23,14 @@ namespace MABMoney.Web.Controllers
                                ITransactionServices transactionServices,
                                IBudgetServices budgetServices,
                                HttpContextBase context,
+                               ISiteConfiguration config,
                                ICryptoWrapper crypto) : base(userServices,
-                                                               accountServices,
-                                                               categoryServices,
-                                                               transactionServices, 
-                                                               budgetServices,
-                                                               context) 
+                                                             accountServices,
+                                                             categoryServices,
+                                                             transactionServices, 
+                                                             budgetServices,
+                                                             context,
+                                                             config) 
         {
             _crypto = crypto;
         }
@@ -110,10 +112,7 @@ namespace MABMoney.Web.Controllers
 
         public ActionResult Login()
         {
-            return View(new LoginViewModel { 
-                Email = "me@markashleybell.com",
-                Password = "test123"
-            });
+            return View(new LoginViewModel());
         }
 
         [HttpPost]
@@ -129,7 +128,7 @@ namespace MABMoney.Web.Controllers
                 return View(model);
 
             // Encrypt the ID before storing it in a cookie
-            var encryptedUserId = EncryptionHelpers.EncryptStringAES(user.UserID.ToString(), ConfigurationManager.AppSettings["SharedSecret"]);
+            var encryptedUserId = EncryptionHelpers.EncryptStringAES(user.UserID.ToString(), _config.SharedSecret);
             _context.Response.Cookies.Add(new HttpCookie("UserID", encryptedUserId));
 
             return RedirectToAction("Index", "Home");

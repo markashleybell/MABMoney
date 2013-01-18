@@ -149,8 +149,10 @@
     <Compile Include="Infrastructure\CryptoWrapper.cs" />
     <Compile Include="Infrastructure\HttpContextLifetimeManager.cs" />
     <Compile Include="Infrastructure\ICryptoWrapper.cs" />
+    <Compile Include="Infrastructure\ISiteConfiguration.cs" />
     <Compile Include="Infrastructure\ProfileModelBinder.cs" />
     <Compile Include="Infrastructure\ServiceResolverAdapter.cs" />
+    <Compile Include="Infrastructure\SiteConfiguration.cs" />
     <Compile Include="Infrastructure\UnityDependencyResolver.cs" />
     <Compile Include="Models\Accounts\CreateViewModel.cs" />
     <Compile Include="Models\Accounts\EditViewModel.cs" />

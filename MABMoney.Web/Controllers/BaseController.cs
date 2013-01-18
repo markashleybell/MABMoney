@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using MABMoney.Services;
+using MABMoney.Web.Infrastructure;
 
 namespace MABMoney.Web.Controllers
 {
@@ -15,13 +16,15 @@ namespace MABMoney.Web.Controllers
         protected ITransactionServices _transactionServices;
         protected IBudgetServices _budgetServices;
         protected HttpContextBase _context;
+        protected ISiteConfiguration _config;
 
         public BaseController(IUserServices userServices,
                               IAccountServices accountServices,
                               ICategoryServices categoryServices,
                               ITransactionServices transactionServices,
                               IBudgetServices budgetServices,
-                              HttpContextBase context)
+                              HttpContextBase context,
+                              ISiteConfiguration config)
         {
             _userServices = userServices;
             _accountServices = accountServices;
@@ -29,6 +32,7 @@ namespace MABMoney.Web.Controllers
             _transactionServices = transactionServices;
             _budgetServices = budgetServices;
             _context = context;
+            _config = config;
         }
 
     }
