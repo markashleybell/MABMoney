@@ -10,8 +10,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MABMoney.Services</RootNamespace>
     <AssemblyName>MABMoney.Services</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,10 +31,12 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="mab.lib.SimpleMapper">
-      <HintPath>..\packages\mab.lib.SimpleMapper.2.0.0.0\lib\mab.lib.SimpleMapper.dll</HintPath>
+    <Reference Include="mab.lib.SimpleMapper, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\mab.lib.SimpleMapper.3.1.0.0\lib\mab.lib.SimpleMapper.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -47,6 +51,7 @@
     <Compile Include="AccountServices.cs" />
     <Compile Include="BudgetServices.cs" />
     <Compile Include="CategoryServices.cs" />
+    <Compile Include="DTO\CategoryTypeDTO.cs" />
     <Compile Include="DTO\Category_BudgetDTO.cs" />
     <Compile Include="TransactionServices.cs" />
     <Compile Include="DTO\AccountDTO.cs" />

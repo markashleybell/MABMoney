@@ -2,14 +2,14 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>mab.lib.SimpleMapper</id>
-    <version>2.0.0.0</version>
+    <version>3.1.0.0</version>
     <title />
     <authors>Mark Bell</authors>
     <owners>Mark Bell</owners>
-    <licenseUrl>http://opensource.org/licenses/ms-pl.html</licenseUrl>
-    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>A simple object mapping library</description>
-    <releaseNotes>Support for prefixed properties to avoid property name clashes when flattening multiple entities out into view models</releaseNotes>
+    <releaseNotes>Completely rewritten to allow custom mappings, support for enum properties</releaseNotes>
     <references>
       <reference file="mab.lib.SimpleMapper.dll" />
     </references>

@@ -26,7 +26,6 @@ namespace MABMoney.Tests
         private ICryptoWrapper _crypto;
         private ISiteConfiguration _config;
         private HttpCookieCollection _cookies;
-        private HttpResponseBase _response;
 
         [SetUp]
         public void SetUp()
@@ -59,13 +58,8 @@ namespace MABMoney.Tests
             _budgetServices = MockRepository.GenerateStub<IBudgetServices>();
             _context = MockRepository.GenerateStub<HttpContextBase>();
 
-            
-
-
             _cookies = new HttpCookieCollection();
-
             _context.Stub(x => x.Response.Cookies).Return(_cookies);
-
 
             _crypto = MockRepository.GenerateStub<ICryptoWrapper>();
 

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using MABMoney.Services;
+using MABMoney.Services.DTO;
 
 namespace MABMoney.Web.Helpers
 {
@@ -21,6 +22,17 @@ namespace MABMoney.Web.Helpers
         public static IQueryable<SelectListItem> GetCategorySelectOptions(ICategoryServices categoryServices, int userId)
         {
             return categoryServices.All(userId)
+                                   .Select(x => new SelectListItem
+                                   {
+                                       Value = x.CategoryID.ToString(),
+                                       Text = x.Name
+                                   }).AsQueryable();
+        }
+
+        public static IQueryable<SelectListItem> GetCategorySelectOptions(ICategoryServices categoryServices, int userId, CategoryTypeDTO type)
+        {
+            return categoryServices.All(userId)
+                                   .Where(x => x.Type == type)
                                    .Select(x => new SelectListItem {
                                        Value = x.CategoryID.ToString(),
                                        Text = x.Name

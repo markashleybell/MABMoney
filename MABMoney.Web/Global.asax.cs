@@ -65,8 +65,10 @@ namespace MABMoney.Web
             // the correct type
             config.DependencyResolver = resolver.ToServiceResolver();
 
-            // Database.SetInitializer<DataStore>(new DbInitializer());
-            Database.SetInitializer<DataStore>(null);
+            if (Convert.ToBoolean(ConfigurationManager.AppSettings["RegenerateDb"]))
+                Database.SetInitializer<DataStore>(new DbInitializer());
+            else
+                Database.SetInitializer<DataStore>(null);
         }
     }
 
@@ -110,15 +112,23 @@ namespace MABMoney.Web
             var categories = new List<Category> {
                 new Category {
                     Account = accounts[0],
-                    Name = "Rent"
+                    Name = "Salary",
+                    Type = CategoryType.Income
                 },
                 new Category {
                     Account = accounts[0],
-                    Name = "Food"
+                    Name = "Rent",
+                    Type = CategoryType.Expense
                 },
                 new Category {
                     Account = accounts[0],
-                    Name = "Fuel"
+                    Name = "Food",
+                    Type = CategoryType.Expense
+                },
+                new Category {
+                    Account = accounts[0],
+                    Name = "Fuel",
+                    Type = CategoryType.Expense
                 }
             };
 

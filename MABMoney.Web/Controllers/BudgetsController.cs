@@ -64,7 +64,7 @@ namespace MABMoney.Web.Controllers
         {
             return View(new CreateViewModel {
                 Accounts = DataHelpers.GetAccountSelectOptions(_accountServices, profile.UserID),
-                Categories = _categoryServices.All(profile.UserID).ToList().Select(x => new Category_BudgetViewModel { 
+                Categories = _categoryServices.All(profile.UserID).Where(x => x.Type == CategoryTypeDTO.Expense).ToList().Select(x => new Category_BudgetViewModel { 
                     Category_CategoryID = x.CategoryID,
                     Name = x.Name
                 }).ToList()

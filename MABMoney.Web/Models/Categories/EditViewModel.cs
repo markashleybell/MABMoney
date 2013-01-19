@@ -5,6 +5,7 @@ using System.Web;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using System.ComponentModel;
+using MABMoney.Services.DTO;
 
 namespace MABMoney.Web.Models.Categories
 {
@@ -19,5 +20,7 @@ namespace MABMoney.Web.Models.Categories
         [DisplayName("Account")]
         public int Account_AccountID { get; set; }
         public IQueryable<SelectListItem> Accounts { get; set; }
+        [Required]
+        public CategoryTypeDTO Type { get; set; }
     }
 }

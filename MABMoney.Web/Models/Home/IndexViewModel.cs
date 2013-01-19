@@ -24,7 +24,8 @@ namespace MABMoney.Web.Models.Home
         public decimal Amount { get; set; }
         [DisplayName("Category")]
         public int? Category_CategoryID { get; set; }
-        public IQueryable<SelectListItem> Categories { get; set; }
+        public IQueryable<SelectListItem> IncomeCategories { get; set; }
+        public IQueryable<SelectListItem> ExpenseCategories { get; set; }
         [DisplayName("Account")]
         public int Account_AccountID { get; set; }
         public IQueryable<SelectListItem> Accounts { get; set; }
