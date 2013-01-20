@@ -48,7 +48,7 @@
     </Reference>
     <Reference Include="mab.lib.SimpleMapper, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\mab.lib.SimpleMapper.3.1.0.0\lib\mab.lib.SimpleMapper.dll</HintPath>
+      <HintPath>..\packages\mab.lib.SimpleMapper.3.2.0.0\lib\mab.lib.SimpleMapper.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Practices.ServiceLocation">

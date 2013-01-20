@@ -2,14 +2,16 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>mab.lib.SimpleMapper</id>
-    <version>3.1.0.0</version>
+    <version>3.2.0.0</version>
     <title />
     <authors>Mark Bell</authors>
     <owners>Mark Bell</owners>
     <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>A simple object mapping library</description>
-    <releaseNotes>Completely rewritten to allow custom mappings, support for enum properties</releaseNotes>
+    <releaseNotes>3.0.0.0: Completely rewritten to allow custom mappings. 
+3.1.0.0: Support for enum properties
+3.2.0.0: Support for EF dynamic proxy mappings</releaseNotes>
     <references>
       <reference file="mab.lib.SimpleMapper.dll" />
     </references>

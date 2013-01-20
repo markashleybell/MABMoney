@@ -15,6 +15,8 @@ using MABMoney.Web.Models;
 using System.Configuration;
 using StackExchange.Profiling;
 using MABMoney.Web.Helpers;
+using mab.lib.SimpleMapper;
+using MABMoney.Services.DTO;
 
 namespace MABMoney.Web
 {
@@ -74,6 +76,12 @@ namespace MABMoney.Web
                 Database.SetInitializer<DataStore>(null);
 
             // MiniProfilerEF.Initialize();
+
+            //Mapper.AddMapping<User, UserDTO>((s, d) => {
+            //    d.UserID = s.UserID;
+            //    d.Forename = "MAPPED!!!!";
+            //    d.Accounts = s.Accounts.ToList().MapToList<AccountDTO>();
+            //});
         }
     }
 
