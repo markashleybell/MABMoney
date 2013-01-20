@@ -13,7 +13,7 @@ namespace MABMoney.Domain
         public int LastModifiedBy { get; set; }
         public DateTime LastModifiedDate { get; set; }
         public bool Deleted { get; set; }
-        public int DeletedBy { get; set; }
+        public int? DeletedBy { get; set; }
         public DateTime? DeletedDate { get; set; }
     }
 }
