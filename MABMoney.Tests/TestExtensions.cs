@@ -13,5 +13,10 @@ namespace MABMoney.Tests
         {
             Assert.AreEqual(expectedValue, actualValue);
         }
+
+        public static void ShouldNotBeNull(this object obj)
+        {
+            Assert.NotNull(obj);
+        }
     }
 }
