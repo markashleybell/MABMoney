@@ -13,6 +13,7 @@ using Microsoft.Practices.Unity;
 using MABMoney.Services;
 using MABMoney.Web.Models;
 using System.Configuration;
+using StackExchange.Profiling;
 
 namespace MABMoney.Web
 {
@@ -69,6 +70,8 @@ namespace MABMoney.Web
                 Database.SetInitializer<DataStore>(new DbInitializer());
             else
                 Database.SetInitializer<DataStore>(null);
+
+            MiniProfilerEF.Initialize();
         }
     }
 
