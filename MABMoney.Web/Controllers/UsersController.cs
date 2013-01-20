@@ -46,14 +46,6 @@ namespace MABMoney.Web.Controllers
         }
 
         //
-        // GET: /Users/Details/5
-        [Authenticate]
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        //
         // GET: /Users/Create
         [Authenticate]
         public ActionResult Create()

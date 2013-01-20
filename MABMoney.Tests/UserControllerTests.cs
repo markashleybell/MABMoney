@@ -96,12 +96,6 @@ namespace MABMoney.Tests
         }
 
         [Test]
-        public void Details_Get()
-        {
-            throw new NotImplementedException();
-        }
-
-        [Test]
         public void Create_Get()
         {
             var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _crypto);
@@ -216,7 +210,7 @@ namespace MABMoney.Tests
 
             _crypto.AssertWasCalled(x => x.VerifyHashedPassword("yyyyy", model.Password));
 
-            Assert.AreEqual(_context.Response.Cookies[0].Name, "UserID");
+            Assert.AreEqual("UserID", _context.Response.Cookies[0].Name);
 
             Assert.NotNull(result);
         }
@@ -224,7 +218,14 @@ namespace MABMoney.Tests
         [Test]
         public void Logout_Get()
         {
-            throw new NotImplementedException();
+            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _crypto);
+
+            var result = controller.Logout() as RedirectToRouteResult;
+
+            Assert.AreEqual("UserID", _context.Response.Cookies[0].Name);
+            Assert.Greater(DateTime.Now, _context.Response.Cookies[0].Expires);
+
+            Assert.NotNull(result);
         }
     }
 }
