@@ -29,12 +29,12 @@ namespace MABMoney.Services
                     {
                         TransactionID = t.TransactionID,
                         Account_AccountID = t.Account_AccountID,
+                        Date = t.Date,
                         Amount = t.Amount,
                         Description = t.Description,
                         Category_CategoryID = t.Category_CategoryID,
                         Category = new CategoryDTO { 
-                            CategoryID = t.Category.CategoryID,
-                            Name = t.Category.Name
+                            Name = (t.Category != null) ? t.Category.Name : null
                         }
                     }).ToList();
 
