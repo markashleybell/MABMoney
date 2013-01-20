@@ -24,7 +24,21 @@ namespace MABMoney.Services
 
         public IEnumerable<TransactionDTO> All(int userId)
         {
-            return _transactions.Query(x => x.Account.User_UserID == userId).ToList().MapToList<TransactionDTO>();
+            return (from t in _transactions.Query(x => x.Account.User_UserID == userId)
+                    select new TransactionDTO
+                    {
+                        TransactionID = t.TransactionID,
+                        Account_AccountID = t.Account_AccountID,
+                        Amount = t.Amount,
+                        Description = t.Description,
+                        Category_CategoryID = t.Category_CategoryID,
+                        Category = new CategoryDTO { 
+                            CategoryID = t.Category.CategoryID,
+                            Name = t.Category.Name
+                        }
+                    }).ToList();
+
+            // return _transactions.Query(x => x.Account.User_UserID == userId).ToList().MapToList<TransactionDTO>();
         }
 
         public TransactionDTO Get(int userId, int id)
