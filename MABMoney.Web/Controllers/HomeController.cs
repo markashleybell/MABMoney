@@ -42,8 +42,8 @@ namespace MABMoney.Web.Controllers
                 Account = account,
                 Account_AccountID = account.AccountID,
                 Transactions = transactions,
-                IncomeCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, profile.UserID, CategoryTypeDTO.Income),
-                ExpenseCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, profile.UserID, CategoryTypeDTO.Expense),
+                IncomeCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, profile.UserID, account.AccountID, CategoryTypeDTO.Income),
+                ExpenseCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, profile.UserID, account.AccountID, CategoryTypeDTO.Expense),
                 Accounts = DataHelpers.GetAccountSelectOptions(_accountServices, profile.UserID),
                 Type = TransactionType.Income,
                 Budget = _budgetServices.GetLatest(profile.UserID, account.AccountID),
@@ -65,8 +65,8 @@ namespace MABMoney.Web.Controllers
                 Account = account,
                 Account_AccountID = account.AccountID,
                 Transactions = transactions,
-                IncomeCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, profile.UserID, CategoryTypeDTO.Income),
-                ExpenseCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, profile.UserID, CategoryTypeDTO.Expense),
+                IncomeCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, profile.UserID, account.AccountID, CategoryTypeDTO.Income),
+                ExpenseCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, profile.UserID, account.AccountID, CategoryTypeDTO.Expense),
                 Accounts = DataHelpers.GetAccountSelectOptions(_accountServices, profile.UserID),
                 Type = TransactionType.Income,
                 Budget = _budgetServices.GetLatest(profile.UserID, account.AccountID),
@@ -82,8 +82,8 @@ namespace MABMoney.Web.Controllers
             {
                 model.Account = _accountServices.Get(profile.UserID, model.Account_AccountID);
                 model.Transactions = _transactionServices.All(profile.UserID).Where(x => x.Account_AccountID == model.Account_AccountID).ToList();
-                model.IncomeCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, profile.UserID, CategoryTypeDTO.Income);
-                model.ExpenseCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, profile.UserID, CategoryTypeDTO.Expense);
+                model.IncomeCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, profile.UserID, model.Account_AccountID, CategoryTypeDTO.Income);
+                model.ExpenseCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, profile.UserID, model.Account_AccountID, CategoryTypeDTO.Expense);
                 model.Accounts = DataHelpers.GetAccountSelectOptions(_accountServices, profile.UserID);
                 return View("Index", model);
             }
@@ -113,8 +113,8 @@ namespace MABMoney.Web.Controllers
             return View("Index", new IndexViewModel { 
                 Account = _accountServices.Get(profile.UserID, model.Account_AccountID),
                 Transactions = _transactionServices.All(profile.UserID).Where(x => x.Account_AccountID == model.Account_AccountID).ToList(),
-                IncomeCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, profile.UserID, CategoryTypeDTO.Income),
-                ExpenseCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, profile.UserID, CategoryTypeDTO.Expense),
+                IncomeCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, profile.UserID, model.Account_AccountID, CategoryTypeDTO.Income),
+                ExpenseCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, profile.UserID, model.Account_AccountID, CategoryTypeDTO.Expense),
                 Accounts = DataHelpers.GetAccountSelectOptions(_accountServices, profile.UserID),
                 Type = model.Type,
                 Budget = _budgetServices.GetLatest(profile.UserID, model.Account_AccountID),

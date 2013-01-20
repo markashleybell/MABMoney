@@ -29,10 +29,21 @@ namespace MABMoney.Web.Helpers
                                    }).AsQueryable();
         }
 
-        public static IQueryable<SelectListItem> GetCategorySelectOptions(ICategoryServices categoryServices, int userId, CategoryTypeDTO type)
+        public static IQueryable<SelectListItem> GetCategorySelectOptions(ICategoryServices categoryServices, int userId, int accountId)
         {
             return categoryServices.All(userId)
-                                   .Where(x => x.Type == type)
+                                   .Where(x => x.Account_AccountID == accountId)
+                                   .Select(x => new SelectListItem
+                                   {
+                                       Value = x.CategoryID.ToString(),
+                                       Text = x.Name
+                                   }).AsQueryable();
+        }
+
+        public static IQueryable<SelectListItem> GetCategorySelectOptions(ICategoryServices categoryServices, int userId, int accountId, CategoryTypeDTO type)
+        {
+            return categoryServices.All(userId)
+                                   .Where(x => x.Type == type && x.Account_AccountID == accountId)
                                    .Select(x => new SelectListItem {
                                        Value = x.CategoryID.ToString(),
                                        Text = x.Name
