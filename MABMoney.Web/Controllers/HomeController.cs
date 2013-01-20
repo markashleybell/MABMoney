@@ -121,5 +121,12 @@ namespace MABMoney.Web.Controllers
                 NetWorth = _accountServices.GetNetWorth(profile.UserID)
             });
         }
+
+        public ActionResult MainNavigation(ProfileViewModel profile)
+        {
+            return View(new MainNavigationViewModel { 
+                Profile = profile
+            });
+        }
     }
 }

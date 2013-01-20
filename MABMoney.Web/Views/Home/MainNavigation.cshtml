@@ -1,0 +1,27 @@
+﻿@model MABMoney.Web.Models.Home.MainNavigationViewModel
+
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="brand" href="/">MABMoney</a>
+
+            @if(Model.Profile.UserID != 0) {
+            <ul class="nav pull-right">
+                <li class="dropdown">
+                    <a href="#" id="drop3" role="button" class="dropdown-toggle" data-toggle="dropdown">Manage <b class="caret"></b></a>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="drop3">
+                        <li>@Html.ActionLink("Accounts", "Index", "Accounts", null, new { tabindex = -1 })</li>
+                        <li>@Html.ActionLink("Categories", "Index", "Categories", null, new { tabindex = -1 })</li>
+                        <li>@Html.ActionLink("Transactions", "Index", "Transactions", null, new { tabindex = -1 })</li>
+                        <li>@Html.ActionLink("Budgets", "Index", "Budgets", null, new { tabindex = -1 })</li>
+                        <li class="divider"></li>
+                        <li>@Html.ActionLink("Users", "Index", "Users", null, new { tabindex = -1 })</li>
+                        <li>@Html.ActionLink("Login", "Login", "Users", null, new { tabindex = -1 })</li>
+                        <li>@Html.ActionLink("Logout", "Logout", "Users", null, new { tabindex = -1 })</li>
+                    </ul>
+                </li>
+            </ul>
+            }
+        </div>
+    </div>
+</div>

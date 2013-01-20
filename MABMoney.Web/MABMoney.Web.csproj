@@ -176,6 +176,7 @@
     <Compile Include="Models\Categories\CreateViewModel.cs" />
     <Compile Include="Models\Categories\EditViewModel.cs" />
     <Compile Include="Models\Categories\IndexViewModel.cs" />
+    <Compile Include="Models\Home\MainNavigationViewModel.cs" />
     <Compile Include="Models\Transactions\CreateViewModel.cs" />
     <Compile Include="Models\Transactions\EditViewModel.cs" />
     <Compile Include="Models\Transactions\ImportViewModel.cs" />
@@ -344,6 +345,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shared\_MINIPROFILER UPDATED Layout.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\MainNavigation.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
