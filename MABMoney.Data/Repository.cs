@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MABMoney.Data
 {
-    public class Repository<Type, KeyType> : IRepository<Type, KeyType> where Type : class
+    public class Repository<Type, KeyType> : IRepository<Type, KeyType> where Type : MABMoney.Domain.AuditableEntityBase
     {
         private readonly IDbSet<Type> _dbset;
         private readonly IUnitOfWork _unitOfWork;
@@ -22,17 +22,22 @@ namespace MABMoney.Data
 
         public virtual IQueryable<Type> All()
         {
-            return _dbset;
+            return _dbset.Where(x => !x.Deleted);
         }
 
         public virtual IQueryable<Type> Query(Expression<Func<Type, bool>> filter)
         {
-            return _dbset.Where(filter);
+            return _dbset.Where(x => !x.Deleted).Where(filter);
         }
 
         public virtual Type Get(KeyType key)
         {
-            return _dbset.Find(key);
+            var result = _dbset.Find(key);
+
+            if(result == null || result.Deleted)
+                return null;
+
+            return result;
         }
 
         public virtual void Add(Type entity)

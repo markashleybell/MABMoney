@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MABMoney.Domain
 {
-    public class Category : IAuditable
+    public class Category : AuditableEntityBase
     {
         [Key]
         [Required]
@@ -20,10 +20,5 @@ namespace MABMoney.Domain
         public virtual Account Account { get; set; }
         [Required]
         public CategoryType Type { get; set; }
-
-        public int CreatedBy { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public int LastModifiedBy { get; set; }
-        public DateTime LastModifiedDate { get; set; }
     }
 }

@@ -7,6 +7,7 @@ using MABMoney.Domain;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Data;
 using System.Data.Entity.Infrastructure;
+using System.Data.Objects;
 
 namespace MABMoney.Data
 {
@@ -40,7 +41,7 @@ namespace MABMoney.Data
         {
             DateTime now = DateTime.Now;
 
-            foreach (var entry in ChangeTracker.Entries<IAuditable>().Select(e => new { Entity = e.Entity, State = e.State }))
+            foreach (var entry in ChangeTracker.Entries<AuditableEntityBase>())
             {
                 if (entry.State == EntityState.Added)
                 {
@@ -55,27 +56,17 @@ namespace MABMoney.Data
                     entry.Entity.LastModifiedBy = _userId;
                     entry.Entity.LastModifiedDate = now;
                 }
+
+                if (entry.State == EntityState.Deleted)
+                {
+                    entry.State = EntityState.Modified;
+                    entry.Entity.Deleted = true;
+                    entry.Entity.DeletedBy = _userId;
+                    entry.Entity.DeletedDate = now;
+                }
             }
 
             return base.SaveChanges();
-        }
-
-        private void SetAuditData(int userId, DateTime date)
-        {
-            foreach (var entry in ChangeTracker.Entries<IAuditable>().Select(e => new { Entity = e.Entity, State = e.State }))
-            {
-                if (entry.State == EntityState.Added)
-                {
-                    entry.Entity.CreatedBy = userId;
-                    entry.Entity.CreatedDate = date;
-                }
-
-                if (entry.State == EntityState.Modified)
-                {
-                    entry.Entity.LastModifiedBy = userId;
-                    entry.Entity.LastModifiedDate = date;
-                }
-            }
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

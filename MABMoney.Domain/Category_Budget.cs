@@ -8,7 +8,7 @@ using System.Text;
 namespace MABMoney.Domain
 {
     [Table("Categories_Budgets")]
-    public class Category_Budget : IAuditable
+    public class Category_Budget : AuditableEntityBase
     {
         [Key, Column(Order = 0)]
         [Required]
@@ -22,10 +22,5 @@ namespace MABMoney.Domain
         public virtual Category Category { get; set; }
         [Required]
         public decimal Amount { get; set; }
-
-        public int CreatedBy { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public int LastModifiedBy { get; set; }
-        public DateTime LastModifiedDate { get; set; }
     }
 }
