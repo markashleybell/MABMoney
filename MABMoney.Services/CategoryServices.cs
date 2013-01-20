@@ -42,14 +42,14 @@ namespace MABMoney.Services
                 {
                     var entity = dto.MapTo<Category>();
                     _categories.Add(entity);
-                    _unitOfWork.Commit();
+                    _unitOfWork.Commit(userId);
                     dto.CategoryID = entity.CategoryID;
                 }
                 else
                 {
                     var entity = _categories.Get(dto.CategoryID);
                     dto.MapTo(entity);
-                    _unitOfWork.Commit();
+                    _unitOfWork.Commit(userId);
                 }
             }
         }
@@ -61,7 +61,7 @@ namespace MABMoney.Services
             if(category != null)
             {
                 _categories.Remove(id);
-                _unitOfWork.Commit();
+                _unitOfWork.Commit(userId);
             }
         }
     }

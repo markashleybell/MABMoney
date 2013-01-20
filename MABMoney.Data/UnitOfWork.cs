@@ -20,7 +20,7 @@ namespace MABMoney.Data
             get { return _dataStore ?? (_dataStore = _dataStoreFactory.Get()); }
         }
 
-        public void Commit()
+        public void Commit(int userId)
         {
             DataStore.Commit();
         }

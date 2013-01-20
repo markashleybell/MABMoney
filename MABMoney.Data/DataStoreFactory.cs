@@ -8,10 +8,16 @@ namespace MABMoney.Data
     public class DataStoreFactory : Disposable, IDataStoreFactory
     {
         private DataStore _database;
+        private int _userId;
+
+        public DataStoreFactory(int userId)
+        {
+            _userId = userId;
+        }
 
         public IDataStore Get()
         {
-            _database = new DataStore();
+            _database = new DataStore(_userId);
             return _database;
         }
 

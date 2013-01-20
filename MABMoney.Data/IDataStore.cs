@@ -13,6 +13,8 @@ namespace MABMoney.Data
         IDbSet<Account> Accounts { get; }
         IDbSet<Category> Categories { get; }
         IDbSet<Transaction> Transactions { get; }
+        IDbSet<Budget> Budgets { get; set; }
+        IDbSet<Category_Budget> Categories_Budgets { get; set; }
 
         IDbSet<T> DbSet<T>() where T : class;
 

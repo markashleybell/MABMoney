@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MABMoney.Domain
 {
-    public class Transaction
+    public class Transaction : IAuditable
     {
         [Key]
         [Required]
@@ -24,5 +24,10 @@ namespace MABMoney.Domain
         public int Account_AccountID { get; set; }
         [ForeignKey("Account_AccountID")]
         public virtual Account Account { get; set; }
+
+        public int CreatedBy { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public int LastModifiedBy { get; set; }
+        public DateTime LastModifiedDate { get; set; }
     }
 }

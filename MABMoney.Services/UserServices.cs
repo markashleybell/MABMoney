@@ -54,21 +54,21 @@ namespace MABMoney.Services
             {
                 var entity = dto.MapTo<User>();
                 _users.Add(entity);
-                _unitOfWork.Commit();
+                _unitOfWork.Commit(0);
                 dto.UserID = entity.UserID;
             }
             else
             {
                 var entity = _users.Get(dto.UserID);
                 dto.MapTo(entity);
-                _unitOfWork.Commit();
+                _unitOfWork.Commit(0);
             }
         }
 
         public void Delete(int id)
         {
             _users.Remove(id);
-            _unitOfWork.Commit();
+            _unitOfWork.Commit(0);
         }
     }
 }

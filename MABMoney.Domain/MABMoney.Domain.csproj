@@ -50,6 +50,7 @@
     <Compile Include="Category.cs" />
     <Compile Include="CategoryType.cs" />
     <Compile Include="Category_Budget.cs" />
+    <Compile Include="IAuditable.cs" />
     <Compile Include="Transaction.cs" />
     <Compile Include="User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -14,6 +14,7 @@ using MABMoney.Services;
 using MABMoney.Web.Models;
 using System.Configuration;
 using StackExchange.Profiling;
+using MABMoney.Web.Helpers;
 
 namespace MABMoney.Web
 {
@@ -47,7 +48,8 @@ namespace MABMoney.Web
                      .RegisterType<IBudgetServices, BudgetServices>(new HttpContextLifetimeManager<BudgetServices>())
                      .RegisterType<ICategoryServices, CategoryServices>(new HttpContextLifetimeManager<CategoryServices>())
                      .RegisterType<IUnitOfWork, UnitOfWork>(new HttpContextLifetimeManager<UnitOfWork>())
-                     .RegisterType<IDataStoreFactory, DataStoreFactory>(new HttpContextLifetimeManager<DataStoreFactory>())
+                     // .RegisterType<IDataStoreFactory, DataStoreFactory>(new HttpContextLifetimeManager<DataStoreFactory>())
+                     .RegisterType<IDataStoreFactory>(new InjectionFactory(c => new DataStoreFactory((HttpContext.Current.Request.Cookies["UserID"] != null) ? Convert.ToInt32(EncryptionHelpers.DecryptStringAES(HttpContext.Current.Request.Cookies["UserID"].Value, ConfigurationManager.AppSettings["SharedSecret"])) : -1)))
                      .RegisterType<ICryptoWrapper>(new InjectionFactory(c => new CryptoWrapper()))
                      .RegisterType<HttpContextBase>(new InjectionFactory(c => new HttpContextWrapper(HttpContext.Current)))
                      .RegisterType<ISiteConfiguration>(new InjectionFactory(c => new SiteConfiguration(ConfigurationManager.AppSettings["SharedSecret"])));
@@ -71,7 +73,7 @@ namespace MABMoney.Web
             else
                 Database.SetInitializer<DataStore>(null);
 
-            MiniProfilerEF.Initialize();
+            // MiniProfilerEF.Initialize();
         }
     }
 

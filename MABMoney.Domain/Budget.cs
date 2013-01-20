@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MABMoney.Domain
 {
-    public class Budget
+    public class Budget : IAuditable
     {
         [Key]
         [Required]
@@ -22,5 +22,10 @@ namespace MABMoney.Domain
         public virtual Account Account { get; set; }
 
         public virtual ICollection<Category_Budget> Category_Budgets { get; set; }
+
+        public int CreatedBy { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public int LastModifiedBy { get; set; }
+        public DateTime LastModifiedDate { get; set; }
     }
 }

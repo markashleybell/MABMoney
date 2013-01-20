@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MABMoney.Domain
 {
-    public class User
+    public class User : IAuditable
     {
         [Key]
         [Required]
@@ -21,5 +21,10 @@ namespace MABMoney.Domain
         public string Password { get; set; }
 
         public virtual ICollection<Account> Accounts { get; set; }
+
+        public int CreatedBy { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public int LastModifiedBy { get; set; }
+        public DateTime LastModifiedDate { get; set; }
     }
 }

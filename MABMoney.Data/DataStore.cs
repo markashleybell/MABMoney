@@ -5,6 +5,8 @@ using System.Text;
 using System.Data.Entity;
 using MABMoney.Domain;
 using System.Data.Entity.ModelConfiguration.Conventions;
+using System.Data;
+using System.Data.Entity.Infrastructure;
 
 namespace MABMoney.Data
 {
@@ -16,7 +18,14 @@ namespace MABMoney.Data
         public virtual IDbSet<Transaction> Transactions { get; set; }
         public virtual IDbSet<Budget> Budgets { get; set; }
         public virtual IDbSet<Category_Budget> Categories_Budgets { get; set; }
-        
+
+        private int _userId;
+
+        public DataStore(int userId)
+        {
+            _userId = userId;
+        }
+
         public virtual IDbSet<T> DbSet<T>() where T : class
         {
             return Set<T>();
@@ -24,7 +33,49 @@ namespace MABMoney.Data
 
         public virtual void Commit()
         {
-            base.SaveChanges();
+            SaveChanges();
+        }
+
+        public override int SaveChanges()
+        {
+            DateTime now = DateTime.Now;
+
+            foreach (var entry in ChangeTracker.Entries<IAuditable>().Select(e => new { Entity = e.Entity, State = e.State }))
+            {
+                if (entry.State == EntityState.Added)
+                {
+                    entry.Entity.CreatedBy = _userId;
+                    entry.Entity.CreatedDate = now;
+                    entry.Entity.LastModifiedBy = _userId;
+                    entry.Entity.LastModifiedDate = now;
+                }
+
+                if (entry.State == EntityState.Modified)
+                {
+                    entry.Entity.LastModifiedBy = _userId;
+                    entry.Entity.LastModifiedDate = now;
+                }
+            }
+
+            return base.SaveChanges();
+        }
+
+        private void SetAuditData(int userId, DateTime date)
+        {
+            foreach (var entry in ChangeTracker.Entries<IAuditable>().Select(e => new { Entity = e.Entity, State = e.State }))
+            {
+                if (entry.State == EntityState.Added)
+                {
+                    entry.Entity.CreatedBy = userId;
+                    entry.Entity.CreatedDate = date;
+                }
+
+                if (entry.State == EntityState.Modified)
+                {
+                    entry.Entity.LastModifiedBy = userId;
+                    entry.Entity.LastModifiedDate = date;
+                }
+            }
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

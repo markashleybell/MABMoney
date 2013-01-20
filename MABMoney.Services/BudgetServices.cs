@@ -76,14 +76,14 @@ namespace MABMoney.Services
                 {
                     var entity = dto.MapTo<Budget>();
                     _budgets.Add(entity);
-                    _unitOfWork.Commit();
+                    _unitOfWork.Commit(userId);
                     dto.BudgetID = entity.BudgetID;
                 }
                 else
                 {
                     var entity = _budgets.Get(dto.BudgetID);
                     dto.MapTo(entity);
-                    _unitOfWork.Commit();
+                    _unitOfWork.Commit(userId);
                 }
             }
         }
@@ -95,7 +95,7 @@ namespace MABMoney.Services
             if(budget != null)
             {
                 _budgets.Remove(id);
-                _unitOfWork.Commit();
+                _unitOfWork.Commit(userId);
             }
         }
 
@@ -114,7 +114,7 @@ namespace MABMoney.Services
                 dto.MapTo(entity);
             }
 
-            _unitOfWork.Commit();
+            _unitOfWork.Commit(userId);
         }
 
         public void DeleteCategoryBudget(int userId, int id)

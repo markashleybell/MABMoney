@@ -46,14 +46,14 @@ namespace MABMoney.Services
                 {
                     var entity = dto.MapTo<Account>();
                     _accounts.Add(entity);
-                    _unitOfWork.Commit();
+                    _unitOfWork.Commit(userId);
                     dto.AccountID = entity.AccountID;
                 }
                 else
                 {
                     var entity = _accounts.Get(dto.AccountID);
                     dto.MapTo(entity);
-                    _unitOfWork.Commit();
+                    _unitOfWork.Commit(userId);
                 }
             }
         }
@@ -65,7 +65,7 @@ namespace MABMoney.Services
             if(account != null)
             {
                 _accounts.Remove(id);
-                _unitOfWork.Commit();
+                _unitOfWork.Commit(userId);
             }
         }
 
