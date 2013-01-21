@@ -46,8 +46,7 @@ namespace MABMoney.Web.Controllers
                 ExpenseCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, profile.UserID, account.AccountID, CategoryTypeDTO.Expense),
                 Accounts = DataHelpers.GetAccountSelectOptions(_accountServices, profile.UserID),
                 Type = TransactionType.Income,
-                Budget = _budgetServices.GetLatest(profile.UserID, account.AccountID),
-                NetWorth = _accountServices.GetNetWorth(user.UserID)
+                Budget = _budgetServices.GetLatest(profile.UserID, account.AccountID)
             });
         }
 
@@ -69,8 +68,7 @@ namespace MABMoney.Web.Controllers
                 ExpenseCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, profile.UserID, account.AccountID, CategoryTypeDTO.Expense),
                 Accounts = DataHelpers.GetAccountSelectOptions(_accountServices, profile.UserID),
                 Type = TransactionType.Income,
-                Budget = _budgetServices.GetLatest(profile.UserID, account.AccountID),
-                NetWorth = _accountServices.GetNetWorth(user.UserID)
+                Budget = _budgetServices.GetLatest(profile.UserID, account.AccountID)
             });
         }
 
@@ -117,15 +115,15 @@ namespace MABMoney.Web.Controllers
                 ExpenseCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, profile.UserID, model.Account_AccountID, CategoryTypeDTO.Expense),
                 Accounts = DataHelpers.GetAccountSelectOptions(_accountServices, profile.UserID),
                 Type = model.Type,
-                Budget = _budgetServices.GetLatest(profile.UserID, model.Account_AccountID),
-                NetWorth = _accountServices.GetNetWorth(profile.UserID)
+                Budget = _budgetServices.GetLatest(profile.UserID, model.Account_AccountID)
             });
         }
 
         public ActionResult MainNavigation(ProfileViewModel profile)
         {
             return View(new MainNavigationViewModel { 
-                Profile = profile
+                Profile = profile,
+                NetWorth = _accountServices.GetNetWorth(profile.UserID)
             });
         }
     }

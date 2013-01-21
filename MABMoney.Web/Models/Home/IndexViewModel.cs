@@ -32,8 +32,6 @@ namespace MABMoney.Web.Models.Home
 
         public BudgetDTO Budget { get; set; }
 
-        public decimal NetWorth { get; set; }
-
         public IndexViewModel()
         {
             Date = DateTime.Now;

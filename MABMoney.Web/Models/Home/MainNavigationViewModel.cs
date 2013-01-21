@@ -8,5 +8,6 @@ namespace MABMoney.Web.Models.Home
     public class MainNavigationViewModel
     {
         public ProfileViewModel Profile { get; set; }
+        public decimal NetWorth { get; set; }
     }
 }
