@@ -40,14 +40,6 @@ namespace MABMoney.Web.Controllers
         }
 
         //
-        // GET: /Account/Details/5
-        [Authenticate]
-        public ActionResult Details(ProfileViewModel profile, int id)
-        {
-            return View();
-        }
-
-        //
         // GET: /Account/Create
         [Authenticate]
         public ActionResult Create(ProfileViewModel profile)

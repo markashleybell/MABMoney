@@ -1,4 +1,1 @@
-Baseline MVC4 app.
-
-
-
+A personal finance/budgeting app.
