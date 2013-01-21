@@ -15,6 +15,7 @@ using MABMoney.Web.Models.Categories;
 
 namespace MABMoney.Tests
 {
+    [TestFixture]
     public class CategoryControllerTests
     {
         private IUserServices _userServices;
