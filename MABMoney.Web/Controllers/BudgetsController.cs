@@ -60,11 +60,17 @@ namespace MABMoney.Web.Controllers
         //
         // GET: /Budget/Create
         [Authenticate]
-        public ActionResult Create(ProfileViewModel profile)
+        public ActionResult Create(ProfileViewModel profile, int? id)
         {
+            var categories = _categoryServices.All(profile.UserID).Where(x => x.Type == CategoryTypeDTO.Expense);
+
+            if(id.HasValue) 
+                categories = categories.Where(x => x.Account_AccountID == id.Value);
+
             return View(new CreateViewModel {
+                Account_AccountID = (id.HasValue) ? id.Value : 0,
                 Accounts = DataHelpers.GetAccountSelectOptions(_accountServices, profile.UserID),
-                Categories = _categoryServices.All(profile.UserID).Where(x => x.Type == CategoryTypeDTO.Expense).ToList().Select(x => new Category_BudgetViewModel { 
+                Categories = categories.ToList().Select(x => new Category_BudgetViewModel { 
                     Category_CategoryID = x.CategoryID,
                     Name = x.Name
                 }).ToList()

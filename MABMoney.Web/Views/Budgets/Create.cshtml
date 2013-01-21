@@ -17,9 +17,17 @@
     @Html.EditorFor(x => x.End)
     @Html.ValidationMessageFor(x => x.End)</p>
 
-    <p>@Html.LabelFor(x => x.Account_AccountID)
-    @Html.DropDownListFor(x => x.Account_AccountID, Model.Accounts, "Please select...")
-    @Html.ValidationMessageFor(x => x.Account_AccountID)</p>
+    if(Model.Account_AccountID == 0) {
+    
+        <p>@Html.LabelFor(x => x.Account_AccountID)
+        @Html.DropDownListFor(x => x.Account_AccountID, Model.Accounts, "Please select...")
+        @Html.ValidationMessageFor(x => x.Account_AccountID)</p>
+        
+    } else {
+        
+        @Html.HiddenFor(x => x.Account_AccountID)
+
+    }
     
     @Html.EditorFor(x => x.Categories)
 
