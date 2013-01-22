@@ -19,11 +19,5 @@ namespace MABMoney.Web.Models.Budgets
         public IQueryable<SelectListItem> Accounts { get; set; }
 
         public List<Category_BudgetViewModel> Categories { get; set; }
-
-        public CreateViewModel()
-        {
-            Start = DateTime.Now;
-            End = Start.AddDays(30);
-        }
     }
 }

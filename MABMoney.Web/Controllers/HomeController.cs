@@ -22,13 +22,15 @@ namespace MABMoney.Web.Controllers
                               ITransactionServices transactionServices,
                               IBudgetServices budgetServices, 
                               HttpContextBase context,
-                              ISiteConfiguration config) : base(userServices,
-                                                                accountServices,
-                                                                categoryServices,
-                                                                transactionServices, 
-                                                                budgetServices,
-                                                                context,
-                                                                config) { }
+                              ISiteConfiguration config,
+                              IDateTimeProvider dateProvider) : base(userServices,
+                                                                     accountServices,
+                                                                     categoryServices,
+                                                                     transactionServices, 
+                                                                     budgetServices,
+                                                                     context,
+                                                                     config,
+                                                                     dateProvider) { }
 
         [Authenticate]
         public ActionResult Index(ProfileViewModel profile)
@@ -39,6 +41,7 @@ namespace MABMoney.Web.Controllers
             var transactions = _transactionServices.All(profile.UserID).Where(x => x.Account_AccountID == account.AccountID).ToList();
 
             return View(new IndexViewModel { 
+                Date = _dateProvider.Date,
                 Account = account,
                 Account_AccountID = account.AccountID,
                 Transactions = transactions,

@@ -21,13 +21,15 @@ namespace MABMoney.Web.Controllers
                                  ITransactionServices transactionServices,
                                  IBudgetServices budgetServices,
                                  HttpContextBase context,
-                                 ISiteConfiguration config) : base(userServices,
-                                                                   accountServices,
-                                                                   categoryServices,
-                                                                   transactionServices, 
-                                                                   budgetServices,
-                                                                   context,
-                                                                   config) { }
+                                 ISiteConfiguration config,
+                                 IDateTimeProvider dateProvider) : base(userServices,
+                                                                        accountServices,
+                                                                        categoryServices,
+                                                                        transactionServices, 
+                                                                        budgetServices,
+                                                                        context,
+                                                                        config,
+                                                                        dateProvider) { }
 
         //
         // GET: /Budget/
@@ -67,7 +69,11 @@ namespace MABMoney.Web.Controllers
             if(id.HasValue) 
                 categories = categories.Where(x => x.Account_AccountID == id.Value);
 
+            var now = _dateProvider.Date;
+            
             return View(new CreateViewModel {
+                Start = new DateTime(now.Year, now.Month, 1),
+                End = new DateTime(now.Year, now.Month, DateTime.DaysInMonth(now.Year, now.Month)),
                 Account_AccountID = (id.HasValue) ? id.Value : 0,
                 Accounts = DataHelpers.GetAccountSelectOptions(_accountServices, profile.UserID),
                 Categories = categories.ToList().Select(x => new Category_BudgetViewModel { 
@@ -116,7 +122,8 @@ namespace MABMoney.Web.Controllers
                 Name = x.Category.Name,
                 Budget_BudgetID = x.Budget_BudgetID,
                 Category_CategoryID = x.Category_CategoryID,
-                Amount = x.Amount
+                Amount = x.Amount,
+                Total = x.Total
             }).ToList();
             return View(model);
         }

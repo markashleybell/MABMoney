@@ -22,13 +22,15 @@ namespace MABMoney.Web.Controllers
                                       ITransactionServices transactionServices,
                                       IBudgetServices budgetServices,
                                       HttpContextBase context,
-                                      ISiteConfiguration config) : base(userServices,
-                                                                        accountServices,
-                                                                        categoryServices,
-                                                                        transactionServices, 
-                                                                        budgetServices,
-                                                                        context,
-                                                                        config) { }
+                                      ISiteConfiguration config,
+                                      IDateTimeProvider dateProvider) : base(userServices,
+                                                                             accountServices,
+                                                                             categoryServices,
+                                                                             transactionServices, 
+                                                                             budgetServices,
+                                                                             context,
+                                                                             config,
+                                                                             dateProvider) { }
 
         //
         // GET: /Transaction/
@@ -159,6 +161,7 @@ namespace MABMoney.Web.Controllers
                     }
                     catch (MalformedLineException ex)
                     {
+                        var exception = ex;
                         // not a valid delimited line - log, terminate, or ignore
                         continue;
                     }

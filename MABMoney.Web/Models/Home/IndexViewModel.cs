@@ -31,11 +31,6 @@ namespace MABMoney.Web.Models.Home
         public IQueryable<SelectListItem> Accounts { get; set; }
 
         public BudgetDTO Budget { get; set; }
-
-        public IndexViewModel()
-        {
-            Date = DateTime.Now;
-        }
     }
 
     public enum TransactionType

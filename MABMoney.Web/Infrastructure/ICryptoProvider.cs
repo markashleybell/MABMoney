@@ -5,7 +5,7 @@ using System.Web;
 
 namespace MABMoney.Web.Infrastructure
 {
-    public interface ICryptoWrapper
+    public interface ICryptoProvider
     {
         string GenerateSalt(int byteLength);
         string Hash(byte[] input, string algorithm);

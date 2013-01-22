@@ -85,6 +85,8 @@
   <PropertyGroup>
     <PostBuildEvent>
     </PostBuildEvent>
+    <StartAction>Program</StartAction>
+    <StartProgram>D:\Web\MABMoney\packages\NUnit.Runners.2.6.2\tools\nunit.exe</StartProgram>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

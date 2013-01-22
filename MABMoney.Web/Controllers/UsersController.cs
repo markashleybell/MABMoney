@@ -15,7 +15,7 @@ namespace MABMoney.Web.Controllers
 {
     public class UsersController : BaseController
     {
-        private ICryptoWrapper _crypto;
+        private ICryptoProvider _crypto;
 
         public UsersController(IUserServices userServices,
                                IAccountServices accountServices,
@@ -24,13 +24,15 @@ namespace MABMoney.Web.Controllers
                                IBudgetServices budgetServices,
                                HttpContextBase context,
                                ISiteConfiguration config,
-                               ICryptoWrapper crypto) : base(userServices,
-                                                             accountServices,
-                                                             categoryServices,
-                                                             transactionServices, 
-                                                             budgetServices,
-                                                             context,
-                                                             config) 
+                               IDateTimeProvider dateProvider,
+                               ICryptoProvider crypto) : base(userServices,
+                                                              accountServices,
+                                                              categoryServices,
+                                                              transactionServices, 
+                                                              budgetServices,
+                                                              context,
+                                                              config,
+                                                              dateProvider) 
         {
             _crypto = crypto;
         }
@@ -130,7 +132,7 @@ namespace MABMoney.Web.Controllers
         public ActionResult Logout()
         {
             var cookie = new HttpCookie("UserID", "");
-            cookie.Expires = DateTime.Now.AddDays(-1);
+            cookie.Expires = _dateProvider.Date.AddDays(-1);
             _context.Response.Cookies.Add(cookie);
             return RedirectToAction("Login");
         }

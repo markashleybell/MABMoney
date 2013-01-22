@@ -20,13 +20,15 @@ namespace MABMoney.Web.Controllers
                                   ITransactionServices transactionServices,
                                   IBudgetServices budgetServices,
                                   HttpContextBase context,
-                                  ISiteConfiguration config) : base(userServices,
-                                                                    accountServices,
-                                                                    categoryServices,
-                                                                    transactionServices, 
-                                                                    budgetServices,
-                                                                    context,
-                                                                    config) { }
+                                  ISiteConfiguration config,
+                                  IDateTimeProvider dateProvider) : base(userServices,
+                                                                         accountServices,
+                                                                         categoryServices,
+                                                                         transactionServices, 
+                                                                         budgetServices,
+                                                                         context,
+                                                                         config,
+                                                                         dateProvider) { }
 
         //
         // GET: /Account/

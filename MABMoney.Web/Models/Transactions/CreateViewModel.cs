@@ -21,10 +21,5 @@ namespace MABMoney.Web.Models.Transactions
         [DisplayName("Account")]
         public int Account_AccountID { get; set; }
         public IQueryable<SelectListItem> Accounts { get; set; }
-
-        public CreateViewModel()
-        {
-            Date = DateTime.Now;
-        }
     }
 }

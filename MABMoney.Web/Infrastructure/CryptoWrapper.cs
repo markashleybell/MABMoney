@@ -6,7 +6,7 @@ using System.Web.Helpers;
 
 namespace MABMoney.Web.Infrastructure
 {
-    public class CryptoWrapper : ICryptoWrapper
+    public class CryptoWrapper : ICryptoProvider
     {
         public string GenerateSalt(int byteLength = 16)
         {
