@@ -60,7 +60,8 @@ namespace MABMoney.Web.Controllers
         {
             return View(new CreateViewModel {
                 Categories = DataHelpers.GetCategorySelectOptions(_categoryServices, profile.UserID),
-                Accounts = DataHelpers.GetAccountSelectOptions(_accountServices, profile.UserID)
+                Accounts = DataHelpers.GetAccountSelectOptions(_accountServices, profile.UserID),
+                Date = _dateProvider.Date
             });
         }
 

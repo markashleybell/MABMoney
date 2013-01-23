@@ -85,11 +85,13 @@ namespace MABMoney.Tests
             _accountServices.Stub(x => x.All(1)).Return(accounts.Where(x => x.User_UserID == 1));
             _accountServices.Stub(x => x.Get(1, 1)).Return(accounts[0]);
             _accountServices.Stub(x => x.Get(1, 2)).Return(accounts[1]);
+            _accountServices.Stub(x => x.Get(1, 3)).Return(accounts[2]);
 
             _categoryServices = MockRepository.GenerateStub<ICategoryServices>();
             _categoryServices.Stub(x => x.All(1)).Return(categories);
             _categoryServices.Stub(x => x.Get(1, 1)).Return(categories[0]);
             _categoryServices.Stub(x => x.Get(1, 2)).Return(categories[1]);
+            _categoryServices.Stub(x => x.Get(1, 3)).Return(categories[2]);
 
             _transactionServices = MockRepository.GenerateStub<ITransactionServices>();
             _budgetServices = MockRepository.GenerateStub<IBudgetServices>();
@@ -116,6 +118,9 @@ namespace MABMoney.Tests
 
             model.ShouldNotBeNull();
             model.Categories.Count.ShouldEqual(3);
+            model.Categories[0].CategoryID.ShouldEqual(1);
+            model.Categories[1].CategoryID.ShouldEqual(2);
+            model.Categories[2].CategoryID.ShouldEqual(3);
         }
 
         [Test]
