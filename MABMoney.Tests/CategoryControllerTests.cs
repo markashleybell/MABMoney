@@ -137,7 +137,7 @@ namespace MABMoney.Tests
             model.ShouldNotBeNull();
             model.Name.ShouldEqual(null);
             model.Account_AccountID.ShouldEqual(0);
-            model.Type.ShouldEqual(CategoryTypeDTO.Income);
+            model.Type.ShouldEqual(CategoryTypeDTO.Expense);
         }
 
         [Test]
