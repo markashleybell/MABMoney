@@ -32,6 +32,17 @@ namespace MABMoney.Web.Controllers
                                                                      config,
                                                                      dateProvider) { }
 
+        private TransactionType GetDefaultTransationTypeForAccount(AccountDTO account)
+        {
+            var accountName = account.Name.ToUpper();
+
+            // Try and work out if this is a savings/deposit account or a current account
+            if (accountName.Contains("SAVING") || accountName.Contains("SAVER") || accountName.Contains("ISA"))
+                return TransactionType.Income;
+
+            return TransactionType.Expense;
+        }
+
         [Authenticate]
         public ActionResult Index(ProfileViewModel profile)
         {
@@ -48,7 +59,7 @@ namespace MABMoney.Web.Controllers
                 IncomeCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, profile.UserID, account.AccountID, CategoryTypeDTO.Income),
                 ExpenseCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, profile.UserID, account.AccountID, CategoryTypeDTO.Expense),
                 Accounts = DataHelpers.GetAccountSelectOptions(_accountServices, profile.UserID),
-                Type = TransactionType.Income,
+                Type = GetDefaultTransationTypeForAccount(account),
                 Budget = _budgetServices.GetLatest(profile.UserID, account.AccountID)
             });
         }
@@ -64,13 +75,14 @@ namespace MABMoney.Web.Controllers
 
             return View(new IndexViewModel
             {
+                Date = _dateProvider.Date,
                 Account = account,
                 Account_AccountID = account.AccountID,
                 Transactions = transactions,
                 IncomeCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, profile.UserID, account.AccountID, CategoryTypeDTO.Income),
                 ExpenseCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, profile.UserID, account.AccountID, CategoryTypeDTO.Expense),
                 Accounts = DataHelpers.GetAccountSelectOptions(_accountServices, profile.UserID),
-                Type = TransactionType.Income,
+                Type = GetDefaultTransationTypeForAccount(account),
                 Budget = _budgetServices.GetLatest(profile.UserID, account.AccountID)
             });
         }

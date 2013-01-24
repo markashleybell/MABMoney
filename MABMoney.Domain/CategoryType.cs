@@ -7,7 +7,7 @@ namespace MABMoney.Domain
 {
     public enum CategoryType
     {
-        Income,
-        Expense
+        Expense,
+        Income   
     }
 }
