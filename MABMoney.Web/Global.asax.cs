@@ -71,10 +71,12 @@ namespace MABMoney.Web
             // the correct type
             config.DependencyResolver = resolver.ToServiceResolver();
 
-            if (Convert.ToBoolean(ConfigurationManager.AppSettings["RegenerateDb"]))
-                Database.SetInitializer<DataStore>(new DbInitializer());
-            else
-                Database.SetInitializer<DataStore>(null);
+            //if (Convert.ToBoolean(ConfigurationManager.AppSettings["RegenerateDb"]))
+            //    Database.SetInitializer<DataStore>(new DbInitializer());
+            //else
+            //    Database.SetInitializer<DataStore>(null);
+
+            Database.SetInitializer<DataStore>(new MigrateDatabaseToLatestVersion<DataStore, MABMoney.Data.Migrations.Configuration>());
 
             // MiniProfilerEF.Initialize();
 
@@ -83,71 +85,6 @@ namespace MABMoney.Web
             //    d.Forename = "MAPPED!!!!";
             //    d.Accounts = s.Accounts.ToList().MapToList<AccountDTO>();
             //});
-        }
-    }
-
-    public class DbInitializer : DropCreateDatabaseIfModelChanges<DataStore>
-    {
-        protected override void Seed(DataStore context)
-        {
-            var users = new List<User> {
-                new User {
-                    Forename = "Mark",
-                    Surname = "Bell",
-                    Email = "me@markashleybell.com",
-                    Password = "ALZByiJAcShmiQpEue7DR0g+RZYSWiSXJoF3VxFck96CEhW8SZakdXaJ+1PDgqGoXw==" // test123
-                }
-            };
-
-            foreach (var user in users)
-                context.Users.Add(user);
-
-            var accounts = new List<Account> {
-                new Account {
-                    Name = "Current",
-                    User = users[0],
-                    StartingBalance = 0
-                },
-                new Account {
-                    Name = "Savings",
-                    User = users[0],
-                    StartingBalance = 0
-                },
-                new Account {
-                    Name = "Credit Card",
-                    User = users[0],
-                    StartingBalance = 0
-                }
-            };
-
-            foreach (var account in accounts)
-                context.Accounts.Add(account);
-
-            var categories = new List<Category> {
-                new Category {
-                    Account = accounts[0],
-                    Name = "Salary",
-                    Type = CategoryType.Income
-                },
-                new Category {
-                    Account = accounts[0],
-                    Name = "Rent",
-                    Type = CategoryType.Expense
-                },
-                new Category {
-                    Account = accounts[0],
-                    Name = "Food",
-                    Type = CategoryType.Expense
-                },
-                new Category {
-                    Account = accounts[0],
-                    Name = "Fuel",
-                    Type = CategoryType.Expense
-                }
-            };
-
-            foreach (var category in categories)
-                context.Categories.Add(category);
         }
     }
 }
