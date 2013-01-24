@@ -13,6 +13,9 @@ namespace MABMoney.Data.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = true;
+
+            // BE CAREFUL!!
+            // AutomaticMigrationDataLossAllowed = true;
         }
 
         protected override void Seed(DataStore context)

@@ -138,7 +138,7 @@
         }
         else
         {
-            <p>Add a budget</p>
+            <p>@Html.ActionLink("Add a budget", "Create", "Budgets", new { id = Model.Account_AccountID }, null)</p>
         }
     </div>
  </div>
