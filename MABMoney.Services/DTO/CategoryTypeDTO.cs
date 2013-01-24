@@ -8,7 +8,7 @@ namespace MABMoney.Services.DTO
 {
     public enum CategoryTypeDTO
     {
-        Income,
-        Expense
+        Expense,
+        Income
     }
 }

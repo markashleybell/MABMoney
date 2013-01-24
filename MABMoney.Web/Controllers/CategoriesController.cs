@@ -47,6 +47,7 @@ namespace MABMoney.Web.Controllers
         public ActionResult Create(ProfileViewModel profile)
         {
             return View(new CreateViewModel {
+                CategoryTypes = DataHelpers.GetCategoryTypeSelectOptions(),
                 Accounts = DataHelpers.GetAccountSelectOptions(_accountServices, profile.UserID)
             });
         }
@@ -60,6 +61,7 @@ namespace MABMoney.Web.Controllers
             if (!ModelState.IsValid)
             {
                 model.Accounts = DataHelpers.GetAccountSelectOptions(_accountServices, profile.UserID);
+                model.CategoryTypes = DataHelpers.GetCategoryTypeSelectOptions();
                 return View(model);
             }
 
@@ -75,7 +77,8 @@ namespace MABMoney.Web.Controllers
         public ActionResult Edit(ProfileViewModel profile, int id)
         {
             var model = _categoryServices.Get(profile.UserID, id).MapTo<EditViewModel>();
-            model.Accounts = DataHelpers.GetAccountSelectOptions(_accountServices, profile.UserID);
+            model.Accounts = DataHelpers.GetAccountSelectOptions(_accountServices, profile.UserID);model.CategoryTypes = DataHelpers.GetCategoryTypeSelectOptions();
+            model.CategoryTypes = DataHelpers.GetCategoryTypeSelectOptions();
             return View(model);
         }
 
@@ -88,6 +91,7 @@ namespace MABMoney.Web.Controllers
             if (!ModelState.IsValid)
             {
                 model.Accounts = DataHelpers.GetAccountSelectOptions(_accountServices, profile.UserID);
+                model.CategoryTypes = DataHelpers.GetCategoryTypeSelectOptions();
                 return View(model);
             }
 

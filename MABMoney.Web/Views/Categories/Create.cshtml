@@ -18,7 +18,7 @@
     @Html.ValidationMessageFor(x => x.Account_AccountID)</p>
     
     <p>@Html.LabelFor(x => x.Type)
-    @Html.DropDownListFor(x => x.Type, new SelectList(Enum.GetValues(typeof(MABMoney.Services.DTO.CategoryTypeDTO))))
+    @Html.DropDownListFor(x => x.Type, Model.CategoryTypes, "Please select...")
     @Html.ValidationMessageFor(x => x.Type)</p>
 
     <p><input type="submit" value="Save" /></p>

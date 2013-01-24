@@ -22,5 +22,6 @@ namespace MABMoney.Web.Models.Categories
         public IQueryable<SelectListItem> Accounts { get; set; }
         [Required]
         public CategoryTypeDTO Type { get; set; }
+        public SelectList CategoryTypes { get; set; }
     }
 }

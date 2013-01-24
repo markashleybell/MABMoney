@@ -10,6 +10,11 @@ namespace MABMoney.Web.Helpers
 {
     public static class DataHelpers
     {
+        public static SelectList GetCategoryTypeSelectOptions()
+        {
+            return new SelectList(Enum.GetValues(typeof(CategoryTypeDTO)));
+        }
+
         public static IQueryable<SelectListItem> GetAccountSelectOptions(IAccountServices accountServices, int userId) 
         {
             return accountServices.All(userId)

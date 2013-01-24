@@ -76,7 +76,7 @@ namespace MABMoney.Web
             else
                 Database.SetInitializer<DataStore>(null);
 
-            MiniProfilerEF.Initialize();
+            // MiniProfilerEF.Initialize();
 
             //Mapper.AddMapping<User, UserDTO>((s, d) => {
             //    d.UserID = s.UserID;
