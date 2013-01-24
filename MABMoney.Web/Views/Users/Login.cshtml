@@ -9,7 +9,21 @@
 
 @using (Html.BeginForm())
 {
-    @Html.EditorForModel()
+    <div class="editor-label">
+        @Html.LabelFor(x => x.Email)
+    </div>
+    <div class="editor-field">
+        @Html.TextBoxFor(x => x.Email)
+        @Html.ValidationMessageFor(x => x.Email)
+    </div>
 
+    <div class="editor-label">
+        @Html.LabelFor(x => x.Password)
+    </div>
+    <div class="editor-field">
+        @Html.PasswordFor(x => x.Password)
+        @Html.ValidationMessageFor(x => x.Password)
+    </div>
+    
     <p><input type="submit" value="Log In" /></p>
 }
