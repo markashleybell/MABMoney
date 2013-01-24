@@ -20,5 +20,7 @@ namespace MABMoney.Domain
         public int User_UserID { get; set; }
         [ForeignKey("User_UserID")]
         public virtual User User { get; set; }
+
+        public bool Default { get; set; }
     }
 }
