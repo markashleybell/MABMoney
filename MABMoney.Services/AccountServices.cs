@@ -40,8 +40,12 @@ namespace MABMoney.Services
 
         public void Save(int userId, AccountDTO dto)
         {
-            if(userId == dto.User_UserID)
+            var account = _accounts.Query(x => x.User_UserID == userId && x.AccountID == dto.AccountID).FirstOrDefault();
+
+            if (account != null)
             {
+                dto.User_UserID = userId;
+
                 if (dto.AccountID == 0)
                 {
                     var entity = dto.MapTo<Account>();

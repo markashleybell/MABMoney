@@ -22,5 +22,7 @@ namespace MABMoney.Domain
         public virtual User User { get; set; }
 
         public bool Default { get; set; }
+
+        public AccountType Type { get; set; }
     }
 }

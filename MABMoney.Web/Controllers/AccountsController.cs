@@ -9,6 +9,7 @@ using MABMoney.Services.DTO;
 using mab.lib.SimpleMapper;
 using MABMoney.Web.Infrastructure;
 using MABMoney.Web.Models;
+using MABMoney.Web.Helpers;
 
 namespace MABMoney.Web.Controllers
 {
@@ -46,7 +47,8 @@ namespace MABMoney.Web.Controllers
         public ActionResult Create(ProfileViewModel profile)
         {
             return View(new CreateViewModel { 
-                User_UserID = profile.UserID
+                User_UserID = profile.UserID,
+                AccountTypes = DataHelpers.GetAccountTypeSelectOptions()
             });
         }
 
@@ -57,7 +59,10 @@ namespace MABMoney.Web.Controllers
         public ActionResult Create(ProfileViewModel profile, CreateViewModel model)
         {
             if (!ModelState.IsValid)
+            {
+                model.AccountTypes = DataHelpers.GetAccountTypeSelectOptions();
                 return View(model);
+            }
 
             var dto = model.MapTo<AccountDTO>();
             _accountServices.Save(profile.UserID, dto);
@@ -71,6 +76,7 @@ namespace MABMoney.Web.Controllers
         public ActionResult Edit(ProfileViewModel profile, int id)
         {
             var model = _accountServices.Get(profile.UserID, id).MapTo<EditViewModel>();
+            model.AccountTypes = DataHelpers.GetAccountTypeSelectOptions();
             return View(model);
         }
 
@@ -81,7 +87,10 @@ namespace MABMoney.Web.Controllers
         public ActionResult Edit(ProfileViewModel profile, EditViewModel model)
         {
             if (!ModelState.IsValid)
+            {
+                model.AccountTypes = DataHelpers.GetAccountTypeSelectOptions();
                 return View(model);
+            }
 
             var dto = model.MapTo<AccountDTO>();
             _accountServices.Save(profile.UserID, dto);

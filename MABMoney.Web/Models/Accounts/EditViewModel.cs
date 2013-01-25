@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
+using MABMoney.Services.DTO;
 
 namespace MABMoney.Web.Models.Accounts
 {
@@ -19,5 +20,8 @@ namespace MABMoney.Web.Models.Accounts
         [Required]
         [HiddenInput(DisplayValue = false)]
         public int User_UserID { get; set; }
+        [Required]
+        public AccountTypeDTO Type { get; set; }
+        public SelectList AccountTypes { get; set; }
     }
 }

@@ -9,9 +9,32 @@
 
 @using (Html.BeginForm())
 {
-    @Html.EditorForModel()
+    <div class="editor-label">
+        @Html.LabelFor(x => x.Name)
+    </div>
+    <div class="editor-field">
+        @Html.TextBoxFor(x => x.Name)
+        @Html.ValidationMessageFor(x => x.Name)
+    </div>
 
-    <p><input type="submit" value="Save" /></p>
+    <div class="editor-label">
+        @Html.LabelFor(x => x.StartingBalance)
+    </div>
+    <div class="editor-field">
+        @Html.TextBoxFor(x => x.StartingBalance)
+        @Html.ValidationMessageFor(x => x.StartingBalance)
+    </div>
+    
+    <div class="editor-label">
+        @Html.LabelFor(x => x.Type)
+    </div>
+    <div class="editor-field">
+        @Html.DropDownListFor(x => x.Type, Model.AccountTypes, "Please select...")
+        @Html.ValidationMessageFor(x => x.Type)
+    </div>
+    
+    <p>@Html.HiddenFor(x => x.AccountID)
+    <input type="submit" value="Save" /></p>
 }
 
 @using (Html.BeginForm("Delete", "Accounts"))

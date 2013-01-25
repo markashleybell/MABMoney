@@ -15,6 +15,11 @@ namespace MABMoney.Web.Helpers
             return new SelectList(Enum.GetValues(typeof(CategoryTypeDTO)));
         }
 
+        public static SelectList GetAccountTypeSelectOptions()
+        {
+            return new SelectList(Enum.GetValues(typeof(AccountTypeDTO)));
+        }
+
         public static IQueryable<SelectListItem> GetAccountSelectOptions(IAccountServices accountServices, int userId) 
         {
             return accountServices.All(userId)
