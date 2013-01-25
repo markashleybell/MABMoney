@@ -9,6 +9,7 @@ namespace MABMoney.Domain
     public enum AccountType
     {
         Current,
-        Savings
+        Savings,
+        CreditCard
     }
 }

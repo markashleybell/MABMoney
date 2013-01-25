@@ -36,19 +36,22 @@ namespace MABMoney.Tests
                     AccountID = 1,
                     Name = "Current",
                     StartingBalance = 100,
-                    User_UserID = 1
+                    User_UserID = 1,
+                    Type = AccountTypeDTO.Current
                 },
                 new AccountDTO { 
                     AccountID = 2,
                     Name = "Savings",
                     StartingBalance = 200,
-                    User_UserID = 1
+                    User_UserID = 1,
+                    Type = AccountTypeDTO.Savings
                 },
                 new AccountDTO { 
                     AccountID = 3,
                     Name = "Other",
                     StartingBalance = 150,
-                    User_UserID = 2
+                    User_UserID = 2,
+                    Type = AccountTypeDTO.Savings
                 }
             };
 
