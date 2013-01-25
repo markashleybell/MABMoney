@@ -116,6 +116,7 @@ namespace MABMoney.Web.Controllers
         public ActionResult Edit(ProfileViewModel profile, int id)
         {
             var dto = _budgetServices.Get(profile.UserID, id);
+
             var model = dto.MapTo<EditViewModel>();
             model.Accounts = DataHelpers.GetAccountSelectOptions(_accountServices, profile.UserID);
             model.Categories = dto.Category_Budgets.Select(x => new Category_BudgetViewModel { 
@@ -125,6 +126,18 @@ namespace MABMoney.Web.Controllers
                 Amount = x.Amount,
                 Total = x.Total
             }).ToList();
+
+            var categories = _categoryServices.All(profile.UserID)
+                                              .Where(x => x.Account_AccountID == dto.Account_AccountID && x.Type == CategoryTypeDTO.Expense && !model.Categories.Any(c => c.Category_CategoryID == x.CategoryID))
+                                              .Select(x => new Category_BudgetViewModel
+                                              {
+                                                  Category_CategoryID = x.CategoryID,
+                                                  Name = x.Name
+                                              })
+                                              .ToList();
+
+            model.Categories.AddRange(categories);
+
             return View(model);
         }
 

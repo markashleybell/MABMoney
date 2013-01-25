@@ -135,11 +135,10 @@
                 </div>
             </div>
             }
+            
+            <p>@Html.ActionLink("Edit budget", "Edit", "Budgets", new { id = Model.Account_AccountID }, null)</p>
         }
-        else
-        {
-            <p>@Html.ActionLink("Add a budget", "Create", "Budgets", new { id = Model.Account_AccountID }, null)</p>
-        }
+        <p>@Html.ActionLink("Add a new budget", "Create", "Budgets", new { id = Model.Account_AccountID }, null)</p>
     </div>
  </div>
 

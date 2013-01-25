@@ -124,6 +124,7 @@ namespace MABMoney.Web.Controllers
             // Change to show index view directly so we can return to the correct 
             // account/tab without a ton of querystring params
             return View("Index", new IndexViewModel { 
+                Date = _dateProvider.Date,
                 Account = _accountServices.Get(profile.UserID, model.Account_AccountID),
                 Transactions = _transactionServices.All(profile.UserID).Where(x => x.Account_AccountID == model.Account_AccountID).ToList(),
                 IncomeCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, profile.UserID, model.Account_AccountID, CategoryTypeDTO.Income),
