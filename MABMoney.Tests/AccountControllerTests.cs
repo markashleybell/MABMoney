@@ -51,7 +51,7 @@ namespace MABMoney.Tests
                     Name = "Other",
                     StartingBalance = 150,
                     User_UserID = 2,
-                    Type = AccountTypeDTO.Savings
+                    Type = AccountTypeDTO.CreditCard
                 }
             };
 
@@ -95,10 +95,12 @@ namespace MABMoney.Tests
             model.Accounts[0].Name.ShouldEqual("Current");
             model.Accounts[0].StartingBalance.ShouldEqual(100M);
             model.Accounts[0].User_UserID.ShouldEqual(1);
+            model.Accounts[0].Type.ShouldEqual(AccountTypeDTO.Current);
             model.Accounts[1].AccountID.ShouldEqual(2);
             model.Accounts[1].Name.ShouldEqual("Savings");
             model.Accounts[1].StartingBalance.ShouldEqual(200M);
             model.Accounts[1].User_UserID.ShouldEqual(1);
+            model.Accounts[1].Type.ShouldEqual(AccountTypeDTO.Savings);
         }
 
         [Test]
@@ -114,6 +116,7 @@ namespace MABMoney.Tests
 
             model.ShouldNotBeNull();
             model.User_UserID.ShouldEqual(1);
+            model.Type.ShouldEqual(AccountTypeDTO.Current);
         }
 
         [Test]
@@ -125,7 +128,8 @@ namespace MABMoney.Tests
             {
                 User_UserID = 1,
                 Name = "New",
-                StartingBalance = 1000M
+                StartingBalance = 1000M,
+                Type = AccountTypeDTO.Current
             };
 
             var result = controller.Create(_profile, model) as RedirectToRouteResult;
@@ -134,7 +138,12 @@ namespace MABMoney.Tests
 
             _accountServices.AssertWasCalled(x => x.Save(
                 Arg<int>.Is.Equal(1), 
-                Arg<AccountDTO>.Matches(o => o.User_UserID == 1 && o.Name == "New" && o.StartingBalance == 1000M)
+                Arg<AccountDTO>.Matches(
+                    o => o.User_UserID == 1 
+                      && o.Name == "New" 
+                      && o.StartingBalance == 1000M
+                      && o.Type == AccountTypeDTO.Current
+                )
             ));
         }
 
@@ -154,6 +163,7 @@ namespace MABMoney.Tests
             model.AccountID.ShouldEqual(1);
             model.StartingBalance.ShouldEqual(100M);
             model.Name.ShouldEqual("Current");
+            model.Type.ShouldEqual(AccountTypeDTO.Current);
         }
 
         [Test]
@@ -166,7 +176,8 @@ namespace MABMoney.Tests
                 User_UserID = 1,
                 AccountID = 10,
                 Name = "EDITED",
-                StartingBalance = 750M
+                StartingBalance = 750M,
+                Type = AccountTypeDTO.CreditCard
             };
 
             var result = controller.Edit(_profile, model) as RedirectToRouteResult;
@@ -175,7 +186,13 @@ namespace MABMoney.Tests
 
             _accountServices.AssertWasCalled(x => x.Save(
                 Arg<int>.Is.Equal(1),
-                Arg<AccountDTO>.Matches(o => o.User_UserID == 1 && o.AccountID == 10 && o.Name == "EDITED" && o.StartingBalance == 750M)
+                Arg<AccountDTO>.Matches(
+                    o => o.User_UserID == 1 
+                      && o.AccountID == 10 
+                      && o.Name == "EDITED" 
+                      && o.StartingBalance == 750M
+                      && o.Type == AccountTypeDTO.CreditCard
+                )
             ));
         }
 
