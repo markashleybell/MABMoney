@@ -46,7 +46,7 @@ namespace MABMoney.Services
             if (budget == null)
                 return null;
 
-            var transactions = _transactions.Query(x => x.Date >= budget.Start && x.Date < budget.End && x.Category.Account_AccountID == budget.Account_AccountID).ToList();
+            var transactions = _transactions.Query(x => x.Date >= budget.Start && x.Date < budget.End && x.Account_AccountID == budget.Account_AccountID).ToList();
 
             var dto = budget.MapTo<BudgetDTO>();
 
@@ -61,6 +61,31 @@ namespace MABMoney.Services
                     Amount = x.Amount,
                     Total = transactions.Where(t => t.Category_CategoryID == x.Category_CategoryID).Sum(t => Math.Abs(t.Amount))
                 }).ToList();
+
+                // Work out the total amount overspent across all categories
+                var overspend = dto.Category_Budgets.Where(x => x.Total > x.Amount).Select(x => x.Total - x.Amount).Sum();
+
+                // Get the total income since
+                var incomeSinceBudgetStart = transactions.Where(x => x.Amount > 0).ToList().Sum(x => x.Amount);
+                var unallocatedSpent = transactions.Where(x => x.Amount < 0 && x.Category_CategoryID == null).ToList().Sum(x => Math.Abs(x.Amount));
+
+                // Work out how much money has been allocated to budget categories
+                var allocated = dto.Category_Budgets.Sum(x => x.Amount);
+
+                dto.Category_Budgets.Add(new Category_BudgetDTO
+                {
+                    Budget_BudgetID = budget.BudgetID,
+                    Category_CategoryID = 0,
+                    Budget = budget.MapTo<BudgetDTO>(),
+                    Category = new CategoryDTO
+                    {
+                        CategoryID = 0,
+                        Name = "Unallocated",
+                        Type = CategoryTypeDTO.Expense
+                    },
+                    Amount = (incomeSinceBudgetStart - allocated) - overspend,
+                    Total = unallocatedSpent
+                });
             }
 
             return dto;
