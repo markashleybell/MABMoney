@@ -179,6 +179,7 @@
     <Compile Include="Models\Categories\EditViewModel.cs" />
     <Compile Include="Models\Categories\IndexViewModel.cs" />
     <Compile Include="Models\Home\MainNavigationViewModel.cs" />
+    <Compile Include="Models\Home\TransactionType.cs" />
     <Compile Include="Models\Transactions\CreateViewModel.cs" />
     <Compile Include="Models\Transactions\EditViewModel.cs" />
     <Compile Include="Models\Transactions\ImportViewModel.cs" />

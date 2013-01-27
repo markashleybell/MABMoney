@@ -14,16 +14,7 @@ namespace MABMoney.Web.Models.Home
     {
         public AccountDTO Account { get; set; }
         public List<TransactionDTO> Transactions { get; set; }
-
-        public TransactionType Type { get; set; }
-
-        [Required]
-        public DateTime Date { get; set; }
-        public string Description { get; set; }
-        [Required]
-        public decimal Amount { get; set; }
-        [DisplayName("Category")]
-        public int? Category_CategoryID { get; set; }
+        
         public IQueryable<SelectListItem> IncomeCategories { get; set; }
         public IQueryable<SelectListItem> ExpenseCategories { get; set; }
         [DisplayName("Account")]
@@ -31,11 +22,15 @@ namespace MABMoney.Web.Models.Home
         public IQueryable<SelectListItem> Accounts { get; set; }
 
         public BudgetDTO Budget { get; set; }
-    }
 
-    public enum TransactionType
-    {
-        Income,
-        Expense
+        // Transaction form fields
+        public TransactionType Type { get; set; }
+        [DisplayName("Category")]
+        public int? Category_CategoryID { get; set; }
+        [Required]
+        public DateTime Date { get; set; }
+        public string Description { get; set; }
+        [Required]
+        public decimal Amount { get; set; }
     }
 }
