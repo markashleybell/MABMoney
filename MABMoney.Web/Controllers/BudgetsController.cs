@@ -119,7 +119,7 @@ namespace MABMoney.Web.Controllers
 
             var model = dto.MapTo<EditViewModel>();
             model.Accounts = DataHelpers.GetAccountSelectOptions(_accountServices, profile.UserID);
-            model.Categories = dto.Category_Budgets.Select(x => new Category_BudgetViewModel { 
+            model.Categories = dto.Category_Budgets.Where(x => x.Category_CategoryID != 0).Select(x => new Category_BudgetViewModel { 
                 Name = x.Category.Name,
                 Budget_BudgetID = x.Budget_BudgetID,
                 Category_CategoryID = x.Category_CategoryID,

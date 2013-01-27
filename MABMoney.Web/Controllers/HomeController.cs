@@ -43,48 +43,57 @@ namespace MABMoney.Web.Controllers
             return TransactionType.Expense;
         }
 
-        [Authenticate]
-        public ActionResult Index(ProfileViewModel profile)
+        private IndexViewModel GetModelData(int userId, int? accountId)
         {
-            var user = _userServices.Get(profile.UserID);
+            var user = _userServices.Get(userId);
 
-            var account = _accountServices.Get(profile.UserID, user.Accounts.First().AccountID);
-            var transactions = _transactionServices.All(profile.UserID).Where(x => x.Account_AccountID == account.AccountID).ToList();
+            var account = _accountServices.Get(userId, ((accountId.HasValue) ? accountId.Value : user.Accounts.First().AccountID));
 
-            return View(new IndexViewModel { 
+            var model = new IndexViewModel
+            {
                 Date = _dateProvider.Date,
                 Account = account,
                 Account_AccountID = account.AccountID,
-                Transactions = transactions,
-                IncomeCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, profile.UserID, account.AccountID, CategoryTypeDTO.Income),
-                ExpenseCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, profile.UserID, account.AccountID, CategoryTypeDTO.Expense),
-                Accounts = DataHelpers.GetAccountSelectOptions(_accountServices, profile.UserID),
-                Type = GetDefaultTransationTypeForAccount(account),
-                Budget = _budgetServices.GetLatest(profile.UserID, account.AccountID)
-            });
+                IncomeCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, userId, account.AccountID, CategoryTypeDTO.Income),
+                ExpenseCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, userId, account.AccountID, CategoryTypeDTO.Expense),
+                Accounts = DataHelpers.GetAccountSelectOptions(_accountServices, userId),
+                Type = GetDefaultTransationTypeForAccount(account)
+            };
+
+            var now = _dateProvider.Date;
+
+            model.From = new DateTime(now.Year, now.Month, 1);
+            model.To = new DateTime(now.Year, now.Month, DateTime.DaysInMonth(now.Year, now.Month));
+
+            // Get latest budget, if there is one
+            var latestBudget = _budgetServices.GetLatest(userId, account.AccountID);
+
+            var transactions = _transactionServices.All(userId).Where(x => x.Account_AccountID == account.AccountID);
+
+            if (latestBudget != null)
+            {
+                transactions = transactions.Where(x => x.Date >= latestBudget.Start && x.Date <= latestBudget.End);
+                model.From = latestBudget.Start;
+                model.To = latestBudget.End;
+            }
+
+            model.Transactions = transactions.ToList();
+            model.Budget = latestBudget;
+
+            return model;
+        }
+
+        [Authenticate]
+        public ActionResult Index(ProfileViewModel profile)
+        {
+            return View(GetModelData(profile.UserID, null));
         }
 
         [Authenticate]
         [HttpPost]
         public ActionResult Index(ProfileViewModel profile, int account_accountId)
         {
-            var user = _userServices.Get(profile.UserID);
-
-            var account = _accountServices.Get(profile.UserID, account_accountId);
-            var transactions = _transactionServices.All(profile.UserID).Where(x => x.Account_AccountID == account.AccountID).ToList();
-
-            return View(new IndexViewModel
-            {
-                Date = _dateProvider.Date,
-                Account = account,
-                Account_AccountID = account.AccountID,
-                Transactions = transactions,
-                IncomeCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, profile.UserID, account.AccountID, CategoryTypeDTO.Income),
-                ExpenseCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, profile.UserID, account.AccountID, CategoryTypeDTO.Expense),
-                Accounts = DataHelpers.GetAccountSelectOptions(_accountServices, profile.UserID),
-                Type = GetDefaultTransationTypeForAccount(account),
-                Budget = _budgetServices.GetLatest(profile.UserID, account.AccountID)
-            });
+            return View(GetModelData(profile.UserID, account_accountId));
         }
 
         [Authenticate]
@@ -98,6 +107,7 @@ namespace MABMoney.Web.Controllers
                 model.IncomeCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, profile.UserID, model.Account_AccountID, CategoryTypeDTO.Income);
                 model.ExpenseCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, profile.UserID, model.Account_AccountID, CategoryTypeDTO.Expense);
                 model.Accounts = DataHelpers.GetAccountSelectOptions(_accountServices, profile.UserID);
+
                 return View("Index", model);
             }
 
@@ -121,18 +131,10 @@ namespace MABMoney.Web.Controllers
             ModelState.Remove("Description");
             ModelState.Remove("Amount");
 
-            // Change to show index view directly so we can return to the correct 
-            // account/tab without a ton of querystring params
-            return View("Index", new IndexViewModel { 
-                Date = _dateProvider.Date,
-                Account = _accountServices.Get(profile.UserID, model.Account_AccountID),
-                Transactions = _transactionServices.All(profile.UserID).Where(x => x.Account_AccountID == model.Account_AccountID).ToList(),
-                IncomeCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, profile.UserID, model.Account_AccountID, CategoryTypeDTO.Income),
-                ExpenseCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, profile.UserID, model.Account_AccountID, CategoryTypeDTO.Expense),
-                Accounts = DataHelpers.GetAccountSelectOptions(_accountServices, profile.UserID),
-                Type = model.Type,
-                Budget = _budgetServices.GetLatest(profile.UserID, model.Account_AccountID)
-            });
+            var displayModel = GetModelData(profile.UserID, model.Account_AccountID);
+            displayModel.Type = model.Type;
+
+            return View("Index", displayModel);
         }
 
         public ActionResult MainNavigation(ProfileViewModel profile)

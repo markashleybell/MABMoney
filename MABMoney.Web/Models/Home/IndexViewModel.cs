@@ -12,6 +12,9 @@ namespace MABMoney.Web.Models.Home
 {
     public class IndexViewModel
     {
+        public DateTime From { get; set; }
+        public DateTime To { get; set; }
+
         public AccountDTO Account { get; set; }
         public List<TransactionDTO> Transactions { get; set; }
         

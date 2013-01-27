@@ -115,6 +115,16 @@ namespace MABMoney.Tests
                             Category_CategoryID = 4,
                             Amount = 50,
                             Total = 100
+                        },
+                        new Category_BudgetDTO {
+                            Category = new CategoryDTO {
+                                Name = "Uncategorised",
+                                Type = CategoryTypeDTO.Expense,
+                                CategoryID = 0
+                            },
+                            Category_CategoryID = 0,
+                            Amount = 100,
+                            Total = 0
                         }
                     }
                 }
