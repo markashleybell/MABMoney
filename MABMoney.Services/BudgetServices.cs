@@ -65,27 +65,37 @@ namespace MABMoney.Services
                 // Work out the total amount overspent across all categories
                 var overspend = dto.Category_Budgets.Where(x => x.Total > x.Amount).Select(x => x.Total - x.Amount).Sum();
 
-                // Get the total income since
+                // Get the total income since the budget start date
                 var incomeSinceBudgetStart = transactions.Where(x => x.Amount > 0).ToList().Sum(x => x.Amount);
-                var unallocatedSpent = transactions.Where(x => x.Amount < 0 && x.Category_CategoryID == null).ToList().Sum(x => Math.Abs(x.Amount));
-
+                
                 // Work out how much money has been allocated to budget categories
                 var allocated = dto.Category_Budgets.Sum(x => x.Amount);
 
-                dto.Category_Budgets.Add(new Category_BudgetDTO
+                // Work out how much money is not allocated to any budget category (disposable income)
+                var unallocatedAmount = (incomeSinceBudgetStart - allocated) - overspend;
+
+                // Work out how much money was spent in transactions not assigned to a category
+                var unallocatedSpent = transactions.Where(x => x.Amount < 0 && x.Category_CategoryID == null).ToList().Sum(x => Math.Abs(x.Amount));
+
+                // If there is money left over after all budget category amounts and any overspend have been subtracted
+                if (incomeSinceBudgetStart > allocated)
                 {
-                    Budget_BudgetID = budget.BudgetID,
-                    Category_CategoryID = 0,
-                    Budget = budget.MapTo<BudgetDTO>(),
-                    Category = new CategoryDTO
+                    // Show how much and how much we've spent so far
+                    dto.Category_Budgets.Add(new Category_BudgetDTO
                     {
-                        CategoryID = 0,
-                        Name = "Unallocated",
-                        Type = CategoryTypeDTO.Expense
-                    },
-                    Amount = (incomeSinceBudgetStart - allocated) - overspend,
-                    Total = unallocatedSpent
-                });
+                        Budget_BudgetID = budget.BudgetID,
+                        Category_CategoryID = 0,
+                        Budget = budget.MapTo<BudgetDTO>(),
+                        Category = new CategoryDTO
+                        {
+                            CategoryID = 0,
+                            Name = "Unallocated",
+                            Type = CategoryTypeDTO.Expense
+                        },
+                        Amount = unallocatedAmount,
+                        Total = unallocatedSpent
+                    });
+                }
             }
 
             return dto;
