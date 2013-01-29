@@ -79,9 +79,9 @@ namespace MABMoney.Services
                 var account = _accountServices.Get(userId, budget.Account.AccountID);
                 var allocatedSpent = dto.Category_Budgets.Sum(x => x.Total);
 
-                var balanceAtBudgetStart = transactions.Where(x => x.Date < budget.Start).ToList().Sum(x => x.Amount);
+                var balanceAtBudgetStart = transactions.Where(x => x.Date < budget.Start).ToList().Sum(x => x.Amount) + account.StartingBalance;
 
-                var unallocatedAmount = ((balanceAtBudgetStart - allocated) - overspend) + transactions.Where(x => x.Amount > 0).Sum(x => x.Amount);
+                var unallocatedAmount = ((balanceAtBudgetStart - allocated) - overspend) + budgetTransactions.Where(x => x.Amount > 0).Sum(x => x.Amount);
 
                 // Work out how much money was spent in transactions not assigned to a category
                 var unallocatedSpent = budgetTransactions.Where(x => x.Amount < 0 && x.Category_CategoryID == null).ToList().Sum(x => Math.Abs(x.Amount));
