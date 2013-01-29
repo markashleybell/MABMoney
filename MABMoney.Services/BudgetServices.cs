@@ -15,14 +15,16 @@ namespace MABMoney.Services
         private IRepository<Account, int> _accounts;
         private IRepository<Category_Budget, int> _categories_budgets;
         private IRepository<Transaction, int> _transactions;
+        private IAccountServices _accountServices;
         private IUnitOfWork _unitOfWork;
 
-        public BudgetServices(IRepository<Budget, int> budgets, IRepository<Account, int> accounts, IRepository<Category_Budget, int> categories_budgets, IRepository<Transaction, int> transactions, IUnitOfWork unitOfWork)
+        public BudgetServices(IRepository<Budget, int> budgets, IRepository<Account, int> accounts, IRepository<Category_Budget, int> categories_budgets, IRepository<Transaction, int> transactions, IAccountServices accountServices, IUnitOfWork unitOfWork)
         {
             _budgets = budgets;
             _accounts = accounts;
             _categories_budgets = categories_budgets;
             _transactions = transactions;
+            _accountServices = accountServices;
             _unitOfWork = unitOfWork;
         }
 
@@ -33,15 +35,15 @@ namespace MABMoney.Services
 
         public BudgetDTO Get(int userId, int id)
         {
-            return MapBudget(_budgets.Query(x => x.Account.User_UserID == userId && x.BudgetID == id).FirstOrDefault());
+            return MapBudget(userId, _budgets.Query(x => x.Account.User_UserID == userId && x.BudgetID == id).FirstOrDefault());
         }
 
         public BudgetDTO GetLatest(int userId, int accountId)
         {
-            return MapBudget(_budgets.Query(x => x.Account.User_UserID == userId && x.Account_AccountID == accountId).OrderByDescending(x => x.BudgetID).FirstOrDefault());
+            return MapBudget(userId, _budgets.Query(x => x.Account.User_UserID == userId && x.Account_AccountID == accountId).OrderByDescending(x => x.BudgetID).FirstOrDefault());
         }
 
-        private BudgetDTO MapBudget(Budget budget)
+        private BudgetDTO MapBudget(int userId, Budget budget)
         {
             if (budget == null)
                 return null;
@@ -65,20 +67,18 @@ namespace MABMoney.Services
                 // Work out the total amount overspent across all categories
                 var overspend = dto.Category_Budgets.Where(x => x.Total > x.Amount).Select(x => x.Total - x.Amount).Sum();
 
-                // Get the total income since the budget start date
-                var incomeSinceBudgetStart = transactions.Where(x => x.Amount > 0).ToList().Sum(x => x.Amount);
-                
                 // Work out how much money has been allocated to budget categories
                 var allocated = dto.Category_Budgets.Sum(x => x.Amount);
 
                 // Work out how much money is not allocated to any budget category (disposable income)
-                var unallocatedAmount = (incomeSinceBudgetStart - allocated) - overspend;
+                var account = _accountServices.Get(userId, budget.Account.AccountID);
+                var unallocatedAmount = (account.CurrentBalance - allocated) - overspend;
 
                 // Work out how much money was spent in transactions not assigned to a category
                 var unallocatedSpent = transactions.Where(x => x.Amount < 0 && x.Category_CategoryID == null).ToList().Sum(x => Math.Abs(x.Amount));
 
                 // If there is money left over after all budget category amounts and any overspend have been subtracted
-                if (incomeSinceBudgetStart > allocated)
+                if (unallocatedAmount > 0)
                 {
                     // Show how much and how much we've spent so far
                     dto.Category_Budgets.Add(new Category_BudgetDTO
