@@ -70,9 +70,11 @@ namespace MABMoney.Services
                 // Work out how much money has been allocated to budget categories
                 var allocated = dto.Category_Budgets.Sum(x => x.Amount);
 
-                // Work out how much money is not allocated to any budget category (disposable income)
+                // Work out how much money has been spent in budget categories
                 var account = _accountServices.Get(userId, budget.Account.AccountID);
-                var unallocatedAmount = (account.CurrentBalance - allocated) - overspend;
+                var allocatedSpent = dto.Category_Budgets.Sum(x => x.Total);
+
+                var unallocatedAmount = (-Math.Abs(allocatedSpent - allocated)) + account.CurrentBalance;
 
                 // Work out how much money was spent in transactions not assigned to a category
                 var unallocatedSpent = transactions.Where(x => x.Amount < 0 && x.Category_CategoryID == null).ToList().Sum(x => Math.Abs(x.Amount));
