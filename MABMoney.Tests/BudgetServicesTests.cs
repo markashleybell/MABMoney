@@ -1,0 +1,149 @@
+﻿using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using MABMoney.Services;
+using MABMoney.Data;
+using MABMoney.Domain;
+using Rhino.Mocks;
+using MABMoney.Services.DTO;
+
+namespace MABMoney.Tests
+{
+    [TestFixture]
+    public class BudgetServicesTests
+    {
+        private IAccountServices _accountServices;
+        private IRepository<Budget, int> _budgets;
+        private IRepository<Account, int> _accounts;
+        private IRepository<Category_Budget, int> _categories_budgets;
+        private IRepository<Transaction, int> _transactions;
+
+        [SetUp]
+        public void SetUp()
+        {
+            var accountDtos = new List<AccountDTO> {
+                new AccountDTO { 
+                    AccountID = 1,
+                    Name = "Current",
+                    StartingBalance = 100,
+                    User_UserID = 1,
+                    CurrentBalance = 100
+                }
+            };
+
+            var accounts = new List<Account> {
+                new Account { 
+                    AccountID = 1,
+                    Name = "Current",
+                    StartingBalance = 100,
+                    User_UserID = 1
+                }
+            };
+
+            var categories = new List<Category> {
+                new Category { 
+                    CategoryID = 1,
+                    Name = "Salary",
+                    Account_AccountID = 1,
+                    Type = CategoryType.Income
+                },
+                new Category { 
+                    CategoryID = 2,
+                    Name = "Rent",
+                    Account_AccountID = 1,
+                    Type = CategoryType.Expense
+                },
+                new Category { 
+                    CategoryID = 3,
+                    Name = "Bills",
+                    Account_AccountID = 1,
+                    Type = CategoryType.Expense
+                }
+            };
+
+            var categories_budgets = new List<Category_Budget> {
+                new Category_Budget {
+                    Category = categories[1],
+                    Budget_BudgetID = 1,
+                    Category_CategoryID = 2,
+                    Amount = 500
+                },
+                new Category_Budget {
+                    Category = categories[2],
+                    Budget_BudgetID = 1,
+                    Category_CategoryID = 3,
+                    Amount = 250
+                }
+            };
+
+            var budgets = new List<Budget> {
+                new Budget { 
+                    BudgetID = 1,
+                    Account_AccountID = 1,
+                    Account = accounts[0],
+                    Start = new DateTime(2020, 1, 1),
+                    End = new DateTime(2020, 1, 31),
+                    Category_Budgets = categories_budgets
+                }
+            };
+
+            var transactions = new List<Transaction> {
+                new Transaction { 
+                    TransactionID = 1,
+                    Account_AccountID = 1,
+                    Category_CategoryID = 1,
+                    Date = new DateTime(2020, 1, 1),
+                    Description = "SALARY",
+                    Amount = 1000
+                },
+                new Transaction { 
+                    TransactionID = 1,
+                    Account_AccountID = 1,
+                    Category_CategoryID = 2,
+                    Date = new DateTime(2020, 1, 1),
+                    Description = "RENT",
+                    Amount = -500
+                },
+                new Transaction { 
+                    TransactionID = 1,
+                    Account_AccountID = 1,
+                    Category_CategoryID = 3,
+                    Date = new DateTime(2020, 1, 2),
+                    Description = "BILLS",
+                    Amount = -150
+                }
+            };
+
+            _accountServices = MockRepository.GenerateStub<IAccountServices>();
+            _accountServices.Stub(x => x.All(1)).Return(accountDtos);
+            _accountServices.Stub(x => x.Get(1, 1)).Return(accountDtos[0]);
+
+            _budgets = MockRepository.GenerateStub<IRepository<Budget, int>>();
+            _budgets.Stub(x => x.All()).Return(budgets.AsQueryable());
+            _budgets.Stub(x => x.Get(1)).Return(budgets[0]);
+            _budgets.Stub(x => x.Query(a => a.Account.AccountID == 1 && a.BudgetID == 1)).Return(budgets.Where(x => x.BudgetID == 1 && x.Account_AccountID == 1).AsQueryable());
+
+            _accounts = MockRepository.GenerateStub<IRepository<Account, int>>();
+            _accounts.Stub(x => x.All()).Return(accounts.AsQueryable());
+
+            _categories_budgets = MockRepository.GenerateStub<IRepository<Category_Budget, int>>();
+            _categories_budgets.Stub(x => x.All()).Return(categories_budgets.AsQueryable());
+
+            _transactions = MockRepository.GenerateStub<IRepository<Transaction, int>>();
+            _transactions.Stub(x => x.All()).Return(transactions.AsQueryable());
+        }
+
+        [Test]
+        public void Unallocated_Funds_Calculated_Correctly()
+        {
+            var service = new BudgetServices(_budgets, _accounts, _categories_budgets, _transactions, _accountServices, null);
+
+            var dto = service.Get(1, 1);
+
+            dto.ShouldNotBeNull();
+        }
+    }
+}

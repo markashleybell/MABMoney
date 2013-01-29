@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="AccountControllerTests.cs" />
     <Compile Include="BudgetControllerTests.cs" />
+    <Compile Include="BudgetServicesTests.cs" />
     <Compile Include="CategoryControllerTests.cs" />
     <Compile Include="HomeControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
