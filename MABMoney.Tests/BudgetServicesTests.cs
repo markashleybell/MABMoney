@@ -64,31 +64,34 @@ namespace MABMoney.Tests
                 }
             };
 
-            var categories_budgets = new List<Category_Budget> {
-                new Category_Budget {
-                    Category = categories[1],
-                    Budget_BudgetID = 1,
-                    Category_CategoryID = 2,
-                    Amount = 500
-                },
-                new Category_Budget {
-                    Category = categories[2],
-                    Budget_BudgetID = 1,
-                    Category_CategoryID = 3,
-                    Amount = 250
-                }
-            };
-
             var budgets = new List<Budget> {
                 new Budget { 
                     BudgetID = 1,
                     Account_AccountID = 1,
                     Account = accounts[0],
                     Start = new DateTime(2020, 1, 1),
-                    End = new DateTime(2020, 1, 31),
-                    Category_Budgets = categories_budgets
+                    End = new DateTime(2020, 1, 31)
                 }
             };
+
+            var categories_budgets = new List<Category_Budget> {
+                new Category_Budget {
+                    Category = categories[1],
+                    Budget_BudgetID = 1,
+                    Category_CategoryID = 2,
+                    Amount = 500,
+                    Budget = budgets[0]
+                },
+                new Category_Budget {
+                    Category = categories[2],
+                    Budget_BudgetID = 1,
+                    Category_CategoryID = 3,
+                    Amount = 250,
+                    Budget = budgets[0]
+                }
+            };
+
+            budgets[0].Category_Budgets = categories_budgets;
 
             var transactions = new List<Transaction> {
                 new Transaction { 
@@ -124,7 +127,7 @@ namespace MABMoney.Tests
             _budgets = MockRepository.GenerateStub<IRepository<Budget, int>>();
             _budgets.Stub(x => x.All()).Return(budgets.AsQueryable());
             _budgets.Stub(x => x.Get(1)).Return(budgets[0]);
-            _budgets.Stub(x => x.Query(a => a.Account.AccountID == 1 && a.BudgetID == 1)).Return(budgets.Where(x => x.BudgetID == 1 && x.Account_AccountID == 1).AsQueryable());
+            _budgets.Stub(x => x.Query(null)).Return(budgets.AsQueryable()).IgnoreArguments();
 
             _accounts = MockRepository.GenerateStub<IRepository<Account, int>>();
             _accounts.Stub(x => x.All()).Return(accounts.AsQueryable());
@@ -134,6 +137,7 @@ namespace MABMoney.Tests
 
             _transactions = MockRepository.GenerateStub<IRepository<Transaction, int>>();
             _transactions.Stub(x => x.All()).Return(transactions.AsQueryable());
+            _transactions.Stub(x => x.Query(null)).Return(transactions.AsQueryable()).IgnoreArguments();
         }
 
         [Test]
