@@ -29,6 +29,9 @@ namespace MABMoney.Services
                     {
                         TransactionID = t.TransactionID,
                         Account_AccountID = t.Account_AccountID,
+                        Account = new AccountDTO {
+                            Name = t.Account.Name
+                        },
                         Date = t.Date,
                         Amount = t.Amount,
                         Description = t.Description,
