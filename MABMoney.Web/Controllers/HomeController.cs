@@ -11,6 +11,7 @@ using mab.lib.SimpleMapper;
 using MABMoney.Services.DTO;
 using MABMoney.Web.Infrastructure;
 using MABMoney.Web.Models;
+using System.Text;
 
 namespace MABMoney.Web.Controllers
 {
@@ -84,8 +85,20 @@ namespace MABMoney.Web.Controllers
         }
 
         [Authenticate]
-        public ActionResult Index(ProfileViewModel profile)
+        public ActionResult Index(ProfileViewModel profile, string state = null)
         {
+            if (state != null)
+            {
+                var decodedPageState = Encoding.UTF8.GetString(HttpServerUtility.UrlTokenDecode(state));
+                var pageState = EncryptionHelpers.DecryptStringAES(decodedPageState, _config.SharedSecret).Split('-');
+
+                var model = GetModelData(profile.UserID, Convert.ToInt32(pageState[0]));
+
+                model.Type = (TransactionType)Enum.Parse(typeof(TransactionType), pageState[1]);
+
+                return View(model);
+            }
+
             return View(GetModelData(profile.UserID, null));
         }
 
@@ -93,7 +106,10 @@ namespace MABMoney.Web.Controllers
         [HttpPost]
         public ActionResult Index(ProfileViewModel profile, int account_accountId)
         {
-            return View(GetModelData(profile.UserID, account_accountId));
+            var pageState = EncryptionHelpers.EncryptStringAES(account_accountId + "-" + TransactionType.Expense, _config.SharedSecret);
+            var encodedPageState = HttpServerUtility.UrlTokenEncode(Encoding.UTF8.GetBytes(pageState));
+
+            return RedirectToRoute("Home", new { state = encodedPageState });
         }
 
         [Authenticate]
@@ -126,15 +142,20 @@ namespace MABMoney.Web.Controllers
             var dto = model.MapTo<TransactionDTO>();
             _transactionServices.Save(profile.UserID, dto);
 
-            ModelState.Remove("Date");
-            ModelState.Remove("Category_CategoryID");
-            ModelState.Remove("Description");
-            ModelState.Remove("Amount");
+            //ModelState.Remove("Date");
+            //ModelState.Remove("Category_CategoryID");
+            //ModelState.Remove("Description");
+            //ModelState.Remove("Amount");
 
-            var displayModel = GetModelData(profile.UserID, model.Account_AccountID);
-            displayModel.Type = model.Type;
+            //var displayModel = GetModelData(profile.UserID, model.Account_AccountID);
+            //displayModel.Type = model.Type;
 
-            return View("Index", displayModel);
+            //return View("Index", displayModel);
+
+            var pageState = EncryptionHelpers.EncryptStringAES(model.Account_AccountID + "-" + model.Type, _config.SharedSecret);
+            var encodedPageState = HttpServerUtility.UrlTokenEncode(Encoding.UTF8.GetBytes(pageState));
+
+            return RedirectToRoute("Home", new { state = encodedPageState });
         }
 
         public ActionResult MainNavigation(ProfileViewModel profile)

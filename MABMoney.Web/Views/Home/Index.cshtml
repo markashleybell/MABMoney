@@ -84,7 +84,7 @@
         {
             <div class="controls controls-row">
                 @Html.EditorFor(x => x.Date, new { @class = "span2", placeholder = "Date" })
-                @Html.DropDownListFor(x => x.Category_CategoryID, Model.ExpenseCategories, "Category", new { @class = "span2" })
+                @Html.DropDownListFor(x => x.Category_CategoryID, Model.ExpenseCategories, "Category...", new { @class = "span2" })
                 @Html.TextBoxFor(x => x.Description, new { @class = "span4", placeholder = "Description (optional)" })
                 @Html.TextBoxFor(x => x.Amount, new { @class = "span2", placeholder = "Amount" })              
                 <div class="span2">
