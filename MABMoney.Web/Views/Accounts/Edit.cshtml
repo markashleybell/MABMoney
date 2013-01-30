@@ -34,10 +34,10 @@
     </div>
     
     <p>@Html.HiddenFor(x => x.AccountID)
-    <input type="submit" value="Save" /></p>
+    <input type="submit" value="Save" class="btn btn-primary" /></p>
 }
 
 @using (Html.BeginForm("Delete", "Accounts"))
 {
-    <p><input type="hidden" name="id" value="@Model.AccountID" /><input type="submit" value="Delete" /></p>
+    <p><input type="hidden" name="id" value="@Model.AccountID" /><input type="submit" value="Delete" class="btn" /></p>
 }

@@ -26,4 +26,10 @@
     </tbody>
 </table>
 
-<p>@Html.ActionLink("Add New Budget", "Create")</p>
+<div class="row button-row">
+    <div class="span2">
+        @Html.ActionLink("Add New Budget", "Create", null, new { @class = "btn btn-primary" })
+    </div>
+    <div class="span8">&nbsp;</div>
+    <div class="span2">&nbsp;</div>
+</div>

@@ -22,10 +22,10 @@
     @Html.ValidationMessageFor(x => x.Type)</p>
     
     <p>@Html.HiddenFor(x => x.CategoryID)
-    <input type="submit" value="Save" /></p>
+    <input type="submit" value="Save" class="btn btn-primary" /></p>
 }
 
 @using (Html.BeginForm("Delete", "Categories"))
 {
-    <p><input type="hidden" name="id" value="@Model.CategoryID" /><input type="submit" value="Delete" /></p>
+    <p><input type="hidden" name="id" value="@Model.CategoryID" /><input type="submit" value="Delete" class="btn" /></p>
 }

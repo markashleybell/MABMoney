@@ -30,10 +30,10 @@
     @Html.ValidationMessageFor(x => x.Account_AccountID)</p>
 
     <p>@Html.HiddenFor(x => x.TransactionID)
-    <input type="submit" value="Save" /></p>
+    <input type="submit" value="Save" class="btn btn-primary" /></p>
 }
 
 @using (Html.BeginForm("Delete", "Transactions"))
 {
-    <p><input type="hidden" name="id" value="@Model.TransactionID" /><input type="submit" value="Delete" /></p>
+    <p><input type="hidden" name="id" value="@Model.TransactionID" /><input type="submit" value="Delete" class="btn" /></p>
 }

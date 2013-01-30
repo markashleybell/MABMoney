@@ -24,10 +24,10 @@
     @Html.EditorFor(x => x.Categories)
 
     <p>@Html.HiddenFor(x => x.BudgetID)
-    <input type="submit" value="Save" /></p>
+    <input type="submit" value="Save" class="btn btn-primary" /></p>
 }
 
 @using (Html.BeginForm("Delete", "Budgets"))
 {
-    <p><input type="hidden" name="id" value="@Model.BudgetID" /><input type="submit" value="Delete" /></p>
+    <p><input type="hidden" name="id" value="@Model.BudgetID" /><input type="submit" value="Delete" class="btn" /></p>
 }

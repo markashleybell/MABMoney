@@ -135,10 +135,19 @@
                 </div>
             </div>
             }
-            
-            <p>@Html.ActionLink("Edit budget", "Edit", "Budgets", new { id = Model.Account_AccountID }, null)</p>
         }
-        <p>@Html.ActionLink("Add a new budget", "Create", "Budgets", new { id = Model.Account_AccountID }, null)</p>
+
+        <div class="row button-row">
+            <div class="span2">
+                @Html.ActionLink("Edit this budget", "Edit", "Budgets", new { id = Model.Account_AccountID }, new { @class = "btn btn-primary" })
+            </div>
+            <div class="span8">&nbsp;</div>
+            <div class="span2">
+                @Html.ActionLink("Add a new budget", "Create", "Budgets", new { id = Model.Account_AccountID }, new { @class = "btn btn-primary pull-right" })
+            </div>
+        </div>
+
+        <p></p>
     </div>
  </div>
 

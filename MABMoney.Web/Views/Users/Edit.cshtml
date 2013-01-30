@@ -11,10 +11,10 @@
 {
     @Html.EditorForModel()
 
-    <p><input type="submit" value="Save" /></p>
+    <p><input type="submit" value="Save" class="btn btn-primary" /></p>
 }
 
 @using (Html.BeginForm("Delete", "Users"))
 {
-    <p><input type="hidden" name="id" value="@Model.UserID" /><input type="submit" value="Delete" /></p>
+    <p><input type="hidden" name="id" value="@Model.UserID" /><input type="submit" value="Delete" class="btn" /></p>
 }
