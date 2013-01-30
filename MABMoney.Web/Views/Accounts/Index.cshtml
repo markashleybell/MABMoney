@@ -12,6 +12,7 @@
     <thead>
         <tr>
             <th>Name</th>
+            <th>Current Balance</th>
             <th>Edit</th>
         </tr>
     </thead>
@@ -20,6 +21,7 @@
         {
         <tr>
             <td>@account.Name</td>
+            <td>@account.CurrentBalance</td>
             <td>@Html.ActionLink("Edit", "Edit", new { id = account.AccountID })</td>
         </tr>
         }

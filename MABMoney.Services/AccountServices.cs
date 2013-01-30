@@ -26,7 +26,17 @@ namespace MABMoney.Services
 
         public IEnumerable<AccountDTO> All(int userId)
         {
-            return _accounts.Query(x => x.User_UserID == userId).ToList().MapToList<AccountDTO>();
+            var dto = _accounts.Query(x => x.User_UserID == userId).Select(a => new AccountDTO { 
+                AccountID = a.AccountID,
+                Type = (AccountTypeDTO)a.Type,
+                Name = a.Name,
+                StartingBalance = a.StartingBalance,
+                // CurrentBalance = a.StartingBalance + (a.Transactions.Where(t => !t.Deleted).Select(t => (decimal?)t.Amount).Sum() ?? 0M),
+                CurrentBalance = a.StartingBalance + (a.Transactions.Where(t => !t.Deleted).Select(t => t.Amount).DefaultIfEmpty(0).Sum()),
+                Default = a.Default
+            }).ToList();
+
+            return dto;
         }
 
         public AccountDTO Get(int userId, int id)
@@ -71,23 +81,6 @@ namespace MABMoney.Services
                 _accounts.Remove(id);
                 _unitOfWork.Commit(userId);
             }
-        }
-
-        public decimal GetNetWorth(int userId)
-        {
-            var user = _users.Get(userId);
-
-            if (user == null)
-                return 0;
-
-            var netWorth = 0M;
-
-            foreach (var account in user.Accounts)
-            {
-                netWorth += Get(userId, account.AccountID).CurrentBalance;
-            }
-
-            return netWorth;
         }
     }
 }

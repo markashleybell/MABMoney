@@ -139,9 +139,12 @@ namespace MABMoney.Web.Controllers
 
         public ActionResult MainNavigation(ProfileViewModel profile)
         {
+            var accounts = _accountServices.All(profile.UserID).ToList();
+
             return View(new MainNavigationViewModel { 
                 Profile = profile,
-                NetWorth = _accountServices.GetNetWorth(profile.UserID)
+                Accounts = accounts,
+                NetWorth = accounts.Sum(x => x.CurrentBalance)
             });
         }
     }
