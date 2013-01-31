@@ -48,16 +48,16 @@ namespace MABMoney.Web.Controllers
         {
             var user = _userServices.Get(userId);
 
-            var account = _accountServices.Get(userId, ((accountId.HasValue) ? accountId.Value : user.Accounts.First().AccountID));
+            var account = _accountServices.Get(((accountId.HasValue) ? accountId.Value : user.Accounts.First().AccountID));
 
             var model = new IndexViewModel
             {
                 Date = _dateProvider.Date,
                 Account = account,
                 Account_AccountID = account.AccountID,
-                IncomeCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, userId, account.AccountID, CategoryTypeDTO.Income),
-                ExpenseCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, userId, account.AccountID, CategoryTypeDTO.Expense),
-                Accounts = DataHelpers.GetAccountSelectOptions(_accountServices, userId),
+                IncomeCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, account.AccountID, CategoryTypeDTO.Income),
+                ExpenseCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, account.AccountID, CategoryTypeDTO.Expense),
+                Accounts = DataHelpers.GetAccountSelectOptions(_accountServices),
                 Type = GetDefaultTransationTypeForAccount(account)
             };
 
@@ -67,9 +67,9 @@ namespace MABMoney.Web.Controllers
             model.To = new DateTime(now.Year, now.Month, DateTime.DaysInMonth(now.Year, now.Month));
 
             // Get latest budget, if there is one
-            var latestBudget = _budgetServices.GetLatest(userId, account.AccountID);
+            var latestBudget = _budgetServices.GetLatest(account.AccountID);
 
-            var transactions = _transactionServices.All(userId).Where(x => x.Account_AccountID == account.AccountID);
+            var transactions = _transactionServices.All().Where(x => x.Account_AccountID == account.AccountID);
 
             if (latestBudget != null)
             {
@@ -118,11 +118,11 @@ namespace MABMoney.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                model.Account = _accountServices.Get(profile.UserID, model.Account_AccountID);
-                model.Transactions = _transactionServices.All(profile.UserID).Where(x => x.Account_AccountID == model.Account_AccountID).ToList();
-                model.IncomeCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, profile.UserID, model.Account_AccountID, CategoryTypeDTO.Income);
-                model.ExpenseCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, profile.UserID, model.Account_AccountID, CategoryTypeDTO.Expense);
-                model.Accounts = DataHelpers.GetAccountSelectOptions(_accountServices, profile.UserID);
+                model.Account = _accountServices.Get(model.Account_AccountID);
+                model.Transactions = _transactionServices.All().Where(x => x.Account_AccountID == model.Account_AccountID).ToList();
+                model.IncomeCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, model.Account_AccountID, CategoryTypeDTO.Income);
+                model.ExpenseCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, model.Account_AccountID, CategoryTypeDTO.Expense);
+                model.Accounts = DataHelpers.GetAccountSelectOptions(_accountServices);
 
                 return View("Index", model);
             }
@@ -140,17 +140,8 @@ namespace MABMoney.Web.Controllers
             }
 
             var dto = model.MapTo<TransactionDTO>();
-            _transactionServices.Save(profile.UserID, dto);
+            _transactionServices.Save(dto);
 
-            //ModelState.Remove("Date");
-            //ModelState.Remove("Category_CategoryID");
-            //ModelState.Remove("Description");
-            //ModelState.Remove("Amount");
-
-            //var displayModel = GetModelData(profile.UserID, model.Account_AccountID);
-            //displayModel.Type = model.Type;
-
-            //return View("Index", displayModel);
 
             var pageState = EncryptionHelpers.EncryptStringAES(model.Account_AccountID + "-" + model.Type, _config.SharedSecret);
             var encodedPageState = HttpServerUtility.UrlTokenEncode(Encoding.UTF8.GetBytes(pageState));
@@ -160,7 +151,7 @@ namespace MABMoney.Web.Controllers
 
         public ActionResult MainNavigation(ProfileViewModel profile)
         {
-            var accounts = _accountServices.All(profile.UserID).ToList();
+            var accounts = _accountServices.All().ToList();
 
             return View(new MainNavigationViewModel { 
                 Profile = profile,

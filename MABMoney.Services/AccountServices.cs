@@ -16,17 +16,20 @@ namespace MABMoney.Services
         private IRepository<User, int> _users;
         private IUnitOfWork _unitOfWork;
 
+        private int _userId;
+
         public AccountServices(IRepository<Account, int> accounts, IRepository<Transaction, int> transactions, IRepository<User, int> users, IUnitOfWork unitOfWork)
         {
             _accounts = accounts;
             _transactions = transactions;
             _users = users;
             _unitOfWork = unitOfWork;
+            _userId = unitOfWork.DataStore.UserID;
         }
 
-        public IEnumerable<AccountDTO> All(int userId)
+        public IEnumerable<AccountDTO> All()
         {
-            var dto = _accounts.Query(x => x.User_UserID == userId).Select(a => new AccountDTO { 
+            var dto = _accounts.All().Where(x => x.User_UserID == _userId).Select(a => new AccountDTO { 
                 AccountID = a.AccountID,
                 Type = (AccountTypeDTO)a.Type,
                 Name = a.Name,
@@ -39,47 +42,48 @@ namespace MABMoney.Services
             return dto;
         }
 
-        public AccountDTO Get(int userId, int id)
+        public AccountDTO Get(int id)
         {
-            var dto = _accounts.Query(x => x.User_UserID == userId && x.AccountID == id).FirstOrDefault().MapTo<AccountDTO>();
+            var dto = _accounts.Query(x => x.User_UserID == _userId && x.AccountID == id).FirstOrDefault().MapTo<AccountDTO>();
             var transactions = _transactions.Query(x => x.Account_AccountID == dto.AccountID).ToList();
             dto.CurrentBalance = dto.StartingBalance + transactions.Sum(x => x.Amount);
 
             return dto;
         }
 
-        public void Save(int userId, AccountDTO dto)
+        public void Save(AccountDTO dto)
         {
-            var account = _accounts.Query(x => x.User_UserID == userId && x.AccountID == dto.AccountID).FirstOrDefault();
+            // Try and get the account
+            var account = _accounts.Get(dto.AccountID);
 
-            if (account != null)
+            // If the account exists AND belongs to this user
+            if (account != null && account.User_UserID == _userId)
             {
-                dto.User_UserID = userId;
+                // Update the account
+                dto.MapTo(account);
+                _unitOfWork.Commit();
+            }
+            else
+            {
+                // Add the account
+                account = dto.MapTo<Account>();
+                account.User_UserID = _userId;
+                _accounts.Add(account);
+                _unitOfWork.Commit();
 
-                if (dto.AccountID == 0)
-                {
-                    var entity = dto.MapTo<Account>();
-                    _accounts.Add(entity);
-                    _unitOfWork.Commit(userId);
-                    dto.AccountID = entity.AccountID;
-                }
-                else
-                {
-                    var entity = _accounts.Get(dto.AccountID);
-                    dto.MapTo(entity);
-                    _unitOfWork.Commit(userId);
-                }
+                // Update the DTO with the new ID
+                dto.AccountID = account.AccountID;
             }
         }
 
-        public void Delete(int userId, int id)
+        public void Delete(int id)
         {
-            var account = _accounts.Query(x => x.User_UserID == userId && x.AccountID == id).FirstOrDefault();
+            var account = _accounts.Query(x => x.User_UserID == _userId && x.AccountID == id).FirstOrDefault();
 
             if(account != null)
             {
                 _accounts.Remove(id);
-                _unitOfWork.Commit(userId);
+                _unitOfWork.Commit();
             }
         }
     }

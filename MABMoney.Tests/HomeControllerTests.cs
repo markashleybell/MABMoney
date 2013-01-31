@@ -35,14 +35,12 @@ namespace MABMoney.Tests
                 new AccountDTO { 
                     AccountID = 1,
                     Name = "Current",
-                    StartingBalance = 0,
-                    User_UserID = 1
+                    StartingBalance = 0
                 },
                 new AccountDTO { 
                     AccountID = 2,
                     Name = "Savings",
-                    StartingBalance = 500,
-                    User_UserID = 1
+                    StartingBalance = 500
                 }
             };
 
@@ -175,29 +173,29 @@ namespace MABMoney.Tests
             };
 
             _accountServices = MockRepository.GenerateStub<IAccountServices>();
-            _accountServices.Stub(x => x.All(1)).Return(accounts.Where(x => x.User_UserID == 1));
-            _accountServices.Stub(x => x.Get(1, 1)).Return(accounts[0]);
-            _accountServices.Stub(x => x.Get(1, 2)).Return(accounts[1]);
+            _accountServices.Stub(x => x.All()).Return(accounts);
+            _accountServices.Stub(x => x.Get(1)).Return(accounts[0]);
+            _accountServices.Stub(x => x.Get(2)).Return(accounts[1]);
 
             _categoryServices = MockRepository.GenerateStub<ICategoryServices>();
-            _categoryServices.Stub(x => x.All(1)).Return(categories);
-            _categoryServices.Stub(x => x.Get(1, 1)).Return(categories[0]);
-            _categoryServices.Stub(x => x.Get(1, 2)).Return(categories[1]);
-            _categoryServices.Stub(x => x.Get(1, 3)).Return(categories[2]);
-            _categoryServices.Stub(x => x.Get(1, 4)).Return(categories[3]);
-            _categoryServices.Stub(x => x.Get(1, 5)).Return(categories[4]);
+            _categoryServices.Stub(x => x.All()).Return(categories);
+            _categoryServices.Stub(x => x.Get(1)).Return(categories[0]);
+            _categoryServices.Stub(x => x.Get(2)).Return(categories[1]);
+            _categoryServices.Stub(x => x.Get(3)).Return(categories[2]);
+            _categoryServices.Stub(x => x.Get(4)).Return(categories[3]);
+            _categoryServices.Stub(x => x.Get(5)).Return(categories[4]);
 
             _transactionServices = MockRepository.GenerateStub<ITransactionServices>();
-            _transactionServices.Stub(x => x.All(1)).Return(transactions);
-            _transactionServices.Stub(x => x.Get(1, 1)).Return(transactions[0]);
-            _transactionServices.Stub(x => x.Get(1, 2)).Return(transactions[1]);
-            _transactionServices.Stub(x => x.Get(1, 3)).Return(transactions[2]);
+            _transactionServices.Stub(x => x.All()).Return(transactions);
+            _transactionServices.Stub(x => x.Get(1)).Return(transactions[0]);
+            _transactionServices.Stub(x => x.Get(2)).Return(transactions[1]);
+            _transactionServices.Stub(x => x.Get(3)).Return(transactions[2]);
 
             _budgetServices = MockRepository.GenerateStub<IBudgetServices>();
-            _budgetServices.Stub(x => x.All(1)).Return(budgets);
-            _budgetServices.Stub(x => x.Get(1, 1)).Return(budgets[0]);
-            _budgetServices.Stub(x => x.Get(1, 2)).Return(budgets[1]);
-            _budgetServices.Stub(x => x.GetLatest(1, 1)).Return(budgets[0]);
+            _budgetServices.Stub(x => x.All()).Return(budgets);
+            _budgetServices.Stub(x => x.Get(1)).Return(budgets[0]);
+            _budgetServices.Stub(x => x.Get(2)).Return(budgets[1]);
+            _budgetServices.Stub(x => x.GetLatest(1)).Return(budgets[0]);
 
             _userServices = MockRepository.GenerateStub<IUserServices>();
             _userServices.Stub(x => x.Get(1)).Return(user);

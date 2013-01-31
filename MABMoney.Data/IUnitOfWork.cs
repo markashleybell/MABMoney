@@ -8,6 +8,6 @@ namespace MABMoney.Data
     public interface IUnitOfWork
     {
         IDataStore DataStore { get; }
-        void Commit(int userId);
+        void Commit();
     }
 }

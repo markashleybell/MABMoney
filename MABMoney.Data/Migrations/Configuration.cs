@@ -29,7 +29,8 @@ namespace MABMoney.Data.Migrations
                     Forename = "Mark",
                     Surname = "Bell",
                     Email = "me@markashleybell.com",
-                    Password = "ALZByiJAcShmiQpEue7DR0g+RZYSWiSXJoF3VxFck96CEhW8SZakdXaJ+1PDgqGoXw==" // test123
+                    Password = "ALZByiJAcShmiQpEue7DR0g+RZYSWiSXJoF3VxFck96CEhW8SZakdXaJ+1PDgqGoXw==", // test123
+                    IsAdmin = true
                 };
 
                 context.Users.Add(user);

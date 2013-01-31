@@ -20,6 +20,8 @@ namespace MABMoney.Domain
         [Required]
         public string Password { get; set; }
 
+        public bool IsAdmin { get; set; }
+
         public virtual ICollection<Account> Accounts { get; set; }
     }
 }

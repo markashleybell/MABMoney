@@ -20,18 +20,18 @@ namespace MABMoney.Web.Helpers
             return new SelectList(Enum.GetValues(typeof(AccountTypeDTO)));
         }
 
-        public static IQueryable<SelectListItem> GetAccountSelectOptions(IAccountServices accountServices, int userId) 
+        public static IQueryable<SelectListItem> GetAccountSelectOptions(IAccountServices accountServices) 
         {
-            return accountServices.All(userId)
+            return accountServices.All()
                                   .Select(x => new SelectListItem { 
                                       Value = x.AccountID.ToString(),
                                       Text = x.Name
                                   }).AsQueryable();
         }
 
-        public static IQueryable<SelectListItem> GetCategorySelectOptions(ICategoryServices categoryServices, int userId)
+        public static IQueryable<SelectListItem> GetCategorySelectOptions(ICategoryServices categoryServices)
         {
-            return categoryServices.All(userId)
+            return categoryServices.All()
                                    .Select(x => new SelectListItem
                                    {
                                        Value = x.CategoryID.ToString(),
@@ -39,9 +39,9 @@ namespace MABMoney.Web.Helpers
                                    }).AsQueryable();
         }
 
-        public static IQueryable<SelectListItem> GetCategorySelectOptions(ICategoryServices categoryServices, int userId, int accountId)
+        public static IQueryable<SelectListItem> GetCategorySelectOptions(ICategoryServices categoryServices, int accountId)
         {
-            return categoryServices.All(userId)
+            return categoryServices.All()
                                    .Where(x => x.Account_AccountID == accountId)
                                    .Select(x => new SelectListItem
                                    {
@@ -50,9 +50,9 @@ namespace MABMoney.Web.Helpers
                                    }).AsQueryable();
         }
 
-        public static IQueryable<SelectListItem> GetCategorySelectOptions(ICategoryServices categoryServices, int userId, int accountId, CategoryTypeDTO type)
+        public static IQueryable<SelectListItem> GetCategorySelectOptions(ICategoryServices categoryServices, int accountId, CategoryTypeDTO type)
         {
-            return categoryServices.All(userId)
+            return categoryServices.All()
                                    .Where(x => x.Type == type && x.Account_AccountID == accountId)
                                    .Select(x => new SelectListItem {
                                        Value = x.CategoryID.ToString(),

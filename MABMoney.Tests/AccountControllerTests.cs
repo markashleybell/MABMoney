@@ -36,21 +36,18 @@ namespace MABMoney.Tests
                     AccountID = 1,
                     Name = "Current",
                     StartingBalance = 100,
-                    User_UserID = 1,
                     Type = AccountTypeDTO.Current
                 },
                 new AccountDTO { 
                     AccountID = 2,
                     Name = "Savings",
                     StartingBalance = 200,
-                    User_UserID = 1,
                     Type = AccountTypeDTO.Savings
                 },
                 new AccountDTO { 
                     AccountID = 3,
                     Name = "Other",
                     StartingBalance = 150,
-                    User_UserID = 2,
                     Type = AccountTypeDTO.CreditCard
                 }
             };
@@ -62,8 +59,8 @@ namespace MABMoney.Tests
             _userServices = MockRepository.GenerateStub<IUserServices>();
 
             _accountServices = MockRepository.GenerateStub<IAccountServices>();
-            _accountServices.Stub(x => x.All(1)).Return(accounts.Where(x => x.User_UserID == 1));
-            _accountServices.Stub(x => x.Get(1, 1)).Return(accounts[0]);
+            _accountServices.Stub(x => x.All()).Return(accounts);
+            _accountServices.Stub(x => x.Get(1)).Return(accounts[0]);
 
             _categoryServices = MockRepository.GenerateStub<ICategoryServices>();
             _transactionServices = MockRepository.GenerateStub<ITransactionServices>();
@@ -90,16 +87,14 @@ namespace MABMoney.Tests
             var model = result.Model as IndexViewModel;
 
             model.ShouldNotBeNull();
-            model.Accounts.Count.ShouldEqual(2);
+            model.Accounts.Count.ShouldEqual(3);
             model.Accounts[0].AccountID.ShouldEqual(1);
             model.Accounts[0].Name.ShouldEqual("Current");
             model.Accounts[0].StartingBalance.ShouldEqual(100M);
-            model.Accounts[0].User_UserID.ShouldEqual(1);
             model.Accounts[0].Type.ShouldEqual(AccountTypeDTO.Current);
             model.Accounts[1].AccountID.ShouldEqual(2);
             model.Accounts[1].Name.ShouldEqual("Savings");
             model.Accounts[1].StartingBalance.ShouldEqual(200M);
-            model.Accounts[1].User_UserID.ShouldEqual(1);
             model.Accounts[1].Type.ShouldEqual(AccountTypeDTO.Savings);
         }
 
@@ -115,7 +110,6 @@ namespace MABMoney.Tests
             var model = result.Model as CreateViewModel;
 
             model.ShouldNotBeNull();
-            model.User_UserID.ShouldEqual(1);
             model.Type.ShouldEqual(AccountTypeDTO.Current);
         }
 
@@ -126,7 +120,6 @@ namespace MABMoney.Tests
 
             var model = new CreateViewModel
             {
-                User_UserID = 1,
                 Name = "New",
                 StartingBalance = 1000M,
                 Type = AccountTypeDTO.Current
@@ -137,10 +130,8 @@ namespace MABMoney.Tests
             result.ShouldNotBeNull();
 
             _accountServices.AssertWasCalled(x => x.Save(
-                Arg<int>.Is.Equal(1), 
                 Arg<AccountDTO>.Matches(
-                    o => o.User_UserID == 1 
-                      && o.Name == "New" 
+                    o => o.Name == "New" 
                       && o.StartingBalance == 1000M
                       && o.Type == AccountTypeDTO.Current
                 )
@@ -159,7 +150,6 @@ namespace MABMoney.Tests
             var model = result.Model as EditViewModel;
 
             model.ShouldNotBeNull();
-            model.User_UserID.ShouldEqual(1);
             model.AccountID.ShouldEqual(1);
             model.StartingBalance.ShouldEqual(100M);
             model.Name.ShouldEqual("Current");
@@ -173,7 +163,6 @@ namespace MABMoney.Tests
 
             var model = new EditViewModel
             {
-                User_UserID = 1,
                 AccountID = 10,
                 Name = "EDITED",
                 StartingBalance = 750M,
@@ -185,10 +174,8 @@ namespace MABMoney.Tests
             result.ShouldNotBeNull();
 
             _accountServices.AssertWasCalled(x => x.Save(
-                Arg<int>.Is.Equal(1),
                 Arg<AccountDTO>.Matches(
-                    o => o.User_UserID == 1 
-                      && o.AccountID == 10 
+                    o => o.AccountID == 10 
                       && o.Name == "EDITED" 
                       && o.StartingBalance == 750M
                       && o.Type == AccountTypeDTO.CreditCard
@@ -206,7 +193,6 @@ namespace MABMoney.Tests
             result.ShouldNotBeNull();
 
             _accountServices.AssertWasCalled(x => x.Delete(
-                Arg<int>.Is.Equal(1),
                 Arg<int>.Is.Equal(2)
             ));
         }

@@ -38,7 +38,7 @@ namespace MABMoney.Web.Controllers
         public ActionResult Index(ProfileViewModel profile)
         {
             return View(new IndexViewModel {
-                Transactions = _transactionServices.All(profile.UserID)
+                Transactions = _transactionServices.All()
                                                    .OrderByDescending(x => x.Date)
                                                    .ThenByDescending(x => x.TransactionID)
                                                    .ToList()
@@ -59,8 +59,8 @@ namespace MABMoney.Web.Controllers
         public ActionResult Create(ProfileViewModel profile)
         {
             return View(new CreateViewModel {
-                Categories = DataHelpers.GetCategorySelectOptions(_categoryServices, profile.UserID),
-                Accounts = DataHelpers.GetAccountSelectOptions(_accountServices, profile.UserID),
+                Categories = DataHelpers.GetCategorySelectOptions(_categoryServices),
+                Accounts = DataHelpers.GetAccountSelectOptions(_accountServices),
                 Date = _dateProvider.Date
             });
         }
@@ -73,13 +73,13 @@ namespace MABMoney.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                model.Categories = DataHelpers.GetCategorySelectOptions(_categoryServices, profile.UserID);
-                model.Accounts = DataHelpers.GetAccountSelectOptions(_accountServices, profile.UserID);
+                model.Categories = DataHelpers.GetCategorySelectOptions(_categoryServices);
+                model.Accounts = DataHelpers.GetAccountSelectOptions(_accountServices);
                 return View(model);
             }
 
             var dto = model.MapTo<TransactionDTO>();
-            _transactionServices.Save(profile.UserID, dto);
+            _transactionServices.Save(dto);
 
             return RedirectToAction("Index");
         }
@@ -89,9 +89,9 @@ namespace MABMoney.Web.Controllers
         [Authenticate]
         public ActionResult Edit(ProfileViewModel profile, int id)
         {
-            var model = _transactionServices.Get(profile.UserID, id).MapTo<EditViewModel>();
-            model.Categories = DataHelpers.GetCategorySelectOptions(_categoryServices, profile.UserID);
-            model.Accounts = DataHelpers.GetAccountSelectOptions(_accountServices, profile.UserID);
+            var model = _transactionServices.Get(id).MapTo<EditViewModel>();
+            model.Categories = DataHelpers.GetCategorySelectOptions(_categoryServices);
+            model.Accounts = DataHelpers.GetAccountSelectOptions(_accountServices);
             return View(model);
         }
 
@@ -103,13 +103,13 @@ namespace MABMoney.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                model.Categories = DataHelpers.GetCategorySelectOptions(_categoryServices, profile.UserID);
-                model.Accounts = DataHelpers.GetAccountSelectOptions(_accountServices, profile.UserID);
+                model.Categories = DataHelpers.GetCategorySelectOptions(_categoryServices);
+                model.Accounts = DataHelpers.GetAccountSelectOptions(_accountServices);
                 return View(model);
             }
 
             var dto = model.MapTo<TransactionDTO>();
-            _transactionServices.Save(profile.UserID, dto);
+            _transactionServices.Save(dto);
 
             return RedirectToAction("Index");
         }
@@ -120,7 +120,7 @@ namespace MABMoney.Web.Controllers
         [HttpPost]
         public ActionResult Delete(ProfileViewModel profile, int id)
         {
-            _transactionServices.Delete(profile.UserID, id);
+            _transactionServices.Delete(id);
             return RedirectToAction("Index");
         }
 
@@ -128,7 +128,7 @@ namespace MABMoney.Web.Controllers
         public ActionResult Import(ProfileViewModel profile)
         {
             return View(new ImportViewModel { 
-                Accounts = DataHelpers.GetAccountSelectOptions(_accountServices, profile.UserID)
+                Accounts = DataHelpers.GetAccountSelectOptions(_accountServices)
             });
         }
 
@@ -176,11 +176,11 @@ namespace MABMoney.Web.Controllers
             transactions.Reverse();
 
             foreach (var transaction in transactions)
-                _transactionServices.Save(profile.UserID, transaction);
+                _transactionServices.Save(transaction);
 
             return View(new ImportViewModel {
                 RecordsImported = transactions.Count,
-                Accounts = DataHelpers.GetAccountSelectOptions(_accountServices, profile.UserID)
+                Accounts = DataHelpers.GetAccountSelectOptions(_accountServices)
             });
         }
     }

@@ -21,6 +21,8 @@ namespace MABMoney.Tests
         private IRepository<Category_Budget, int> _categories_budgets;
         private IRepository<Transaction, int> _transactions;
 
+        private IUnitOfWork _unitOfWork;
+
         [SetUp]
         public void SetUp()
         {
@@ -29,7 +31,6 @@ namespace MABMoney.Tests
                     AccountID = 1,
                     Name = "Current",
                     StartingBalance = 100,
-                    User_UserID = 1,
                     CurrentBalance = 100
                 }
             };
@@ -121,8 +122,8 @@ namespace MABMoney.Tests
             };
 
             _accountServices = MockRepository.GenerateStub<IAccountServices>();
-            _accountServices.Stub(x => x.All(1)).Return(accountDtos);
-            _accountServices.Stub(x => x.Get(1, 1)).Return(accountDtos[0]);
+            _accountServices.Stub(x => x.All()).Return(accountDtos);
+            _accountServices.Stub(x => x.Get(1)).Return(accountDtos[0]);
 
             _budgets = MockRepository.GenerateStub<IRepository<Budget, int>>();
             _budgets.Stub(x => x.All()).Return(budgets.AsQueryable());
@@ -138,14 +139,17 @@ namespace MABMoney.Tests
             _transactions = MockRepository.GenerateStub<IRepository<Transaction, int>>();
             _transactions.Stub(x => x.All()).Return(transactions.AsQueryable());
             _transactions.Stub(x => x.Query(null)).Return(transactions.AsQueryable()).IgnoreArguments();
+
+            _unitOfWork = MockRepository.GenerateStub<IUnitOfWork>();
+            _unitOfWork.Stub(x => x.DataStore.UserID).Return(1);
         }
 
         [Test]
         public void Unallocated_Funds_Calculated_Correctly()
         {
-            var service = new BudgetServices(_budgets, _accounts, _categories_budgets, _transactions, _accountServices, null);
+            var service = new BudgetServices(_budgets, _accounts, _categories_budgets, _transactions, _accountServices, _unitOfWork);
 
-            var dto = service.Get(1, 1);
+            var dto = service.Get(1);
 
             dto.ShouldNotBeNull();
         }

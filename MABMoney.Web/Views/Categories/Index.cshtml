@@ -12,6 +12,7 @@
     <thead>
         <tr>
             <th>Name</th>
+            <th>Account</th>
             <th>Category Type</th>
             <th>Edit</th>
         </tr>
@@ -21,6 +22,7 @@
         {
         <tr>
             <td>@category.Name</td>
+            <td>@category.Account.Name</td>
             <td>@category.Type</td>
             <td>@Html.ActionLink("Edit", "Edit", new { id = category.CategoryID })</td>
         </tr>

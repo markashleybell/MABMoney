@@ -20,11 +20,11 @@ namespace MABMoney.Data
         public virtual IDbSet<Budget> Budgets { get; set; }
         public virtual IDbSet<Category_Budget> Categories_Budgets { get; set; }
 
-        private int _userId;
+        public int UserID { get; private set; }
 
         public DataStore(int userId)
         {
-            _userId = userId;
+            UserID = userId;
         }
 
         public virtual IDbSet<T> DbSet<T>() where T : class
@@ -45,15 +45,15 @@ namespace MABMoney.Data
             {
                 if (entry.State == EntityState.Added)
                 {
-                    entry.Entity.CreatedBy = _userId;
+                    entry.Entity.CreatedBy = UserID;
                     entry.Entity.CreatedDate = now;
-                    entry.Entity.LastModifiedBy = _userId;
+                    entry.Entity.LastModifiedBy = UserID;
                     entry.Entity.LastModifiedDate = now;
                 }
 
                 if (entry.State == EntityState.Modified)
                 {
-                    entry.Entity.LastModifiedBy = _userId;
+                    entry.Entity.LastModifiedBy = UserID;
                     entry.Entity.LastModifiedDate = now;
                 }
 
@@ -61,7 +61,7 @@ namespace MABMoney.Data
                 {
                     entry.State = EntityState.Modified;
                     entry.Entity.Deleted = true;
-                    entry.Entity.DeletedBy = _userId;
+                    entry.Entity.DeletedBy = UserID;
                     entry.Entity.DeletedDate = now;
                 }
             }

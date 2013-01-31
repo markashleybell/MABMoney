@@ -18,9 +18,6 @@ namespace MABMoney.Web.Models.Accounts
         [Required]
         public decimal StartingBalance { get; set; }
         [Required]
-        [HiddenInput(DisplayValue = false)]
-        public int User_UserID { get; set; }
-        [Required]
         public AccountTypeDTO Type { get; set; }
         public SelectList AccountTypes { get; set; }
     }

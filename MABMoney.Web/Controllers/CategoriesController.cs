@@ -37,7 +37,7 @@ namespace MABMoney.Web.Controllers
         public ActionResult Index(ProfileViewModel profile)
         {
             return View(new IndexViewModel {
-                Categories = _categoryServices.All(profile.UserID).ToList()
+                Categories = _categoryServices.All().ToList()
             });
         }
 
@@ -48,7 +48,7 @@ namespace MABMoney.Web.Controllers
         {
             return View(new CreateViewModel {
                 CategoryTypes = DataHelpers.GetCategoryTypeSelectOptions(),
-                Accounts = DataHelpers.GetAccountSelectOptions(_accountServices, profile.UserID)
+                Accounts = DataHelpers.GetAccountSelectOptions(_accountServices)
             });
         }
 
@@ -60,13 +60,13 @@ namespace MABMoney.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                model.Accounts = DataHelpers.GetAccountSelectOptions(_accountServices, profile.UserID);
+                model.Accounts = DataHelpers.GetAccountSelectOptions(_accountServices);
                 model.CategoryTypes = DataHelpers.GetCategoryTypeSelectOptions();
                 return View(model);
             }
 
             var dto = model.MapTo<CategoryDTO>();
-            _categoryServices.Save(profile.UserID, dto);
+            _categoryServices.Save(dto);
 
             return RedirectToAction("Index");
         }
@@ -76,8 +76,8 @@ namespace MABMoney.Web.Controllers
         [Authenticate]
         public ActionResult Edit(ProfileViewModel profile, int id)
         {
-            var model = _categoryServices.Get(profile.UserID, id).MapTo<EditViewModel>();
-            model.Accounts = DataHelpers.GetAccountSelectOptions(_accountServices, profile.UserID);model.CategoryTypes = DataHelpers.GetCategoryTypeSelectOptions();
+            var model = _categoryServices.Get(id).MapTo<EditViewModel>();
+            model.Accounts = DataHelpers.GetAccountSelectOptions(_accountServices);model.CategoryTypes = DataHelpers.GetCategoryTypeSelectOptions();
             model.CategoryTypes = DataHelpers.GetCategoryTypeSelectOptions();
             return View(model);
         }
@@ -90,13 +90,13 @@ namespace MABMoney.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                model.Accounts = DataHelpers.GetAccountSelectOptions(_accountServices, profile.UserID);
+                model.Accounts = DataHelpers.GetAccountSelectOptions(_accountServices);
                 model.CategoryTypes = DataHelpers.GetCategoryTypeSelectOptions();
                 return View(model);
             }
 
             var dto = model.MapTo<CategoryDTO>();
-            _categoryServices.Save(profile.UserID, dto);
+            _categoryServices.Save(dto);
 
             return RedirectToAction("Index");
         }
@@ -107,7 +107,7 @@ namespace MABMoney.Web.Controllers
         [HttpPost]
         public ActionResult Delete(ProfileViewModel profile, int id)
         {
-            _categoryServices.Delete(profile.UserID, id);
+            _categoryServices.Delete(id);
             return RedirectToAction("Index");
         }
     }

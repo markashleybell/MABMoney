@@ -37,14 +37,16 @@ namespace MABMoney.Tests
                     Forename = "Bob",
                     Surname = "Jones",
                     Email = "bob@bob.com",
-                    Password = "xxxxx"
+                    Password = "xxxxx",
+                    IsAdmin = true
                 },
                 new UserDTO { 
                     UserID = 2,
                     Forename = "Jane",
                     Surname = "Smith",
                     Email = "jane@jane.com",
-                    Password = "yyyyy"
+                    Password = "yyyyy",
+                    IsAdmin = false
                 }
             };
 
@@ -69,6 +71,7 @@ namespace MABMoney.Tests
             _config = MockRepository.GenerateStub<ISiteConfiguration>();
 
             _config.Stub(x => x.SharedSecret).Return("SHAREDSECRET");
+            _config.Stub(x => x.CookieKey).Return("COOKIEKEY");
 
             _dateProvider = MockRepository.GenerateStub<IDateTimeProvider>();
             _dateProvider.Stub(x => x.Date).Return(new DateTime(2020, 01, 01));
@@ -214,7 +217,7 @@ namespace MABMoney.Tests
 
             _crypto.AssertWasCalled(x => x.VerifyHashedPassword("yyyyy", model.Password));
 
-            Assert.AreEqual("UserID", _context.Response.Cookies[0].Name);
+            Assert.AreEqual("COOKIEKEY", _context.Response.Cookies[0].Name);
 
             Assert.NotNull(result);
         }
@@ -226,7 +229,7 @@ namespace MABMoney.Tests
 
             var result = controller.Logout() as RedirectToRouteResult;
 
-            Assert.AreEqual("UserID", _context.Response.Cookies[0].Name);
+            Assert.AreEqual("COOKIEKEY", _context.Response.Cookies[0].Name);
             Assert.Greater(_dateProvider.Date, _context.Response.Cookies[0].Expires);
 
             Assert.NotNull(result);

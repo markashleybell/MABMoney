@@ -36,20 +36,17 @@ namespace MABMoney.Tests
                 new AccountDTO { 
                     AccountID = 1,
                     Name = "Current",
-                    StartingBalance = 100,
-                    User_UserID = 1
+                    StartingBalance = 100
                 },
                 new AccountDTO { 
                     AccountID = 2,
                     Name = "Savings",
-                    StartingBalance = 200,
-                    User_UserID = 1
+                    StartingBalance = 200
                 },
                 new AccountDTO { 
                     AccountID = 3,
                     Name = "Other",
-                    StartingBalance = 150,
-                    User_UserID = 2
+                    StartingBalance = 150
                 }
             };
 
@@ -82,16 +79,16 @@ namespace MABMoney.Tests
             _userServices = MockRepository.GenerateStub<IUserServices>();
 
             _accountServices = MockRepository.GenerateStub<IAccountServices>();
-            _accountServices.Stub(x => x.All(1)).Return(accounts.Where(x => x.User_UserID == 1));
-            _accountServices.Stub(x => x.Get(1, 1)).Return(accounts[0]);
-            _accountServices.Stub(x => x.Get(1, 2)).Return(accounts[1]);
-            _accountServices.Stub(x => x.Get(1, 3)).Return(accounts[2]);
+            _accountServices.Stub(x => x.All()).Return(accounts);
+            _accountServices.Stub(x => x.Get(1)).Return(accounts[0]);
+            _accountServices.Stub(x => x.Get(2)).Return(accounts[1]);
+            _accountServices.Stub(x => x.Get(3)).Return(accounts[2]);
 
             _categoryServices = MockRepository.GenerateStub<ICategoryServices>();
-            _categoryServices.Stub(x => x.All(1)).Return(categories);
-            _categoryServices.Stub(x => x.Get(1, 1)).Return(categories[0]);
-            _categoryServices.Stub(x => x.Get(1, 2)).Return(categories[1]);
-            _categoryServices.Stub(x => x.Get(1, 3)).Return(categories[2]);
+            _categoryServices.Stub(x => x.All()).Return(categories);
+            _categoryServices.Stub(x => x.Get(1)).Return(categories[0]);
+            _categoryServices.Stub(x => x.Get(2)).Return(categories[1]);
+            _categoryServices.Stub(x => x.Get(3)).Return(categories[2]);
 
             _transactionServices = MockRepository.GenerateStub<ITransactionServices>();
             _budgetServices = MockRepository.GenerateStub<IBudgetServices>();
@@ -157,7 +154,6 @@ namespace MABMoney.Tests
             result.ShouldNotBeNull();
 
             _categoryServices.AssertWasCalled(x => x.Save(
-                Arg<int>.Is.Equal(1),
                 Arg<CategoryDTO>.Matches(o => o.Account_AccountID == 2 && o.Name == "New" && o.Type == CategoryTypeDTO.Income)
             ));
         }
@@ -198,7 +194,6 @@ namespace MABMoney.Tests
             result.ShouldNotBeNull();
 
             _categoryServices.AssertWasCalled(x => x.Save(
-                Arg<int>.Is.Equal(1),
                 Arg<CategoryDTO>.Matches(o => o.CategoryID == 10 && o.Account_AccountID == 2 && o.Name == "EDITED" && o.Type == CategoryTypeDTO.Expense)
             ));
         }
@@ -213,7 +208,6 @@ namespace MABMoney.Tests
             result.ShouldNotBeNull();
 
             _categoryServices.AssertWasCalled(x => x.Delete(
-                Arg<int>.Is.Equal(1),
                 Arg<int>.Is.Equal(2)
             ));
         }

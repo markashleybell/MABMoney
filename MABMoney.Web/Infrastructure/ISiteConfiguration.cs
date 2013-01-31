@@ -8,5 +8,6 @@ namespace MABMoney.Web.Infrastructure
     public interface ISiteConfiguration
     {
         string SharedSecret { get; }
+        string CookieKey { get; }
     }
 }

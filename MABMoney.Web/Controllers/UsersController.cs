@@ -123,7 +123,7 @@ namespace MABMoney.Web.Controllers
 
             // Encrypt the ID before storing it in a cookie
             var encryptedUserId = EncryptionHelpers.EncryptStringAES(user.UserID.ToString(), _config.SharedSecret);
-            _context.Response.Cookies.Add(new HttpCookie("UserID", encryptedUserId));
+            _context.Response.Cookies.Add(new HttpCookie(_config.CookieKey, encryptedUserId));
 
             return RedirectToAction("Index", "Home");
         }
@@ -131,7 +131,7 @@ namespace MABMoney.Web.Controllers
         [HttpGet]
         public ActionResult Logout()
         {
-            var cookie = new HttpCookie("UserID", "");
+            var cookie = new HttpCookie(_config.CookieKey, "");
             cookie.Expires = _dateProvider.Date.AddDays(-1);
             _context.Response.Cookies.Add(cookie);
             return RedirectToAction("Login");

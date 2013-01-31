@@ -139,7 +139,9 @@
 
         <div class="row button-row">
             <div class="span2">
-                @Html.ActionLink("Edit this budget", "Edit", "Budgets", new { id = Model.Account_AccountID }, new { @class = "btn btn-primary" })
+                @if (Model.Budget != null) {
+                    @Html.ActionLink("Edit this budget", "Edit", "Budgets", new { id = Model.Account_AccountID }, new { @class = "btn btn-primary" })
+                }
             </div>
             <div class="span8">&nbsp;</div>
             <div class="span2">

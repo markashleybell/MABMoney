@@ -14,9 +14,6 @@ namespace MABMoney.Services.DTO
         public string Name { get; set; }
         [Required]
         public decimal StartingBalance { get; set; }
-        [Required]
-        public int User_UserID { get; set; }
-        public UserDTO User { get; set; }
 
         public decimal CurrentBalance { get; set; }
 

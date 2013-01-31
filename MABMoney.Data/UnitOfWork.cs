@@ -10,9 +10,9 @@ namespace MABMoney.Data
         private readonly IDataStoreFactory _dataStoreFactory;
         private IDataStore _dataStore;
 
-        public UnitOfWork(IDataStoreFactory databaseFactory)
+        public UnitOfWork(IDataStoreFactory dataStoreFactory)
         {
-            _dataStoreFactory = databaseFactory;
+            _dataStoreFactory = dataStoreFactory;
         }
 
         public IDataStore DataStore
@@ -20,7 +20,7 @@ namespace MABMoney.Data
             get { return _dataStore ?? (_dataStore = _dataStoreFactory.Get()); }
         }
 
-        public void Commit(int userId)
+        public void Commit()
         {
             DataStore.Commit();
         }

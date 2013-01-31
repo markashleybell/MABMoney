@@ -14,10 +14,13 @@ namespace MABMoney.Services
         private IRepository<User, int> _users;
         private IUnitOfWork _unitOfWork;
 
+        private int _userId;
+
         public UserServices(IRepository<User, int> users, IUnitOfWork unitOfWork)
         {
             _users = users;
             _unitOfWork = unitOfWork;
+            _userId = unitOfWork.DataStore.UserID;
         }
 
         public IEnumerable<UserDTO> All()
@@ -54,21 +57,21 @@ namespace MABMoney.Services
             {
                 var entity = dto.MapTo<User>();
                 _users.Add(entity);
-                _unitOfWork.Commit(0);
+                _unitOfWork.Commit();
                 dto.UserID = entity.UserID;
             }
             else
             {
                 var entity = _users.Get(dto.UserID);
                 dto.MapTo(entity);
-                _unitOfWork.Commit(0);
+                _unitOfWork.Commit();
             }
         }
 
         public void Delete(int id)
         {
             _users.Remove(id);
-            _unitOfWork.Commit(0);
+            _unitOfWork.Commit();
         }
     }
 }

@@ -37,7 +37,7 @@ namespace MABMoney.Web.Controllers
         public ActionResult Index(ProfileViewModel profile)
         {
             return View(new IndexViewModel {
-                Accounts = _accountServices.All(profile.UserID).ToList()
+                Accounts = _accountServices.All().ToList()
             });
         }
 
@@ -47,7 +47,6 @@ namespace MABMoney.Web.Controllers
         public ActionResult Create(ProfileViewModel profile)
         {
             return View(new CreateViewModel { 
-                User_UserID = profile.UserID,
                 AccountTypes = DataHelpers.GetAccountTypeSelectOptions()
             });
         }
@@ -65,7 +64,7 @@ namespace MABMoney.Web.Controllers
             }
 
             var dto = model.MapTo<AccountDTO>();
-            _accountServices.Save(profile.UserID, dto);
+            _accountServices.Save(dto);
 
             return RedirectToAction("Index");
         }
@@ -75,7 +74,7 @@ namespace MABMoney.Web.Controllers
         [Authenticate]
         public ActionResult Edit(ProfileViewModel profile, int id)
         {
-            var model = _accountServices.Get(profile.UserID, id).MapTo<EditViewModel>();
+            var model = _accountServices.Get(id).MapTo<EditViewModel>();
             model.AccountTypes = DataHelpers.GetAccountTypeSelectOptions();
             return View(model);
         }
@@ -93,7 +92,7 @@ namespace MABMoney.Web.Controllers
             }
 
             var dto = model.MapTo<AccountDTO>();
-            _accountServices.Save(profile.UserID, dto);
+            _accountServices.Save(dto);
 
             return RedirectToAction("Index");
         }
@@ -104,7 +103,7 @@ namespace MABMoney.Web.Controllers
         [HttpPost]
         public ActionResult Delete(ProfileViewModel profile, int id)
         {
-            _accountServices.Delete(profile.UserID, id);
+            _accountServices.Delete(id);
             return RedirectToAction("Index");
         }
     }

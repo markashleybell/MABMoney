@@ -17,7 +17,8 @@ namespace MABMoney.Web.Infrastructure
                 throw new ArgumentNullException("bindingContext");
 
             return new ProfileViewModel {
-                UserID = Convert.ToInt32(controllerContext.HttpContext.Items["UserID"])
+                UserID = Convert.ToInt32(controllerContext.HttpContext.Items["UserID"]),
+                IsAdmin = Convert.ToBoolean(controllerContext.HttpContext.Items["IsAdmin"])
             };
         }
     }

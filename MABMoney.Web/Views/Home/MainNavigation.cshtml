@@ -29,8 +29,9 @@
                         <li>@Html.ActionLink("Transactions", "Index", "Transactions", null, new { tabindex = -1 })</li>
                         <li>@Html.ActionLink("Budgets", "Index", "Budgets", null, new { tabindex = -1 })</li>
                         <li class="divider"></li>
+                        @if(Model.Profile.IsAdmin) {
                         <li>@Html.ActionLink("Users", "Index", "Users", null, new { tabindex = -1 })</li>
-                        <li>@Html.ActionLink("Login", "Login", "Users", null, new { tabindex = -1 })</li>
+                        }
                         <li>@Html.ActionLink("Logout", "Logout", "Users", null, new { tabindex = -1 })</li>
                     </ul>
                 </li>

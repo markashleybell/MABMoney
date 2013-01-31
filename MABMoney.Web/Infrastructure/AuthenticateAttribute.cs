@@ -19,10 +19,12 @@ namespace MABMoney.Web.Infrastructure
             if (context == null)
                 throw new ArgumentNullException("context");
 
-            if(context.Request.Cookies["UserID"] == null)
+            if (context.Request.Cookies[ConfigurationManager.AppSettings["CookieKey"]] == null)
                 return false;
 
-            var userId = Convert.ToInt32(EncryptionHelpers.DecryptStringAES(context.Request.Cookies["UserID"].Value, ConfigurationManager.AppSettings["SharedSecret"]));
+            var encryptedCookieValue = context.Request.Cookies[ConfigurationManager.AppSettings["CookieKey"]].Value;
+
+            var userId = Convert.ToInt32(EncryptionHelpers.DecryptStringAES(encryptedCookieValue, ConfigurationManager.AppSettings["SharedSecret"]));
 
             var unitOfWork = new UnitOfWork(new DataStoreFactory(userId));
             var userServices = new UserServices(new Repository<User, int>(unitOfWork), unitOfWork);
@@ -33,6 +35,7 @@ namespace MABMoney.Web.Infrastructure
                 return false;
 
             context.Items.Add("UserID", user.UserID);
+            context.Items.Add("IsAdmin", user.IsAdmin);
 
             return true;
         }

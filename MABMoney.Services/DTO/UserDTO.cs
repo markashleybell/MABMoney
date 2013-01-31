@@ -19,6 +19,8 @@ namespace MABMoney.Services.DTO
         [Required]
         public string Password { get; set; }
 
+        public bool IsAdmin { get; set; }
+
         public List<AccountDTO> Accounts { get; set; }
     }
 }

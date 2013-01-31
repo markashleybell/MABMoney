@@ -34,6 +34,9 @@ namespace MABMoney.Web
 
             ModelBinders.Binders.Add(typeof(ProfileViewModel), new ProfileModelBinder());
 
+            var sharedSecret = ConfigurationManager.AppSettings["SharedSecret"];
+            var cookieKey = ConfigurationManager.AppSettings["CookieKey"];
+
             // Set up object mappings for Unity DI
             var container = new UnityContainer();
 
@@ -52,10 +55,10 @@ namespace MABMoney.Web
                      .RegisterType<IUnitOfWork, UnitOfWork>(new HttpContextLifetimeManager<UnitOfWork>())
                      // .RegisterType<IDataStoreFactory, DataStoreFactory>(new HttpContextLifetimeManager<DataStoreFactory>())
                      .RegisterType<IDateTimeProvider, DateTimeWrapper>(new InjectionFactory(c => new DateTimeWrapper(() => DateTime.Now)))
-                     .RegisterType<IDataStoreFactory>(new InjectionFactory(c => new DataStoreFactory((HttpContext.Current.Request.Cookies["UserID"] != null) ? Convert.ToInt32(EncryptionHelpers.DecryptStringAES(HttpContext.Current.Request.Cookies["UserID"].Value, ConfigurationManager.AppSettings["SharedSecret"])) : -1)))
+                     .RegisterType<IDataStoreFactory>(new InjectionFactory(c => new DataStoreFactory((HttpContext.Current.Request.Cookies[cookieKey] != null) ? Convert.ToInt32(EncryptionHelpers.DecryptStringAES(HttpContext.Current.Request.Cookies[cookieKey].Value, sharedSecret)) : -1)))
                      .RegisterType<ICryptoProvider>(new InjectionFactory(c => new CryptoWrapper()))
                      .RegisterType<HttpContextBase>(new InjectionFactory(c => new HttpContextWrapper(HttpContext.Current)))
-                     .RegisterType<ISiteConfiguration>(new InjectionFactory(c => new SiteConfiguration(ConfigurationManager.AppSettings["SharedSecret"])));
+                     .RegisterType<ISiteConfiguration>(new InjectionFactory(c => new SiteConfiguration(sharedSecret, cookieKey)));
 
             var resolver = new UnityDependencyResolver(container);
 

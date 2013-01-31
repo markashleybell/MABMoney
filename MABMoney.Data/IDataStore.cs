@@ -16,6 +16,8 @@ namespace MABMoney.Data
         IDbSet<Budget> Budgets { get; set; }
         IDbSet<Category_Budget> Categories_Budgets { get; set; }
 
+        int UserID { get; }
+
         IDbSet<T> DbSet<T>() where T : class;
 
         void Commit();

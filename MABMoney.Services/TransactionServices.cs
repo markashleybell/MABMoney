@@ -15,16 +15,19 @@ namespace MABMoney.Services
         private IRepository<Account, int> _accounts;
         private IUnitOfWork _unitOfWork;
 
+        private int _userId;
+
         public TransactionServices(IRepository<Transaction, int> transactions, IRepository<Account, int> accounts, IUnitOfWork unitOfWork)
         {
             _transactions = transactions;
             _accounts = accounts;
             _unitOfWork = unitOfWork;
+            _userId = unitOfWork.DataStore.UserID;
         }
 
-        public IEnumerable<TransactionDTO> All(int userId)
+        public IEnumerable<TransactionDTO> All()
         {
-            return (from t in _transactions.Query(x => x.Account.User_UserID == userId)
+            return (from t in _transactions.Query(x => x.Account.User_UserID == _userId)
                     select new TransactionDTO
                     {
                         TransactionID = t.TransactionID,
@@ -44,41 +47,43 @@ namespace MABMoney.Services
             // return _transactions.Query(x => x.Account.User_UserID == userId).ToList().MapToList<TransactionDTO>();
         }
 
-        public TransactionDTO Get(int userId, int id)
+        public TransactionDTO Get(int id)
         {
-            return _transactions.Query(x => x.Account.User_UserID == userId && x.TransactionID == id).FirstOrDefault().MapTo<TransactionDTO>();
+            return _transactions.Query(x => x.Account.User_UserID == _userId && x.TransactionID == id).FirstOrDefault().MapTo<TransactionDTO>();
         }
 
-        public void Save(int userId, TransactionDTO dto)
+        public void Save(TransactionDTO dto)
         {
-            var account = _accounts.Get(dto.Account_AccountID);
+            // Try and get the transaction
+            var transaction = _transactions.Get(dto.TransactionID);
 
-            if(account != null && account.User_UserID == userId)
+            // If the transaction exists AND belongs to this user
+            if (transaction != null && transaction.Account.User_UserID == _userId)
             {
-                if (dto.TransactionID == 0)
-                {
-                    var entity = dto.MapTo<Transaction>();
-                    _transactions.Add(entity);
-                    _unitOfWork.Commit(userId);
-                    dto.TransactionID = entity.TransactionID;
-                }
-                else
-                {
-                    var entity = _transactions.Get(dto.TransactionID);
-                    dto.MapTo(entity);
-                    _unitOfWork.Commit(userId);
-                }
+                // Update the transaction
+                dto.MapTo(transaction);
+                _unitOfWork.Commit();
+            }
+            else
+            {
+                // Add the transaction
+                transaction = dto.MapTo<Transaction>();
+                _transactions.Add(transaction);
+                _unitOfWork.Commit();
+
+                // Update the DTO with the new ID
+                dto.TransactionID = transaction.TransactionID;
             }
         }
 
-        public void Delete(int userId, int id)
+        public void Delete(int id)
         {
-            var transaction = _transactions.Query(x => x.Account.User_UserID == userId && x.TransactionID == id).FirstOrDefault();
+            var transaction = _transactions.Query(x => x.Account.User_UserID == _userId && x.TransactionID == id).FirstOrDefault();
 
             if(transaction != null)
             {
                 _transactions.Remove(id);
-                _unitOfWork.Commit(userId);
+                _unitOfWork.Commit();
             }
         }
     }
