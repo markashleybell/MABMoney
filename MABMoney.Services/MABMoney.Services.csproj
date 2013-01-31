@@ -54,7 +54,6 @@
     <Compile Include="DTO\AccountTypeDTO.cs" />
     <Compile Include="DTO\CategoryTypeDTO.cs" />
     <Compile Include="DTO\Category_BudgetDTO.cs" />
-    <Compile Include="IUserSpecificServices.cs" />
     <Compile Include="TransactionServices.cs" />
     <Compile Include="DTO\AccountDTO.cs" />
     <Compile Include="DTO\BudgetDTO.cs" />

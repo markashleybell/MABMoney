@@ -37,6 +37,7 @@
     <li @Html.Raw((Model.Type == TransactionType.Income) ? "class=\"active\"" : "")><a href="#income" data-toggle="tab">Income: @Model.Transactions.Where(t => t.Amount > 0).Sum(x => x.Amount)</a></li>
     <li @Html.Raw((Model.Type == TransactionType.Expense) ? "class=\"active\"" : "")><a href="#expenses" data-toggle="tab">Expenses: @Model.Transactions.Where(t => t.Amount < 0).Sum(x => Math.Abs(x.Amount))</a></li>
     <li><a href="#budget" data-toggle="tab">Budget @((Model.Budget != null) ? Model.Budget.Start.ToString("dd/MM/yy") + " - " + Model.Budget.End.ToString("dd/MM/yy") : "")</a></li>
+    <li><a href="#payment-calculator" data-toggle="tab">Payment Calculator</a></li>
 </ul>
 <div class="tab-content">
     <div class="tab-pane@((Model.Type == TransactionType.Income) ? " active" : "")" id="income">
@@ -151,7 +152,10 @@
 
         <p></p>
     </div>
- </div>
+
+    <div class="tab-pane" id="payment-calculator"> 
+        <p>UNDER CONSTRUCTION</p>
+    </div>
 
  <p></p>
 
