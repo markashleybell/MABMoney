@@ -17,13 +17,25 @@ using StackExchange.Profiling;
 using MABMoney.Web.Helpers;
 using mab.lib.SimpleMapper;
 using MABMoney.Services.DTO;
+using Enyim.Caching;
+using Enyim.Caching.Configuration;
+using Enyim.Caching.Memcached;
+
+
 
 namespace MABMoney.Web
 {
+    public static class Global
+    {
+        public static MemcachedClient Cache { get; set; }
+    }
+
     // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
     // visit http://go.microsoft.com/?LinkId=9394801
     public class MvcApplication : System.Web.HttpApplication
     {
+        
+
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
@@ -81,13 +93,27 @@ namespace MABMoney.Web
 
             Database.SetInitializer<DataStore>(new MigrateDatabaseToLatestVersion<DataStore, MABMoney.Data.Migrations.Configuration>());
 
-            // MiniProfilerEF.Initialize();
+            MiniProfilerEF.Initialize();
 
             //Mapper.AddMapping<User, UserDTO>((s, d) => {
             //    d.UserID = s.UserID;
             //    d.Forename = "MAPPED!!!!";
             //    d.Accounts = s.Accounts.ToList().MapToList<AccountDTO>();
             //});
+
+            var configuration = new MemcachedClientConfiguration();
+            configuration.AddServer(ConfigurationManager.AppSettings["MEMCACHIER_SERVERS"]);
+            configuration.Protocol = MemcachedProtocol.Binary;
+
+            if (Convert.ToBoolean(ConfigurationManager.AppSettings["MEMCACHIER_AUTH"]))
+            {
+                configuration.Authentication.Type = typeof(PlainTextAuthenticator);
+                configuration.Authentication.Parameters["userName"] = ConfigurationManager.AppSettings["MEMCACHIER_USERNAME"];
+                configuration.Authentication.Parameters["password"] = ConfigurationManager.AppSettings["MEMCACHIER_PASSWORD"];
+                configuration.Authentication.Parameters["zone"] = "";
+            }
+
+            Global.Cache = new MemcachedClient(configuration);
         }
     }
 }

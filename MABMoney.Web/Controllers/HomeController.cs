@@ -12,6 +12,7 @@ using MABMoney.Services.DTO;
 using MABMoney.Web.Infrastructure;
 using MABMoney.Web.Models;
 using System.Text;
+using Enyim.Caching.Memcached;
 
 namespace MABMoney.Web.Controllers
 {
@@ -48,7 +49,14 @@ namespace MABMoney.Web.Controllers
         {
             var user = _userServices.Get(userId);
 
-            var account = _accountServices.Get(((accountId.HasValue) ? accountId.Value : user.Accounts.First().AccountID));
+            var key = "ACCOUNT_DTO_" + userId;
+            AccountDTO account = Global.Cache.Get<AccountDTO>(key);
+
+            if (account == null)
+            {
+                account = _accountServices.Get(((accountId.HasValue) ? accountId.Value : user.Accounts.First().AccountID));
+                Global.Cache.Store(StoreMode.Set, key, account);
+            }
 
             var model = new IndexViewModel
             {

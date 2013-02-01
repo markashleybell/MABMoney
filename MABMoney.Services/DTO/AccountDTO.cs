@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MABMoney.Services.DTO
 {
+    [Serializable]
     public class AccountDTO
     {
         [Required]
