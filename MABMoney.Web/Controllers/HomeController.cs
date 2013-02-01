@@ -50,13 +50,21 @@ namespace MABMoney.Web.Controllers
         {
             var user = _userServices.Get(userId);
 
+            var debug = "";
+
             var key = "ACCOUNT_DTO_" + userId;
             AccountDTO account = _cacheProvider.Get<AccountDTO>(key);
 
             if (account == null)
             {
                 account = _accountServices.Get(((accountId.HasValue) ? accountId.Value : user.Accounts.First().AccountID));
-                _cacheProvider.Set(key, account);
+                var set = _cacheProvider.Set(key, account);
+
+                debug = key + ": NOT IN CACHE, " + ((set) ? "SET" : "FAILED TO SET");
+            }
+            else
+            {
+                debug = key + ": RETRIEVED FROM CACHE";
             }
 
             var model = new IndexViewModel
@@ -67,7 +75,8 @@ namespace MABMoney.Web.Controllers
                 IncomeCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, account.AccountID, CategoryTypeDTO.Income),
                 ExpenseCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, account.AccountID, CategoryTypeDTO.Expense),
                 Accounts = DataHelpers.GetAccountSelectOptions(_accountServices),
-                Type = GetDefaultTransationTypeForAccount(account)
+                Type = GetDefaultTransationTypeForAccount(account),
+                Debug = debug
             };
 
             var now = _dateProvider.Date;
