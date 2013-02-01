@@ -170,6 +170,7 @@
     <Compile Include="Infrastructure\ICryptoProvider.cs" />
     <Compile Include="Infrastructure\IDateTimeProvider.cs" />
     <Compile Include="Infrastructure\ISiteConfiguration.cs" />
+    <Compile Include="Infrastructure\MemcachedCacheProvider.cs" />
     <Compile Include="Infrastructure\ProfileModelBinder.cs" />
     <Compile Include="Infrastructure\ServiceResolverAdapter.cs" />
     <Compile Include="Infrastructure\SiteConfiguration.cs" />

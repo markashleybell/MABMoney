@@ -42,6 +42,18 @@ namespace MABMoney.Web
             var sharedSecret = ConfigurationManager.AppSettings["SharedSecret"];
             var cookieKey = ConfigurationManager.AppSettings["CookieKey"];
 
+            var memcachedConfiguration = new MemcachedClientConfiguration();
+            memcachedConfiguration.AddServer(ConfigurationManager.AppSettings["MEMCACHIER_SERVERS"]);
+            memcachedConfiguration.Protocol = MemcachedProtocol.Binary;
+
+            if (Convert.ToBoolean(ConfigurationManager.AppSettings["MEMCACHIER_AUTH"]))
+            {
+                memcachedConfiguration.Authentication.Type = typeof(PlainTextAuthenticator);
+                memcachedConfiguration.Authentication.Parameters["userName"] = ConfigurationManager.AppSettings["MEMCACHIER_USERNAME"];
+                memcachedConfiguration.Authentication.Parameters["password"] = ConfigurationManager.AppSettings["MEMCACHIER_PASSWORD"];
+                memcachedConfiguration.Authentication.Parameters["zone"] = "";
+            }
+
             // Set up object mappings for Unity DI
             var container = new UnityContainer();
 
@@ -63,7 +75,8 @@ namespace MABMoney.Web
                      .RegisterType<IDataStoreFactory>(new InjectionFactory(c => new DataStoreFactory((HttpContext.Current.Request.Cookies[cookieKey] != null) ? Convert.ToInt32(EncryptionHelpers.DecryptStringAES(HttpContext.Current.Request.Cookies[cookieKey].Value, sharedSecret)) : -1)))
                      .RegisterType<ICryptoProvider>(new InjectionFactory(c => new CryptoWrapper()))
                      .RegisterType<HttpContextBase>(new InjectionFactory(c => new HttpContextWrapper(HttpContext.Current)))
-                     .RegisterType<ISiteConfiguration>(new InjectionFactory(c => new SiteConfiguration(sharedSecret, cookieKey)));
+                     .RegisterType<ISiteConfiguration>(new InjectionFactory(c => new SiteConfiguration(sharedSecret, cookieKey)))
+                     .RegisterInstance<ICacheProvider>(new MemcachedCacheProvider(memcachedConfiguration));
 
             var resolver = new UnityDependencyResolver(container);
 
@@ -93,20 +106,6 @@ namespace MABMoney.Web
             //    d.Forename = "MAPPED!!!!";
             //    d.Accounts = s.Accounts.ToList().MapToList<AccountDTO>();
             //});
-
-            var configuration = new MemcachedClientConfiguration();
-            configuration.AddServer(ConfigurationManager.AppSettings["MEMCACHIER_SERVERS"]);
-            configuration.Protocol = MemcachedProtocol.Binary;
-
-            if (Convert.ToBoolean(ConfigurationManager.AppSettings["MEMCACHIER_AUTH"]))
-            {
-                configuration.Authentication.Type = typeof(PlainTextAuthenticator);
-                configuration.Authentication.Parameters["userName"] = ConfigurationManager.AppSettings["MEMCACHIER_USERNAME"];
-                configuration.Authentication.Parameters["password"] = ConfigurationManager.AppSettings["MEMCACHIER_PASSWORD"];
-                configuration.Authentication.Parameters["zone"] = "";
-            }
-
-            // Global.Cache = new MemcachedClient(configuration);
         }
     }
 }
