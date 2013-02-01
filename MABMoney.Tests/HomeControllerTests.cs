@@ -27,10 +27,14 @@ namespace MABMoney.Tests
         private ISiteConfiguration _config;
         private ProfileViewModel _profile;
         private IDateTimeProvider _dateProvider;
+        private ICacheProvider _cacheProvider;
 
         [SetUp]
         public void SetUp()
         {
+            _cacheProvider = MockRepository.GenerateMock<ICacheProvider>();
+            _cacheProvider.Stub(x => x.Get<object>(null)).IgnoreArguments().Return(null);
+
             var accounts = new List<AccountDTO> {
                 new AccountDTO { 
                     AccountID = 1,
@@ -213,7 +217,7 @@ namespace MABMoney.Tests
         [Test]
         public void Index_Get()
         {
-            var controller = new HomeController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider);
+            var controller = new HomeController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider);
 
             var result = controller.Index(_profile) as ViewResult;
 

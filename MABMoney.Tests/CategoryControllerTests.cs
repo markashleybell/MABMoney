@@ -28,10 +28,14 @@ namespace MABMoney.Tests
         private HttpCookieCollection _cookies;
         private ProfileViewModel _profile;
         private IDateTimeProvider _dateProvider;
+        private ICacheProvider _cacheProvider;
 
         [SetUp]
         public void SetUp()
         {
+            _cacheProvider = MockRepository.GenerateMock<ICacheProvider>();
+            _cacheProvider.Stub(x => x.Get<object>(null)).IgnoreArguments().Return(null);
+
             var accounts = new List<AccountDTO> {
                 new AccountDTO { 
                     AccountID = 1,
@@ -105,7 +109,7 @@ namespace MABMoney.Tests
         [Test]
         public void Index_Get()
         {
-            var controller = new CategoriesController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider);
+            var controller = new CategoriesController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider);
 
             var result = controller.Index(_profile) as ViewResult;
 
@@ -123,7 +127,7 @@ namespace MABMoney.Tests
         [Test]
         public void Create_Get()
         {
-            var controller = new CategoriesController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider);
+            var controller = new CategoriesController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider);
 
             var result = controller.Create(_profile) as ViewResult;
 
@@ -140,7 +144,7 @@ namespace MABMoney.Tests
         [Test]
         public void Create_Post()
         {
-            var controller = new CategoriesController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider);
+            var controller = new CategoriesController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider);
 
             var model = new CreateViewModel
             {
@@ -161,7 +165,7 @@ namespace MABMoney.Tests
         [Test]
         public void Edit_Get()
         {
-            var controller = new CategoriesController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider);
+            var controller = new CategoriesController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider);
 
             var result = controller.Edit(_profile, 2) as ViewResult;
 
@@ -179,7 +183,7 @@ namespace MABMoney.Tests
         [Test]
         public void Edit_Post()
         {
-            var controller = new CategoriesController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider);
+            var controller = new CategoriesController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider);
 
             var model = new EditViewModel
             {
@@ -201,7 +205,7 @@ namespace MABMoney.Tests
         [Test]
         public void Delete_Post()
         {
-            var controller = new CategoriesController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider);
+            var controller = new CategoriesController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider);
 
             var result = controller.Delete(_profile, 2) as RedirectToRouteResult;
 

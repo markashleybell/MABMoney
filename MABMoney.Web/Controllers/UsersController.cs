@@ -25,6 +25,7 @@ namespace MABMoney.Web.Controllers
                                HttpContextBase context,
                                ISiteConfiguration config,
                                IDateTimeProvider dateProvider,
+                               ICacheProvider cacheProvider,
                                ICryptoProvider crypto) : base(userServices,
                                                               accountServices,
                                                               categoryServices,
@@ -32,7 +33,8 @@ namespace MABMoney.Web.Controllers
                                                               budgetServices,
                                                               context,
                                                               config,
-                                                              dateProvider) 
+                                                              dateProvider,
+                                                              cacheProvider) 
         {
             _crypto = crypto;
         }

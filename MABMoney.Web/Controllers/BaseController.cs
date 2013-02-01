@@ -18,6 +18,7 @@ namespace MABMoney.Web.Controllers
         protected HttpContextBase _context;
         protected ISiteConfiguration _config;
         protected IDateTimeProvider _dateProvider;
+        protected ICacheProvider _cacheProvider;
 
         public BaseController(IUserServices userServices,
                               IAccountServices accountServices,
@@ -26,7 +27,8 @@ namespace MABMoney.Web.Controllers
                               IBudgetServices budgetServices,
                               HttpContextBase context,
                               ISiteConfiguration config,
-                              IDateTimeProvider dateProvider)
+                              IDateTimeProvider dateProvider,
+                              ICacheProvider cacheProvider)
         {
             _userServices = userServices;
             _accountServices = accountServices;
@@ -36,6 +38,7 @@ namespace MABMoney.Web.Controllers
             _context = context;
             _config = config;
             _dateProvider = dateProvider;
+            _cacheProvider = cacheProvider;
         }
 
     }

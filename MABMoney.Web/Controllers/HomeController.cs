@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System;   
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -12,7 +12,6 @@ using MABMoney.Services.DTO;
 using MABMoney.Web.Infrastructure;
 using MABMoney.Web.Models;
 using System.Text;
-using Enyim.Caching.Memcached;
 
 namespace MABMoney.Web.Controllers
 {
@@ -25,14 +24,16 @@ namespace MABMoney.Web.Controllers
                               IBudgetServices budgetServices, 
                               HttpContextBase context,
                               ISiteConfiguration config,
-                              IDateTimeProvider dateProvider) : base(userServices,
-                                                                     accountServices,
-                                                                     categoryServices,
-                                                                     transactionServices, 
-                                                                     budgetServices,
-                                                                     context,
-                                                                     config,
-                                                                     dateProvider) { }
+                              IDateTimeProvider dateProvider,
+                              ICacheProvider cacheProvider) : base(userServices,
+                                                                   accountServices,
+                                                                   categoryServices,
+                                                                   transactionServices, 
+                                                                   budgetServices,
+                                                                   context,
+                                                                   config,
+                                                                   dateProvider,
+                                                                   cacheProvider) { }
 
         private TransactionType GetDefaultTransationTypeForAccount(AccountDTO account)
         {
@@ -50,12 +51,12 @@ namespace MABMoney.Web.Controllers
             var user = _userServices.Get(userId);
 
             var key = "ACCOUNT_DTO_" + userId;
-            AccountDTO account = Global.Cache.Get<AccountDTO>(key);
+            AccountDTO account = _cacheProvider.Get<AccountDTO>(key);
 
             if (account == null)
             {
                 account = _accountServices.Get(((accountId.HasValue) ? accountId.Value : user.Accounts.First().AccountID));
-                Global.Cache.Store(StoreMode.Set, key, account);
+                _cacheProvider.Set(key, account);
             }
 
             var model = new IndexViewModel

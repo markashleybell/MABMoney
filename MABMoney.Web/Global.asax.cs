@@ -25,17 +25,10 @@ using Enyim.Caching.Memcached;
 
 namespace MABMoney.Web
 {
-    public static class Global
-    {
-        public static MemcachedClient Cache { get; set; }
-    }
-
     // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
     // visit http://go.microsoft.com/?LinkId=9394801
     public class MvcApplication : System.Web.HttpApplication
     {
-        
-
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
@@ -113,7 +106,7 @@ namespace MABMoney.Web
                 configuration.Authentication.Parameters["zone"] = "";
             }
 
-            Global.Cache = new MemcachedClient(configuration);
+            // Global.Cache = new MemcachedClient(configuration);
         }
     }
 }
