@@ -56,7 +56,7 @@
 
             balance = model.monthEnd;
 
-            console.log(model);
+            // console.log(model);
 
             var row = '<tr>' +
                         '<td>' + model.month + '</td>' +
