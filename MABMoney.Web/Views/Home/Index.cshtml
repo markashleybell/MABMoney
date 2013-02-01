@@ -154,7 +154,37 @@
     </div>
 
     <div class="tab-pane" id="payment-calculator"> 
-        <p>UNDER CONSTRUCTION</p>
+        
+        <form>
+            <div class="controls controls-row">
+                <input class="span2" id="payment-calculator-currentbalance" name="payment-calculator-currentbalance" type="text" value="@Math.Abs(Model.Account.CurrentBalance).ToString("#0.00")">
+                <input class="span2" id="payment-calculator-paymentamount" name="payment-calculator-paymentamount" type="text" value="200">
+                <input class="span2" id="payment-calculator-interestrate" name="payment-calculator-interestrate" type="text" value="16.9">
+                <input class="span2" id="payment-calculator-minpaymentpercentage" name="payment-calculator-currentbalance" type="text" value="3">
+                <div class="span2"></div>
+                <div class="span2">
+                    <input type="button" id="payment-calculator-recalculate" value="Recalculate" class="btn btn-primary" />
+                </div>
+            </div>
+        </form>
+
+        <table class="table table-striped" id="payment-calculator-table">
+            <caption>Transaction List</caption>
+            <thead>
+                <tr>
+                    <th>Month</th>
+                    <th>Balance at Month Start</th>
+                    <th>Interest</th>
+                    <th>Min Payment</th>
+                    <th>Actual Payment</th>
+                    <th>Balance at Month End</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            </tbody>
+        </table>
+
     </div>
 
  <p></p>
