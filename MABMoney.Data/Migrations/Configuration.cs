@@ -41,17 +41,27 @@ namespace MABMoney.Data.Migrations
                     new Account {
                         Name = "Current",
                         User = user,
-                        StartingBalance = 0
+                        StartingBalance = 0,
+                        Type = AccountType.Current,
+                        Default = true
                     },
                     new Account {
                         Name = "Savings",
                         User = user,
-                        StartingBalance = 0
+                        StartingBalance = 0,
+                        Type = AccountType.Savings
                     },
                     new Account {
                         Name = "Credit Card",
                         User = user,
-                        StartingBalance = 0
+                        StartingBalance = 0,
+                        Type = AccountType.CreditCard
+                    },
+                    new Account {
+                        Name = "Loan",
+                        User = user,
+                        StartingBalance = 0,
+                        Type = AccountType.Loan
                     }
                 };
 

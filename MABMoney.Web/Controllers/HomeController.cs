@@ -67,7 +67,25 @@ namespace MABMoney.Web.Controllers
             //    debug = key + ": RETRIEVED FROM CACHE";
             //}
 
-            var account = _accountServices.Get(((accountId.HasValue) ? accountId.Value : user.Accounts.First().AccountID));
+            // If no account ID has been passed in
+            if (!accountId.HasValue)
+            {
+                var defaultAccount = user.Accounts.Where(x => x.Default).FirstOrDefault();
+
+                // If there isn't a default account
+                if (defaultAccount == null)
+                {
+                    // Just get the first one
+                    accountId = user.Accounts.First().AccountID;
+                }
+                else
+                {
+                    // Set the account ID to the ID of the default account
+                    accountId = defaultAccount.AccountID;
+                }
+            }
+
+            var account = _accountServices.Get(accountId.Value);
 
             var model = new IndexViewModel
             {
