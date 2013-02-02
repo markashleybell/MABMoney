@@ -13,6 +13,7 @@ namespace MABMoney.Services.DTO
         Current,
         Savings,
         [Description("Credit Card")]
-        CreditCard
+        CreditCard,
+        Loan
     }
 }

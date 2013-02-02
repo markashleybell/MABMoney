@@ -10,6 +10,7 @@ namespace MABMoney.Domain
     {
         Current,
         Savings,
-        CreditCard
+        CreditCard,
+        Loan
     }
 }
