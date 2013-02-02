@@ -140,11 +140,16 @@
             {
                 var percentage = (category.Total / category.Amount * 100);
                 var barwidth = Math.Abs(percentage) / 2;
+                var remaining = category.Amount - category.Total;
     
             <div class="row">
                 <div class="span2"><div class="category-label">@category.Category.Name</div></div>
                 <div class="span10">
-                    <div class="category-bar @((percentage > 100) ? "over" : "")"><div class="category-stats">@((category.Total).ToString("#0.00")) of @category.Amount.ToString("#0.00") (@percentage.ToString("#0.00")%)</div><div class="category-progress" style="width: @(barwidth)%;">&nbsp;</div></div>
+                    <div class="category-bar @((percentage > 100) ? "over" : "")">
+                        <div class="category-stats">@((category.Total).ToString("#0.00")) of @category.Amount.ToString("#0.00") (@percentage.ToString("#0.00")%)</div>
+                        <div class="category-remaining">@remaining.ToString("#0.00") remaining</div>
+                        <div class="category-progress" style="width: @(barwidth)%;">&nbsp;</div>
+                    </div>
                 </div>
             </div>
             }
