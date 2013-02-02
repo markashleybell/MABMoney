@@ -6,9 +6,11 @@
     Layout = "~/Views/Shared/Master.cshtml";
 }
 
+@if(Model.Debug != null) {
 <div class="row">
     <div class="span12">@Model.Debug</div>
 </div>
+}
 
 <div class="row">
     <div class="span10"><h2>@Model.Account.Name (@Model.From.ToString("dd/MM/yyyy")-@Model.To.ToString("dd/MM/yyyy"))</h2></div> 

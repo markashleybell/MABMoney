@@ -6,6 +6,7 @@ using StackExchange.Profiling;
 using StackExchange.Profiling.MVCHelpers;
 using Microsoft.Web.Infrastructure;
 using Microsoft.Web.Infrastructure.DynamicModuleHelper;
+using System.Configuration;
 //using System.Data;
 //using System.Data.Entity;
 //using System.Data.Entity.Infrastructure;
@@ -84,7 +85,9 @@ namespace MABMoney.Web.App_Start
                 var request = ((HttpApplication)sender).Request;
                 //TODO: By default only local requests are profiled, optionally you can set it up
                 //  so authenticated users are always profiled
-                if (request.IsLocal) { MiniProfiler.Start(); }
+                // if (request.IsLocal) { MiniProfiler.Start(); }
+                if (Convert.ToBoolean(ConfigurationManager.AppSettings["Profiling"]))
+                    MiniProfiler.Start();
             };
 
 
