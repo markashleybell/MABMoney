@@ -11,6 +11,7 @@ using MABMoney.Web.Controllers;
 using MABMoney.Web.Infrastructure;
 using System.Web.Mvc;
 using MABMoney.Web.Models.Users;
+using MABMoney.Data;
 
 namespace MABMoney.Tests
 {
@@ -26,7 +27,7 @@ namespace MABMoney.Tests
         private ICryptoProvider _crypto;
         private ISiteConfiguration _config;
         private HttpCookieCollection _cookies;
-        private IDateTimeProvider _dateProvider;
+        private IDateTimeProvider _dateServices;
         private ICacheProvider _cacheProvider;
 
         [SetUp]
@@ -77,14 +78,14 @@ namespace MABMoney.Tests
             _config.Stub(x => x.SharedSecret).Return("SHAREDSECRET");
             _config.Stub(x => x.CookieKey).Return("COOKIEKEY");
 
-            _dateProvider = MockRepository.GenerateStub<IDateTimeProvider>();
-            _dateProvider.Stub(x => x.Date).Return(new DateTime(2020, 01, 01));
+            _dateServices = MockRepository.GenerateStub<IDateTimeProvider>();
+            _dateServices.Stub(x => x.Now).Return(new DateTime(2020, 01, 01));
         }    
 
         [Test]
         public void Index_Get()
         {
-            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider, _crypto);
+            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateServices, _cacheProvider, _crypto);
 
             var result = controller.Index() as ViewResult;
             
@@ -109,7 +110,7 @@ namespace MABMoney.Tests
         [Test]
         public void Create_Get()
         {
-            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider, _crypto);
+            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateServices, _cacheProvider, _crypto);
 
             var result = controller.Create() as ViewResult;
 
@@ -126,7 +127,7 @@ namespace MABMoney.Tests
         [Test]
         public void Create_Post()
         {
-            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider, _crypto);
+            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateServices, _cacheProvider, _crypto);
 
             var model = new CreateViewModel {
                 Forename = "Test",
@@ -144,7 +145,7 @@ namespace MABMoney.Tests
         [Test]
         public void Edit_Get()
         {
-            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider, _crypto);
+            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateServices, _cacheProvider, _crypto);
 
             var result = controller.Edit(1) as ViewResult;
 
@@ -161,7 +162,7 @@ namespace MABMoney.Tests
         [Test]
         public void Edit_Post()
         {
-            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider, _crypto);
+            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateServices, _cacheProvider, _crypto);
 
             var model = new EditViewModel {
                 UserID = 1,
@@ -180,7 +181,7 @@ namespace MABMoney.Tests
         [Test]
         public void Delete_Post()
         {
-            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider, _crypto);
+            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateServices, _cacheProvider, _crypto);
 
             var result = controller.Delete(2) as RedirectToRouteResult;
             
@@ -192,7 +193,7 @@ namespace MABMoney.Tests
         [Test]
         public void Login_Get()
         {
-            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider, _crypto);
+            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateServices, _cacheProvider, _crypto);
 
             var result = controller.Login() as ViewResult;
 
@@ -208,7 +209,7 @@ namespace MABMoney.Tests
         [Test]
         public void Login_Post()
         {
-            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider, _crypto);
+            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateServices, _cacheProvider, _crypto);
 
             var model = new LoginViewModel {
                 Email = "jane@jane.com",
@@ -229,12 +230,12 @@ namespace MABMoney.Tests
         [Test]
         public void Logout_Get()
         {
-            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider, _crypto);
+            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateServices, _cacheProvider, _crypto);
 
             var result = controller.Logout() as RedirectToRouteResult;
 
             Assert.AreEqual("COOKIEKEY", _context.Response.Cookies[0].Name);
-            Assert.Greater(_dateProvider.Date, _context.Response.Cookies[0].Expires);
+            Assert.Greater(_dateServices.Now, _context.Response.Cookies[0].Expires);
 
             Assert.NotNull(result);
         }

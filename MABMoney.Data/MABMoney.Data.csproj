@@ -51,9 +51,11 @@
   <ItemGroup>
     <Compile Include="DataStore.cs" />
     <Compile Include="DataStoreFactory.cs" />
+    <Compile Include="DateTimeProvider.cs" />
     <Compile Include="Disposable.cs" />
     <Compile Include="IDataStore.cs" />
     <Compile Include="IDataStoreFactory.cs" />
+    <Compile Include="IDateTimeProvider.cs" />
     <Compile Include="IRepository.cs" />
     <Compile Include="IUnitOfWork.cs" />
     <Compile Include="MigrationDataStoreFactory.cs" />

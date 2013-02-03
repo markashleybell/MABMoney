@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using MABMoney.Services;
 using MABMoney.Web.Infrastructure;
+using MABMoney.Data;
 
 namespace MABMoney.Web.Controllers
 {
@@ -17,7 +18,7 @@ namespace MABMoney.Web.Controllers
         protected IBudgetServices _budgetServices;
         protected HttpContextBase _context;
         protected ISiteConfiguration _config;
-        protected IDateTimeProvider _dateProvider;
+        protected IDateTimeProvider _dateServices;
         protected ICacheProvider _cacheProvider;
 
         public BaseController(IUserServices userServices,
@@ -37,7 +38,7 @@ namespace MABMoney.Web.Controllers
             _budgetServices = budgetServices;
             _context = context;
             _config = config;
-            _dateProvider = dateProvider;
+            _dateServices = dateProvider;
             _cacheProvider = cacheProvider;
         }
 

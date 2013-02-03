@@ -10,6 +10,7 @@ using mab.lib.SimpleMapper;
 using MABMoney.Web.Helpers;
 using MABMoney.Web.Infrastructure;
 using MABMoney.Web.Models;
+using MABMoney.Data;
 
 namespace MABMoney.Web.Controllers
 {
@@ -71,7 +72,7 @@ namespace MABMoney.Web.Controllers
             if(id.HasValue) 
                 categories = categories.Where(x => x.Account_AccountID == id.Value);
 
-            var now = _dateProvider.Date;
+            var now = _dateServices.Now;
             
             return View(new CreateViewModel {
                 Start = new DateTime(now.Year, now.Month, 1),

@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace MABMoney.Web.Infrastructure
+namespace MABMoney.Data
 {
-    public class DateTimeWrapper : IDateTimeProvider
+    public class DateTimeProvider : IDateTimeProvider
     {
         private readonly Func<DateTime> _nowProvider;
 
-        public DateTimeWrapper(Func<DateTime> nowProvider)
+        public DateTimeProvider(Func<DateTime> nowProvider)
         {
             _nowProvider = nowProvider;
         }
 
-        public DateTime Date
+        public DateTime Now
         {
             get { return _nowProvider(); }
         }

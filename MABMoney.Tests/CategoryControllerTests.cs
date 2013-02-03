@@ -12,6 +12,7 @@ using Rhino.Mocks;
 using MABMoney.Web.Controllers;
 using System.Web.Mvc;
 using MABMoney.Web.Models.Categories;
+using MABMoney.Data;
 
 namespace MABMoney.Tests
 {
@@ -27,7 +28,7 @@ namespace MABMoney.Tests
         private ISiteConfiguration _config;
         private HttpCookieCollection _cookies;
         private ProfileViewModel _profile;
-        private IDateTimeProvider _dateProvider;
+        private IDateTimeProvider _dateServices;
         private ICacheProvider _cacheProvider;
 
         [SetUp]
@@ -102,14 +103,14 @@ namespace MABMoney.Tests
 
             _config.Stub(x => x.SharedSecret).Return("SHAREDSECRET");
 
-            _dateProvider = MockRepository.GenerateStub<IDateTimeProvider>();
-            _dateProvider.Stub(x => x.Date).Return(new DateTime(2020, 01, 01));
+            _dateServices = MockRepository.GenerateStub<IDateTimeProvider>();
+            _dateServices.Stub(x => x.Now).Return(new DateTime(2020, 01, 01));
         }
 
         [Test]
         public void Index_Get()
         {
-            var controller = new CategoriesController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider);
+            var controller = new CategoriesController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateServices, _cacheProvider);
 
             var result = controller.Index(_profile) as ViewResult;
 
@@ -127,7 +128,7 @@ namespace MABMoney.Tests
         [Test]
         public void Create_Get()
         {
-            var controller = new CategoriesController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider);
+            var controller = new CategoriesController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateServices, _cacheProvider);
 
             var result = controller.Create(_profile) as ViewResult;
 
@@ -144,7 +145,7 @@ namespace MABMoney.Tests
         [Test]
         public void Create_Post()
         {
-            var controller = new CategoriesController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider);
+            var controller = new CategoriesController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateServices, _cacheProvider);
 
             var model = new CreateViewModel
             {
@@ -165,7 +166,7 @@ namespace MABMoney.Tests
         [Test]
         public void Edit_Get()
         {
-            var controller = new CategoriesController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider);
+            var controller = new CategoriesController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateServices, _cacheProvider);
 
             var result = controller.Edit(_profile, 2) as ViewResult;
 
@@ -183,7 +184,7 @@ namespace MABMoney.Tests
         [Test]
         public void Edit_Post()
         {
-            var controller = new CategoriesController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider);
+            var controller = new CategoriesController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateServices, _cacheProvider);
 
             var model = new EditViewModel
             {
@@ -205,7 +206,7 @@ namespace MABMoney.Tests
         [Test]
         public void Delete_Post()
         {
-            var controller = new CategoriesController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider);
+            var controller = new CategoriesController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateServices, _cacheProvider);
 
             var result = controller.Delete(_profile, 2) as RedirectToRouteResult;
 

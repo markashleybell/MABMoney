@@ -11,7 +11,7 @@ namespace MABMoney.Data
     {
         public DataStore Create()
         {
-            return new DataStore(0);
+            return new DataStore(0, new DateTimeProvider(() => DateTime.Now));
         }
     }
 }

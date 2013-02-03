@@ -10,6 +10,7 @@ using mab.lib.SimpleMapper;
 using MABMoney.Web.Infrastructure;
 using MABMoney.Web.Models;
 using MABMoney.Web.Helpers;
+using MABMoney.Data;
 
 namespace MABMoney.Web.Controllers
 {

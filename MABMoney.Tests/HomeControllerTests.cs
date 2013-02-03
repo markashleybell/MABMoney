@@ -12,6 +12,7 @@ using MABMoney.Services.DTO;
 using Rhino.Mocks;
 using MABMoney.Web.Controllers;
 using System.Web.Mvc;
+using MABMoney.Data;
 
 namespace MABMoney.Tests
 {
@@ -26,7 +27,7 @@ namespace MABMoney.Tests
         private HttpContextBase _context;
         private ISiteConfiguration _config;
         private ProfileViewModel _profile;
-        private IDateTimeProvider _dateProvider;
+        private IDateTimeProvider _dateServices;
         private ICacheProvider _cacheProvider;
 
         [SetUp]
@@ -210,14 +211,14 @@ namespace MABMoney.Tests
 
             _config.Stub(x => x.SharedSecret).Return("SHAREDSECRET");
 
-            _dateProvider = MockRepository.GenerateStub<IDateTimeProvider>();
-            _dateProvider.Stub(x => x.Date).Return(new DateTime(2020, 1, 1));
+            _dateServices = MockRepository.GenerateStub<IDateTimeProvider>();
+            _dateServices.Stub(x => x.Now).Return(new DateTime(2020, 1, 1));
         }
 
         [Test]
         public void Index_Get()
         {
-            var controller = new HomeController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider);
+            var controller = new HomeController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateServices, _cacheProvider);
 
             var result = controller.Index(_profile) as ViewResult;
 

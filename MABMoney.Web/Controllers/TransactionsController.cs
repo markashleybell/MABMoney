@@ -11,6 +11,7 @@ using MABMoney.Web.Helpers;
 using Microsoft.VisualBasic.FileIO;
 using MABMoney.Web.Infrastructure;
 using MABMoney.Web.Models;
+using MABMoney.Data;
 
 namespace MABMoney.Web.Controllers
 {
@@ -63,7 +64,7 @@ namespace MABMoney.Web.Controllers
             return View(new CreateViewModel {
                 Categories = DataHelpers.GetCategorySelectOptions(_categoryServices),
                 Accounts = DataHelpers.GetAccountSelectOptions(_accountServices),
-                Date = _dateProvider.Date
+                Date = _dateServices.Now
             });
         }
 

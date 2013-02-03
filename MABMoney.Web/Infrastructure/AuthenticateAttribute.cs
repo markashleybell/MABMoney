@@ -26,7 +26,7 @@ namespace MABMoney.Web.Infrastructure
 
             var userId = Convert.ToInt32(EncryptionHelpers.DecryptStringAES(encryptedCookieValue, ConfigurationManager.AppSettings["SharedSecret"]));
 
-            var unitOfWork = new UnitOfWork(new DataStoreFactory(userId));
+            var unitOfWork = new UnitOfWork(new DataStoreFactory(userId, new DateTimeProvider(() => DateTime.Now)));
             var userServices = new UserServices(new Repository<User, int>(unitOfWork), unitOfWork);
 
             var user = userServices.Get(userId);

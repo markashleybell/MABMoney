@@ -164,11 +164,9 @@
     <Compile Include="Helpers\EncryptionHelpers.cs" />
     <Compile Include="Infrastructure\AuthenticateAttribute.cs" />
     <Compile Include="Infrastructure\CryptoWrapper.cs" />
-    <Compile Include="Infrastructure\DateTimeWrapper.cs" />
     <Compile Include="Infrastructure\HttpContextLifetimeManager.cs" />
     <Compile Include="Infrastructure\ICacheProvider.cs" />
     <Compile Include="Infrastructure\ICryptoProvider.cs" />
-    <Compile Include="Infrastructure\IDateTimeProvider.cs" />
     <Compile Include="Infrastructure\ISiteConfiguration.cs" />
     <Compile Include="Infrastructure\MemcachedCacheProvider.cs" />
     <Compile Include="Infrastructure\ProfileModelBinder.cs" />

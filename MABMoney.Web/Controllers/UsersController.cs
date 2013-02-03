@@ -10,6 +10,7 @@ using MABMoney.Services.DTO;
 using MABMoney.Web.Infrastructure;
 using MABMoney.Web.Helpers;
 using System.Configuration;
+using MABMoney.Data;
 
 namespace MABMoney.Web.Controllers
 {
@@ -134,7 +135,7 @@ namespace MABMoney.Web.Controllers
         public ActionResult Logout()
         {
             var cookie = new HttpCookie(_config.CookieKey, "");
-            cookie.Expires = _dateProvider.Date.AddDays(-1);
+            cookie.Expires = _dateServices.Now.AddDays(-1);
             _context.Response.Cookies.Add(cookie);
             return RedirectToAction("Login");
         }
