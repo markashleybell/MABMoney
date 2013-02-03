@@ -64,7 +64,7 @@ namespace MABMoney.Web.Controllers
             return View(new CreateViewModel {
                 Categories = DataHelpers.GetCategorySelectOptions(_categoryServices),
                 Accounts = DataHelpers.GetAccountSelectOptions(_accountServices),
-                Date = _dateServices.Now
+                Date = _dateProvider.Now
             });
         }
 

@@ -90,7 +90,7 @@ namespace MABMoney.Web.Controllers
 
             var model = new IndexViewModel
             {
-                Date = _dateServices.Now,
+                Date = _dateProvider.Now,
                 Account = account,
                 Account_AccountID = account.AccountID,
                 IncomeCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, account.AccountID, CategoryTypeDTO.Income),
@@ -100,7 +100,7 @@ namespace MABMoney.Web.Controllers
                 Debug = debug
             };
 
-            var now = _dateServices.Now;
+            var now = _dateProvider.Now;
 
             model.From = new DateTime(now.Year, now.Month, 1);
             model.To = new DateTime(now.Year, now.Month, DateTime.DaysInMonth(now.Year, now.Month));

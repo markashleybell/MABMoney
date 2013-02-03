@@ -135,7 +135,7 @@ namespace MABMoney.Web.Controllers
         public ActionResult Logout()
         {
             var cookie = new HttpCookie(_config.CookieKey, "");
-            cookie.Expires = _dateServices.Now.AddDays(-1);
+            cookie.Expires = _dateProvider.Now.AddDays(-1);
             _context.Response.Cookies.Add(cookie);
             return RedirectToAction("Login");
         }
