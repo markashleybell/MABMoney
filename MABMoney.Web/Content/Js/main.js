@@ -4,7 +4,9 @@
         autoclose: true
     });
 
-    $('#net-worth').popover({
+    $('#net-worth').on('click', function (evt) {
+        evt.preventDefault();
+    }).popover({
         title: 'Accounts',
         placement: 'bottom',
         html: true,
