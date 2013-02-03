@@ -13,7 +13,10 @@
         content: $('#net-worth-content').html()
     });
 
-    
+    $('#account-selector').on('change', function (evt) {
+        this.form.submit();
+    });
+
     function aprCalc(apr) {
         apr = apr * 1 / 100;
         return (Math.pow((1 + apr), (1 / 12)) - 1) * 100;
