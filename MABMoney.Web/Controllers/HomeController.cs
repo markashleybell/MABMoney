@@ -121,7 +121,7 @@ namespace MABMoney.Web.Controllers
                 transactions = transactions.Where(x => x.Date >= model.From.AddDays(-7) && x.Date <= model.To);
             }
 
-            model.Transactions = transactions.Take(10).ToList();
+            model.Transactions = transactions.ToList();
             model.Budget = latestBudget;
 
             return model;

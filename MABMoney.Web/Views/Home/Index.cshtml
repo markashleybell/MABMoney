@@ -83,7 +83,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var transaction in Model.Transactions.Where(t => t.Amount > 0).OrderByDescending(x => x.Date).ThenByDescending(x => x.TransactionID))
+                @foreach (var transaction in Model.Transactions.Where(t => t.Amount > 0).OrderByDescending(x => x.Date).ThenByDescending(x => x.TransactionID).Take(10))
                 {
                 <tr@((transaction.Date < Model.From) ? new MvcHtmlString(" class=\"before-budget-start\"") : new MvcHtmlString(""))>
                     <td>@transaction.Date.ToString("dd/MM/yyyy")</td>
@@ -123,7 +123,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var transaction in Model.Transactions.Where(t => t.Amount < 0).OrderByDescending(x => x.Date).ThenByDescending(x => x.TransactionID))
+                @foreach (var transaction in Model.Transactions.Where(t => t.Amount < 0).OrderByDescending(x => x.Date).ThenByDescending(x => x.TransactionID).Take(10))
                 {
                 <tr@((transaction.Date < Model.From) ? new MvcHtmlString(" class=\"before-budget-start\"") : new MvcHtmlString(""))>
                     <td>@transaction.Date.ToString("dd/MM/yyyy")</td>
