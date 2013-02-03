@@ -14,14 +14,18 @@
 }
 
 <div class="row">
-    <div class="span10"><h2>@Model.Account.Name (@Model.From.ToString("dd/MM/yyyy")-@Model.To.ToString("dd/MM/yyyy"))</h2></div> 
-    <div class="span2"><div class="heading-mimic">@Model.Account.CurrentBalance.ToString("c")</div></div>
+    <div class="span4">
+        @*@Model.From.ToString("dd/MM/yyyy")-@Model.To.ToString("dd/MM/yyyy")*@
+        @using (Html.BeginForm("", "Home", FormMethod.Post, new { @class = "form-inline" }))
+        {
+            <p>@Html.DropDownListFor(x => x.Account_AccountID, Model.Accounts, new { id = "account-selector" }) </p>
+            <noscript><input type="submit" class="btn" value="Go" /></noscript>
+        }
+    </div> 
+    <div class="span8"><div class="heading-mimic">@Model.Account.CurrentBalance.ToString("c")</div></div>
 </div>
 
-@using (Html.BeginForm("", "Home", FormMethod.Post, new { @class = "form-inline" }))
-{
-    @Html.DropDownListFor(x => x.Account_AccountID, Model.Accounts) <input type="submit" class="btn" value="Go" />
-}
+
 
 @*<p>Starting Balance: @Model.Account.StartingBalance.ToString("#0.00"), Current Balance: @Model.Account.CurrentBalance.ToString("#0.00")</p>*@
 
