@@ -22,12 +22,12 @@ namespace MABMoney.Data
 
         public int UserID { get; private set; }
 
-        private IDateTimeProvider _dateTimeServices;
+        private IDateTimeProvider _dateProvider;
 
-        public DataStore(int userId, IDateTimeProvider dateTimeServices)
+        public DataStore(int userId, IDateTimeProvider dateProvider)
         {
             UserID = userId;
-            _dateTimeServices = dateTimeServices;
+            _dateProvider = dateProvider;
         }
 
         public virtual IDbSet<T> DbSet<T>() where T : class
@@ -42,7 +42,7 @@ namespace MABMoney.Data
 
         public override int SaveChanges()
         {
-            DateTime now = _dateTimeServices.Now;
+            DateTime now = _dateProvider.Now;
 
             foreach (var entry in ChangeTracker.Entries<AuditableEntityBase>())
             {
