@@ -112,12 +112,16 @@ namespace MABMoney.Web.Controllers
 
             if (latestBudget != null)
             {
-                transactions = transactions.Where(x => x.Date >= latestBudget.Start && x.Date <= latestBudget.End);
+                transactions = transactions.Where(x => x.Date >= latestBudget.Start.AddDays(-7) && x.Date <= latestBudget.End);
                 model.From = latestBudget.Start;
                 model.To = latestBudget.End;
             }
+            else
+            {
+                transactions = transactions.Where(x => x.Date >= model.From.AddDays(-7) && x.Date <= model.To);
+            }
 
-            model.Transactions = transactions.ToList();
+            model.Transactions = transactions.Take(10).ToList();
             model.Budget = latestBudget;
 
             return model;

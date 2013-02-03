@@ -81,13 +81,13 @@
             <tbody>
                 @foreach (var transaction in Model.Transactions.Where(t => t.Amount > 0).OrderByDescending(x => x.Date).ThenByDescending(x => x.TransactionID))
                 {
-                <tr>
+                <tr@((transaction.Date < Model.From) ? new MvcHtmlString(" class=\"before-budget-start\"") : new MvcHtmlString(""))>
                     <td>@transaction.Date.ToString("dd/MM/yyyy")</td>
                     <td>@transaction.Category.Name</td>
                     <td>@transaction.Description</td>
                     <td>@transaction.Amount.ToString("#0.00")</td>
                     <td>@Html.ActionLink("Edit", "Edit", "Transactions", new { id = transaction.TransactionID }, null)</td>
-                </tr>
+                </tr@()>
                 }
             </tbody>
         </table>
@@ -121,7 +121,7 @@
             <tbody>
                 @foreach (var transaction in Model.Transactions.Where(t => t.Amount < 0).OrderByDescending(x => x.Date).ThenByDescending(x => x.TransactionID))
                 {
-                <tr>
+                <tr@((transaction.Date < Model.From) ? new MvcHtmlString(" class=\"before-budget-start\"") : new MvcHtmlString(""))>
                     <td>@transaction.Date.ToString("dd/MM/yyyy")</td>
                     <td>@transaction.Category.Name</td>
                     <td>@transaction.Description</td>
