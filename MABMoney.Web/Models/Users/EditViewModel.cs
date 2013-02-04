@@ -4,14 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
-using System.Web.Mvc;
+using System.ComponentModel;
 
 namespace MABMoney.Web.Models.Users
 {
     public class EditViewModel
     {
         [Required]
-        [HiddenInput(DisplayValue = false)]
+        [System.Web.Mvc.HiddenInput(DisplayValue = false)]
         public int UserID { get; set; }
         [Required]
         public string Forename { get; set; }
@@ -19,5 +19,10 @@ namespace MABMoney.Web.Models.Users
         public string Surname { get; set; }
         [Required]
         public string Email { get; set; }
+        [DisplayName("New Password")]
+        public string Password { get; set; }
+        [DisplayName("Confirm New Password")]
+        [Compare("Password")]
+        public string ConfirmPassword { get; set; }
     }
 }

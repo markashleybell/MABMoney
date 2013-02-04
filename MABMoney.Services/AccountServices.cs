@@ -44,7 +44,13 @@ namespace MABMoney.Services
 
         public AccountDTO Get(int id)
         {
-            var dto = _accounts.Query(x => x.User_UserID == _userId && x.AccountID == id).FirstOrDefault().MapTo<AccountDTO>();
+            var account = _accounts.Query(x => x.User_UserID == _userId && x.AccountID == id).FirstOrDefault();
+
+            if (account == null)
+                return null;
+
+            var dto = account.MapTo<AccountDTO>();
+
             var transactions = _transactions.Query(x => x.Account_AccountID == dto.AccountID).ToList();
             dto.CurrentBalance = dto.StartingBalance + transactions.Sum(x => x.Amount);
 

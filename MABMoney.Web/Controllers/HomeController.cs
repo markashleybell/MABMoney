@@ -36,7 +36,7 @@ namespace MABMoney.Web.Controllers
                                                                    dateProvider,
                                                                    cacheProvider) { }
 
-        private TransactionType GetDefaultTransationTypeForAccount(AccountDTO account)
+        private TransactionType GetDefaultTransactionTypeForAccount(AccountDTO account)
         {
             var accountName = account.Name.ToUpper();
 
@@ -76,8 +76,11 @@ namespace MABMoney.Web.Controllers
                 // If there isn't a default account
                 if (defaultAccount == null)
                 {
-                    // Just get the first one
-                    accountId = user.Accounts.First().AccountID;
+                    // If the user doesn't yet have any accounts, redirect them to the add account screen
+                    if (user.Accounts == null || user.Accounts.Count == 0)
+                        accountId = 0;
+                    else // Just get the first one
+                        accountId = user.Accounts.First().AccountID;
                 }
                 else
                 {
@@ -88,6 +91,9 @@ namespace MABMoney.Web.Controllers
 
             var account = _accountServices.Get(accountId.Value);
 
+            if (account == null)
+                return null;
+
             var model = new IndexViewModel
             {
                 Date = _dateProvider.Now,
@@ -96,7 +102,7 @@ namespace MABMoney.Web.Controllers
                 IncomeCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, account.AccountID, CategoryTypeDTO.Income),
                 ExpenseCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, account.AccountID, CategoryTypeDTO.Expense),
                 Accounts = DataHelpers.GetAccountSelectOptions(_accountServices),
-                Type = GetDefaultTransationTypeForAccount(account),
+                Type = GetDefaultTransactionTypeForAccount(account),
                 Debug = debug
             };
 
@@ -130,19 +136,31 @@ namespace MABMoney.Web.Controllers
         [Authenticate]
         public ActionResult Index(ProfileViewModel profile, string state = null)
         {
+            IndexViewModel model;
+
             if (state != null)
             {
                 var decodedPageState = Encoding.UTF8.GetString(HttpServerUtility.UrlTokenDecode(state));
                 var pageState = EncryptionHelpers.DecryptStringAES(decodedPageState, _config.SharedSecret).Split('-');
 
-                var model = GetModelData(profile.UserID, Convert.ToInt32(pageState[0]));
+                model = GetModelData(profile.UserID, Convert.ToInt32(pageState[0]));
+
+                if (model == null)
+                    return RedirectToAction("Create", "Account");
 
                 model.Type = (TransactionType)Enum.Parse(typeof(TransactionType), pageState[1]);
 
                 return View(model);
             }
+            else
+            {
+                model = GetModelData(profile.UserID, null);
 
-            return View(GetModelData(profile.UserID, null));
+                if (model == null)
+                    return RedirectToAction("Create", "Accounts");
+
+                return View(model);
+            }
         }
 
         [Authenticate]
@@ -184,7 +202,6 @@ namespace MABMoney.Web.Controllers
 
             var dto = model.MapTo<TransactionDTO>();
             _transactionServices.Save(dto);
-
 
             var pageState = EncryptionHelpers.EncryptStringAES(model.Account_AccountID + "-" + model.Type, _config.SharedSecret);
             var encodedPageState = HttpServerUtility.UrlTokenEncode(Encoding.UTF8.GetBytes(pageState));

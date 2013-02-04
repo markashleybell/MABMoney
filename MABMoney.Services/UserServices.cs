@@ -63,7 +63,16 @@ namespace MABMoney.Services
             else
             {
                 var entity = _users.Get(dto.UserID);
+
+                // Store the existing password
+                var oldPassword = entity.Password;
+
                 dto.MapTo(entity);
+
+                // If a new password hasn't been supplied, keep the old one
+                if (entity.Password == null)
+                    entity.Password = oldPassword;
+
                 _unitOfWork.Commit();
             }
         }

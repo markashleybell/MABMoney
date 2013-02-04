@@ -100,11 +100,32 @@ namespace MABMoney.Web
 
             MiniProfilerEF.Initialize();
 
-            //Mapper.AddMapping<User, UserDTO>((s, d) => {
-            //    d.UserID = s.UserID;
-            //    d.Forename = "MAPPED!!!!";
-            //    d.Accounts = s.Accounts.ToList().MapToList<AccountDTO>();
-            //});
+            ICryptoProvider _crypto = new CryptoWrapper();
+
+            Mapper.AddMapping<MABMoney.Web.Models.Users.CreateViewModel, MABMoney.Services.DTO.UserDTO>((s, d) =>
+            {
+                d.Forename = s.Forename;
+                d.Surname = s.Surname;
+                d.Email = s.Email;
+                d.Password = _crypto.HashPassword(s.Password);
+            });
+
+            Mapper.AddMapping<MABMoney.Services.DTO.UserDTO, MABMoney.Web.Models.Users.EditViewModel>((s, d) =>
+            {
+                d.UserID = s.UserID;
+                d.Forename = s.Forename;
+                d.Surname = s.Surname;
+                d.Email = s.Email;
+            });
+
+            Mapper.AddMapping<MABMoney.Web.Models.Users.EditViewModel, MABMoney.Services.DTO.UserDTO>((s, d) =>
+            {
+                d.UserID = s.UserID;
+                d.Forename = s.Forename;
+                d.Surname = s.Surname;
+                d.Email = s.Email;
+                d.Password = (s.Password != null) ? _crypto.HashPassword(s.Password) : null;
+            });
         }
     }
 }
