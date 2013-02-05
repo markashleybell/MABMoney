@@ -102,6 +102,14 @@ namespace MABMoney.Web
 
             ICryptoProvider _crypto = new CryptoWrapper();
 
+            Mapper.AddMapping<MABMoney.Web.Models.Home.SignupViewModel, MABMoney.Services.DTO.UserDTO>((s, d) =>
+            {
+                d.Forename = s.Forename;
+                d.Surname = s.Surname;
+                d.Email = s.Email;
+                d.Password = _crypto.HashPassword(s.Password);
+            });
+
             Mapper.AddMapping<MABMoney.Web.Models.Users.CreateViewModel, MABMoney.Services.DTO.UserDTO>((s, d) =>
             {
                 d.Forename = s.Forename;

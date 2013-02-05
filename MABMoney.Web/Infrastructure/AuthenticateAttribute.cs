@@ -36,6 +36,7 @@ namespace MABMoney.Web.Infrastructure
 
             context.Items.Add("UserID", user.UserID);
             context.Items.Add("IsAdmin", user.IsAdmin);
+            context.Items.Add("UserEmail", user.Email);
 
             return true;
         }

@@ -1,0 +1,15 @@
+﻿@model MABMoney.Web.Models.Home.SignupViewModel
+
+@{
+    ViewBag.Title = "SignUp";
+    Layout = "~/Views/Shared/Master.cshtml";
+}
+
+<h2>Sign Up</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.EditorForModel()
+
+    <p><input type="submit" value="Save" class="btn btn-primary" /></p>
+}

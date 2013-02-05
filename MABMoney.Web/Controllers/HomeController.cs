@@ -209,6 +209,27 @@ namespace MABMoney.Web.Controllers
             return RedirectToRoute("Home", new { state = encodedPageState });
         }
 
+        public ActionResult Signup(ProfileViewModel profile)
+        {
+            return View(new SignupViewModel());
+        }
+
+        [HttpPost]
+        public ActionResult Signup(ProfileViewModel profile, SignupViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var dto = model.MapTo<UserDTO>();
+            _userServices.Save(dto);
+
+            // Encrypt the ID before storing it in a cookie
+            var encryptedUserId = EncryptionHelpers.EncryptStringAES(dto.UserID.ToString(), _config.SharedSecret);
+            _context.Response.Cookies.Add(new HttpCookie(_config.CookieKey, encryptedUserId));
+
+            return RedirectToAction("Index");
+        }
+
         public ActionResult MainNavigation(ProfileViewModel profile)
         {
             var accounts = _accountServices.All().ToList();

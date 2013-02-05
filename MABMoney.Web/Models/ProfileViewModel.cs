@@ -9,5 +9,6 @@ namespace MABMoney.Web.Models
     {
         public int UserID { get; set; }
         public bool IsAdmin { get; set; }
+        public string UserEmail { get; set; }
     }
 }
