@@ -9,5 +9,8 @@ namespace MABMoney.Web.Infrastructure
     {
         string SharedSecret { get; }
         string CookieKey { get; }
+        string NoReplyEmailAddress { get; }
+        string NoReplyEmailDisplayName { get; }
+        string SiteUrl { get; }
     }
 }

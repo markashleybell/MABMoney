@@ -197,6 +197,7 @@
     <Compile Include="Models\Users\IndexViewModel.cs" />
     <Compile Include="Models\Users\LoginViewModel.cs" />
     <Compile Include="Models\ProfileViewModel.cs" />
+    <Compile Include="Models\Users\PasswordResetViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -208,6 +209,9 @@
     <Content Include="Content\Css\bootstrap.css" />
     <Content Include="Content\Css\bootstrap.min.css" />
     <Content Include="Content\Css\datepicker.css" />
+    <Content Include="Content\EmailTemplates\password-reset.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Img\glyphicons-halflings-white.png" />
     <Content Include="Content\Img\glyphicons-halflings.png" />
     <Content Include="Content\Img\v-line.gif" />
@@ -359,6 +363,18 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Home\Signup.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Users\PasswordResetRequest.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Users\PasswordResetRequestSent.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Users\PasswordResetRequestExpired.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Users\PasswordReset.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

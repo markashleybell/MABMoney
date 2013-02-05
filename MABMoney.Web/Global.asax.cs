@@ -41,6 +41,10 @@ namespace MABMoney.Web
 
             var sharedSecret = ConfigurationManager.AppSettings["SharedSecret"];
             var cookieKey = ConfigurationManager.AppSettings["CookieKey"];
+            var emailTemplatePath = ConfigurationManager.AppSettings["EmailTemplatePath"];
+            var noReplyEmailAddress = ConfigurationManager.AppSettings["NoReplyEmailAddress"];
+            var noReplyEmailDisplayName = ConfigurationManager.AppSettings["NoReplyEmailDisplayName"];
+            var siteUrl = ConfigurationManager.AppSettings["SiteUrl"];
 
             var memcachedConfiguration = new MemcachedClientConfiguration();
             memcachedConfiguration.AddServer(ConfigurationManager.AppSettings["MEMCACHIER_SERVERS"]);
@@ -74,7 +78,7 @@ namespace MABMoney.Web
                      .RegisterType<IDataStoreFactory>(new InjectionFactory(c => new DataStoreFactory((HttpContext.Current.Request.Cookies[cookieKey] != null) ? Convert.ToInt32(EncryptionHelpers.DecryptStringAES(HttpContext.Current.Request.Cookies[cookieKey].Value, sharedSecret)) : -1, new DateTimeProvider(() => DateTime.Now))))
                      .RegisterType<ICryptoProvider>(new InjectionFactory(c => new CryptoWrapper()))
                      .RegisterType<HttpContextBase>(new InjectionFactory(c => new HttpContextWrapper(HttpContext.Current)))
-                     .RegisterType<ISiteConfiguration>(new InjectionFactory(c => new SiteConfiguration(sharedSecret, cookieKey)))
+                     .RegisterType<ISiteConfiguration>(new InjectionFactory(c => new SiteConfiguration(sharedSecret, cookieKey, noReplyEmailAddress, noReplyEmailDisplayName, siteUrl)))
                      .RegisterInstance<ICacheProvider>(new MemcachedCacheProvider(memcachedConfiguration));
 
             var resolver = new UnityDependencyResolver(container);

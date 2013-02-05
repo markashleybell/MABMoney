@@ -11,6 +11,7 @@ namespace MABMoney.Services
         IEnumerable<UserDTO> All();
         UserDTO Get(int id);
         UserDTO GetByEmailAddress(string email);
+        UserDTO GetByPasswordResetGUID(string guid);
         void Save(UserDTO dto);
         void Delete(int id);
     }

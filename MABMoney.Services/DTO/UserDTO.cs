@@ -10,9 +10,9 @@ namespace MABMoney.Services.DTO
     {
         [Required]
         public int UserID { get; set; }
-        [Required]
+        
         public string Forename { get; set; }
-        [Required]
+        
         public string Surname { get; set; }
         [Required]
         public string Email { get; set; }
@@ -20,6 +20,10 @@ namespace MABMoney.Services.DTO
         public string Password { get; set; }
 
         public bool IsAdmin { get; set; }
+
+        public string PasswordResetGUID { get; set; }
+
+        public DateTime? PasswordResetExpiry { get; set; }
 
         public List<AccountDTO> Accounts { get; set; }
     }

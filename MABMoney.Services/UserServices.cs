@@ -13,13 +13,15 @@ namespace MABMoney.Services
     {
         private IRepository<User, int> _users;
         private IUnitOfWork _unitOfWork;
+        private IDateTimeProvider _dateProvider;
 
         private int _userId;
 
-        public UserServices(IRepository<User, int> users, IUnitOfWork unitOfWork)
+        public UserServices(IRepository<User, int> users, IUnitOfWork unitOfWork, IDateTimeProvider dateProvider)
         {
             _users = users;
             _unitOfWork = unitOfWork;
+            _dateProvider = dateProvider;
             _userId = unitOfWork.DataStore.UserID;
         }
 
@@ -81,6 +83,11 @@ namespace MABMoney.Services
         {
             _users.Remove(id);
             _unitOfWork.Commit();
+        }
+
+        public UserDTO GetByPasswordResetGUID(string guid)
+        {
+            return MapUser(_users.Query(x => x.PasswordResetGUID == guid && x.PasswordResetExpiry >= _dateProvider.Now).FirstOrDefault());
         }
     }
 }

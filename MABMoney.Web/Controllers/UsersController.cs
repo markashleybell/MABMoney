@@ -11,6 +11,8 @@ using MABMoney.Web.Infrastructure;
 using MABMoney.Web.Helpers;
 using System.Configuration;
 using MABMoney.Data;
+using System.Text.RegularExpressions;
+using System.Net.Mail;
 
 namespace MABMoney.Web.Controllers
 {
@@ -137,6 +139,84 @@ namespace MABMoney.Web.Controllers
             var cookie = new HttpCookie(_config.CookieKey, "");
             cookie.Expires = _dateProvider.Now.AddDays(-1);
             _context.Response.Cookies.Add(cookie);
+            return RedirectToAction("Login");
+        }
+
+        public ActionResult PasswordResetRequest()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult PasswordResetRequest(string userEmail)
+        {
+            var user = _userServices.GetByEmailAddress(userEmail);
+
+            if (user != null)
+            {
+                var guid = Guid.NewGuid().ToString();
+
+                user.PasswordResetGUID = guid;
+                user.PasswordResetExpiry = DateTime.Now.AddHours(1);
+
+                _userServices.Save(user);
+
+                var regexOptions = RegexOptions.IgnoreCase | RegexOptions.Singleline;
+
+                var templateHtml = "";
+
+                using (var file = System.IO.File.OpenText(Server.MapPath("~/Content/EmailTemplates") + "\\password-reset.html"))
+                {
+                    templateHtml = file.ReadToEnd();
+                }
+
+                templateHtml = Regex.Replace(templateHtml, @"\[\{SITE_URL\}\]", _config.SiteUrl, regexOptions);
+                templateHtml = Regex.Replace(templateHtml, @"\[\{RESET_GUID\}\]", guid, regexOptions);
+
+                var smtp = new SmtpClient();
+
+                var msg = new MailMessage(new MailAddress(_config.NoReplyEmailAddress, _config.NoReplyEmailDisplayName), new MailAddress(user.Email));
+                msg.Subject = "Reset your Password";
+                msg.IsBodyHtml = true;
+                msg.Body = templateHtml;
+
+                smtp.Send(msg);
+            }
+
+            return RedirectToAction("PasswordResetRequestSent");
+        }
+
+        public ActionResult PasswordResetRequestSent()
+        {
+            return View();
+        }
+
+        public ActionResult PasswordReset(string id)
+        {
+            var user = _userServices.GetByPasswordResetGUID(id);
+
+            if (user == null)
+                return View("PasswordResetRequestExpired");
+
+            return View(new PasswordResetViewModel { 
+                GUID = id
+            });
+        }
+
+        [HttpPost]
+        public ActionResult PasswordReset(PasswordResetViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var user = _userServices.GetByPasswordResetGUID(model.GUID);
+
+            user.Password = _crypto.HashPassword(model.Password);
+            user.PasswordResetExpiry = null;
+            user.PasswordResetGUID = null;
+
+            _userServices.Save(user);
+
             return RedirectToAction("Login");
         }
     }
