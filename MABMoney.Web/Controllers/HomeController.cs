@@ -103,7 +103,9 @@ namespace MABMoney.Web.Controllers
                 ExpenseCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, account.AccountID, CategoryTypeDTO.Expense),
                 Accounts = DataHelpers.GetAccountSelectOptions(_accountServices),
                 Type = GetDefaultTransactionTypeForAccount(account),
-                Debug = debug
+                Debug = debug,
+                // If it's a savings account it will not have the payment calc or the budget tab, so just set to income
+                Tab = (account.Type == AccountTypeDTO.Savings) ? DashboardTab.Income : DashboardTab.BudgetOrPaymentCalc
             };
 
             var now = _dateProvider.Now;
@@ -149,6 +151,11 @@ namespace MABMoney.Web.Controllers
                     return RedirectToAction("Create", "Account");
 
                 model.Type = (TransactionType)Enum.Parse(typeof(TransactionType), pageState[1]);
+                model.Tab = (DashboardTab)Enum.Parse(typeof(DashboardTab), pageState[2]);
+
+                // If it's a savings account it will not have the payment calc or the budget tab, so just set to income
+                if (model.Account.Type == AccountTypeDTO.Savings && model.Tab == DashboardTab.BudgetOrPaymentCalc)
+                    model.Tab = DashboardTab.Income;
 
                 return View(model);
             }
@@ -167,7 +174,7 @@ namespace MABMoney.Web.Controllers
         [HttpPost]
         public ActionResult Index(ProfileViewModel profile, int account_accountId)
         {
-            var pageState = EncryptionHelpers.EncryptStringAES(account_accountId + "-" + TransactionType.Expense, _config.SharedSecret);
+            var pageState = EncryptionHelpers.EncryptStringAES(account_accountId + "-" + TransactionType.Expense + "-" + DashboardTab.BudgetOrPaymentCalc, _config.SharedSecret);
             var encodedPageState = HttpServerUtility.UrlTokenEncode(Encoding.UTF8.GetBytes(pageState));
 
             return RedirectToRoute("Home", new { state = encodedPageState });
@@ -188,22 +195,26 @@ namespace MABMoney.Web.Controllers
                 return View("Index", model);
             }
 
+            model.Tab = DashboardTab.BudgetOrPaymentCalc;
+
             switch (model.Type)
             {
                 case TransactionType.Income:
                     if (model.Amount < 0)
                         model.Amount *= -1;
+                    model.Tab = DashboardTab.Income;
                     break;
                 case TransactionType.Expense:
                     if (model.Amount > 0)
                         model.Amount *= -1;
+                    model.Tab = DashboardTab.Expenses;
                     break;
             }
 
             var dto = model.MapTo<TransactionDTO>();
             _transactionServices.Save(dto);
 
-            var pageState = EncryptionHelpers.EncryptStringAES(model.Account_AccountID + "-" + model.Type, _config.SharedSecret);
+            var pageState = EncryptionHelpers.EncryptStringAES(model.Account_AccountID + "-" + model.Type + "-" + model.Tab, _config.SharedSecret);
             var encodedPageState = HttpServerUtility.UrlTokenEncode(Encoding.UTF8.GetBytes(pageState));
 
             return RedirectToRoute("Home", new { state = encodedPageState });

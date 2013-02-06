@@ -37,5 +37,7 @@ namespace MABMoney.Web.Models.Home
         public decimal Amount { get; set; }
 
         public string Debug { get; set; }
+
+        public DashboardTab Tab { get; set; }
     }
 }

@@ -45,18 +45,21 @@
 </div>*@
 
 <ul class="nav nav-tabs lge">
-    <li @Html.Raw((Model.Type == TransactionType.Income) ? "class=\"active\"" : "")><a href="#income" data-toggle="tab">Income: @Model.Transactions.Where(t => t.Amount > 0 && t.Date >= Model.From).Sum(x => x.Amount)</a></li>
-    <li @Html.Raw((Model.Type == TransactionType.Expense) ? "class=\"active\"" : "")><a href="#expenses" data-toggle="tab">Expenses: @Model.Transactions.Where(t => t.Amount < 0 && t.Date >= Model.From).Sum(x => Math.Abs(x.Amount))</a></li>
 
     @if(Model.Account.Type == AccountTypeDTO.Current) {
-    <li><a href="#budget" data-toggle="tab">Budget @((Model.Budget != null) ? Model.Budget.Start.ToString("dd/MM/yy") + " - " + Model.Budget.End.ToString("dd/MM/yy") : "")</a></li>
+    <li @Html.Raw((Model.Tab == DashboardTab.BudgetOrPaymentCalc) ? "class=\"active\"" : "")><a href="#budget" data-toggle="tab">Budget @((Model.Budget != null) ? Model.Budget.Start.ToString("dd/MM/yy") + " - " + Model.Budget.End.ToString("dd/MM/yy") : "")</a></li>
     }
     @if (Model.Account.Type == AccountTypeDTO.CreditCard || Model.Account.Type == AccountTypeDTO.Loan) {
-    <li><a href="#payment-calculator" data-toggle="tab">Payment Calculator</a></li>
+    <li @Html.Raw((Model.Tab == DashboardTab.BudgetOrPaymentCalc) ? "class=\"active\"" : "")><a href="#payment-calculator" data-toggle="tab">Payment Calculator</a></li>
     }
+
+    <li @Html.Raw((Model.Tab == DashboardTab.Income) ? "class=\"active\"" : "")><a href="#income" data-toggle="tab">Income: @Model.Transactions.Where(t => t.Amount > 0 && t.Date >= Model.From).Sum(x => x.Amount)</a></li>
+    <li @Html.Raw((Model.Tab == DashboardTab.Expenses) ? "class=\"active\"" : "")><a href="#expenses" data-toggle="tab">Expenses: @Model.Transactions.Where(t => t.Amount < 0 && t.Date >= Model.From).Sum(x => Math.Abs(x.Amount))</a></li>
+
+    
 </ul>
 <div class="tab-content">
-    <div class="tab-pane@((Model.Type == TransactionType.Income) ? " active" : "")" id="income">
+    <div class="tab-pane@((Model.Tab == DashboardTab.Income) ? " active" : "")" id="income">
         @using (Html.BeginForm("CreateTransaction", "Home"))
         {
             <div class="controls controls-row">
@@ -96,7 +99,7 @@
             </tbody>
         </table>
     </div>
-    <div class="tab-pane@((Model.Type == TransactionType.Expense) ? " active" : "")" id="expenses">
+    <div class="tab-pane@((Model.Tab == DashboardTab.Expenses) ? " active" : "")" id="expenses">
         @using (Html.BeginForm("CreateTransaction", "Home"))
         {
             <div class="controls controls-row">
@@ -136,7 +139,10 @@
             </tbody>
         </table>
     </div>    
-    <div class="tab-pane" id="budget">
+
+    @if(Model.Account.Type == AccountTypeDTO.Current) {
+        
+    <div class="tab-pane@((Model.Tab == DashboardTab.BudgetOrPaymentCalc) ? " active" : "")" id="budget">
 
         @if (Model.Budget != null)
         {
@@ -173,8 +179,10 @@
 
         <p></p>
     </div>
+    }
 
-    <div class="tab-pane" id="payment-calculator"> 
+    @if(Model.Account.Type == AccountTypeDTO.CreditCard || Model.Account.Type == AccountTypeDTO.Loan) {
+    <div class="tab-pane@((Model.Tab == DashboardTab.BudgetOrPaymentCalc) ? " active" : "")" id="payment-calculator"> 
         
         <form>
             <div class="controls controls-row">
@@ -207,6 +215,7 @@
         </table>
 
     </div>
+    }
 
  <p></p>
 
@@ -224,3 +233,4 @@
     <div class="span1">&nbsp;</div>
     <div class="span1">&nbsp;</div>
 </div>*@
+

@@ -181,6 +181,7 @@
     <Compile Include="Models\Categories\CreateViewModel.cs" />
     <Compile Include="Models\Categories\EditViewModel.cs" />
     <Compile Include="Models\Categories\IndexViewModel.cs" />
+    <Compile Include="Models\Home\DashboardTab.cs" />
     <Compile Include="Models\Home\MainNavigationViewModel.cs" />
     <Compile Include="Models\Home\SignupViewModel.cs" />
     <Compile Include="Models\Home\TransactionType.cs" />
