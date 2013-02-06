@@ -20,8 +20,10 @@ namespace MABMoney.Web.Models.Users
         [Required]
         public string Email { get; set; }
         [DisplayName("New Password")]
+        [DataType(DataType.Password)]
         public string Password { get; set; }
         [DisplayName("Confirm New Password")]
+        [DataType(DataType.Password)]
         [Compare("Password")]
         public string ConfirmPassword { get; set; }
     }

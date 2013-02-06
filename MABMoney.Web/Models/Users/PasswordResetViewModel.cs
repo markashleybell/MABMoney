@@ -13,9 +13,11 @@ namespace MABMoney.Web.Models.Users
         // [StringLength(100, MinimumLength = 6)]
         [Required]
         [DisplayName("New Password")]
+        [DataType(DataType.Password)]
         public string Password { get; set; }
         [Required]
         [DisplayName("Confirm New Password")]
+        [DataType(DataType.Password)]
         [Compare("Password")]
         public string ConfirmPassword { get; set; }
         [Required]
