@@ -28,7 +28,7 @@ namespace MABMoney.Web.Infrastructure
                 return;
 
             // Reject all non https requests
-            base.HandleNonHttpsRequest(filterContext);
+            HandleNonHttpsRequest(filterContext);
         }
     }
 }
