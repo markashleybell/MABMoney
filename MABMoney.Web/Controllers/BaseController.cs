@@ -9,6 +9,7 @@ using MABMoney.Data;
 
 namespace MABMoney.Web.Controllers
 {
+    [MABMoney.Web.Infrastructure.RequireHttps]
     public class BaseController : Controller
     {
         protected IUserServices _userServices;

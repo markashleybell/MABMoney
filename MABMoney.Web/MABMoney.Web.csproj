@@ -16,7 +16,8 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
-    <IISExpressSSLPort />
+    <IISExpressSSLPort>
+    </IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
@@ -170,6 +171,7 @@
     <Compile Include="Infrastructure\ISiteConfiguration.cs" />
     <Compile Include="Infrastructure\MemcachedCacheProvider.cs" />
     <Compile Include="Infrastructure\ProfileModelBinder.cs" />
+    <Compile Include="Infrastructure\RequireHttpsAttribute.cs" />
     <Compile Include="Infrastructure\ServiceResolverAdapter.cs" />
     <Compile Include="Infrastructure\SiteConfiguration.cs" />
     <Compile Include="Infrastructure\UnityDependencyResolver.cs" />
