@@ -32,6 +32,11 @@ namespace MABMoney.Web.Infrastructure
             if (request.IsLocal)
                 return;
 
+            // Reject all non https requests
+            base.HandleNonHttpsRequest(filterContext);
+
+            // TODO: The code below doesn't work on AppHarbor - it redirects to an odd port, something to do with the load balancers?
+            /*
             // Recreate the url with a https protocol prefix
             UriBuilder uri = new UriBuilder(request.Url);
             uri.Scheme = Uri.UriSchemeHttps;
@@ -41,6 +46,7 @@ namespace MABMoney.Web.Infrastructure
                 filterContext.Result = new RedirectResult(uri.ToString());
             else // Don't allow POST, PUT, PATCH or DELETE requests to non-https URLs
                 filterContext.Result = new HttpStatusCodeResult(HttpStatusCode.NotFound);
+            */
         }
     }
 }
