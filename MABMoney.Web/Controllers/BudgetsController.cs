@@ -63,9 +63,19 @@ namespace MABMoney.Web.Controllers
         {
             var categories = _categoryServices.All().Where(x => x.Type == CategoryTypeDTO.Expense);
 
-            if(id.HasValue) 
+            var budgets = new List<SelectListItem>().AsQueryable();
+
+            if (id.HasValue)
+            {
                 categories = categories.Where(x => x.Account_AccountID == id.Value);
 
+                budgets = _budgetServices.All().Where(x => x.Account_AccountID == id.Value).Select(x => new SelectListItem
+                {
+                    Value = x.BudgetID.ToString(),
+                    Text = x.Start.ToString("dd/MM/yyyy") + " - " + x.End.ToString("dd/MM/yyyy")
+                }).AsQueryable();
+
+            }
             var now = _dateProvider.Now;
             
             return View(new CreateViewModel {
@@ -76,7 +86,8 @@ namespace MABMoney.Web.Controllers
                 Categories = categories.ToList().Select(x => new Category_BudgetViewModel { 
                     Category_CategoryID = x.CategoryID,
                     Name = x.Name
-                }).ToList()
+                }).ToList(),
+                Budgets = budgets
             });
         }
 
@@ -86,6 +97,9 @@ namespace MABMoney.Web.Controllers
         [HttpPost]
         public ActionResult CreateFromExistingBudget(ProfileViewModel profile, CreateFromExistingBudgetViewModel model)
         {
+            if(model.Budget_BudgetID == 0)
+                return RedirectToAction("Create", new { id = model.Account_AccountID });
+
             var categories = _categoryServices.All().Where(x => x.Type == CategoryTypeDTO.Expense && x.Account_AccountID == model.Account_AccountID);
 
             var budgets = _budgetServices.All().Where(x => x.Account_AccountID == model.Account_AccountID);

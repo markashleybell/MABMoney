@@ -18,6 +18,9 @@ namespace MABMoney.Web.Models.Budgets
         public int Account_AccountID { get; set; }
         public IQueryable<SelectListItem> Accounts { get; set; }
 
+        public int Budget_BudgetID { get; set; }
+        public IQueryable<SelectListItem> Budgets { get; set; }
+
         public List<Category_BudgetViewModel> Categories { get; set; }
     }
 }

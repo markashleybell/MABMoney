@@ -7,6 +7,14 @@
 
 <h2>Create Budget</h2>
 
+@using (Html.BeginForm("CreateFromExistingBudget", "Budgets", FormMethod.Post, new { @class = "form-inline" }))
+{
+    <p>
+        @Html.DropDownListFor(x => x.Budget_BudgetID, Model.Budgets, "Select a previous budget...") @Html.HiddenFor(x => x.Account_AccountID)
+        <input type="submit" value="Copy amounts from this budget" class="btn btn-primary" /></p>
+}
+
+
 @using (Html.BeginForm())
 {
     <p>@Html.LabelFor(x => x.Start)
@@ -32,11 +40,4 @@
     @Html.EditorFor(x => x.Categories)
 
     <p><input type="submit" value="Save" class="btn btn-primary" /></p>
-}
-
-@using (Html.BeginForm("CreateFromExistingBudget", "Budgets"))
-{
-    <p>
-        @Html.HiddenFor(x => x.Account_AccountID)
-        <input type="submit" value="Copy amounts from existing budget" class="btn btn-primary" /></p>
 }
