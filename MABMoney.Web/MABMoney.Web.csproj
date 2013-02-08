@@ -216,6 +216,7 @@
     <Content Include="Content\EmailTemplates\password-reset.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Img\favicon.ico" />
     <Content Include="Content\Img\glyphicons-halflings-white.png" />
     <Content Include="Content\Img\glyphicons-halflings.png" />
     <Content Include="Content\Img\v-line.gif" />
