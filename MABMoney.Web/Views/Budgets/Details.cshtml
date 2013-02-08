@@ -12,15 +12,4 @@
     </div>
 </div>
 
-@foreach (var category in Model.Categories)
-{
-    var percentage = (category.Total / category.Amount * 100);
-    var barwidth = Math.Abs(percentage) / 2;
-    
-    <div class="row-fluid">
-        <div class="span3"><div class="category-label">@category.Name</div></div>
-        <div class="span9">
-            <div class="category-bar @((percentage > 100) ? "over" : "")"><div class="category-stats">@((category.Total).ToString("#0.00")) of @category.Amount.ToString("#0.00") (@percentage.ToString("#0.00")%)</div><div class="category-progress" style="width: @(barwidth)%;">&nbsp;</div></div>
-        </div>
-    </div>
-}
+@{ Html.RenderPartial("BudgetGraph", Model.Categories); }

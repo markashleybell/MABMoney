@@ -40,7 +40,7 @@ namespace MABMoney.Web.Controllers
         public ActionResult Index(ProfileViewModel profile)
         {
             return View(new IndexViewModel {
-                Budgets = _budgetServices.All().ToList()
+                Budgets = _budgetServices.All().OrderByDescending(x => x.Start).ToList()
             });
         }
 
@@ -51,13 +51,7 @@ namespace MABMoney.Web.Controllers
         {
             var dto = _budgetServices.Get(id);
             var model = dto.MapTo<DetailsViewModel>();
-            model.Categories = dto.Category_Budgets.Select(x => new Category_BudgetViewModel { 
-                Name = x.Category.Name,
-                Budget_BudgetID = x.Budget_BudgetID,
-                Category_CategoryID = x.Category_CategoryID,
-                Amount = x.Amount,
-                Total = x.Total
-            }).ToList();
+            model.Categories = dto.Category_Budgets.ToList();
 
             return View(model);
         }
@@ -83,6 +77,61 @@ namespace MABMoney.Web.Controllers
                     Category_CategoryID = x.CategoryID,
                     Name = x.Name
                 }).ToList()
+            });
+        }
+
+        //
+        // GET: /Budget/Create
+        [Authenticate]
+        [HttpPost]
+        public ActionResult CreateFromExistingBudget(ProfileViewModel profile, CreateFromExistingBudgetViewModel model)
+        {
+            var categories = _categoryServices.All().Where(x => x.Type == CategoryTypeDTO.Expense && x.Account_AccountID == model.Account_AccountID);
+
+            var budgets = _budgetServices.All().Where(x => x.Account_AccountID == model.Account_AccountID);
+
+            var now = _dateProvider.Now;
+
+            var categoryAmounts = categories.ToList().Select(x => new Category_BudgetViewModel
+                {
+                    Category_CategoryID = x.CategoryID,
+                    Name = x.Name
+                }).ToList();
+
+            if(model.Budget_BudgetID != 0) {
+
+                var budget = _budgetServices.Get(model.Budget_BudgetID);
+
+                categoryAmounts = budget.Category_Budgets.Where(x => x.Category_CategoryID != 0).Select(x => new Category_BudgetViewModel { 
+                    Name = x.Category.Name,
+                    Budget_BudgetID = x.Budget_BudgetID,
+                    Category_CategoryID = x.Category_CategoryID,
+                    Amount = x.Amount,
+                    Total = x.Total
+                }).ToList();
+
+                var newCategories = categories.Where(x => !categoryAmounts.Any(c => c.Category_CategoryID == x.CategoryID))
+                                              .Select(x => new Category_BudgetViewModel
+                                              {
+                                                  Category_CategoryID = x.CategoryID,
+                                                  Name = x.Name
+                                              })
+                                              .ToList();
+                categoryAmounts.AddRange(newCategories);
+            }
+
+            return View(new CreateFromExistingBudgetViewModel
+            {
+                Start = new DateTime(now.Year, now.Month, 1),
+                End = new DateTime(now.Year, now.Month, DateTime.DaysInMonth(now.Year, now.Month)),
+                Account_AccountID = model.Account_AccountID,
+                Accounts = DataHelpers.GetAccountSelectOptions(_accountServices),
+                Budget_BudgetID = model.Budget_BudgetID,
+                Budgets = budgets.Select(x => new SelectListItem {
+                    Value = x.BudgetID.ToString(),
+                    Text = x.Start.ToString("dd/MM/yyyy") + " - " + x.End.ToString("dd/MM/yyyy")
+                }).AsQueryable(),
+                Categories = categoryAmounts
             });
         }
 

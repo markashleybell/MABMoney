@@ -179,6 +179,7 @@
     <Compile Include="Models\Accounts\EditViewModel.cs" />
     <Compile Include="Models\Accounts\IndexViewModel.cs" />
     <Compile Include="Models\Budgets\Category_BudgetViewModel.cs" />
+    <Compile Include="Models\Budgets\CreateFromExistingBudgetViewModel.cs" />
     <Compile Include="Models\Budgets\DetailsViewModel.cs" />
     <Compile Include="Models\Categories\CreateViewModel.cs" />
     <Compile Include="Models\Categories\EditViewModel.cs" />
@@ -383,6 +384,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Home\MoreTransactionsLink.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Budgets\CreateFromExistingBudget.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Budgets\BudgetGraph.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

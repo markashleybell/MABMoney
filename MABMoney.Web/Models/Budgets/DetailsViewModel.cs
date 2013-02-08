@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
+using MABMoney.Services.DTO;
 
 namespace MABMoney.Web.Models.Budgets
 {
@@ -16,6 +17,6 @@ namespace MABMoney.Web.Models.Budgets
         [Required]
         public DateTime End { get; set; }
 
-        public List<Category_BudgetViewModel> Categories { get; set; }
+        public List<Category_BudgetDTO> Categories { get; set; }
     }
 }

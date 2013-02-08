@@ -159,29 +159,12 @@
         
     <div class="tab-pane@((Model.Tab == DashboardTab.BudgetOrPaymentCalc) ? " active" : "")" id="budget">
 
-        @if (Model.Budget != null) {
-            foreach (var category in Model.Budget.Category_Budgets) {
-                var percentage = (category.Total / category.Amount * 100);
-                var barwidth = Math.Abs(percentage) / 2;
-                var remaining = category.Amount - category.Total;
-    
-            <div class="row">
-                <div class="span2"><div class="category-label">@category.Category.Name</div></div>
-                <div class="span10">
-                    <div class="category-bar @((percentage > 100) ? "over" : "")">
-                        <div class="category-stats">@((category.Total).ToString("#0.00")) of @category.Amount.ToString("#0.00") (@percentage.ToString("#0.00")%)</div>
-                        <div class="category-remaining">@Math.Abs(remaining).ToString("#0.00") @((remaining >= 0) ? "remaining" : "over")</div>
-                        <div class="category-progress" style="width: @(barwidth)%;">&nbsp;</div>
-                    </div>
-                </div>
-            </div>
-            }
-        }
+        @{ Html.RenderPartial("~/Views/Budgets/BudgetGraph.cshtml", Model.Budget.Category_Budgets); }
 
         <div class="row button-row">
             <div class="span2">
                 @if (Model.Budget != null) {
-                    @Html.ActionLink("Edit this budget", "Edit", "Budgets", new { id = Model.Account_AccountID }, new { @class = "btn btn-primary" })
+                    @Html.ActionLink("Edit this budget", "Edit", "Budgets", new { id = Model.Budget.BudgetID }, new { @class = "btn btn-primary" })
                 }
             </div>
             <div class="span8">&nbsp;</div>
