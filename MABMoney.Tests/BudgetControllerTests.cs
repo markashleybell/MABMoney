@@ -180,12 +180,12 @@ namespace MABMoney.Tests
 
             model.ShouldNotBeNull();
             model.Budgets.Count.ShouldEqual(2);
-            model.Budgets[0].BudgetID.ShouldEqual(1);
-            model.Budgets[0].Start.ShouldEqual(new DateTime(2020, 1, 1));
-            model.Budgets[0].End.ShouldEqual(new DateTime(2020, 1, 31));
-            model.Budgets[1].BudgetID.ShouldEqual(2);
-            model.Budgets[1].Start.ShouldEqual(new DateTime(2021, 1, 1));
-            model.Budgets[1].End.ShouldEqual(new DateTime(2021, 1, 31));
+            model.Budgets[0].BudgetID.ShouldEqual(2);
+            model.Budgets[0].Start.ShouldEqual(new DateTime(2021, 1, 1));
+            model.Budgets[0].End.ShouldEqual(new DateTime(2021, 1, 31));
+            model.Budgets[1].BudgetID.ShouldEqual(1);
+            model.Budgets[1].Start.ShouldEqual(new DateTime(2020, 1, 1));
+            model.Budgets[1].End.ShouldEqual(new DateTime(2020, 1, 31));
         }
 
         [Test]
