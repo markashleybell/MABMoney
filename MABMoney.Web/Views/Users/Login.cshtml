@@ -25,6 +25,12 @@
         @Html.ValidationMessageFor(x => x.Password)
     </div>
     
+    <div class="editor-field">
+        <label for="RememberMe" class="checkbox">
+            @Html.CheckBoxFor(x => x.RememberMe) Remember Me
+        </label>
+    </div>
+    
     <p><input type="submit" class="btn btn-primary" value="Log In" /></p>
     
     <p>@Html.ActionLink("Forgot password?", "PasswordResetRequest")</p>
