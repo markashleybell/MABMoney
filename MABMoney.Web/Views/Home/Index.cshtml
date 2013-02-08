@@ -16,8 +16,7 @@
 <div class="row">
     <div class="span4">
         @*@Model.From.ToString("dd/MM/yyyy")-@Model.To.ToString("dd/MM/yyyy")*@
-        @using (Html.BeginForm("", "Home", FormMethod.Post, new { @class = "form-inline" }))
-        {
+        @using (Html.BeginForm("", "Home", FormMethod.Post, new { @class = "form-inline" })) {
             <p>@Html.DropDownListFor(x => x.Account_AccountID, Model.Accounts, new { id = "account-selector" }) </p>
             <noscript><input type="submit" class="btn" value="Go" /></noscript>
         }
@@ -59,9 +58,11 @@
     
 </ul>
 <div class="tab-content">
+
+    <!-- BEGIN INCOME TAB -->
+
     <div class="tab-pane@((Model.Tab == DashboardTab.Income) ? " active" : "")" id="income">
-        @using (Html.BeginForm("CreateTransaction", "Home"))
-        {
+        @using (Html.BeginForm("CreateTransaction", "Home")) {
             <div class="controls controls-row">
                 @Html.EditorFor(x => x.Date, new { @class = "span2", placeholder = "Date" })
                 @Html.DropDownListFor(x => x.Category_CategoryID, Model.IncomeCategories, "Category...", new { @class = "span2" })
@@ -86,8 +87,10 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var transaction in Model.Transactions.Where(t => t.Amount > 0).OrderByDescending(x => x.Date).ThenByDescending(x => x.TransactionID).Take(10))
-                {
+                @{
+                    var incomeTransactions = Model.Transactions.Where(t => t.Amount > 0).OrderByDescending(x => x.Date).ThenByDescending(x => x.TransactionID).Take(10);
+                }
+                @foreach (var transaction in incomeTransactions) {
                 <tr@((transaction.Date < Model.From) ? new MvcHtmlString(" class=\"before-budget-start\"") : new MvcHtmlString(""))>
                     <td>@transaction.Date.ToString("dd/MM/yyyy")</td>
                     <td>@transaction.Category.Name</td>
@@ -98,10 +101,15 @@
                 }
             </tbody>
         </table>
+        @{ Html.RenderPartial("MoreTransactionsLink", new MoreTransactionsViewModel { From = Model.From, Transactions = incomeTransactions }); }
     </div>
+
+    <!-- END INCOME TAB -->
+
+    <!-- BEGIN EXPENSES TAB -->
+
     <div class="tab-pane@((Model.Tab == DashboardTab.Expenses) ? " active" : "")" id="expenses">
-        @using (Html.BeginForm("CreateTransaction", "Home"))
-        {
+        @using (Html.BeginForm("CreateTransaction", "Home")) {
             <div class="controls controls-row">
                 @Html.EditorFor(x => x.Date, new { @class = "span2", placeholder = "Date" })
                 @Html.DropDownListFor(x => x.Category_CategoryID, Model.ExpenseCategories, "Category...", new { @class = "span2" })
@@ -126,8 +134,10 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var transaction in Model.Transactions.Where(t => t.Amount < 0).OrderByDescending(x => x.Date).ThenByDescending(x => x.TransactionID).Take(10))
-                {
+                @{
+                    var expenseTransactions = Model.Transactions.Where(t => t.Amount < 0).OrderByDescending(x => x.Date).ThenByDescending(x => x.TransactionID).Take(10);
+                }
+                @foreach (var transaction in expenseTransactions) {
                 <tr@((transaction.Date < Model.From) ? new MvcHtmlString(" class=\"before-budget-start\"") : new MvcHtmlString(""))>
                     <td>@transaction.Date.ToString("dd/MM/yyyy")</td>
                     <td>@transaction.Category.Name</td>
@@ -138,16 +148,19 @@
                 }
             </tbody>
         </table>
+        @{ Html.RenderPartial("MoreTransactionsLink", new MoreTransactionsViewModel { From = Model.From, Transactions = expenseTransactions }); }
     </div>    
+
+    <!-- END EXPENSES TAB -->
+
+    <!-- BEGIN BUDGET TAB -->
 
     @if(Model.Account.Type == AccountTypeDTO.Current) {
         
     <div class="tab-pane@((Model.Tab == DashboardTab.BudgetOrPaymentCalc) ? " active" : "")" id="budget">
 
-        @if (Model.Budget != null)
-        {
-            foreach (var category in Model.Budget.Category_Budgets)
-            {
+        @if (Model.Budget != null) {
+            foreach (var category in Model.Budget.Category_Budgets) {
                 var percentage = (category.Total / category.Amount * 100);
                 var barwidth = Math.Abs(percentage) / 2;
                 var remaining = category.Amount - category.Total;
@@ -179,9 +192,15 @@
 
         <p></p>
     </div>
+        
     }
 
+    <!-- END BUDGET TAB -->
+
+    <!-- BEGIN PAYMENT CALC TAB -->
+
     @if(Model.Account.Type == AccountTypeDTO.CreditCard || Model.Account.Type == AccountTypeDTO.Loan) {
+        
     <div class="tab-pane@((Model.Tab == DashboardTab.BudgetOrPaymentCalc) ? " active" : "")" id="payment-calculator"> 
         
         <form>
@@ -215,7 +234,10 @@
         </table>
 
     </div>
+        
     }
+
+    <!-- END PAYMENT CALC TAB -->
 
  <p></p>
 

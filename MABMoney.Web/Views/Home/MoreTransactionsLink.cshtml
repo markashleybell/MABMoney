@@ -1,0 +1,12 @@
+﻿@model MABMoney.Web.Models.Home.MoreTransactionsViewModel
+
+@{
+    var currentTransactionCount = Model.Transactions.Where(x => x.Date >= Model.From).Count();
+    var previousTransactionCount = Model.Transactions.Where(x => x.Date < Model.From).Count();
+}
+<p>Showing your last @currentTransactionCount transaction@((currentTransactionCount != 1) ? "s" : "") 
+@if (previousTransactionCount > 0)
+{ 
+    <span class="before-budget-start">(plus @previousTransactionCount from previous period)</span>
+}
+- @Html.ActionLink("Click here to view more transactions", "Index", "Transactions")</p>
