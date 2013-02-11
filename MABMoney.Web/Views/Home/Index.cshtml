@@ -159,7 +159,9 @@
         
     <div class="tab-pane@((Model.Tab == DashboardTab.BudgetOrPaymentCalc) ? " active" : "")" id="budget">
 
-        @{ Html.RenderPartial("~/Views/Budgets/BudgetGraph.cshtml", Model.Budget.Category_Budgets); }
+        @if (Model.Budget != null) {
+            Html.RenderPartial("~/Views/Budgets/BudgetGraph.cshtml", Model.Budget.Category_Budgets);
+        }
 
         <div class="row button-row">
             <div class="span2">
