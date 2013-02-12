@@ -24,5 +24,7 @@ namespace MABMoney.Domain
         public int Account_AccountID { get; set; }
         [ForeignKey("Account_AccountID")]
         public virtual Account Account { get; set; }
+
+        public string TransferGUID { get; set; }
     }
 }

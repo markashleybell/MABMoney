@@ -41,7 +41,8 @@ namespace MABMoney.Services
                         Category_CategoryID = t.Category_CategoryID,
                         Category = new CategoryDTO { 
                             Name = (t.Category != null) ? t.Category.Name : null
-                        }
+                        },
+                        TransferGUID = t.TransferGUID
                     }).ToList();
 
             // return _transactions.Query(x => x.Account.User_UserID == userId).ToList().MapToList<TransactionDTO>();

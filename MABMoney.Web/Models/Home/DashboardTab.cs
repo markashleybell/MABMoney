@@ -9,6 +9,7 @@ namespace MABMoney.Web.Models.Home
     {
         BudgetOrPaymentCalc,
         Income,
-        Expenses
+        Expenses,
+        Transfers
     }
 }

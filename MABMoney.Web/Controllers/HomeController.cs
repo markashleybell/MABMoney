@@ -105,7 +105,8 @@ namespace MABMoney.Web.Controllers
                 Type = GetDefaultTransactionTypeForAccount(account),
                 Debug = debug,
                 // If it's a savings account it will not have the payment calc or the budget tab, so just set to income
-                Tab = (account.Type == AccountTypeDTO.Savings) ? DashboardTab.Income : DashboardTab.BudgetOrPaymentCalc
+                Tab = (account.Type == AccountTypeDTO.Savings) ? DashboardTab.Income : DashboardTab.BudgetOrPaymentCalc,
+                SourceAccountID = account.AccountID
             };
 
             var now = _dateProvider.Now;
@@ -213,6 +214,59 @@ namespace MABMoney.Web.Controllers
 
             var dto = model.MapTo<TransactionDTO>();
             _transactionServices.Save(dto);
+
+            var pageState = EncryptionHelpers.EncryptStringAES(model.Account_AccountID + "-" + model.Type + "-" + model.Tab, _config.SharedSecret);
+            var encodedPageState = HttpServerUtility.UrlTokenEncode(Encoding.UTF8.GetBytes(pageState));
+
+            return RedirectToRoute("Home", new { state = encodedPageState });
+        }
+
+        [Authenticate]
+        [HttpPost]
+        public ActionResult CreateTransfer(ProfileViewModel profile, IndexViewModel model)
+        {
+            model.Tab = DashboardTab.Transfers;
+
+            if (!ModelState.IsValid)
+            {
+                model.Account = _accountServices.Get(model.Account_AccountID);
+                model.Transactions = _transactionServices.All().Where(x => x.Account_AccountID == model.Account_AccountID).ToList();
+                model.IncomeCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, model.Account_AccountID, CategoryTypeDTO.Income);
+                model.ExpenseCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, model.Account_AccountID, CategoryTypeDTO.Expense);
+                model.Accounts = DataHelpers.GetAccountSelectOptions(_accountServices);
+
+                return View("Index", model);
+            }
+
+            var sourceAccount = _accountServices.Get(model.SourceAccountID);
+            var destinationAccount =  _accountServices.Get(model.DestinationAccountID);
+
+            // Do Transfer
+            var guid = Guid.NewGuid().ToString();
+
+            // Make sure the amount is not negative
+            if(model.Amount < 0)
+                model.Amount *= -1;
+
+            var sourceTransaction = new TransactionDTO {
+                TransferGUID = guid,
+                Account_AccountID = model.SourceAccountID,
+                Date = model.Date,
+                Amount = (model.Amount * -1),
+                Description = "Transfer to " + destinationAccount.Name
+            };
+
+            var destinationTransaction = new TransactionDTO
+            {
+                TransferGUID = guid,
+                Account_AccountID = model.DestinationAccountID,
+                Date = model.Date,
+                Amount = model.Amount,
+                Description = "Transfer from " + sourceAccount.Name
+            };
+
+            _transactionServices.Save(sourceTransaction);
+            _transactionServices.Save(destinationTransaction);
 
             var pageState = EncryptionHelpers.EncryptStringAES(model.Account_AccountID + "-" + model.Type + "-" + model.Tab, _config.SharedSecret);
             var encodedPageState = HttpServerUtility.UrlTokenEncode(Encoding.UTF8.GetBytes(pageState));

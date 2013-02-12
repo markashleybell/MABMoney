@@ -39,5 +39,8 @@ namespace MABMoney.Web.Models.Home
         public string Debug { get; set; }
 
         public DashboardTab Tab { get; set; }
+
+        public int SourceAccountID { get; set; }
+        public int DestinationAccountID { get; set; }
     }
 }

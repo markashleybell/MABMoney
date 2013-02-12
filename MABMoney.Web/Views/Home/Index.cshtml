@@ -54,7 +54,7 @@
 
     <li @Html.Raw((Model.Tab == DashboardTab.Income) ? "class=\"active\"" : "")><a href="#income" data-toggle="tab">Income: @Model.Transactions.Where(t => t.Amount > 0 && t.Date >= Model.From).Sum(x => x.Amount)</a></li>
     <li @Html.Raw((Model.Tab == DashboardTab.Expenses) ? "class=\"active\"" : "")><a href="#expenses" data-toggle="tab">Expenses: @Model.Transactions.Where(t => t.Amount < 0 && t.Date >= Model.From).Sum(x => Math.Abs(x.Amount))</a></li>
-
+    <li @Html.Raw((Model.Tab == DashboardTab.Transfers) ? "class=\"active\"" : "")><a href="#transfers" data-toggle="tab">Transfers: @Model.Transactions.Where(t => t.TransferGUID != null && t.Date >= Model.From).Sum(x => x.Amount)</a></li>
     
 </ul>
 <div class="tab-content">
@@ -152,6 +152,53 @@
     </div>    
 
     <!-- END EXPENSES TAB -->
+
+    <!-- BEGIN TRANSFERS TAB -->
+
+    <div class="tab-pane@((Model.Tab == DashboardTab.Transfers) ? " active" : "")" id="transfers">
+        @using (Html.BeginForm("CreateTransfer", "Home")) {
+            <div class="controls controls-row">
+                @Html.EditorFor(x => x.Date, new { @class = "span2", placeholder = "Date" })
+                @Html.DropDownListFor(x => x.SourceAccountID, Model.Accounts, "Source...", new { @class = "span3" })
+                @Html.DropDownListFor(x => x.DestinationAccountID, Model.Accounts, "Destination...", new { @class = "span3" })
+                @Html.TextBoxFor(x => x.Amount, new { @class = "span2", placeholder = "Amount" })              
+                <div class="span2">
+                    <input type="submit" value="Transfer Funds" class="btn btn-primary" />
+                </div>
+                @Html.HiddenFor(x => x.Account_AccountID)
+                <input data-val="true" data-val-required="The Type field is required." name="Type" type="hidden" value="Transfer">
+            </div>
+        }
+        <table class="table table-striped">
+            <caption>Transaction List</caption>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Category</th>
+                    <th>Description</th>
+                    <th>Amount</th>
+                    <th>Edit</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    var transferTransactions = Model.Transactions.Where(t => t.TransferGUID != null).OrderByDescending(x => x.Date).ThenByDescending(x => x.TransactionID).Take(10);
+                }
+                @foreach (var transaction in transferTransactions) {
+                <tr@((transaction.Date < Model.From) ? new MvcHtmlString(" class=\"before-budget-start\"") : new MvcHtmlString(""))>
+                    <td>@transaction.Date.ToString("dd/MM/yyyy")</td>
+                    <td>@transaction.Category.Name</td>
+                    <td>@transaction.Description</td>
+                    <td>@transaction.Amount.ToString("#0.00")</td>
+                    <td>@Html.ActionLink("Edit", "Edit", "Transactions", new { id = transaction.TransactionID }, null)</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+        @{ Html.RenderPartial("MoreTransactionsLink", new MoreTransactionsViewModel { From = Model.From, Transactions = expenseTransactions }); }
+    </div>    
+
+    <!-- END TRANSFERS TAB -->
 
     <!-- BEGIN BUDGET TAB -->
 

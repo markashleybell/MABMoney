@@ -20,5 +20,7 @@ namespace MABMoney.Services.DTO
         [Required]
         public int Account_AccountID { get; set; }
         public AccountDTO Account { get; set; }
+
+        public string TransferGUID { get; set; }
     }
 }
