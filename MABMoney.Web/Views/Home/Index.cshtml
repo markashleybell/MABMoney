@@ -176,14 +176,14 @@
     <!-- BEGIN TRANSFERS TAB -->
 
     <div class="tab-pane@((Model.Tab == DashboardTab.Transfers) ? " active" : "")" id="transfers">
-        @using (Html.BeginForm("CreateTransaction", "Home")) {
+        @using (Html.BeginForm("CreateTransfer", "Home")) {
             <div class="row">
                 <div class="span2">@Html.EditorFor(x => x.Date, new { @class = "input-block-level", placeholder = "Date" })</div>
                 <div class="span3">@Html.DropDownListFor(x => x.SourceAccountID, Model.Accounts, "Source...", new { @class = "input-block-level" })</div>
-                <div class="span3">@Html.DropDownListFor(x => x.DestinationAccountID, Model.Accounts, "Source...", new { @class = "input-block-level" })</div>
+                <div class="span3">@Html.DropDownListFor(x => x.DestinationAccountID, Model.Accounts, "Destination...", new { @class = "input-block-level" })</div>
                 <div class="span2">@Html.TextBoxFor(x => x.Amount, new { @class = "input-block-level", placeholder = "Amount" })</div>   
                 <div class="span2">
-                    <input type="submit" value="Add Income" class="btn btn-primary btn-fullwidth" />
+                    <input type="submit" value="Transfer Funds" class="btn btn-primary btn-fullwidth" />
                 </div>
                 @Html.HiddenFor(x => x.Account_AccountID)
                 <input data-val="true" data-val-required="The Type field is required." name="Type" type="hidden" value="Transfer">
