@@ -26,5 +26,7 @@ namespace MABMoney.Domain
         public AccountType Type { get; set; }
 
         public virtual ICollection<Transaction> Transactions { get; set; }
+
+        public string TransactionDescriptionHistory { get; set; }
     }
 }

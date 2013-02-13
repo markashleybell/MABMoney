@@ -109,5 +109,16 @@ namespace MABMoney.Web.Controllers
             _accountServices.Delete(id);
             return RedirectToAction("Index");
         }
+
+        //
+        // POST: /Account/Delete/5
+        [Authenticate]
+        [HttpPost]
+        public ActionResult GetTransactionDescriptionHistory(ProfileViewModel profile, string query, int id)
+        {
+            var account = _accountServices.Get(id);
+
+            return Json(account.TransactionDescriptionHistory.ToArray());
+        }
     }
 }

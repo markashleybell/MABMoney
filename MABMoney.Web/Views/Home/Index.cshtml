@@ -63,13 +63,13 @@
 
     <div class="tab-pane@((Model.Tab == DashboardTab.Income) ? " active" : "")" id="income">
         @using (Html.BeginForm("CreateTransaction", "Home")) {
-            <div class="controls controls-row">
-                @Html.EditorFor(x => x.Date, new { @class = "span2", placeholder = "Date" })
-                @Html.DropDownListFor(x => x.Category_CategoryID, Model.IncomeCategories, "Category...", new { @class = "span2" })
-                @Html.TextBoxFor(x => x.Description, new { @class = "span4", placeholder = "Description (optional)" })
-                @Html.TextBoxFor(x => x.Amount, new { @class = "span2", placeholder = "Amount" })              
+            <div class="row">
+                <div class="span2">@Html.EditorFor(x => x.Date, new { @class = "input-block-level", placeholder = "Date" })</div>
+                <div class="span2">@Html.DropDownListFor(x => x.Category_CategoryID, Model.IncomeCategories, "Category...", new { @class = "input-block-level" })</div>
+                <div class="span4">@Html.TextBoxFor(x => x.Description, new { @class = "typeahead input-block-level", placeholder = "Description (optional)", autocomplete = "off" })</div>
+                <div class="span2">@Html.TextBoxFor(x => x.Amount, new { @class = "input-block-level", placeholder = "Amount" })</div>   
                 <div class="span2">
-                    <input type="submit" value="Add Income" class="btn btn-primary" />
+                    <input type="submit" value="Add Income" class="btn btn-primary btn-fullwidth" />
                 </div>
                 @Html.HiddenFor(x => x.Account_AccountID)
                 <input data-val="true" data-val-required="The Type field is required." name="Type" type="hidden" value="Income">
@@ -120,13 +120,13 @@
 
     <div class="tab-pane@((Model.Tab == DashboardTab.Expenses) ? " active" : "")" id="expenses">
         @using (Html.BeginForm("CreateTransaction", "Home")) {
-            <div class="controls controls-row">
-                @Html.EditorFor(x => x.Date, new { @class = "span2", placeholder = "Date" })
-                @Html.DropDownListFor(x => x.Category_CategoryID, Model.ExpenseCategories, "Category...", new { @class = "span2" })
-                @Html.TextBoxFor(x => x.Description, new { @class = "span4", placeholder = "Description (optional)" })
-                @Html.TextBoxFor(x => x.Amount, new { @class = "span2", placeholder = "Amount" })              
+            <div class="row">
+                <div class="span2">@Html.EditorFor(x => x.Date, new { @class = "input-block-level", placeholder = "Date" })</div>
+                <div class="span2">@Html.DropDownListFor(x => x.Category_CategoryID, Model.ExpenseCategories, "Category...", new { @class = "input-block-level" })</div>
+                <div class="span4">@Html.TextBoxFor(x => x.Description, new { @class = "typeahead input-block-level", placeholder = "Description (optional)", autocomplete = "off" })</div>
+                <div class="span2">@Html.TextBoxFor(x => x.Amount, new { @class = "input-block-level", placeholder = "Amount" })</div>   
                 <div class="span2">
-                    <input type="submit" value="Add Expense" class="btn btn-primary" />
+                    <input type="submit" value="Add Income" class="btn btn-primary btn-fullwidth" />
                 </div>
                 @Html.HiddenFor(x => x.Account_AccountID)
                 <input data-val="true" data-val-required="The Type field is required." name="Type" type="hidden" value="Expense">
@@ -176,19 +176,20 @@
     <!-- BEGIN TRANSFERS TAB -->
 
     <div class="tab-pane@((Model.Tab == DashboardTab.Transfers) ? " active" : "")" id="transfers">
-        @using (Html.BeginForm("CreateTransfer", "Home")) {
-            <div class="controls controls-row">
-                @Html.EditorFor(x => x.Date, new { @class = "span2", placeholder = "Date" })
-                @Html.DropDownListFor(x => x.SourceAccountID, Model.Accounts, "Source...", new { @class = "span3" })
-                @Html.DropDownListFor(x => x.DestinationAccountID, Model.Accounts, "Destination...", new { @class = "span3" })
-                @Html.TextBoxFor(x => x.Amount, new { @class = "span2", placeholder = "Amount" })              
+        @using (Html.BeginForm("CreateTransaction", "Home")) {
+            <div class="row">
+                <div class="span2">@Html.EditorFor(x => x.Date, new { @class = "input-block-level", placeholder = "Date" })</div>
+                <div class="span3">@Html.DropDownListFor(x => x.SourceAccountID, Model.Accounts, "Source...", new { @class = "input-block-level" })</div>
+                <div class="span3">@Html.DropDownListFor(x => x.DestinationAccountID, Model.Accounts, "Source...", new { @class = "input-block-level" })</div>
+                <div class="span2">@Html.TextBoxFor(x => x.Amount, new { @class = "input-block-level", placeholder = "Amount" })</div>   
                 <div class="span2">
-                    <input type="submit" value="Transfer Funds" class="btn btn-primary" />
+                    <input type="submit" value="Add Income" class="btn btn-primary btn-fullwidth" />
                 </div>
                 @Html.HiddenFor(x => x.Account_AccountID)
                 <input data-val="true" data-val-required="The Type field is required." name="Type" type="hidden" value="Transfer">
             </div>
         }
+
         @{
             var transferTransactions = Model.Transactions.Where(t => t.TransferGUID != null).OrderByDescending(x => x.Date).ThenByDescending(x => x.TransactionID).Take(10);
         }

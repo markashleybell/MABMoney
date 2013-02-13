@@ -54,6 +54,12 @@ namespace MABMoney.Services
             var transactions = _transactions.Query(x => x.Account_AccountID == dto.AccountID).ToList();
             dto.CurrentBalance = dto.StartingBalance + transactions.Sum(x => x.Amount);
 
+            var history = account.TransactionDescriptionHistory;
+
+            dto.TransactionDescriptionHistory = new List<string>();
+            if(!string.IsNullOrWhiteSpace(history))
+                dto.TransactionDescriptionHistory = history.Split('|').ToList();
+
             return dto;
         }
 
@@ -67,6 +73,13 @@ namespace MABMoney.Services
             {
                 // Update the account
                 dto.MapTo(account);
+
+                if (dto.TransactionDescriptionHistory != null)
+                {
+                    // Convert the list of descriptions back into a flat string, removing duplicates
+                    account.TransactionDescriptionHistory = string.Join("|", dto.TransactionDescriptionHistory.Where(x => !string.IsNullOrWhiteSpace(x)).Distinct().ToArray());
+                }
+
                 _unitOfWork.Commit();
             }
             else

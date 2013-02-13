@@ -13,9 +13,29 @@
         content: $('#net-worth-content').html()
     });
 
-    $('#account-selector').on('change', function (evt) {
+    var accountSelector = $('#account-selector');
+
+    accountSelector.on('change', function (evt) {
         this.form.submit();
     });
+
+
+    $('.typeahead').typeahead({
+        minlength: 1,
+        source: function (query, process) {
+
+            $.ajax({
+                url: '/Accounts/GetTransactionDescriptionHistory',
+                data: { query: query, id: accountSelector.val() },
+                type: 'POST'
+            }).done(function (data) {
+                console.log(data);
+                process(data);
+            });
+
+        }
+    });
+
 
     function aprCalc(apr) {
         apr = apr * 1 / 100;

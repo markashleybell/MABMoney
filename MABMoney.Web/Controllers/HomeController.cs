@@ -208,6 +208,11 @@ namespace MABMoney.Web.Controllers
             var dto = model.MapTo<TransactionDTO>();
             _transactionServices.Save(dto);
 
+            // Update the transaction description history for this account
+            var account = _accountServices.Get(model.Account_AccountID);
+            account.TransactionDescriptionHistory.Add(dto.Description);
+            _accountServices.Save(account);
+
             var pageState = EncryptionHelpers.EncryptStringAES(model.Account_AccountID + "-" + model.Type + "-" + model.Tab, _config.SharedSecret);
             var encodedPageState = HttpServerUtility.UrlTokenEncode(Encoding.UTF8.GetBytes(pageState));
 
