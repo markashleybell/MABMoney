@@ -75,33 +75,43 @@
                 <input data-val="true" data-val-required="The Type field is required." name="Type" type="hidden" value="Income">
             </div>
         }
-        <table class="table table-striped">
-            <caption>Transaction List</caption>
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Category</th>
-                    <th>Description</th>
-                    <th>Amount</th>
-                    <th>Edit</th>
-                </tr>
-            </thead>
-            <tbody>
-                @{
-                    var incomeTransactions = Model.Transactions.Where(t => t.Amount > 0).OrderByDescending(x => x.Date).ThenByDescending(x => x.TransactionID).Take(10);
-                }
-                @foreach (var transaction in incomeTransactions) {
-                <tr@((transaction.Date < Model.From) ? new MvcHtmlString(" class=\"before-budget-start\"") : new MvcHtmlString(""))>
-                    <td>@transaction.Date.ToString("dd/MM/yyyy")</td>
-                    <td>@transaction.Category.Name</td>
-                    <td>@transaction.Description</td>
-                    <td>@transaction.Amount.ToString("#0.00")</td>
-                    <td>@Html.ActionLink("Edit", "Edit", "Transactions", new { id = transaction.TransactionID }, null)</td>
-                </tr@()>
-                }
-            </tbody>
-        </table>
-        @{ Html.RenderPartial("MoreTransactionsLink", new MoreTransactionsViewModel { From = Model.From, Transactions = incomeTransactions }); }
+        @{
+            var incomeTransactions = Model.Transactions.Where(t => t.Amount > 0).OrderByDescending(x => x.Date).ThenByDescending(x => x.TransactionID).Take(10);
+        }
+        @if (incomeTransactions.Count() > 0) {
+            
+            <table class="table table-striped">
+                <caption>Transaction List</caption>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Category</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                        <th>Edit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                
+                    @foreach (var transaction in incomeTransactions) {
+                    <tr@((transaction.Date < Model.From) ? new MvcHtmlString(" class=\"before-budget-start\"") : new MvcHtmlString(""))>
+                        <td>@transaction.Date.ToString("dd/MM/yyyy")</td>
+                        <td>@transaction.Category.Name</td>
+                        <td>@transaction.Description</td>
+                        <td>@transaction.Amount.ToString("#0.00")</td>
+                        <td>@Html.ActionLink("Edit", "Edit", "Transactions", new { id = transaction.TransactionID }, null)</td>
+                    </tr@()>
+                    }
+                </tbody>
+            </table>
+            
+            Html.RenderPartial("MoreTransactionsLink", new MoreTransactionsViewModel { From = Model.From, Transactions = incomeTransactions }); 
+            
+        } else {
+            
+            <p>You haven't made any outgoing transactions during this period.</p>
+            
+        }
     </div>
 
     <!-- END INCOME TAB -->
@@ -122,33 +132,43 @@
                 <input data-val="true" data-val-required="The Type field is required." name="Type" type="hidden" value="Expense">
             </div>
         }
-        <table class="table table-striped">
-            <caption>Transaction List</caption>
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Category</th>
-                    <th>Description</th>
-                    <th>Amount</th>
-                    <th>Edit</th>
-                </tr>
-            </thead>
-            <tbody>
-                @{
-                    var expenseTransactions = Model.Transactions.Where(t => t.Amount < 0).OrderByDescending(x => x.Date).ThenByDescending(x => x.TransactionID).Take(10);
-                }
-                @foreach (var transaction in expenseTransactions) {
-                <tr@((transaction.Date < Model.From) ? new MvcHtmlString(" class=\"before-budget-start\"") : new MvcHtmlString(""))>
-                    <td>@transaction.Date.ToString("dd/MM/yyyy")</td>
-                    <td>@transaction.Category.Name</td>
-                    <td>@transaction.Description</td>
-                    <td>@transaction.Amount.ToString("#0.00")</td>
-                    <td>@Html.ActionLink("Edit", "Edit", "Transactions", new { id = transaction.TransactionID }, null)</td>
-                </tr>
-                }
-            </tbody>
-        </table>
-        @{ Html.RenderPartial("MoreTransactionsLink", new MoreTransactionsViewModel { From = Model.From, Transactions = expenseTransactions }); }
+        @{
+            var expenseTransactions = Model.Transactions.Where(t => t.Amount < 0).OrderByDescending(x => x.Date).ThenByDescending(x => x.TransactionID).Take(10);
+        }
+        @if (expenseTransactions.Count() > 0) {
+            
+            <table class="table table-striped">
+                <caption>Transaction List</caption>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Category</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                        <th>Edit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                
+                    @foreach (var transaction in expenseTransactions) {
+                    <tr@((transaction.Date < Model.From) ? new MvcHtmlString(" class=\"before-budget-start\"") : new MvcHtmlString(""))>
+                        <td>@transaction.Date.ToString("dd/MM/yyyy")</td>
+                        <td>@transaction.Category.Name</td>
+                        <td>@transaction.Description</td>
+                        <td>@transaction.Amount.ToString("#0.00")</td>
+                        <td>@Html.ActionLink("Edit", "Edit", "Transactions", new { id = transaction.TransactionID }, null)</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+            
+            Html.RenderPartial("MoreTransactionsLink", new MoreTransactionsViewModel { From = Model.From, Transactions = expenseTransactions }); 
+            
+        } else {
+            
+            <p>You haven't made any outgoing transactions during this period.</p>
+            
+        }
     </div>    
 
     <!-- END EXPENSES TAB -->
@@ -169,33 +189,42 @@
                 <input data-val="true" data-val-required="The Type field is required." name="Type" type="hidden" value="Transfer">
             </div>
         }
-        <table class="table table-striped">
-            <caption>Transaction List</caption>
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Category</th>
-                    <th>Description</th>
-                    <th>Amount</th>
-                    <th>Edit</th>
-                </tr>
-            </thead>
-            <tbody>
-                @{
-                    var transferTransactions = Model.Transactions.Where(t => t.TransferGUID != null).OrderByDescending(x => x.Date).ThenByDescending(x => x.TransactionID).Take(10);
-                }
-                @foreach (var transaction in transferTransactions) {
-                <tr@((transaction.Date < Model.From) ? new MvcHtmlString(" class=\"before-budget-start\"") : new MvcHtmlString(""))>
-                    <td>@transaction.Date.ToString("dd/MM/yyyy")</td>
-                    <td>@transaction.Category.Name</td>
-                    <td>@transaction.Description</td>
-                    <td>@transaction.Amount.ToString("#0.00")</td>
-                    <td>@Html.ActionLink("Edit", "Edit", "Transactions", new { id = transaction.TransactionID }, null)</td>
-                </tr>
-                }
-            </tbody>
-        </table>
-        @{ Html.RenderPartial("MoreTransactionsLink", new MoreTransactionsViewModel { From = Model.From, Transactions = expenseTransactions }); }
+        @{
+            var transferTransactions = Model.Transactions.Where(t => t.TransferGUID != null).OrderByDescending(x => x.Date).ThenByDescending(x => x.TransactionID).Take(10);
+        }
+        @if(transferTransactions.Count() > 0) {
+            
+            <table class="table table-striped">
+                <caption>Transaction List</caption>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Category</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                        <th>Edit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var transaction in transferTransactions) {
+                    <tr@((transaction.Date < Model.From) ? new MvcHtmlString(" class=\"before-budget-start\"") : new MvcHtmlString(""))>
+                        <td>@transaction.Date.ToString("dd/MM/yyyy")</td>
+                        <td>@transaction.Category.Name</td>
+                        <td>@transaction.Description</td>
+                        <td>@transaction.Amount.ToString("#0.00")</td>
+                        <td>@Html.ActionLink("Edit", "Edit", "Transactions", new { id = transaction.TransactionID }, null)</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+            
+            Html.RenderPartial("MoreTransactionsLink", new MoreTransactionsViewModel { From = Model.From, Transactions = transferTransactions });
+            
+        } else {
+            
+            <p>You haven't made any transfers during this period.</p>
+            
+        }
     </div>    
 
     <!-- END TRANSFERS TAB -->
