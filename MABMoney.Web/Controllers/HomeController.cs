@@ -47,7 +47,7 @@ namespace MABMoney.Web.Controllers
             return TransactionType.Expense;
         }
 
-        private IndexViewModel GetModelData(int userId, int? accountId)
+        private IndexViewModel GetModelData(IndexViewModel model, int userId, int? accountId)
         {
             var user = _userServices.Get(userId);
 
@@ -94,20 +94,16 @@ namespace MABMoney.Web.Controllers
             if (account == null)
                 return null;
 
-            var model = new IndexViewModel
-            {
-                Date = _dateProvider.Now,
-                Account = account,
-                Account_AccountID = account.AccountID,
-                IncomeCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, account.AccountID, CategoryTypeDTO.Income),
-                ExpenseCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, account.AccountID, CategoryTypeDTO.Expense),
-                Accounts = DataHelpers.GetAccountSelectOptions(_accountServices),
-                Type = GetDefaultTransactionTypeForAccount(account),
-                Debug = debug,
+            model.Account = account;
+            model.Account_AccountID = account.AccountID;
+            model.IncomeCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, account.AccountID, CategoryTypeDTO.Income);
+            model.ExpenseCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, account.AccountID, CategoryTypeDTO.Expense);
+            model.Accounts = DataHelpers.GetAccountSelectOptions(_accountServices);
+            model.Type = GetDefaultTransactionTypeForAccount(account);
+            model.Debug = debug;
                 // If it's a savings account it will not have the payment calc or the budget tab, so just set to income
-                Tab = (account.Type == AccountTypeDTO.Savings) ? DashboardTab.Income : DashboardTab.BudgetOrPaymentCalc,
-                SourceAccountID = account.AccountID
-            };
+            model.Tab = (account.Type == AccountTypeDTO.Savings) ? DashboardTab.Income : DashboardTab.BudgetOrPaymentCalc;
+            model.SourceAccountID = account.AccountID;
 
             var now = _dateProvider.Now;
 
@@ -139,14 +135,15 @@ namespace MABMoney.Web.Controllers
         [Authenticate]
         public ActionResult Index(ProfileViewModel profile, string state = null)
         {
-            IndexViewModel model;
+            var model = new IndexViewModel();
+            model.Date = _dateProvider.Now;
 
             if (state != null)
             {
                 var decodedPageState = Encoding.UTF8.GetString(HttpServerUtility.UrlTokenDecode(state));
                 var pageState = EncryptionHelpers.DecryptStringAES(decodedPageState, _config.SharedSecret).Split('-');
 
-                model = GetModelData(profile.UserID, Convert.ToInt32(pageState[0]));
+                model = GetModelData(model, profile.UserID, Convert.ToInt32(pageState[0]));
 
                 if (model == null)
                     return RedirectToAction("Create", "Account");
@@ -162,7 +159,7 @@ namespace MABMoney.Web.Controllers
             }
             else
             {
-                model = GetModelData(profile.UserID, null);
+                model = GetModelData(model, profile.UserID, null);
 
                 if (model == null)
                     return RedirectToAction("Create", "Accounts");
@@ -187,11 +184,7 @@ namespace MABMoney.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                model.Account = _accountServices.Get(model.Account_AccountID);
-                model.Transactions = _transactionServices.All().Where(x => x.Account_AccountID == model.Account_AccountID).ToList();
-                model.IncomeCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, model.Account_AccountID, CategoryTypeDTO.Income);
-                model.ExpenseCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, model.Account_AccountID, CategoryTypeDTO.Expense);
-                model.Accounts = DataHelpers.GetAccountSelectOptions(_accountServices);
+                GetModelData(model, profile.UserID, model.Account_AccountID);
 
                 return View("Index", model);
             }
@@ -225,19 +218,14 @@ namespace MABMoney.Web.Controllers
         [HttpPost]
         public ActionResult CreateTransfer(ProfileViewModel profile, IndexViewModel model)
         {
-            model.Tab = DashboardTab.Transfers;
-
             if (!ModelState.IsValid)
             {
-                model.Account = _accountServices.Get(model.Account_AccountID);
-                model.Transactions = _transactionServices.All().Where(x => x.Account_AccountID == model.Account_AccountID).ToList();
-                model.IncomeCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, model.Account_AccountID, CategoryTypeDTO.Income);
-                model.ExpenseCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, model.Account_AccountID, CategoryTypeDTO.Expense);
-                model.Accounts = DataHelpers.GetAccountSelectOptions(_accountServices);
-
+                GetModelData(model, profile.UserID, model.Account_AccountID);
+                model.Tab = DashboardTab.Transfers;
                 return View("Index", model);
             }
 
+            model.Tab = DashboardTab.Transfers;
             var sourceAccount = _accountServices.Get(model.SourceAccountID);
             var destinationAccount =  _accountServices.Get(model.DestinationAccountID);
 
