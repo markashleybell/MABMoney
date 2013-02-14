@@ -126,7 +126,7 @@
                 <div class="span4">@Html.TextBoxFor(x => x.Description, new { @class = "typeahead input-block-level", placeholder = "Description (optional)", autocomplete = "off" })</div>
                 <div class="span2">@Html.TextBoxFor(x => x.Amount, new { @class = "input-block-level", placeholder = "Amount" })</div>   
                 <div class="span2">
-                    <input type="submit" value="Add Income" class="btn btn-primary btn-fullwidth" />
+                    <input type="submit" value="Add Expense" class="btn btn-primary btn-fullwidth" />
                 </div>
                 @Html.HiddenFor(x => x.Account_AccountID)
                 <input data-val="true" data-val-required="The Type field is required." name="Type" type="hidden" value="Expense">
