@@ -214,9 +214,7 @@
     <Content Include="Content\Css\bootstrap.css" />
     <Content Include="Content\Css\bootstrap.min.css" />
     <Content Include="Content\Css\datepicker.css" />
-    <Content Include="Content\EmailTemplates\password-reset.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Content\EmailTemplates\password-reset.html" />
     <Content Include="Content\Img\favicon.ico" />
     <Content Include="Content\Img\glyphicons-halflings-white.png" />
     <Content Include="Content\Img\glyphicons-halflings.png" />
