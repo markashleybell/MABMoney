@@ -7,14 +7,26 @@
 
 <h2>Edit User</h2>
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("Edit", "Users", FormMethod.Post, new { @class = "form-horizontal" }))
 {
-    @Html.EditorForModel()
+    @Html.TextControlGroupFor(x => x.Forename)
 
-    <p><input type="submit" value="Save" class="btn btn-primary" /></p>
+    @Html.TextControlGroupFor(x => x.Surname)
+
+    @Html.TextControlGroupFor(x => x.Email)
+
+    @Html.PasswordControlGroupFor(x => x.Password)
+
+    @Html.PasswordControlGroupFor(x => x.ConfirmPassword)
+
+    @Html.HiddenFor(x => x.UserID)
+
+    @Html.SubmitControlGroup("Save")
 }
 
-@using (Html.BeginForm("Delete", "Users"))
+@using (Html.BeginForm("Delete", "Users", FormMethod.Post, new { @class = "form-horizontal" }))
 {
-    <p><input type="hidden" name="id" value="@Model.UserID" /><input type="submit" value="Delete" class="btn" /></p>
+    <input type="hidden" name="id" value="@Model.UserID" />
+    
+    @Html.ButtonControlGroup("Delete")
 }

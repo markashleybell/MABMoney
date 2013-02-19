@@ -7,19 +7,13 @@
 
 <h2>Create Category</h2>
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("Create", "Categories", FormMethod.Post, new { @class = "form-horizontal" }))
 {
-    <p>@Html.LabelFor(x => x.Name)
-    @Html.TextBoxFor(x => x.Name)
-    @Html.ValidationMessageFor(x => x.Name)</p>
+    @Html.TextControlGroupFor(x => x.Name)
     
-    <p>@Html.LabelFor(x => x.Account_AccountID)
-    @Html.DropDownListFor(x => x.Account_AccountID, Model.Accounts, "Please select...")
-    @Html.ValidationMessageFor(x => x.Account_AccountID)</p>
-    
-    <p>@Html.LabelFor(x => x.Type)
-    @Html.DropDownListFor(x => x.Type, Model.CategoryTypes, "Please select...")
-    @Html.ValidationMessageFor(x => x.Type)</p>
+    @Html.SelectControlGroupFor(x => x.Account_AccountID, Model.Accounts, "Please select...")
 
-    <p><input type="submit" value="Save" class="btn btn-primary" /></p>
+    @Html.SelectControlGroupFor(x => x.Type, Model.CategoryTypes, "Please select...")
+    
+    @Html.SubmitControlGroup("Save")
 }

@@ -7,28 +7,27 @@
 
 <h2>Create Budget From Existing</h2>
 
-@using (Html.BeginForm("CreateFromExistingBudget", "Budgets", FormMethod.Post, new { @class = "form-inline" }))
+@using (Html.BeginForm("CreateFromExistingBudget", "Budgets", FormMethod.Post, new { @class = "form-horizontal" }))
 {
-    <p>
-        @Html.DropDownListFor(x => x.Budget_BudgetID, Model.Budgets, "Select a previous budget...") @Html.HiddenFor(x => x.Account_AccountID)
-        <input type="submit" value="Copy amounts from this budget" class="btn btn-primary" /></p>
+    <div class="control-group">
+        @Html.LabelFor(x => x.Budget_BudgetID, new { @class = "control-label" })
+        <div class="controls">
+            @Html.DropDownListFor(x => x.Budget_BudgetID, Model.Budgets, "Select a previous budget...")
+            @Html.HiddenFor(x => x.Account_AccountID)
+            <input type="submit" value="Copy amounts from this budget" class="btn btn-primary" />
+        </div>
+    </div>
 }
 
-@using (Html.BeginForm("Create", "Budgets"))
+@using (Html.BeginForm("Create", "Budgets", FormMethod.Post, new { @class = "form-horizontal" }))
 {
-    <p>@Html.LabelFor(x => x.Start)
-    @Html.EditorFor(x => x.Start)
-    @Html.ValidationMessageFor(x => x.Start)</p>
+    @Html.EditorControlGroupFor(x => x.Start)
     
-    <p>@Html.LabelFor(x => x.End)
-    @Html.EditorFor(x => x.End)
-    @Html.ValidationMessageFor(x => x.End)</p>
+    @Html.EditorControlGroupFor(x => x.End)
 
     if(Model.Account_AccountID == 0) {
-    
-        <p>@Html.LabelFor(x => x.Account_AccountID)
-        @Html.DropDownListFor(x => x.Account_AccountID, Model.Accounts, "Please select...")
-        @Html.ValidationMessageFor(x => x.Account_AccountID)</p>
+
+        @Html.SelectControlGroupFor(x => x.Account_AccountID, Model.Accounts, "Please select...")
         
     } else {
         
@@ -38,5 +37,5 @@
     
     @Html.EditorFor(x => x.Categories)
 
-    <p><input type="submit" value="Save" class="btn btn-primary" /></p>
+    @Html.SubmitControlGroup("Save")
 }

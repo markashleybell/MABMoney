@@ -7,25 +7,22 @@
 
 <h2>Edit Category</h2>
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("Edit", "Categories", FormMethod.Post, new { @class = "form-horizontal" }))
 {
-    <p>@Html.LabelFor(x => x.Name)
-    @Html.TextBoxFor(x => x.Name)
-    @Html.ValidationMessageFor(x => x.Name)</p>
+    @Html.TextControlGroupFor(x => x.Name)
     
-    <p>@Html.LabelFor(x => x.Account_AccountID)
-    @Html.DropDownListFor(x => x.Account_AccountID, Model.Accounts, "Please select...")
-    @Html.ValidationMessageFor(x => x.Account_AccountID)</p>
+    @Html.SelectControlGroupFor(x => x.Account_AccountID, Model.Accounts, "Please select...")
 
-    <p>@Html.LabelFor(x => x.Type)
-    @Html.DropDownListFor(x => x.Type, Model.CategoryTypes, "Please select...")
-    @Html.ValidationMessageFor(x => x.Type)</p>
+    @Html.SelectControlGroupFor(x => x.Type, Model.CategoryTypes, "Please select...")
     
-    <p>@Html.HiddenFor(x => x.CategoryID)
-    <input type="submit" value="Save" class="btn btn-primary" /></p>
+    @Html.HiddenFor(x => x.CategoryID)
+    
+    @Html.SubmitControlGroup("Save")
 }
 
-@using (Html.BeginForm("Delete", "Categories"))
+@using (Html.BeginForm("Delete", "Categories", FormMethod.Post, new { @class = "form-horizontal" }))
 {
-    <p><input type="hidden" name="id" value="@Model.CategoryID" /><input type="submit" value="Delete" class="btn" /></p>
+    <input type="hidden" name="id" value="@Model.CategoryID" />
+    
+    @Html.ButtonControlGroup("Delete")
 }

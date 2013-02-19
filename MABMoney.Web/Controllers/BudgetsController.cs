@@ -158,6 +158,10 @@ namespace MABMoney.Web.Controllers
             if (!ModelState.IsValid)
             {
                 model.Accounts = DataHelpers.GetAccountSelectOptions(_accountServices);
+                model.Budgets = _budgetServices.All().Where(x => x.Account_AccountID == model.Account_AccountID).Select(x => new SelectListItem {
+                    Value = x.BudgetID.ToString(),
+                    Text = x.Start.ToString("dd/MM/yyyy") + " - " + x.End.ToString("dd/MM/yyyy")
+                }).AsQueryable();
                 return View(model);
             }
 

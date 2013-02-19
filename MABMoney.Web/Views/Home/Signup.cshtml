@@ -7,9 +7,17 @@
 
 <h2>Sign Up</h2>
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("Signup", "Home", FormMethod.Post, new { @class = "form-horizontal" }))
 {
-    @Html.EditorForModel()
+    @Html.TextControlGroupFor(x => x.Forename)
 
-    <p><input type="submit" value="Save" class="btn btn-primary" /></p>
+    @Html.TextControlGroupFor(x => x.Surname)
+
+    @Html.TextControlGroupFor(x => x.Email)
+
+    @Html.PasswordControlGroupFor(x => x.Password)
+
+    @Html.PasswordControlGroupFor(x => x.ConfirmPassword)
+
+    @Html.SubmitControlGroup("Create Account")
 }

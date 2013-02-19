@@ -18,6 +18,7 @@ namespace MABMoney.Web.Models.Budgets
         public int Account_AccountID { get; set; }
         public IQueryable<SelectListItem> Accounts { get; set; }
 
+        [DisplayName("Copy from previous")]
         public int Budget_BudgetID { get; set; }
         public IQueryable<SelectListItem> Budgets { get; set; }
 

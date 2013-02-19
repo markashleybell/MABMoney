@@ -7,43 +7,24 @@
 
 <h2>Edit Account</h2>
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("Edit", "Accounts", FormMethod.Post, new { @class = "form-horizontal" }))
 {
-    <div class="editor-label">
-        @Html.LabelFor(x => x.Name)
-    </div>
-    <div class="editor-field">
-        @Html.TextBoxFor(x => x.Name)
-        @Html.ValidationMessageFor(x => x.Name)
-    </div>
+    @Html.TextControlGroupFor(x => x.Name)
     
-    <div class="editor-field">
-        <label for="Default" class="checkbox">
-            @Html.CheckBoxFor(x => x.Default) Default Account
-        </label>
-    </div>
+    @Html.CheckboxControlGroupFor(x => x.Default)
 
-    <div class="editor-label">
-        @Html.LabelFor(x => x.StartingBalance)
-    </div>
-    <div class="editor-field">
-        @Html.TextBoxFor(x => x.StartingBalance)
-        @Html.ValidationMessageFor(x => x.StartingBalance)
-    </div>
+    @Html.TextControlGroupFor(x => x.StartingBalance)
     
-    <div class="editor-label">
-        @Html.LabelFor(x => x.Type)
-    </div>
-    <div class="editor-field">
-        @Html.DropDownListFor(x => x.Type, Model.AccountTypes, "Please select...")
-        @Html.ValidationMessageFor(x => x.Type)
-    </div>
+    @Html.SelectControlGroupFor(x => x.Type, Model.AccountTypes, "Please select...")
 
-    <p>@Html.HiddenFor(x => x.AccountID)
-    <input type="submit" value="Save" class="btn btn-primary" /></p>
+    @Html.HiddenFor(x => x.AccountID)
+    
+    @Html.SubmitControlGroup("Save")
 }
 
-@using (Html.BeginForm("Delete", "Accounts"))
+@using (Html.BeginForm("Delete", "Accounts", FormMethod.Post, new { @class = "form-horizontal" }))
 {
-    <p><input type="hidden" name="id" value="@Model.AccountID" /><input type="submit" value="Delete" class="btn" /></p>
+    <input type="hidden" name="id" value="@Model.AccountID" />
+        
+    @Html.ButtonControlGroup("Delete")
 }

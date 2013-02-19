@@ -7,27 +7,17 @@
 
 <h2>Create Transaction</h2>
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("Edit", "Transactions", FormMethod.Post, new { @class = "form-horizontal" }))
 {
-    <p>@Html.LabelFor(x => x.Date)
-    @Html.EditorFor(x => x.Date)
-    @Html.ValidationMessageFor(x => x.Date)</p>
+    @Html.EditorControlGroupFor(x => x.Date)
    
-    <p>@Html.LabelFor(x => x.Description)
-    @Html.TextBoxFor(x => x.Description)
-    @Html.ValidationMessageFor(x => x.Description)</p>
-    
-    <p>@Html.LabelFor(x => x.Amount)
-    @Html.TextBoxFor(x => x.Amount)
-    @Html.ValidationMessageFor(x => x.Amount)</p>
-    
-    <p>@Html.LabelFor(x => x.Category_CategoryID)
-    @Html.DropDownListFor(x => x.Category_CategoryID, Model.Categories, "Please select...")
-    @Html.ValidationMessageFor(x => x.Category_CategoryID)</p>
-    
-    <p>@Html.LabelFor(x => x.Account_AccountID)
-    @Html.DropDownListFor(x => x.Account_AccountID, Model.Accounts, "Please select...")
-    @Html.ValidationMessageFor(x => x.Account_AccountID)</p>
+    @Html.TextControlGroupFor(x => x.Description)
 
-    <p><input type="submit" value="Save" class="btn btn-primary" /></p>
+    @Html.TextControlGroupFor(x => x.Amount)
+    
+    @Html.SelectControlGroupFor(x => x.Category_CategoryID, Model.Categories, "Please select...")
+    
+    @Html.SelectControlGroupFor(x => x.Account_AccountID, Model.Accounts, "Please select...")
+
+    @Html.SubmitControlGroup("Save")
 }
