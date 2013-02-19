@@ -14,6 +14,7 @@ namespace MABMoney.Web.Models.Users
         [Required]
         public string Password { get; set; }
 
+        [DisplayName("Remember Me")]
         public bool RememberMe { get; set; }
     }
 }

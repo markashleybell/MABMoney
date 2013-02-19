@@ -7,31 +7,15 @@
 
 <h2>Login</h2>
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("Login", "Users", FormMethod.Post, new { @class = "form-horizontal" }))
 {
-    <div class="editor-label">
-        @Html.LabelFor(x => x.Email)
-    </div>
-    <div class="editor-field">
-        @Html.TextBoxFor(x => x.Email)
-        @Html.ValidationMessageFor(x => x.Email)
-    </div>
+    @Html.TextControlGroupFor(x => x.Email)
 
-    <div class="editor-label">
-        @Html.LabelFor(x => x.Password)
-    </div>
-    <div class="editor-field">
-        @Html.PasswordFor(x => x.Password)
-        @Html.ValidationMessageFor(x => x.Password)
-    </div>
+    @Html.PasswordControlGroupFor(x => x.Password)
+
+    @Html.CheckboxControlGroupFor(x => x.RememberMe)
     
-    <div class="editor-field">
-        <label for="RememberMe" class="checkbox">
-            @Html.CheckBoxFor(x => x.RememberMe) Remember Me
-        </label>
-    </div>
-    
-    <p><input type="submit" class="btn btn-primary" value="Log In" /></p>
+    @Html.SubmitControlGroup("Log In")
     
     <p>@Html.ActionLink("Forgot password?", "PasswordResetRequest")</p>
 }
