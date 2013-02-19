@@ -2,8 +2,8 @@
 
 @if (Model != null) {
     foreach (var category in Model) {
-        var percentage = (category.Total / category.Amount * 100);
-        var barwidth = Math.Abs(percentage) / 2;
+        var percentage = (category.Amount != 0) ? (category.Total / category.Amount * 100) : 0;
+        var barwidth = (percentage != 0) ? (Math.Abs(percentage) / 2) : 0;
         var remaining = category.Amount - category.Total;
     
     <div class="row">
