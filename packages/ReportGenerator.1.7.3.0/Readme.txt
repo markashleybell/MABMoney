@@ -51,6 +51,11 @@ For further details take a look at LICENSE.txt.
 
 CHANGELOG
 
+1.7.3.0
+
+    * Fix: Issue #9886: Compatibility for OpenCover 4.0.1229
+    * Fix: Issue #9833: Version command line parameter
+
 1.7.2.0
 
     * Fix: Issue #9736: NCover 1.5.8 Exclude attribute is not handled
