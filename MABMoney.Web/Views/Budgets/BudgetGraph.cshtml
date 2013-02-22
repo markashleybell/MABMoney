@@ -1,19 +1,31 @@
 ﻿@model IEnumerable<MABMoney.Services.DTO.Category_BudgetDTO>
 
 @if (Model != null) {
-    foreach (var category in Model) {
+    foreach (var category in Model.Where(x => x.Amount > 0 || x.Total > 0)) {
         var percentage = (category.Amount != 0) ? (category.Total / category.Amount * 100) : 0;
         var barwidth = (percentage != 0) ? (Math.Abs(percentage) / 2) : 0;
+        if (barwidth > 100)
+        {
+            barwidth = 100;
+        }
         var remaining = category.Amount - category.Total;
     
     <div class="row">
         <div class="span2"><div class="category-label">@category.Category.Name</div></div>
         <div class="span10">
+            @if(category.Amount == 0 && category.Total > 0) {
+            <div class="category-bar over">
+                <div class="category-stats">@((category.Total).ToString("#0.00"))</div>
+                <div class="category-remaining">@Math.Abs(remaining).ToString("#0.00") over</div>
+                <div class="category-progress" style="width: 100%;">&nbsp;</div>
+            </div>
+            } else {
             <div class="category-bar @((percentage > 100) ? "over" : "")">
                 <div class="category-stats">@((category.Total).ToString("#0.00")) of @category.Amount.ToString("#0.00") (@percentage.ToString("#0.00")%)</div>
                 <div class="category-remaining">@Math.Abs(remaining).ToString("#0.00") @((remaining >= 0) ? "remaining" : "over")</div>
                 <div class="category-progress" style="width: @(barwidth)%;">&nbsp;</div>
             </div>
+            }
         </div>
     </div>
     }
