@@ -21,7 +21,7 @@
             <noscript><input type="submit" class="btn" value="Go" /></noscript>
         }
     </div> 
-    <div class="span8"><div class="heading-mimic">@Model.Account.CurrentBalance.ToString("c")</div></div>
+    <div class="span8" id="current-balance"><div class="heading-mimic">@Model.Account.CurrentBalance.ToString("c")</div></div>
 </div>
 
 
@@ -53,8 +53,8 @@
     }
 
     <li @Html.Raw((Model.Tab == DashboardTab.Income) ? "class=\"active\"" : "")><a href="#income" data-toggle="tab">Income<span>: @Model.Transactions.Where(t => t.Amount > 0 && t.Date >= Model.From).Sum(x => x.Amount)</span></a></li>
-    <li @Html.Raw((Model.Tab == DashboardTab.Expenses) ? "class=\"active\"" : "")><a href="#expenses" data-toggle="tab">Expenses<span>: @Model.Transactions.Where(t => t.Amount < 0 && t.Date >= Model.From).Sum(x => Math.Abs(x.Amount))</span></a></li>
-    <li @Html.Raw((Model.Tab == DashboardTab.Transfers) ? "class=\"active\"" : "")><a href="#transfers" data-toggle="tab">Transfers<span>: @Model.Transactions.Where(t => t.TransferGUID != null && t.Date >= Model.From).Sum(x => x.Amount)</span></a></li>
+    <li @Html.Raw((Model.Tab == DashboardTab.Expenses) ? "class=\"active\"" : "")><a href="#expenses" data-toggle="tab">Expense<span>s: @Model.Transactions.Where(t => t.Amount < 0 && t.Date >= Model.From).Sum(x => Math.Abs(x.Amount))</span></a></li>
+    <li @Html.Raw((Model.Tab == DashboardTab.Transfers) ? "class=\"active\"" : "")><a href="#transfers" data-toggle="tab">Transfer<span>s: @Model.Transactions.Where(t => t.TransferGUID != null && t.Date >= Model.From).Sum(x => x.Amount)</span></a></li>
     
 </ul>
 <div class="tab-content">
@@ -88,7 +88,7 @@
                         <th>Category</th>
                         <th>Description</th>
                         <th>Amount</th>
-                        <th>Edit</th>
+                        <th class="edit-column">Edit</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -99,7 +99,7 @@
                         <td>@transaction.Category.Name</td>
                         <td>@transaction.Description</td>
                         <td>@transaction.Amount.ToString("#0.00")</td>
-                        <td>@Html.ActionLink("Edit", "Edit", "Transactions", new { id = transaction.TransactionID }, null)</td>
+                        <td class="edit-column">@Html.ActionLink("Edit", "Edit", "Transactions", new { id = transaction.TransactionID }, null)</td>
                     </tr@()>
                     }
                 </tbody>
@@ -145,7 +145,7 @@
                         <th>Category</th>
                         <th>Description</th>
                         <th>Amount</th>
-                        <th>Edit</th>
+                        <th class="edit-column">Edit</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -156,7 +156,7 @@
                         <td>@transaction.Category.Name</td>
                         <td>@transaction.Description</td>
                         <td>@transaction.Amount.ToString("#0.00")</td>
-                        <td>@Html.ActionLink("Edit", "Edit", "Transactions", new { id = transaction.TransactionID }, null)</td>
+                        <td class="edit-column">@Html.ActionLink("Edit", "Edit", "Transactions", new { id = transaction.TransactionID }, null)</td>
                     </tr>
                     }
                 </tbody>
@@ -203,7 +203,7 @@
                         <th>Category</th>
                         <th>Description</th>
                         <th>Amount</th>
-                        <th>Edit</th>
+                        <th class="edit-column">Edit</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -213,7 +213,7 @@
                         <td>@transaction.Category.Name</td>
                         <td>@transaction.Description</td>
                         <td>@transaction.Amount.ToString("#0.00")</td>
-                        <td>@Html.ActionLink("Edit", "Edit", "Transactions", new { id = transaction.TransactionID }, null)</td>
+                        <td class="edit-column">@Html.ActionLink("Edit", "Edit", "Transactions", new { id = transaction.TransactionID }, null)</td>
                     </tr>
                     }
                 </tbody>
