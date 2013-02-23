@@ -46,15 +46,15 @@
 <ul class="nav nav-tabs lge">
 
     @if(Model.Account.Type == AccountTypeDTO.Current) {
-    <li @Html.Raw((Model.Tab == DashboardTab.BudgetOrPaymentCalc) ? "class=\"active\"" : "")><a href="#budget" data-toggle="tab">Budget @((Model.Budget != null) ? Model.Budget.Start.ToString("dd/MM/yy") + " - " + Model.Budget.End.ToString("dd/MM/yy") : "")</a></li>
+    <li @Html.Raw((Model.Tab == DashboardTab.BudgetOrPaymentCalc) ? "class=\"active\"" : "")><a href="#budget" data-toggle="tab">Budget<span> @((Model.Budget != null) ? Model.Budget.Start.ToString("dd/MM/yy") + " - " + Model.Budget.End.ToString("dd/MM/yy") : "")</span></a></li>
     }
     @if (Model.Account.Type == AccountTypeDTO.CreditCard || Model.Account.Type == AccountTypeDTO.Loan) {
     <li @Html.Raw((Model.Tab == DashboardTab.BudgetOrPaymentCalc) ? "class=\"active\"" : "")><a href="#payment-calculator" data-toggle="tab">Payment Calculator</a></li>
     }
 
-    <li @Html.Raw((Model.Tab == DashboardTab.Income) ? "class=\"active\"" : "")><a href="#income" data-toggle="tab">Income: @Model.Transactions.Where(t => t.Amount > 0 && t.Date >= Model.From).Sum(x => x.Amount)</a></li>
-    <li @Html.Raw((Model.Tab == DashboardTab.Expenses) ? "class=\"active\"" : "")><a href="#expenses" data-toggle="tab">Expenses: @Model.Transactions.Where(t => t.Amount < 0 && t.Date >= Model.From).Sum(x => Math.Abs(x.Amount))</a></li>
-    <li @Html.Raw((Model.Tab == DashboardTab.Transfers) ? "class=\"active\"" : "")><a href="#transfers" data-toggle="tab">Transfers: @Model.Transactions.Where(t => t.TransferGUID != null && t.Date >= Model.From).Sum(x => x.Amount)</a></li>
+    <li @Html.Raw((Model.Tab == DashboardTab.Income) ? "class=\"active\"" : "")><a href="#income" data-toggle="tab">Income<span>: @Model.Transactions.Where(t => t.Amount > 0 && t.Date >= Model.From).Sum(x => x.Amount)</span></a></li>
+    <li @Html.Raw((Model.Tab == DashboardTab.Expenses) ? "class=\"active\"" : "")><a href="#expenses" data-toggle="tab">Expenses<span>: @Model.Transactions.Where(t => t.Amount < 0 && t.Date >= Model.From).Sum(x => Math.Abs(x.Amount))</span></a></li>
+    <li @Html.Raw((Model.Tab == DashboardTab.Transfers) ? "class=\"active\"" : "")><a href="#transfers" data-toggle="tab">Transfers<span>: @Model.Transactions.Where(t => t.TransferGUID != null && t.Date >= Model.From).Sum(x => x.Amount)</span></a></li>
     
 </ul>
 <div class="tab-content">
@@ -241,18 +241,17 @@
         }
 
         <div class="row button-row">
-            <div class="span2">
+            <div class="span3">
                 @if (Model.Budget != null) {
-                    @Html.ActionLink("Edit this budget", "Edit", "Budgets", new { id = Model.Budget.BudgetID }, new { @class = "btn btn-primary" })
+                    @Html.ActionLink("Edit this budget", "Edit", "Budgets", new { id = Model.Budget.BudgetID }, new { @class = "btn btn-primary input-block-level" })
                 }
             </div>
-            <div class="span8">&nbsp;</div>
-            <div class="span2">
-                @Html.ActionLink("Add a new budget", "Create", "Budgets", new { id = Model.Account_AccountID }, new { @class = "btn btn-primary pull-right" })
+            <div class="span6">&nbsp;</div>
+            <div class="span3">
+                @Html.ActionLink("Add a new budget", "Create", "Budgets", new { id = Model.Account_AccountID }, new { @class = "btn btn-primary input-block-level pull-right" })
             </div>
         </div>
 
-        <p></p>
     </div>
         
     }
