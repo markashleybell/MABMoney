@@ -19,6 +19,13 @@
         this.form.submit();
     });
 
+    var mobileTabSelect = $('#mobile-tab-select select:first');
+    var allTabs = $('div.tab-content').find('div.tab-pane');
+
+    mobileTabSelect.on('change', function (evt) {
+        allTabs.removeClass('active');
+        $(mobileTabSelect.val()).addClass('active');
+    });
 
     $('.typeahead').typeahead({
         minlength: 1,

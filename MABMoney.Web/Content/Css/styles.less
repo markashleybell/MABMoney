@@ -144,7 +144,7 @@ div.heading-mimic {
     color: #AED5E9;
 }
 
-.account-selector {
+.account-selector, #mobile-tab-select select {
     // width: auto;
     width: 100%;
     font-size: 1.75em;
@@ -152,11 +152,11 @@ div.heading-mimic {
     margin: 10px 0;
 }
 
-#account-selector, #account-selector-mobile {
+#account-selector {
     margin-bottom: 30px;
 }
 
-#account-selector-mobile {
+#account-selector-mobile,  #mobile-tab-select {
     display: none;
 }
 
@@ -220,10 +220,14 @@ div.heading-mimic {
     #logged-in-user-email, #net-worth-display, #current-balance, .percentage, .edit-column {
         display: none;
     }
-    #account-selector {
+
+    #account-selector, #nav-tabs {
         display: none;
     }
-    #account-selector-mobile {
+    #account-selector-mobile, #mobile-tab-select {
         display: block;
+    }
+    .tab-pane form {
+        margin-top: 20px;
     }
 }
