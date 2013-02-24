@@ -20,8 +20,7 @@ using MABMoney.Services.DTO;
 using Enyim.Caching;
 using Enyim.Caching.Configuration;
 using Enyim.Caching.Memcached;
-
-
+using System.Web.Optimization;
 
 namespace MABMoney.Web
 {
@@ -36,6 +35,7 @@ namespace MABMoney.Web
             WebApiConfig.Register(GlobalConfiguration.Configuration);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
+            BundleConfig.RegisterBundles(BundleTable.Bundles);
 
             ModelBinders.Binders.Add(typeof(ProfileViewModel), new ProfileModelBinder());
 

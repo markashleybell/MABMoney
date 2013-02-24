@@ -1,0 +1,152 @@
+﻿#nav li {
+  display: inline;
+}
+.category-label {
+  border: solid 1px #fff;
+  text-align: left;
+  padding: 6px 0;
+  margin: 5px 0;
+  font-weight: bold;
+}
+.category-bar {
+  position: relative;
+  width: 100%;
+  float: left;
+  background: url(/Content/Img/v-line.gif) #e0e0e0 center top no-repeat;
+  margin: 5px 0;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+.category-stats {
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding: 6px 12px;
+  font-weight: bold;
+}
+.category-remaining {
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: 6px 12px;
+  font-weight: bold;
+}
+.over .category-progress {
+  background-color: #EB8B75;
+}
+.category-progress {
+  display: block;
+  float: left;
+  padding: 6px 0;
+  background-color: #5FCF59;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+caption {
+  display: none;
+}
+input[type="submit"].btn-fullwidth,
+input[type="button"].btn-fullwidth {
+  width: 100%;
+}
+.field-validation-error {
+  color: #cc0000;
+  padding-left: 1em;
+}
+.typeahead {
+  margin-top: 0;
+}
+#test .span1 {
+  background-color: #e0e0e0;
+}
+.nav-tabs.lge a {
+  font-size: 1.5em;
+  font-weight: bold;
+  padding: 12px 20px;
+  margin-right: 10px;
+}
+div.heading-mimic {
+  font-size: 31.5px;
+  line-height: 40px;
+  margin: 10px 0;
+  font-weight: bold;
+  text-align: right;
+}
+#net-worth {
+  padding-top: 9px;
+}
+#net-worth .label.label-info {
+  padding: 4px 6px 3px 7px;
+  font-size: 1.1em;
+}
+#net-worth-content {
+  display: none;
+}
+#net-worth-content-table {
+  width: 100%;
+}
+#net-worth-content-table th {
+  text-align: left;
+}
+#net-worth-content-table td {
+  text-align: right;
+}
+.row.button-row {
+  margin-top: 30px;
+}
+.before-budget-start {
+  color: #C2C2C2;
+}
+.before-budget-start a {
+  color: #AED5E9;
+}
+#account-selector {
+  width: 100%;
+  font-size: 1.75em;
+  height: 40px;
+  margin: 10px 0;
+}
+@media (max-width: 1200px) {
+  .nav-tabs.lge a {
+    font-size: 1.3em;
+  }
+}
+@media (min-width: 768px) and (max-width: 979px) {
+  .navbar .brand {
+    padding-left: 5px;
+  }
+  .navbar .container {
+    width: 724px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .nav-tabs.lge a span {
+    display: none;
+  }
+}
+@media (max-width: 767px) {
+  .navbar .container {
+    margin-left: 12px;
+    margin-right: 15px;
+  }
+  .nav-tabs.lge a {
+    font-size: 1.1em;
+    padding: 10px 8px;
+    margin-right: 3px;
+  }
+  .nav-tabs.lge a span {
+    display: none;
+  }
+  .button-row .span2 {
+    width: 100%;
+  }
+  #logged-in-user-email,
+  #net-worth-display,
+  #current-balance,
+  .percentage,
+  .edit-column {
+    display: none;
+  }
+}
