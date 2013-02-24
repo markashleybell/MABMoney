@@ -16,10 +16,16 @@
 <div class="row">
     <div class="span4">
         @*@Model.From.ToString("dd/MM/yyyy")-@Model.To.ToString("dd/MM/yyyy")*@
-        @using (Html.BeginForm("", "Home", FormMethod.Post, new { @class = "form-inline" })) {
-            <p>@Html.DropDownListFor(x => x.Account_AccountID, Model.Accounts, new { id = "account-selector" }) </p>
+        @using (Html.BeginForm("", "Home", FormMethod.Post, new { id = "account-selector", @class = "form-inline" })) {
+            <p>@Html.DropDownListFor(x => x.Account_AccountID, Model.Accounts, new { @class = "account-selector" }) </p>
             <noscript><input type="submit" class="btn" value="Go" /></noscript>
         }
+
+        @using (Html.BeginForm("", "Home", FormMethod.Post, new { id = "account-selector-mobile", @class = "form-inline" })) {
+            <p>@Html.DropDownListFor(x => x.Account_AccountID, Model.AccountsWithBalances, new { @class = "account-selector" }) </p>
+            <noscript><input type="submit" class="btn" value="Go" /></noscript>
+        }
+
     </div> 
     <div class="span8" id="current-balance"><div class="heading-mimic">@Model.Account.CurrentBalance.ToString("c")</div></div>
 </div>

@@ -102,11 +102,18 @@ div.heading-mimic {
 .before-budget-start a {
   color: #AED5E9;
 }
-#account-selector {
+.account-selector {
   width: 100%;
   font-size: 1.75em;
   height: 40px;
   margin: 10px 0;
+}
+#account-selector,
+#account-selector-mobile {
+  margin-bottom: 30px;
+}
+#account-selector-mobile {
+  display: none;
 }
 @media (max-width: 1200px) {
   .nav-tabs.lge a {
@@ -148,5 +155,11 @@ div.heading-mimic {
   .percentage,
   .edit-column {
     display: none;
+  }
+  #account-selector {
+    display: none;
+  }
+  #account-selector-mobile {
+    display: block;
   }
 }

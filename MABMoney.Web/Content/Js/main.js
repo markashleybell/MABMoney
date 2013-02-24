@@ -13,7 +13,7 @@
         content: $('#net-worth-content').html()
     });
 
-    var accountSelector = $('#account-selector');
+    var accountSelector = $('.account-selector');
 
     accountSelector.on('change', function (evt) {
         this.form.submit();

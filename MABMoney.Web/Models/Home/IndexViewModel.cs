@@ -23,6 +23,7 @@ namespace MABMoney.Web.Models.Home
         [DisplayName("Account")]
         public int Account_AccountID { get; set; }
         public IQueryable<SelectListItem> Accounts { get; set; }
+        public IQueryable<SelectListItem> AccountsWithBalances { get; set; }
 
         public BudgetDTO Budget { get; set; }
 

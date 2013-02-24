@@ -20,12 +20,12 @@ namespace MABMoney.Web.Helpers
             return new SelectList(Enum.GetValues(typeof(AccountTypeDTO)));
         }
 
-        public static IQueryable<SelectListItem> GetAccountSelectOptions(IAccountServices accountServices) 
+        public static IQueryable<SelectListItem> GetAccountSelectOptions(IAccountServices accountServices, bool showBalances = false) 
         {
             return accountServices.All()
                                   .Select(x => new SelectListItem { 
                                       Value = x.AccountID.ToString(),
-                                      Text = x.Name
+                                      Text = x.Name + ((showBalances) ? " / " + x.CurrentBalance : "")
                                   }).AsQueryable();
         }
 

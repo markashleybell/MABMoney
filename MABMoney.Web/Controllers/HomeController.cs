@@ -99,6 +99,7 @@ namespace MABMoney.Web.Controllers
             model.IncomeCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, account.AccountID, CategoryTypeDTO.Income);
             model.ExpenseCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, account.AccountID, CategoryTypeDTO.Expense);
             model.Accounts = DataHelpers.GetAccountSelectOptions(_accountServices);
+            model.AccountsWithBalances = DataHelpers.GetAccountSelectOptions(_accountServices, true);
             model.Type = GetDefaultTransactionTypeForAccount(account);
             model.Debug = debug;
                 // If it's a savings account it will not have the payment calc or the budget tab, so just set to income
