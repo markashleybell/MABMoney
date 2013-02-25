@@ -11,6 +11,7 @@ using MABMoney.Web.Infrastructure;
 using MABMoney.Web.Models;
 using MABMoney.Web.Helpers;
 using MABMoney.Data;
+using System.Text;
 
 namespace MABMoney.Web.Controllers
 {
@@ -49,9 +50,17 @@ namespace MABMoney.Web.Controllers
         [Authenticate]
         public ActionResult Create(ProfileViewModel profile)
         {
-            return View(new CreateViewModel { 
-                AccountTypes = DataHelpers.GetAccountTypeSelectOptions()
-            });
+            var accounts = _accountServices.All();
+
+            var model = new CreateViewModel {
+                AccountTypes = DataHelpers.GetAccountTypeSelectOptions(),
+                Default = (accounts.Count() == 0) ? true : false
+            };
+
+            if (accounts.Count() == 0)
+                model.Type = AccountTypeDTO.Current;
+
+            return View(model);
         }
 
         //
@@ -69,7 +78,10 @@ namespace MABMoney.Web.Controllers
             var dto = model.MapTo<AccountDTO>();
             _accountServices.Save(dto);
 
-            return RedirectToAction("Index");
+            var pageState = EncryptionHelpers.EncryptStringAES(dto.AccountID + "-" + MABMoney.Web.Models.Home.TransactionType.Expense + "-" + MABMoney.Web.Models.Home.DashboardTab.BudgetOrPaymentCalc, _config.SharedSecret);
+            var encodedPageState = HttpServerUtility.UrlTokenEncode(Encoding.UTF8.GetBytes(pageState));
+
+            return RedirectToRoute("Home", new { state = encodedPageState });
         }
 
         //

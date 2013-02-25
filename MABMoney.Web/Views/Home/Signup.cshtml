@@ -9,15 +9,15 @@
 
 @using (Html.BeginForm("Signup", "Home", FormMethod.Post, new { @class = "form-horizontal" }))
 {
-    @Html.TextControlGroupFor(x => x.Forename)
+    //@Html.TextControlGroupFor(x => x.Forename)
 
-    @Html.TextControlGroupFor(x => x.Surname)
+    //@Html.TextControlGroupFor(x => x.Surname)
 
-    @Html.TextControlGroupFor(x => x.Email)
+    @Html.TextControlGroupFor(x => x.Email, new { @class = "help", placeholder = "Enter your email address", data_content = "Your email address will be used to uniquely identify you." })
 
-    @Html.PasswordControlGroupFor(x => x.Password)
+    @Html.PasswordControlGroupFor(x => x.Password, new { @class = "help", placeholder = "Enter a password", data_content = "Choose a password to protect your account." })
 
-    @Html.PasswordControlGroupFor(x => x.ConfirmPassword)
+    @Html.PasswordControlGroupFor(x => x.ConfirmPassword, new { @class = "help", placeholder = "Confirm the password", data_content = "Type your password again to confirm it." })
 
     @Html.SubmitControlGroup("Create Account")
 }

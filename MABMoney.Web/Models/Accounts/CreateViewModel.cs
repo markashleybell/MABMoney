@@ -12,11 +12,13 @@ namespace MABMoney.Web.Models.Accounts
     public class CreateViewModel
     {
         [Required]
+        [DisplayName("Account Name")]
         public string Name { get; set; }
         [Required]
         [DisplayName("Starting Balance")]
         public decimal StartingBalance { get; set; }
         [Required]
+        [DisplayName("Account Type")]
         public AccountTypeDTO Type { get; set; }
         public SelectList AccountTypes { get; set; }
 

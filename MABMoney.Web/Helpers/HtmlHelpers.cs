@@ -92,6 +92,11 @@ namespace MABMoney.Web.Helpers
 
         public static MvcHtmlString CheckboxControlGroupFor<TModel>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, bool>> expression)
         {
+            return CheckboxControlGroupFor<TModel>(htmlHelper, expression, null);
+        }
+
+        public static MvcHtmlString CheckboxControlGroupFor<TModel>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, bool>> expression, object htmlAttributes)
+        {
             var output = new StringBuilder();
 
             ModelMetadata metadata = ModelMetadata.FromLambdaExpression(expression, htmlHelper.ViewData);
@@ -99,7 +104,7 @@ namespace MABMoney.Web.Helpers
             output.Append("<div class=\"control-group\">");
             output.Append("<div class=\"controls\">");
             output.Append("<label class=\"checkbox\" for=\"" + ExpressionHelper.GetExpressionText(expression) + "\">");
-            output.Append(System.Web.Mvc.Html.InputExtensions.CheckBoxFor(htmlHelper, expression));
+            output.Append(System.Web.Mvc.Html.InputExtensions.CheckBoxFor(htmlHelper, expression, htmlAttributes));
             output.Append(metadata.DisplayName);
             output.Append("</label>");
             output.Append(System.Web.Mvc.Html.ValidationExtensions.ValidationMessageFor(htmlHelper, expression));

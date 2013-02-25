@@ -1,4 +1,11 @@
-﻿#nav li {
+﻿form {
+  padding-top: 20px;
+}
+.popover-title {
+  color: #0044cc;
+  font-weight: bold;
+}
+#nav li {
   display: inline;
 }
 .category-label {

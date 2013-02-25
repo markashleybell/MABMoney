@@ -124,4 +124,9 @@
         buildPaymentCalculatorTable(currentBalance.val(), paymentAmount.val(), interestRate.val(), minPaymentPercentage.val());
     });
 
+    $('input.help, select.help, textarea.help').popover({
+        title: 'What\'s this?',
+        trigger: 'focus'
+    });
+
 });
