@@ -18,6 +18,7 @@ namespace MABMoney.Tests
         private IAccountServices _accountServices;
         private IRepository<Budget, int> _budgets;
         private IRepository<Account, int> _accounts;
+        private IRepository<Category, int> _categories;
         private IRepository<Category_Budget, int> _categories_budgets;
         private IRepository<Transaction, int> _transactions;
 
@@ -133,6 +134,9 @@ namespace MABMoney.Tests
             _accounts = MockRepository.GenerateStub<IRepository<Account, int>>();
             _accounts.Stub(x => x.All()).Return(accounts.AsQueryable());
 
+            _categories = MockRepository.GenerateStub<IRepository<Category, int>>();
+            _categories.Stub(x => x.All()).Return(categories.AsQueryable());
+
             _categories_budgets = MockRepository.GenerateStub<IRepository<Category_Budget, int>>();
             _categories_budgets.Stub(x => x.All()).Return(categories_budgets.AsQueryable());
 
@@ -147,7 +151,7 @@ namespace MABMoney.Tests
         [Test]
         public void Unallocated_Funds_Calculated_Correctly()
         {
-            var service = new BudgetServices(_budgets, _accounts, _categories_budgets, _transactions, _accountServices, _unitOfWork);
+            var service = new BudgetServices(_budgets, _accounts, _categories, _categories_budgets, _transactions, _accountServices, _unitOfWork);
 
             var dto = service.Get(1);
 

@@ -106,11 +106,10 @@ namespace MABMoney.Web.Controllers
 
             var now = _dateProvider.Now;
 
-            var categoryAmounts = categories.ToList().Select(x => new Category_BudgetViewModel
-                {
-                    Category_CategoryID = x.CategoryID,
-                    Name = x.Name
-                }).ToList();
+            var categoryAmounts = categories.ToList().Select(x => new Category_BudgetViewModel {
+                Category_CategoryID = x.CategoryID,
+                Name = x.Name
+            }).ToList();
 
             if(model.Budget_BudgetID != 0) {
 
@@ -125,12 +124,11 @@ namespace MABMoney.Web.Controllers
                 }).ToList();
 
                 var newCategories = categories.Where(x => !categoryAmounts.Any(c => c.Category_CategoryID == x.CategoryID))
-                                              .Select(x => new Category_BudgetViewModel
-                                              {
+                                              .Select(x => new Category_BudgetViewModel {
                                                   Category_CategoryID = x.CategoryID,
                                                   Name = x.Name
-                                              })
-                                              .ToList();
+                                              }).ToList();
+
                 categoryAmounts.AddRange(newCategories);
             }
 
@@ -171,6 +169,12 @@ namespace MABMoney.Web.Controllers
             foreach (var category in model.Categories)
             {
                 _budgetServices.SaveCategoryBudget(new Category_BudgetDTO { 
+                    Category = new CategoryDTO {
+                        CategoryID = category.Category_CategoryID,
+                        Name = category.Name,
+                        Type = CategoryTypeDTO.Expense,
+                        Account_AccountID = model.Account_AccountID
+                    },
                     Budget_BudgetID = dto.BudgetID,
                     Category_CategoryID = category.Category_CategoryID,
                     Amount = category.Amount
@@ -229,6 +233,13 @@ namespace MABMoney.Web.Controllers
             foreach (var category in model.Categories)
             {
                 _budgetServices.SaveCategoryBudget(new Category_BudgetDTO {
+                    Category = new CategoryDTO
+                    {
+                        CategoryID = category.Category_CategoryID,
+                        Name = category.Name,
+                        Type = CategoryTypeDTO.Expense,
+                        Account_AccountID = model.Account_AccountID
+                    },
                     Budget_BudgetID = dto.BudgetID,
                     Category_CategoryID = category.Category_CategoryID,
                     Amount = category.Amount

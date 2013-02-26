@@ -13,6 +13,7 @@ namespace MABMoney.Services
     {
         private IRepository<Budget, int> _budgets;
         private IRepository<Account, int> _accounts;
+        private IRepository<Category, int> _categories;
         private IRepository<Category_Budget, int> _categories_budgets;
         private IRepository<Transaction, int> _transactions;
         private IAccountServices _accountServices;
@@ -20,10 +21,11 @@ namespace MABMoney.Services
 
         private int _userId;
 
-        public BudgetServices(IRepository<Budget, int> budgets, IRepository<Account, int> accounts, IRepository<Category_Budget, int> categories_budgets, IRepository<Transaction, int> transactions, IAccountServices accountServices, IUnitOfWork unitOfWork)
+        public BudgetServices(IRepository<Budget, int> budgets, IRepository<Account, int> accounts, IRepository<Category, int> categories, IRepository<Category_Budget, int> categories_budgets, IRepository<Transaction, int> transactions, IAccountServices accountServices, IUnitOfWork unitOfWork)
         {
             _budgets = budgets;
             _accounts = accounts;
+            _categories = categories;
             _categories_budgets = categories_budgets;
             _transactions = transactions;
             _accountServices = accountServices;
@@ -150,6 +152,22 @@ namespace MABMoney.Services
 
         public void SaveCategoryBudget(Category_BudgetDTO dto)
         {
+            var category = _categories.Query(x => x.CategoryID == dto.Category_CategoryID).FirstOrDefault();
+
+            if (category == null)
+            {
+                category = dto.Category.MapTo<Category>();
+                _categories.Add(category);
+            }
+            else
+            {
+                dto.Category.MapTo(category);
+            }
+
+            _unitOfWork.Commit();
+
+            dto.Category_CategoryID = category.CategoryID;
+
             var entity = _categories_budgets.Query(x => x.Budget.Account.User_UserID == _userId && x.Budget_BudgetID == dto.Budget_BudgetID && x.Category_CategoryID == dto.Category_CategoryID)
                                             .FirstOrDefault();
 
