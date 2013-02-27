@@ -168,6 +168,13 @@ namespace MABMoney.Web.Controllers
 
             foreach (var category in model.Categories)
             {
+                if(category.Delete)
+                {
+                    _categoryServices.Delete(category.Category_CategoryID);
+                }
+                    else
+                    {
+
                 _budgetServices.SaveCategoryBudget(new Category_BudgetDTO { 
                     Category = new CategoryDTO {
                         CategoryID = category.Category_CategoryID,
@@ -179,6 +186,7 @@ namespace MABMoney.Web.Controllers
                     Category_CategoryID = category.Category_CategoryID,
                     Amount = category.Amount
                 });
+                    }
             }
 
             return RedirectToAction("Index");
@@ -232,21 +240,30 @@ namespace MABMoney.Web.Controllers
 
             foreach (var category in model.Categories)
             {
-                _budgetServices.SaveCategoryBudget(new Category_BudgetDTO {
-                    Category = new CategoryDTO
+                if (category.Delete)
+                {
+                    _categoryServices.Delete(category.Category_CategoryID);
+                }
+                else
+                {
+                    _budgetServices.SaveCategoryBudget(new Category_BudgetDTO
                     {
-                        CategoryID = category.Category_CategoryID,
-                        Name = category.Name,
-                        Type = CategoryTypeDTO.Expense,
-                        Account_AccountID = model.Account_AccountID
-                    },
-                    Budget_BudgetID = dto.BudgetID,
-                    Category_CategoryID = category.Category_CategoryID,
-                    Amount = category.Amount
-                });
+                        Category = new CategoryDTO
+                        {
+                            CategoryID = category.Category_CategoryID,
+                            Name = category.Name,
+                            Type = CategoryTypeDTO.Expense,
+                            Account_AccountID = model.Account_AccountID
+                        },
+                        Budget_BudgetID = dto.BudgetID,
+                        Category_CategoryID = category.Category_CategoryID,
+                        Amount = category.Amount
+                    });
+                }
             }
 
-            return RedirectToAction("Index");
+            // return RedirectToAction("Index");
+            return RedirectToAction("Edit", new { id = model.BudgetID });
         }
 
         //

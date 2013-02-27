@@ -1,11 +1,18 @@
 ﻿@model MABMoney.Web.Models.Budgets.Category_BudgetViewModel
 
+@using System.Text.RegularExpressions
+
+@{
+    var index = new Regex(@"_(\d+)_").Match(ViewData.TemplateInfo.GetFullHtmlFieldId("")).Groups[1].Value;
+}
+
 <div class="control-group">
 
     @Html.TextBoxFor(x => x.Name, new { placeholder = "Name", @class = "label-textbox" })
     @*@Html.LabelFor(x => x.Amount, Model.Name, new { @class = "control-label" })*@
     <div class="controls">
         @Html.TextBoxFor(x => x.Amount, new { placeholder = "Email" })
+        <a class="cat-delete" id="del@(index)" href="#del@(Model.Category_CategoryID)">Delete</a>
         @Html.ValidationMessageFor(x => x.Amount)
         @Html.HiddenFor(x => x.Budget_BudgetID)
         @Html.HiddenFor(x => x.Category_CategoryID)

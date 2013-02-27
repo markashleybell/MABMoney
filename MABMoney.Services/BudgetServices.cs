@@ -62,53 +62,58 @@ namespace MABMoney.Services
 
             var dto = budget.MapTo<BudgetDTO>();
 
-            if (budget.Category_Budgets != null && budget.Category_Budgets.Count > 0)
+            if (budget.Category_Budgets != null)
             {
-                dto.Category_Budgets = budget.Category_Budgets.ToList().Select(x => new Category_BudgetDTO
+                var category_budgets = budget.Category_Budgets.Where(x => !x.Category.Deleted).ToList();
+
+                if(category_budgets.Count > 0) 
                 {
-                    Budget_BudgetID = x.Budget_BudgetID,
-                    Category_CategoryID = x.Category_CategoryID,
-                    Budget = x.Budget.MapTo<BudgetDTO>(),
-                    Category = x.Category.MapTo<CategoryDTO>(),
-                    Amount = x.Amount,
-                    Total = budgetTransactions.Where(t => t.Category_CategoryID == x.Category_CategoryID).Sum(t => Math.Abs(t.Amount))
-                }).ToList();
-
-                // Work out the total amount overspent across all categories
-                var overspend = dto.Category_Budgets.Where(x => x.Total > x.Amount).Select(x => x.Total - x.Amount).Sum();
-
-                // Work out how much money has been allocated to budget categories
-                var allocated = dto.Category_Budgets.Sum(x => x.Amount);
-
-                // Work out how much money has been spent in budget categories
-                var account = _accountServices.Get(budget.Account.AccountID);
-                var allocatedSpent = dto.Category_Budgets.Sum(x => x.Total);
-
-                var balanceAtBudgetStart = transactions.Where(x => x.Date < budget.Start).ToList().Sum(x => x.Amount) + account.StartingBalance;
-
-                var unallocatedAmount = ((balanceAtBudgetStart - allocated) - overspend) + budgetTransactions.Where(x => x.Amount > 0).Sum(x => x.Amount);
-
-                // Work out how much money was spent in transactions not assigned to a category
-                var unallocatedSpent = budgetTransactions.Where(x => x.Amount < 0 && x.Category_CategoryID == null).ToList().Sum(x => Math.Abs(x.Amount));
-
-                // If there is money left over after all budget category amounts and any overspend have been subtracted
-                if (unallocatedAmount > 0)
-                {
-                    // Show how much and how much we've spent so far
-                    dto.Category_Budgets.Add(new Category_BudgetDTO
+                    dto.Category_Budgets = category_budgets.Select(x => new Category_BudgetDTO
                     {
-                        Budget_BudgetID = budget.BudgetID,
-                        Category_CategoryID = 0,
-                        Budget = budget.MapTo<BudgetDTO>(),
-                        Category = new CategoryDTO
+                        Budget_BudgetID = x.Budget_BudgetID,
+                        Category_CategoryID = x.Category_CategoryID,
+                        Budget = x.Budget.MapTo<BudgetDTO>(),
+                        Category = x.Category.MapTo<CategoryDTO>(),
+                        Amount = x.Amount,
+                        Total = budgetTransactions.Where(t => t.Category_CategoryID == x.Category_CategoryID).Sum(t => Math.Abs(t.Amount))
+                    }).ToList();
+
+                    // Work out the total amount overspent across all categories
+                    var overspend = dto.Category_Budgets.Where(x => x.Total > x.Amount).Select(x => x.Total - x.Amount).Sum();
+
+                    // Work out how much money has been allocated to budget categories
+                    var allocated = dto.Category_Budgets.Sum(x => x.Amount);
+
+                    // Work out how much money has been spent in budget categories
+                    var account = _accountServices.Get(budget.Account.AccountID);
+                    var allocatedSpent = dto.Category_Budgets.Sum(x => x.Total);
+
+                    var balanceAtBudgetStart = transactions.Where(x => x.Date < budget.Start).ToList().Sum(x => x.Amount) + account.StartingBalance;
+
+                    var unallocatedAmount = ((balanceAtBudgetStart - allocated) - overspend) + budgetTransactions.Where(x => x.Amount > 0).Sum(x => x.Amount);
+
+                    // Work out how much money was spent in transactions not assigned to a category
+                    var unallocatedSpent = budgetTransactions.Where(x => x.Amount < 0 && x.Category_CategoryID == null).ToList().Sum(x => Math.Abs(x.Amount));
+
+                    // If there is money left over after all budget category amounts and any overspend have been subtracted
+                    if (unallocatedAmount > 0)
+                    {
+                        // Show how much and how much we've spent so far
+                        dto.Category_Budgets.Add(new Category_BudgetDTO
                         {
-                            CategoryID = 0,
-                            Name = "Unallocated",
-                            Type = CategoryTypeDTO.Expense
-                        },
-                        Amount = unallocatedAmount,
-                        Total = unallocatedSpent
-                    });
+                            Budget_BudgetID = budget.BudgetID,
+                            Category_CategoryID = 0,
+                            Budget = budget.MapTo<BudgetDTO>(),
+                            Category = new CategoryDTO
+                            {
+                                CategoryID = 0,
+                                Name = "Unallocated",
+                                Type = CategoryTypeDTO.Expense
+                            },
+                            Amount = unallocatedAmount,
+                            Total = unallocatedSpent
+                        });
+                    }
                 }
             }
 
