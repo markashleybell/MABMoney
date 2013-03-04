@@ -102,6 +102,8 @@ namespace MABMoney.Web.Controllers
             model.AccountsWithBalances = DataHelpers.GetAccountSelectOptions(_accountServices, true);
             model.Type = GetDefaultTransactionTypeForAccount(account);
             model.Debug = debug;
+            model.BudgetCount = _budgetServices.GetBudgetCount(account.AccountID);
+
                 // If it's a savings account it will not have the payment calc or the budget tab, so just set to income
             model.Tab = (account.Type == AccountTypeDTO.Savings) ? DashboardTab.Income : DashboardTab.BudgetOrPaymentCalc;
             model.SourceAccountID = account.AccountID;

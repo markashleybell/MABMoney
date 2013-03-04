@@ -17,11 +17,12 @@ namespace MABMoney.Services
         private IRepository<Category_Budget, int> _categories_budgets;
         private IRepository<Transaction, int> _transactions;
         private IAccountServices _accountServices;
+        private IDateTimeProvider _dateProvider;
         private IUnitOfWork _unitOfWork;
 
         private int _userId;
 
-        public BudgetServices(IRepository<Budget, int> budgets, IRepository<Account, int> accounts, IRepository<Category, int> categories, IRepository<Category_Budget, int> categories_budgets, IRepository<Transaction, int> transactions, IAccountServices accountServices, IUnitOfWork unitOfWork)
+        public BudgetServices(IRepository<Budget, int> budgets, IRepository<Account, int> accounts, IRepository<Category, int> categories, IRepository<Category_Budget, int> categories_budgets, IRepository<Transaction, int> transactions, IAccountServices accountServices, IDateTimeProvider dateProvider, IUnitOfWork unitOfWork)
         {
             _budgets = budgets;
             _accounts = accounts;
@@ -29,6 +30,7 @@ namespace MABMoney.Services
             _categories_budgets = categories_budgets;
             _transactions = transactions;
             _accountServices = accountServices;
+            _dateProvider = dateProvider;
             _unitOfWork = unitOfWork;
             _userId = unitOfWork.DataStore.UserID;
         }
@@ -48,7 +50,12 @@ namespace MABMoney.Services
 
         public BudgetDTO GetLatest(int accountId)
         {
-            return MapBudget(_budgets.Query(x => x.Account.User_UserID == _userId && x.Account_AccountID == accountId).OrderByDescending(x => x.BudgetID).FirstOrDefault());
+            var now = _dateProvider.Now;
+            var endOfToday = new DateTime(now.Year, now.Month, now.Day, 23, 59, 59);
+
+            return MapBudget(_budgets.Query(x => x.Account.User_UserID == _userId && x.Account_AccountID == accountId && x.End >= endOfToday)
+                                     .OrderByDescending(x => x.BudgetID)
+                                     .FirstOrDefault());
         }
 
         private BudgetDTO MapBudget(Budget budget)
@@ -193,6 +200,11 @@ namespace MABMoney.Services
         public void DeleteCategoryBudget(int id)
         {
             throw new NotImplementedException();
+        }
+
+        public int GetBudgetCount(int accountId)
+        {
+            return _budgets.Query(x => x.Account_AccountID == accountId).Count();
         }
     }
 }

@@ -43,5 +43,7 @@ namespace MABMoney.Web.Models.Home
 
         public int SourceAccountID { get; set; }
         public int DestinationAccountID { get; set; }
+
+        public int BudgetCount { get; set; }
     }
 }

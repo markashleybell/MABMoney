@@ -21,7 +21,7 @@ namespace MABMoney.Tests
         private IRepository<Category, int> _categories;
         private IRepository<Category_Budget, int> _categories_budgets;
         private IRepository<Transaction, int> _transactions;
-
+        private IDateTimeProvider _dateProvider;
         private IUnitOfWork _unitOfWork;
 
         [SetUp]
@@ -144,6 +144,9 @@ namespace MABMoney.Tests
             _transactions.Stub(x => x.All()).Return(transactions.AsQueryable());
             _transactions.Stub(x => x.Query(null)).Return(transactions.AsQueryable()).IgnoreArguments();
 
+            _dateProvider = MockRepository.GenerateStub<IDateTimeProvider>();
+            _dateProvider.Stub(x => x.Now).Return(new DateTime(2010, 1, 1));
+
             _unitOfWork = MockRepository.GenerateStub<IUnitOfWork>();
             _unitOfWork.Stub(x => x.DataStore.UserID).Return(1);
         }
@@ -151,7 +154,7 @@ namespace MABMoney.Tests
         [Test]
         public void Unallocated_Funds_Calculated_Correctly()
         {
-            var service = new BudgetServices(_budgets, _accounts, _categories, _categories_budgets, _transactions, _accountServices, _unitOfWork);
+            var service = new BudgetServices(_budgets, _accounts, _categories, _categories_budgets, _transactions, _accountServices, _dateProvider, _unitOfWork);
 
             var dto = service.Get(1);
 

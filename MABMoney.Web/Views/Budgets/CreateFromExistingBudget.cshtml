@@ -37,5 +37,12 @@
     
     @Html.EditorFor(x => x.Categories)
 
+    <div class="control-group">
+        <label class="control-label" for="add-category-button">&nbsp;</label>
+        <div class="controls">
+            <input type="button" value="Add Category" class="btn" id="add-category-button" />
+        </div>
+    </div>
+
     @Html.SubmitControlGroup("Save")
 }
