@@ -64,7 +64,8 @@ namespace MABMoney.Services
 
             if (budget.Category_Budgets != null)
             {
-                var category_budgets = budget.Category_Budgets.Where(x => !x.Category.Deleted).ToList();
+                // Get any categories which aren't deleted or which were deleted after this budget period ended
+                var category_budgets = budget.Category_Budgets.Where(x => (x.Category.Deleted && x.Category.DeletedDate > budget.End) || !x.Category.Deleted).ToList();
 
                 if(category_budgets.Count > 0) 
                 {
