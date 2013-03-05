@@ -140,10 +140,12 @@
                '    </div>' +
                '</div>';
 
-    var del = '<input data-val="true" id="Categories_{{INDEX}}__Delete" name="Categories[{{INDEX}}].Delete" type="hidden" value="true">' +
+    var del = '<div><div>' +
+              '<input data-val="true" id="Categories_{{INDEX}}__Delete" name="Categories[{{INDEX}}].Delete" type="hidden" value="true">' +
               '<input data-val="true" id="Categories_{{INDEX}}__Amount" name="Categories[{{INDEX}}].Amount" type="hidden" value="0">' +
               '<input data-val="true" id="Categories_{{INDEX}}__Budget_BudgetID" name="Categories[{{INDEX}}].Budget_BudgetID" type="hidden" value="0">' +
               '<input data-val="true" id="Categories_{{INDEX}}__Category_CategoryID" name="Categories[{{INDEX}}].Category_CategoryID" type="hidden" value="{{ID}}">';
+              '</div></div>';
 
     $('#add-category-button').on('click', function (evt) {
         // Grab the last category input that currently exists in the page
