@@ -110,7 +110,9 @@
         tableBody.append(html.join(''));
     }
 
-    
+    $('form.delete-form').on('submit', function (evt) {
+        return confirm('Are you sure?');
+    });
 
     var currentBalance = $('#payment-calculator-currentbalance');
     var paymentAmount = $('#payment-calculator-paymentamount');

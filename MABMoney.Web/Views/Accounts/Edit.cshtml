@@ -22,7 +22,7 @@
     @Html.SubmitControlGroup("Save")
 }
 
-@using (Html.BeginForm("Delete", "Accounts", FormMethod.Post, new { @class = "form-horizontal" }))
+@using (Html.BeginForm("Delete", "Accounts", FormMethod.Post, new { @class = "form-horizontal delete-form" }))
 {
     <input type="hidden" name="id" value="@Model.AccountID" />
         
