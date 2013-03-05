@@ -129,6 +129,9 @@ div.heading-mimic {
 #mobile-tab-select {
   display: none;
 }
+.budget-graph {
+  margin-top: 2em;
+}
 @media (max-width: 1200px) {
   .nav-tabs.lge a {
     font-size: 1.3em;

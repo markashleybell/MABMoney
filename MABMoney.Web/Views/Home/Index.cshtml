@@ -52,7 +52,7 @@
 <ul class="nav nav-tabs lge" id="nav-tabs">
 
     @if(Model.Account.Type == AccountTypeDTO.Current) {
-    <li @Html.Raw((Model.Tab == DashboardTab.BudgetOrPaymentCalc) ? "class=\"active\"" : "")><a href="#budget" data-toggle="tab">Budget<span> @((Model.Budget != null) ? Model.Budget.Start.ToString("dd/MM/yy") + " - " + Model.Budget.End.ToString("dd/MM/yy") : "")</span></a></li>
+    <li @Html.Raw((Model.Tab == DashboardTab.BudgetOrPaymentCalc) ? "class=\"active\"" : "")><a href="#budget" data-toggle="tab">Budget<span></span></a></li>
     }
     @if (Model.Account.Type == AccountTypeDTO.CreditCard || Model.Account.Type == AccountTypeDTO.Loan) {
     <li @Html.Raw((Model.Tab == DashboardTab.BudgetOrPaymentCalc) ? "class=\"active\"" : "")><a href="#payment-calculator" data-toggle="tab">Payment Calculator</a></li>
@@ -88,6 +88,9 @@
     <!-- BEGIN INCOME TAB -->
 
     <div class="tab-pane@((Model.Tab == DashboardTab.Income) ? " active" : "")" id="income">
+
+        <h2>@((Model.Budget != null) ? Model.Budget.Start.ToString("dd/MM/yy") + " - " + Model.Budget.End.ToString("dd/MM/yy") : "")</h2>
+
         @using (Html.BeginForm("CreateTransaction", "Home")) {
             <div class="row">
                 <div class="span2">@Html.EditorFor(x => x.Date, new { @class = "input-block-level", placeholder = "Date" })</div>
@@ -145,6 +148,9 @@
     <!-- BEGIN EXPENSES TAB -->
 
     <div class="tab-pane@((Model.Tab == DashboardTab.Expenses) ? " active" : "")" id="expenses">
+
+        <h2>@((Model.Budget != null) ? Model.Budget.Start.ToString("dd/MM/yy") + " - " + Model.Budget.End.ToString("dd/MM/yy") : "")</h2>
+
         @using (Html.BeginForm("CreateTransaction", "Home")) {
             <div class="row">
                 <div class="span2">@Html.EditorFor(x => x.Date, new { @class = "input-block-level", placeholder = "Date" })</div>
@@ -202,6 +208,9 @@
     <!-- BEGIN TRANSFERS TAB -->
 
     <div class="tab-pane@((Model.Tab == DashboardTab.Transfers) ? " active" : "")" id="transfers">
+
+        <h2>@((Model.Budget != null) ? Model.Budget.Start.ToString("dd/MM/yy") + " - " + Model.Budget.End.ToString("dd/MM/yy") : "")</h2>
+
         @using (Html.BeginForm("CreateTransfer", "Home")) {
             <div class="row">
                 <div class="span2">@Html.EditorFor(x => x.Date, new { @class = "input-block-level", placeholder = "Date" })</div>
@@ -276,6 +285,9 @@
         }
 
         @if (Model.Budget != null) {
+            
+            <h2>@((Model.Budget != null) ? Model.Budget.Start.ToString("dd/MM/yy") + " - " + Model.Budget.End.ToString("dd/MM/yy") : "")</h2>
+            
             Html.RenderPartial("~/Views/Budgets/BudgetGraph.cshtml", Model.Budget.Category_Budgets);
         }
 

@@ -1,7 +1,8 @@
 ﻿@model IEnumerable<MABMoney.Services.DTO.Category_BudgetDTO>
 
 @if (Model != null) {
-    foreach (var category in Model.Where(x => x.Amount > 0 || x.Total > 0)) {
+    <div class="budget-graph">
+    @foreach (var category in Model.Where(x => x.Amount > 0 || x.Total > 0)) {
         var percentage = (category.Amount != 0) ? (category.Total / category.Amount * 100) : 0;
         var barwidth = (percentage != 0) ? (Math.Abs(percentage) / 2) : 0;
         if (barwidth > 100)
@@ -29,4 +30,5 @@
         </div>
     </div>
     }
+    </div>
 }
