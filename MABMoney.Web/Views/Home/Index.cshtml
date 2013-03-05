@@ -281,13 +281,15 @@
 
         <div class="row button-row">
             <div class="span3">
-                @if (Model.Budget != null) {
-                    @Html.ActionLink("Edit this budget", "Edit", "Budgets", new { id = Model.Budget.BudgetID }, new { @class = "btn btn-primary input-block-level" })
-                }
+                
             </div>
             <div class="span6">&nbsp;</div>
             <div class="span3">
-                @Html.ActionLink("Add a new budget", "Create", "Budgets", new { id = Model.Account_AccountID }, new { @class = "btn btn-primary input-block-level pull-right" })
+                @if (Model.Budget != null) {
+                    @Html.ActionLink("Edit this budget", "Edit", "Budgets", new { id = Model.Budget.BudgetID }, new { @class = "btn btn-primary input-block-level" })
+                } else {
+                    @Html.ActionLink("Add a new budget", "Create", "Budgets", new { id = Model.Account_AccountID }, new { @class = "btn btn-primary input-block-level pull-right" })
+                }
             </div>
         </div>
 
