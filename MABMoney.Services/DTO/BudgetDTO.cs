@@ -16,7 +16,7 @@ namespace MABMoney.Services.DTO
         public DateTime End { get; set; }
         [Required]
         public int Account_AccountID { get; set; }
-        public virtual AccountDTO Account { get; set; }
+        public AccountDTO Account { get; set; }
 
         public List<Category_BudgetDTO> Category_Budgets { get; set; }
     }

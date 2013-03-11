@@ -10,10 +10,10 @@ namespace MABMoney.Services.DTO
     {
         [Required]
         public int Budget_BudgetID { get; set; }
-        public virtual BudgetDTO Budget { get; set; }
+        public BudgetDTO Budget { get; set; }
         [Required]
         public int Category_CategoryID { get; set; }
-        public virtual CategoryDTO Category { get; set; }
+        public CategoryDTO Category { get; set; }
         [Required]
         public decimal Amount { get; set; }
 

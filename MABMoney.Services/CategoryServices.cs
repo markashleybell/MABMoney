@@ -60,13 +60,31 @@ namespace MABMoney.Services
             }
             else
             {
-                // Add the category
-                category = dto.MapTo<Category>();
-                _categories.Add(category);
-                _unitOfWork.Commit();
+                // Check if a category exactly matching this has previously been added and deleted by this person
+                var deleted = _categories.QueryDeleted(x => x.Name == dto.Name && x.Account_AccountID == dto.Account_AccountID && x.Type == (CategoryType)dto.Type)
+                                         .FirstOrDefault();
 
-                // Update the DTO with the new ID
-                dto.CategoryID = category.CategoryID;
+                if (deleted != null)
+                {
+                    // 'Undelete' the category
+                    deleted.Deleted = false;
+                    deleted.DeletedBy = null;
+                    deleted.DeletedDate = null;
+                    _unitOfWork.Commit();
+
+                    // Update the DTO with the new ID
+                    dto.CategoryID = deleted.CategoryID;
+                }
+                else
+                {
+                    // Add the category
+                    category = dto.MapTo<Category>();
+                    _categories.Add(category);
+                    _unitOfWork.Commit();
+
+                    // Update the DTO with the new ID
+                    dto.CategoryID = category.CategoryID;
+                }
             }
         }
 

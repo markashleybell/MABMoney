@@ -50,6 +50,26 @@ namespace MABMoney.Data
             _dbset.Remove(_dbset.Find(key));
         }
 
+        public virtual IQueryable<Type> AllDeleted()
+        {
+            return _dbset.Where(x => x.Deleted);
+        }
+
+        public virtual IQueryable<Type> QueryDeleted(Expression<Func<Type, bool>> filter)
+        {
+            return _dbset.Where(x => x.Deleted).Where(filter);
+        }
+
+        public virtual Type GetDeleted(KeyType key)
+        {
+            var result = _dbset.Find(key);
+
+            if (result == null || !result.Deleted)
+                return null;
+
+            return result;
+        }
+
         //public virtual IEnumerable<E> SqlQuery<E>(string sql, params object[] parameters)
         //{
         //    var paramList = new List<SqlParameter>();

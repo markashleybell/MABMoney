@@ -16,6 +16,7 @@ namespace MABMoney.Tests
     public class BudgetServicesTests
     {
         private IAccountServices _accountServices;
+        private ICategoryServices _categoryServices;
         private IRepository<Budget, int> _budgets;
         private IRepository<Account, int> _accounts;
         private IRepository<Category, int> _categories;
@@ -33,6 +34,15 @@ namespace MABMoney.Tests
                     Name = "Current",
                     StartingBalance = 100,
                     CurrentBalance = 100
+                }
+            };
+
+            var categoryDtos = new List<CategoryDTO> {
+                new CategoryDTO { 
+                    CategoryID = 1,
+                    Name = "Food",
+                    Account_AccountID = 1,
+                    Type = CategoryTypeDTO.Expense
                 }
             };
 
@@ -126,6 +136,10 @@ namespace MABMoney.Tests
             _accountServices.Stub(x => x.All()).Return(accountDtos);
             _accountServices.Stub(x => x.Get(1)).Return(accountDtos[0]);
 
+            _categoryServices = MockRepository.GenerateStub<ICategoryServices>();
+            _categoryServices.Stub(x => x.All()).Return(categoryDtos);
+            _categoryServices.Stub(x => x.Get(1)).Return(categoryDtos[0]);
+
             _budgets = MockRepository.GenerateStub<IRepository<Budget, int>>();
             _budgets.Stub(x => x.All()).Return(budgets.AsQueryable());
             _budgets.Stub(x => x.Get(1)).Return(budgets[0]);
@@ -154,7 +168,7 @@ namespace MABMoney.Tests
         [Test]
         public void Unallocated_Funds_Calculated_Correctly()
         {
-            var service = new BudgetServices(_budgets, _accounts, _categories, _categories_budgets, _transactions, _accountServices, _dateProvider, _unitOfWork);
+            var service = new BudgetServices(_budgets, _accounts, _categories, _categories_budgets, _transactions, _accountServices, _categoryServices, _dateProvider, _unitOfWork);
 
             var dto = service.Get(1);
 

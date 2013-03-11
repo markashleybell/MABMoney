@@ -17,12 +17,13 @@ namespace MABMoney.Services
         private IRepository<Category_Budget, int> _categories_budgets;
         private IRepository<Transaction, int> _transactions;
         private IAccountServices _accountServices;
+        private ICategoryServices _categoryServices;
         private IDateTimeProvider _dateProvider;
         private IUnitOfWork _unitOfWork;
 
         private int _userId;
 
-        public BudgetServices(IRepository<Budget, int> budgets, IRepository<Account, int> accounts, IRepository<Category, int> categories, IRepository<Category_Budget, int> categories_budgets, IRepository<Transaction, int> transactions, IAccountServices accountServices, IDateTimeProvider dateProvider, IUnitOfWork unitOfWork)
+        public BudgetServices(IRepository<Budget, int> budgets, IRepository<Account, int> accounts, IRepository<Category, int> categories, IRepository<Category_Budget, int> categories_budgets, IRepository<Transaction, int> transactions, IAccountServices accountServices, ICategoryServices categoryServices, IDateTimeProvider dateProvider, IUnitOfWork unitOfWork)
         {
             _budgets = budgets;
             _accounts = accounts;
@@ -30,6 +31,7 @@ namespace MABMoney.Services
             _categories_budgets = categories_budgets;
             _transactions = transactions;
             _accountServices = accountServices;
+            _categoryServices = categoryServices;
             _dateProvider = dateProvider;
             _unitOfWork = unitOfWork;
             _userId = unitOfWork.DataStore.UserID;
@@ -165,21 +167,9 @@ namespace MABMoney.Services
 
         public void SaveCategoryBudget(Category_BudgetDTO dto)
         {
-            var category = _categories.Query(x => x.CategoryID == dto.Category_CategoryID).FirstOrDefault();
+            _categoryServices.Save(dto.Category);
 
-            if (category == null)
-            {
-                category = dto.Category.MapTo<Category>();
-                _categories.Add(category);
-            }
-            else
-            {
-                dto.Category.MapTo(category);
-            }
-
-            _unitOfWork.Commit();
-
-            dto.Category_CategoryID = category.CategoryID;
+            dto.Category_CategoryID = dto.Category.CategoryID;
 
             var entity = _categories_budgets.Query(x => x.Budget.Account.User_UserID == _userId && x.Budget_BudgetID == dto.Budget_BudgetID && x.Category_CategoryID == dto.Category_CategoryID)
                                             .FirstOrDefault();
