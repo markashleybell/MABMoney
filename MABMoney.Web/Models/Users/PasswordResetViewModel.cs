@@ -7,7 +7,7 @@ using System.Web;
 
 namespace MABMoney.Web.Models.Users
 {
-    public class PasswordResetViewModel
+    public class PasswordResetViewModel : FormViewModel
     {
         // Hopefully no-one will ever try and enter more than 100 characters as their password...
         // [StringLength(100, MinimumLength = 6)]

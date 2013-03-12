@@ -10,7 +10,7 @@ using MABMoney.Web.Models.Budgets;
 
 namespace MABMoney.Web.Models.Home
 {
-    public class IndexViewModel
+    public class IndexViewModel : FormViewModel
     {
         public DateTime From { get; set; }
         public DateTime To { get; set; }

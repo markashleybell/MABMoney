@@ -15,9 +15,11 @@
 
     @Html.CheckboxControlGroupFor(x => x.RememberMe)
     
+    @Html.HiddenFor(x => x.RedirectAfterSubmitUrl)
+    
     @Html.SubmitControlGroup("Log In")
     
     <p>@Html.ActionLink("Forgot password?", "PasswordResetRequest")</p>
 }
 
-<p>@Html.ActionLink("Don't have an account? Click here to create one.", "Signup", "Home", null, new { @class = "btn" })</p>
+<p>@Html.ActionLink("Don't have an account? Click here to create one.", "Signup", "Users", null, new { @class = "btn" })</p>

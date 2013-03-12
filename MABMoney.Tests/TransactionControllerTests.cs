@@ -30,6 +30,7 @@ namespace MABMoney.Tests
         private ProfileViewModel _profile;
         private IDateTimeProvider _dateProvider;
         private ICacheProvider _cacheProvider;
+        private IUrlHelper _urlHelper;
 
         [SetUp]
         public void SetUp()
@@ -133,12 +134,14 @@ namespace MABMoney.Tests
 
             _dateProvider = MockRepository.GenerateStub<IDateTimeProvider>();
             _dateProvider.Stub(x => x.Now).Return(new DateTime(2020, 01, 01));
+
+            _urlHelper = new FakeUrlHelper();
         }
 
         [Test]
         public void Index_Get()
         {
-            var controller = new TransactionsController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider);
+            var controller = new TransactionsController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider, _urlHelper);
 
             var result = controller.Index(_profile) as ViewResult;
 
@@ -153,7 +156,7 @@ namespace MABMoney.Tests
         [Test]
         public void Create_Get()
         {
-            var controller = new TransactionsController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider);
+            var controller = new TransactionsController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider, _urlHelper);
 
             var result = controller.Create(_profile) as ViewResult;
 
@@ -172,7 +175,7 @@ namespace MABMoney.Tests
         [Test]
         public void Create_Post()
         {
-            var controller = new TransactionsController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider);
+            var controller = new TransactionsController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider, _urlHelper);
 
             var model = new CreateViewModel
             {
@@ -180,10 +183,11 @@ namespace MABMoney.Tests
                 Category_CategoryID = 1,
                 Date = new DateTime(2020, 12, 31),
                 Amount = -80M,
-                Description = "NEW TRANSACTION"
+                Description = "NEW TRANSACTION",
+                RedirectAfterSubmitUrl = "http://localhost"
             };
 
-            var result = controller.Create(_profile, model) as RedirectToRouteResult;
+            var result = controller.Create(_profile, model) as RedirectResult;
 
             result.ShouldNotBeNull();
 
@@ -201,7 +205,7 @@ namespace MABMoney.Tests
         [Test]
         public void Edit_Get()
         {
-            var controller = new TransactionsController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider);
+            var controller = new TransactionsController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider, _urlHelper);
 
             var result = controller.Edit(_profile, 2) as ViewResult;
 
@@ -221,7 +225,7 @@ namespace MABMoney.Tests
         [Test]
         public void Edit_Post()
         {
-            var controller = new TransactionsController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider);
+            var controller = new TransactionsController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider, _urlHelper);
 
             var model = new EditViewModel
             {
@@ -230,10 +234,11 @@ namespace MABMoney.Tests
                 Category_CategoryID = 3,
                 Date = new DateTime(2020, 12, 30),
                 Amount = -65M,
-                Description = "EDITED"
+                Description = "EDITED",
+                RedirectAfterSubmitUrl = "http://localhost"
             };
 
-            var result = controller.Edit(_profile, model) as RedirectToRouteResult;
+            var result = controller.Edit(_profile, model) as RedirectResult;
 
             result.ShouldNotBeNull();
 
@@ -252,9 +257,9 @@ namespace MABMoney.Tests
         [Test]
         public void Delete_Post()
         {
-            var controller = new TransactionsController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider);
+            var controller = new TransactionsController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider, _urlHelper);
 
-            var result = controller.Delete(_profile, 3) as RedirectToRouteResult;
+            var result = controller.Delete(_profile, 3, "/Transactions") as RedirectResult;
 
             result.ShouldNotBeNull();
 

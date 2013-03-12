@@ -9,7 +9,7 @@ using System.ComponentModel;
 
 namespace MABMoney.Web.Models.Accounts
 {
-    public class CreateViewModel
+    public class CreateViewModel : FormViewModel
     {
         [Required]
         [DisplayName("Account Name")]

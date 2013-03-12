@@ -8,7 +8,7 @@ using System.Web.Mvc;
 
 namespace MABMoney.Web.Models.Budgets
 {
-    public class CreateFromExistingBudgetViewModel
+    public class CreateFromExistingBudgetViewModel : FormViewModel
     {
         [Required]
         public DateTime Start { get; set; }

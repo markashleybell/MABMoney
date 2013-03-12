@@ -8,7 +8,7 @@ using System.Web.Mvc;
 
 namespace MABMoney.Web.Models.Transactions
 {
-    public class CreateViewModel
+    public class CreateViewModel : FormViewModel
     {
         [Required]
         public DateTime Date { get; set; }

@@ -8,7 +8,7 @@ using System.ComponentModel;
 
 namespace MABMoney.Web.Models.Users
 {
-    public class CreateViewModel
+    public class CreateViewModel : FormViewModel
     {
         [Required]
         public string Forename { get; set; }

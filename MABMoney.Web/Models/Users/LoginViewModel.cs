@@ -7,7 +7,7 @@ using System.Web;
 
 namespace MABMoney.Web.Models.Users
 {
-    public class LoginViewModel
+    public class LoginViewModel : FormViewModel
     {
         [Required]
         public string Email { get; set; }

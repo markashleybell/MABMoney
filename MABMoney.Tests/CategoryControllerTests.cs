@@ -30,6 +30,7 @@ namespace MABMoney.Tests
         private ProfileViewModel _profile;
         private IDateTimeProvider _dateProvider;
         private ICacheProvider _cacheProvider;
+        private IUrlHelper _urlHelper;
 
         [SetUp]
         public void SetUp()
@@ -105,12 +106,14 @@ namespace MABMoney.Tests
 
             _dateProvider = MockRepository.GenerateStub<IDateTimeProvider>();
             _dateProvider.Stub(x => x.Now).Return(new DateTime(2020, 01, 01));
+
+            _urlHelper = new FakeUrlHelper();
         }
 
         [Test]
         public void Index_Get()
         {
-            var controller = new CategoriesController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider);
+            var controller = new CategoriesController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider, _urlHelper);
 
             var result = controller.Index(_profile) as ViewResult;
 
@@ -128,7 +131,7 @@ namespace MABMoney.Tests
         [Test]
         public void Create_Get()
         {
-            var controller = new CategoriesController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider);
+            var controller = new CategoriesController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider, _urlHelper);
 
             var result = controller.Create(_profile) as ViewResult;
 
@@ -145,16 +148,17 @@ namespace MABMoney.Tests
         [Test]
         public void Create_Post()
         {
-            var controller = new CategoriesController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider);
+            var controller = new CategoriesController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider, _urlHelper);
 
             var model = new CreateViewModel
             {
                 Account_AccountID = 2,
                 Name = "New",
-                Type = CategoryTypeDTO.Income
+                Type = CategoryTypeDTO.Income,
+                RedirectAfterSubmitUrl = "http://localhost"
             };
 
-            var result = controller.Create(_profile, model) as RedirectToRouteResult;
+            var result = controller.Create(_profile, model) as RedirectResult;
 
             result.ShouldNotBeNull();
 
@@ -166,7 +170,7 @@ namespace MABMoney.Tests
         [Test]
         public void Edit_Get()
         {
-            var controller = new CategoriesController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider);
+            var controller = new CategoriesController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider, _urlHelper);
 
             var result = controller.Edit(_profile, 2) as ViewResult;
 
@@ -184,17 +188,18 @@ namespace MABMoney.Tests
         [Test]
         public void Edit_Post()
         {
-            var controller = new CategoriesController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider);
+            var controller = new CategoriesController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider, _urlHelper);
 
             var model = new EditViewModel
             {
                 CategoryID = 10,
                 Account_AccountID = 2,
                 Name = "EDITED",
-                Type = CategoryTypeDTO.Expense
+                Type = CategoryTypeDTO.Expense,
+                RedirectAfterSubmitUrl = "http://localhost"
             };
 
-            var result = controller.Edit(_profile, model) as RedirectToRouteResult;
+            var result = controller.Edit(_profile, model) as RedirectResult;
 
             result.ShouldNotBeNull();
 
@@ -206,9 +211,9 @@ namespace MABMoney.Tests
         [Test]
         public void Delete_Post()
         {
-            var controller = new CategoriesController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider);
+            var controller = new CategoriesController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider, _urlHelper);
 
-            var result = controller.Delete(_profile, 2) as RedirectToRouteResult;
+            var result = controller.Delete(_profile, 2, "/Categories") as RedirectResult;
 
             result.ShouldNotBeNull();
 

@@ -181,12 +181,14 @@
     <Compile Include="Infrastructure\ICacheProvider.cs" />
     <Compile Include="Infrastructure\ICryptoProvider.cs" />
     <Compile Include="Infrastructure\ISiteConfiguration.cs" />
+    <Compile Include="Infrastructure\IUrlHelper.cs" />
     <Compile Include="Infrastructure\MemcachedCacheProvider.cs" />
     <Compile Include="Infrastructure\ProfileModelBinder.cs" />
     <Compile Include="Infrastructure\RequireHttpsAttribute.cs" />
     <Compile Include="Infrastructure\ServiceResolverAdapter.cs" />
     <Compile Include="Infrastructure\SiteConfiguration.cs" />
     <Compile Include="Infrastructure\UnityDependencyResolver.cs" />
+    <Compile Include="Infrastructure\UrlHelperAdapter.cs" />
     <Compile Include="Models\Accounts\CreateViewModel.cs" />
     <Compile Include="Models\Accounts\EditViewModel.cs" />
     <Compile Include="Models\Accounts\IndexViewModel.cs" />
@@ -196,10 +198,11 @@
     <Compile Include="Models\Categories\CreateViewModel.cs" />
     <Compile Include="Models\Categories\EditViewModel.cs" />
     <Compile Include="Models\Categories\IndexViewModel.cs" />
+    <Compile Include="Models\FormViewModel.cs" />
     <Compile Include="Models\Home\DashboardTab.cs" />
     <Compile Include="Models\Home\MainNavigationViewModel.cs" />
     <Compile Include="Models\Home\MoreTransactionsViewModel.cs" />
-    <Compile Include="Models\Home\SignupViewModel.cs" />
+    <Compile Include="Models\Users\SignupViewModel.cs" />
     <Compile Include="Models\Home\TransactionType.cs" />
     <Compile Include="Models\Transactions\CreateViewModel.cs" />
     <Compile Include="Models\Transactions\EditViewModel.cs" />
@@ -214,6 +217,7 @@
     <Compile Include="Models\Users\IndexViewModel.cs" />
     <Compile Include="Models\Users\LoginViewModel.cs" />
     <Compile Include="Models\ProfileViewModel.cs" />
+    <Compile Include="Models\Users\PasswordResetRequestViewModel.cs" />
     <Compile Include="Models\Users\PasswordResetViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -386,7 +390,7 @@
     <Content Include="Views\Home\MainNavigation.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Home\Signup.cshtml" />
+    <Content Include="Views\Users\Signup.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Users\PasswordResetRequest.cshtml" />
@@ -408,6 +412,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Budgets\BudgetGraph.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Users\PasswordResetComplete.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

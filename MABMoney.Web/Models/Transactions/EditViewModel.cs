@@ -8,7 +8,7 @@ using System.ComponentModel;
 
 namespace MABMoney.Web.Models.Transactions
 {
-    public class EditViewModel
+    public class EditViewModel : FormViewModel
     {
         [Required]
         [HiddenInput(DisplayValue = false)]

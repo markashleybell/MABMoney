@@ -6,7 +6,7 @@ using System.Web.Mvc;
 
 namespace MABMoney.Web.Models.Transactions
 {
-    public class ImportViewModel
+    public class ImportViewModel : FormViewModel
     {
         public HttpPostedFileBase File { get; set; }
         public int RecordsImported { get; set; }

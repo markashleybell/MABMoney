@@ -24,15 +24,17 @@ namespace MABMoney.Web.Controllers
                                     HttpContextBase context,
                                     ISiteConfiguration config,
                                     IDateTimeProvider dateProvider,
-                                    ICacheProvider cacheProvider) : base(userServices,
-                                                                         accountServices,
-                                                                         categoryServices,
-                                                                         transactionServices, 
-                                                                         budgetServices,
-                                                                         context,
-                                                                         config,
-                                                                         dateProvider,
-                                                                         cacheProvider) { }
+                                    ICacheProvider cacheProvider,
+                                    IUrlHelper urlHelper) : base(userServices,
+                                                                 accountServices,
+                                                                 categoryServices,
+                                                                 transactionServices, 
+                                                                 budgetServices,
+                                                                 context,
+                                                                 config,
+                                                                 dateProvider,
+                                                                 cacheProvider,
+                                                                 urlHelper) { }
 
         //
         // GET: /Account/
@@ -51,7 +53,8 @@ namespace MABMoney.Web.Controllers
         {
             return View(new CreateViewModel {
                 CategoryTypes = DataHelpers.GetCategoryTypeSelectOptions(),
-                Accounts = DataHelpers.GetAccountSelectOptions(_accountServices)
+                Accounts = DataHelpers.GetAccountSelectOptions(_accountServices),
+                RedirectAfterSubmitUrl = _url.Action("Index")
             });
         }
 
@@ -71,7 +74,7 @@ namespace MABMoney.Web.Controllers
             var dto = model.MapTo<CategoryDTO>();
             _categoryServices.Save(dto);
 
-            return RedirectToAction("Index");
+            return Redirect(model.RedirectAfterSubmitUrl);
         }
 
         //
@@ -82,6 +85,7 @@ namespace MABMoney.Web.Controllers
             var model = _categoryServices.Get(id).MapTo<EditViewModel>();
             model.Accounts = DataHelpers.GetAccountSelectOptions(_accountServices);model.CategoryTypes = DataHelpers.GetCategoryTypeSelectOptions();
             model.CategoryTypes = DataHelpers.GetCategoryTypeSelectOptions();
+            model.RedirectAfterSubmitUrl = _url.Action("Index");
             return View(model);
         }
 
@@ -101,17 +105,17 @@ namespace MABMoney.Web.Controllers
             var dto = model.MapTo<CategoryDTO>();
             _categoryServices.Save(dto);
 
-            return RedirectToAction("Index");
+            return Redirect(model.RedirectAfterSubmitUrl);
         }
 
         //
         // POST: /Account/Delete/5
         [Authenticate]
         [HttpPost]
-        public ActionResult Delete(ProfileViewModel profile, int id)
+        public ActionResult Delete(ProfileViewModel profile, int id, string redirectAfterSubmitUrl)
         {
             _categoryServices.Delete(id);
-            return RedirectToAction("Index");
+            return Redirect(redirectAfterSubmitUrl);
         }
     }
 }

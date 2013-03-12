@@ -25,15 +25,17 @@ namespace MABMoney.Web.Controllers
                                   HttpContextBase context,
                                   ISiteConfiguration config,
                                   IDateTimeProvider dateProvider,
-                                  ICacheProvider cacheProvider) : base(userServices,
-                                                                       accountServices,
-                                                                       categoryServices,
-                                                                       transactionServices, 
-                                                                       budgetServices,
-                                                                       context,
-                                                                       config,
-                                                                       dateProvider,
-                                                                       cacheProvider) { }
+                                  ICacheProvider cacheProvider,
+                                  IUrlHelper urlHelper) : base(userServices,
+                                                               accountServices,
+                                                               categoryServices,
+                                                               transactionServices, 
+                                                               budgetServices,
+                                                               context,
+                                                               config,
+                                                               dateProvider,
+                                                               cacheProvider,
+                                                               urlHelper) { }
 
         //
         // GET: /Account/
@@ -54,7 +56,8 @@ namespace MABMoney.Web.Controllers
 
             var model = new CreateViewModel {
                 AccountTypes = DataHelpers.GetAccountTypeSelectOptions(),
-                Default = (accounts.Count() == 0) ? true : false
+                Default = (accounts.Count() == 0) ? true : false,
+                RedirectAfterSubmitUrl = _url.Action("Index")
             };
 
             if (accounts.Count() == 0)
@@ -81,6 +84,7 @@ namespace MABMoney.Web.Controllers
             var pageState = EncryptionHelpers.EncryptStringAES(dto.AccountID + "-" + MABMoney.Web.Models.Home.TransactionType.Expense + "-" + MABMoney.Web.Models.Home.DashboardTab.BudgetOrPaymentCalc, _config.SharedSecret);
             var encodedPageState = HttpServerUtility.UrlTokenEncode(Encoding.UTF8.GetBytes(pageState));
 
+            // TODO: This doesn't respect RedirectAfterSubmitUrl, should it?
             return RedirectToRoute("Home", new { state = encodedPageState });
         }
 
@@ -91,6 +95,7 @@ namespace MABMoney.Web.Controllers
         {
             var model = _accountServices.Get(id).MapTo<EditViewModel>();
             model.AccountTypes = DataHelpers.GetAccountTypeSelectOptions();
+            model.RedirectAfterSubmitUrl = _url.Action("Index");
             return View(model);
         }
 
@@ -109,17 +114,17 @@ namespace MABMoney.Web.Controllers
             var dto = model.MapTo<AccountDTO>();
             _accountServices.Save(dto);
 
-            return RedirectToAction("Index");
+            return Redirect(model.RedirectAfterSubmitUrl);
         }
 
         //
         // POST: /Account/Delete/5
         [Authenticate]
         [HttpPost]
-        public ActionResult Delete(ProfileViewModel profile, int id)
+        public ActionResult Delete(ProfileViewModel profile, int id, string redirectAfterSubmitUrl)
         {
             _accountServices.Delete(id);
-            return RedirectToAction("Index");
+            return Redirect(redirectAfterSubmitUrl);
         }
 
         //

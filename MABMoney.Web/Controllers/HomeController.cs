@@ -26,15 +26,17 @@ namespace MABMoney.Web.Controllers
                               HttpContextBase context,
                               ISiteConfiguration config,
                               IDateTimeProvider dateProvider,
-                              ICacheProvider cacheProvider) : base(userServices,
-                                                                   accountServices,
-                                                                   categoryServices,
-                                                                   transactionServices, 
-                                                                   budgetServices,
-                                                                   context,
-                                                                   config,
-                                                                   dateProvider,
-                                                                   cacheProvider) { }
+                              ICacheProvider cacheProvider,
+                              IUrlHelper urlHelper) : base(userServices,
+                                                           accountServices,
+                                                           categoryServices,
+                                                           transactionServices, 
+                                                           budgetServices,
+                                                           context,
+                                                           config,
+                                                           dateProvider,
+                                                           cacheProvider,
+                                                           urlHelper) { }
 
         private TransactionType GetDefaultTransactionTypeForAccount(AccountDTO account)
         {
@@ -268,27 +270,6 @@ namespace MABMoney.Web.Controllers
             var encodedPageState = HttpServerUtility.UrlTokenEncode(Encoding.UTF8.GetBytes(pageState));
 
             return RedirectToRoute("Home", new { state = encodedPageState });
-        }
-
-        public ActionResult Signup(ProfileViewModel profile)
-        {
-            return View(new SignupViewModel());
-        }
-
-        [HttpPost]
-        public ActionResult Signup(ProfileViewModel profile, SignupViewModel model)
-        {
-            if (!ModelState.IsValid)
-                return View(model);
-
-            var dto = model.MapTo<UserDTO>();
-            _userServices.Save(dto);
-
-            // Encrypt the ID before storing it in a cookie
-            var encryptedUserId = EncryptionHelpers.EncryptStringAES(dto.UserID.ToString(), _config.SharedSecret);
-            _context.Response.Cookies.Add(new HttpCookie(_config.CookieKey, encryptedUserId));
-
-            return RedirectToAction("Index");
         }
 
         public ActionResult MainNavigation(ProfileViewModel profile)

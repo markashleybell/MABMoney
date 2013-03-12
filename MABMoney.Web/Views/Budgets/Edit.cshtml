@@ -26,12 +26,16 @@
     
     @Html.HiddenFor(x => x.BudgetID)
 
+    @Html.HiddenFor(x => x.RedirectAfterSubmitUrl)
+
     @Html.SubmitControlGroup("Save")
 }
 
 @using (Html.BeginForm("Delete", "Budgets", FormMethod.Post, new { @class = "form-horizontal delete-form" }))
 {
     <input type="hidden" name="id" value="@Model.BudgetID" />
+    
+    <input type="hidden" name="RedirectAfterSubmitUrl" value="@Model.RedirectAfterSubmitUrl" />
     
     @Html.ButtonControlGroup("Delete")
 }

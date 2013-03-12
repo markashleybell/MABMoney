@@ -9,7 +9,7 @@ using MABMoney.Services.DTO;
 
 namespace MABMoney.Web.Models.Categories
 {
-    public class CreateViewModel
+    public class CreateViewModel : FormViewModel
     {
         [Required]
         public string Name { get; set; }

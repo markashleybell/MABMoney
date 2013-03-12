@@ -19,5 +19,7 @@
     
     @Html.SelectControlGroupFor(x => x.Account_AccountID, Model.Accounts, "Please select...")
 
+    @Html.HiddenFor(x => x.RedirectAfterSubmitUrl)
+    
     @Html.SubmitControlGroup("Save")
 }

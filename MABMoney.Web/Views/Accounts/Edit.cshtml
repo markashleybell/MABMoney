@@ -18,6 +18,8 @@
     @Html.SelectControlGroupFor(x => x.Type, Model.AccountTypes, "Please select...")
 
     @Html.HiddenFor(x => x.AccountID)
+
+    @Html.HiddenFor(x => x.RedirectAfterSubmitUrl)
     
     @Html.SubmitControlGroup("Save")
 }
@@ -25,6 +27,8 @@
 @using (Html.BeginForm("Delete", "Accounts", FormMethod.Post, new { @class = "form-horizontal delete-form" }))
 {
     <input type="hidden" name="id" value="@Model.AccountID" />
+    
+    <input type="hidden" name="RedirectAfterSubmitUrl" value="@Model.RedirectAfterSubmitUrl" />
         
     @Html.ButtonControlGroup("Delete")
 }

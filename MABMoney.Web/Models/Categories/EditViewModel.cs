@@ -9,7 +9,7 @@ using MABMoney.Services.DTO;
 
 namespace MABMoney.Web.Models.Categories
 {
-    public class EditViewModel
+    public class EditViewModel : FormViewModel
     {
         [Required]
         [HiddenInput(DisplayValue = false)]

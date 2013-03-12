@@ -19,5 +19,7 @@
 
     @Html.PasswordControlGroupFor(x => x.ConfirmPassword)
 
+    @Html.HiddenFor(x => x.RedirectAfterSubmitUrl)
+
     @Html.SubmitControlGroup("Save")
 }

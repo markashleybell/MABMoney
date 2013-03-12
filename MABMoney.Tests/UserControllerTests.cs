@@ -29,6 +29,7 @@ namespace MABMoney.Tests
         private HttpCookieCollection _cookies;
         private IDateTimeProvider _dateProvider;
         private ICacheProvider _cacheProvider;
+        private IUrlHelper _urlHelper;
 
         [SetUp]
         public void SetUp()
@@ -80,12 +81,14 @@ namespace MABMoney.Tests
 
             _dateProvider = MockRepository.GenerateStub<IDateTimeProvider>();
             _dateProvider.Stub(x => x.Now).Return(new DateTime(2020, 01, 01));
+
+            _urlHelper = new FakeUrlHelper();
         }    
 
         [Test]
         public void Index_Get()
         {
-            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider, _crypto);
+            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider, _crypto, _urlHelper);
 
             var result = controller.Index() as ViewResult;
             
@@ -110,7 +113,7 @@ namespace MABMoney.Tests
         [Test]
         public void Create_Get()
         {
-            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider, _crypto);
+            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider, _crypto, _urlHelper);
 
             var result = controller.Create() as ViewResult;
 
@@ -127,15 +130,16 @@ namespace MABMoney.Tests
         [Test]
         public void Create_Post()
         {
-            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider, _crypto);
+            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider, _crypto, _urlHelper);
 
             var model = new CreateViewModel {
                 Forename = "Test",
                 Surname = "User",
-                Email = "test@test.com"
+                Email = "test@test.com",
+                RedirectAfterSubmitUrl = "/"
             };
 
-            var result = controller.Create(model) as RedirectToRouteResult;
+            var result = controller.Create(model) as RedirectResult;
             
             _userServices.AssertWasCalled(x => x.Save(Arg<UserDTO>.Matches(o => o.Forename == "Test" && o.Surname == "User" && o.Email == "test@test.com")));
 
@@ -145,7 +149,7 @@ namespace MABMoney.Tests
         [Test]
         public void Edit_Get()
         {
-            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider, _crypto);
+            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider, _crypto, _urlHelper);
 
             var result = controller.Edit(1) as ViewResult;
 
@@ -162,16 +166,17 @@ namespace MABMoney.Tests
         [Test]
         public void Edit_Post()
         {
-            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider, _crypto);
+            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider, _crypto, _urlHelper);
 
             var model = new EditViewModel {
                 UserID = 1,
                 Forename = "Test",
                 Surname = "User",
-                Email = "test@test.com"
+                Email = "test@test.com",
+                RedirectAfterSubmitUrl = "/"
             };
 
-            var result = controller.Edit(model) as RedirectToRouteResult;
+            var result = controller.Edit(model) as RedirectResult;
             
             _userServices.AssertWasCalled(x => x.Save(Arg<UserDTO>.Matches(o => o.Forename == "Test" && o.Surname == "User" && o.Email == "test@test.com")));
 
@@ -181,9 +186,9 @@ namespace MABMoney.Tests
         [Test]
         public void Delete_Post()
         {
-            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider, _crypto);
+            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider, _crypto, _urlHelper);
 
-            var result = controller.Delete(2) as RedirectToRouteResult;
+            var result = controller.Delete(2, "/Users") as RedirectResult;
             
             _userServices.AssertWasCalled(x => x.Delete(Arg<int>.Is.Equal(2)));
 
@@ -193,7 +198,7 @@ namespace MABMoney.Tests
         [Test]
         public void Login_Get()
         {
-            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider, _crypto);
+            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider, _crypto, _urlHelper);
 
             var result = controller.Login() as ViewResult;
 
@@ -209,14 +214,15 @@ namespace MABMoney.Tests
         [Test]
         public void Login_Post()
         {
-            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider, _crypto);
+            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider, _crypto, _urlHelper);
 
             var model = new LoginViewModel {
                 Email = "jane@jane.com",
-                Password = "test123"
+                Password = "test123",
+                RedirectAfterSubmitUrl = "/"
             };
 
-            var result = controller.Login(model) as RedirectToRouteResult;
+            var result = controller.Login(model) as RedirectResult;
             
             _userServices.AssertWasCalled(x => x.GetByEmailAddress(model.Email));
 
@@ -230,7 +236,7 @@ namespace MABMoney.Tests
         [Test]
         public void Logout_Get()
         {
-            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider, _crypto);
+            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider, _crypto, _urlHelper);
 
             var result = controller.Logout() as RedirectToRouteResult;
 

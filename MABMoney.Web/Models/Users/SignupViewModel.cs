@@ -5,9 +5,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
-namespace MABMoney.Web.Models.Home
+namespace MABMoney.Web.Models.Users
 {
-    public class SignupViewModel
+    public class SignupViewModel : FormViewModel
     {
         public string Forename { get; set; }
         public string Surname { get; set; }

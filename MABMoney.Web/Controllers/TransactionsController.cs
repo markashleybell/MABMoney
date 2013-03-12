@@ -25,15 +25,17 @@ namespace MABMoney.Web.Controllers
                                       HttpContextBase context,
                                       ISiteConfiguration config,
                                       IDateTimeProvider dateProvider,
-                                      ICacheProvider cacheProvider) : base(userServices,
-                                                                           accountServices,
-                                                                           categoryServices,
-                                                                           transactionServices, 
-                                                                           budgetServices,
-                                                                           context,
-                                                                           config,
-                                                                           dateProvider,
-                                                                           cacheProvider) { }
+                                      ICacheProvider cacheProvider,
+                                      IUrlHelper urlHelper) : base(userServices,
+                                                                   accountServices,
+                                                                   categoryServices,
+                                                                   transactionServices, 
+                                                                   budgetServices,
+                                                                   context,
+                                                                   config,
+                                                                   dateProvider,
+                                                                   cacheProvider,
+                                                                   urlHelper) { }
 
         //
         // GET: /Transaction/
@@ -64,7 +66,8 @@ namespace MABMoney.Web.Controllers
             return View(new CreateViewModel {
                 Categories = DataHelpers.GetCategorySelectOptions(_categoryServices),
                 Accounts = DataHelpers.GetAccountSelectOptions(_accountServices),
-                Date = _dateProvider.Now
+                Date = _dateProvider.Now,
+                RedirectAfterSubmitUrl = _url.Action("Index")
             });
         }
 
@@ -84,7 +87,7 @@ namespace MABMoney.Web.Controllers
             var dto = model.MapTo<TransactionDTO>();
             _transactionServices.Save(dto);
 
-            return RedirectToAction("Index");
+            return Redirect(model.RedirectAfterSubmitUrl);
         }
 
         //
@@ -95,6 +98,7 @@ namespace MABMoney.Web.Controllers
             var model = _transactionServices.Get(id).MapTo<EditViewModel>();
             model.Categories = DataHelpers.GetCategorySelectOptions(_categoryServices);
             model.Accounts = DataHelpers.GetAccountSelectOptions(_accountServices);
+            model.RedirectAfterSubmitUrl = _url.Action("Index");
             return View(model);
         }
 
@@ -114,24 +118,25 @@ namespace MABMoney.Web.Controllers
             var dto = model.MapTo<TransactionDTO>();
             _transactionServices.Save(dto);
 
-            return RedirectToAction("Index");
+            return Redirect(model.RedirectAfterSubmitUrl);
         }
 
         //
         // POST: /Transaction/Delete/5
         [Authenticate]
         [HttpPost]
-        public ActionResult Delete(ProfileViewModel profile, int id)
+        public ActionResult Delete(ProfileViewModel profile, int id, string redirectAfterSubmitUrl)
         {
             _transactionServices.Delete(id);
-            return RedirectToAction("Index");
+            return Redirect(redirectAfterSubmitUrl);
         }
 
         [Authenticate]
         public ActionResult Import(ProfileViewModel profile)
         {
             return View(new ImportViewModel { 
-                Accounts = DataHelpers.GetAccountSelectOptions(_accountServices)
+                Accounts = DataHelpers.GetAccountSelectOptions(_accountServices),
+                RedirectAfterSubmitUrl = _url.Action("Index")
             });
         }
 

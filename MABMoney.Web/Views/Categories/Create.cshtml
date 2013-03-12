@@ -15,5 +15,7 @@
 
     @Html.SelectControlGroupFor(x => x.Type, Model.CategoryTypes, "Please select...")
     
+    @Html.HiddenFor(x => x.RedirectAfterSubmitUrl)
+    
     @Html.SubmitControlGroup("Save")
 }

@@ -77,6 +77,7 @@ namespace MABMoney.Web
                      .RegisterType<IDateTimeProvider, DateTimeProvider>(new InjectionFactory(c => new DateTimeProvider(() => DateTime.Now)))
                      .RegisterType<IDataStoreFactory>(new InjectionFactory(c => new DataStoreFactory((HttpContext.Current.Request.Cookies[cookieKey] != null) ? Convert.ToInt32(EncryptionHelpers.DecryptStringAES(HttpContext.Current.Request.Cookies[cookieKey].Value, sharedSecret)) : -1, new DateTimeProvider(() => DateTime.Now))))
                      .RegisterType<ICryptoProvider>(new InjectionFactory(c => new CryptoWrapper()))
+                     .RegisterType<IUrlHelper>(new InjectionFactory(c => new UrlHelperAdapter(new UrlHelper(HttpContext.Current.Request.RequestContext))))
                      .RegisterType<HttpContextBase>(new InjectionFactory(c => new HttpContextWrapper(HttpContext.Current)))
                      .RegisterType<ISiteConfiguration>(new InjectionFactory(c => new SiteConfiguration(sharedSecret, cookieKey, noReplyEmailAddress, noReplyEmailDisplayName, siteUrl)))
                      .RegisterInstance<ICacheProvider>(new MemcachedCacheProvider(memcachedConfiguration));
@@ -106,7 +107,7 @@ namespace MABMoney.Web
 
             ICryptoProvider _crypto = new CryptoWrapper();
 
-            Mapper.AddMapping<MABMoney.Web.Models.Home.SignupViewModel, MABMoney.Services.DTO.UserDTO>((s, d) =>
+            Mapper.AddMapping<MABMoney.Web.Models.Users.SignupViewModel, MABMoney.Services.DTO.UserDTO>((s, d) =>
             {
                 d.Forename = s.Forename;
                 d.Surname = s.Surname;

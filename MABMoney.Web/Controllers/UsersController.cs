@@ -29,15 +29,17 @@ namespace MABMoney.Web.Controllers
                                ISiteConfiguration config,
                                IDateTimeProvider dateProvider,
                                ICacheProvider cacheProvider,
-                               ICryptoProvider crypto) : base(userServices,
-                                                              accountServices,
-                                                              categoryServices,
-                                                              transactionServices, 
-                                                              budgetServices,
-                                                              context,
-                                                              config,
-                                                              dateProvider,
-                                                              cacheProvider) 
+                               ICryptoProvider crypto,
+                               IUrlHelper urlHelper) : base(userServices,
+                                                            accountServices,
+                                                            categoryServices,
+                                                            transactionServices, 
+                                                            budgetServices,
+                                                            context,
+                                                            config,
+                                                            dateProvider,
+                                                            cacheProvider,
+                                                            urlHelper) 
         {
             _crypto = crypto;
         }
@@ -57,7 +59,9 @@ namespace MABMoney.Web.Controllers
         [Authenticate]
         public ActionResult Create()
         {
-            return View(new CreateViewModel());
+            return View(new CreateViewModel {
+                RedirectAfterSubmitUrl = _url.Action("Index")
+            });
         }
 
         //
@@ -72,7 +76,7 @@ namespace MABMoney.Web.Controllers
             var dto = model.MapTo<UserDTO>();
             _userServices.Save(dto);
 
-            return RedirectToAction("Index");
+            return Redirect(model.RedirectAfterSubmitUrl);
         }
 
         //
@@ -81,6 +85,7 @@ namespace MABMoney.Web.Controllers
         public ActionResult Edit(int id)
         {
             var model = _userServices.Get(id).MapTo<EditViewModel>();
+            model.RedirectAfterSubmitUrl = _url.Action("Index");
             return View(model);
         }
 
@@ -96,22 +101,48 @@ namespace MABMoney.Web.Controllers
             var dto = model.MapTo<UserDTO>();
             _userServices.Save(dto);
 
-            return RedirectToAction("Index");
+            return Redirect(model.RedirectAfterSubmitUrl);
         }
 
         //
         // POST: /Users/Delete/5
         [Authenticate]
         [HttpPost]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(int id, string redirectAfterSubmitUrl)
         {
             _userServices.Delete(id);
-            return RedirectToAction("Index");
+
+            return Redirect(redirectAfterSubmitUrl);
+        }
+
+        public ActionResult Signup()
+        {
+            return View(new SignupViewModel { 
+                RedirectAfterSubmitUrl = _url.Action("Index", "Home")
+            });
+        }
+
+        [HttpPost]
+        public ActionResult Signup(SignupViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var dto = model.MapTo<UserDTO>();
+            _userServices.Save(dto);
+
+            // Encrypt the ID before storing it in a cookie
+            var encryptedUserId = EncryptionHelpers.EncryptStringAES(dto.UserID.ToString(), _config.SharedSecret);
+            _context.Response.Cookies.Add(new HttpCookie(_config.CookieKey, encryptedUserId));
+
+            return Redirect(model.RedirectAfterSubmitUrl);
         }
 
         public ActionResult Login()
         {
-            return View(new LoginViewModel());
+            return View(new LoginViewModel { 
+                RedirectAfterSubmitUrl = _url.Action("Index", "Home")
+            });
         }
 
         [HttpPost]
@@ -133,7 +164,7 @@ namespace MABMoney.Web.Controllers
                 cookie.Expires = _dateProvider.Now.AddDays(7);
             _context.Response.Cookies.Add(cookie);
 
-            return RedirectToAction("Index", "Home");
+            return Redirect(model.RedirectAfterSubmitUrl);
         }
 
         [HttpGet]
@@ -142,18 +173,22 @@ namespace MABMoney.Web.Controllers
             var cookie = new HttpCookie(_config.CookieKey, "");
             cookie.Expires = _dateProvider.Now.AddDays(-1);
             _context.Response.Cookies.Add(cookie);
+
+            // TODO: Is there ever going to be a need to define this on the fly with RedirectAfterSubmitUrl?
             return RedirectToAction("Login");
         }
 
         public ActionResult PasswordResetRequest()
         {
-            return View();
+            return View(new PasswordResetRequestViewModel { 
+                RedirectAfterSubmitUrl = _url.Action("PasswordResetRequestSent")
+            });
         }
 
         [HttpPost]
-        public ActionResult PasswordResetRequest(string userEmail)
+        public ActionResult PasswordResetRequest(PasswordResetRequestViewModel model)
         {
-            var user = _userServices.GetByEmailAddress(userEmail);
+            var user = _userServices.GetByEmailAddress(model.Email);
 
             if (user != null)
             {
@@ -186,7 +221,7 @@ namespace MABMoney.Web.Controllers
                 smtp.Send(msg);
             }
 
-            return RedirectToAction("PasswordResetRequestSent");
+            return Redirect(model.RedirectAfterSubmitUrl);
         }
 
         public ActionResult PasswordResetRequestSent()
@@ -202,7 +237,8 @@ namespace MABMoney.Web.Controllers
                 return View("PasswordResetRequestExpired");
 
             return View(new PasswordResetViewModel { 
-                GUID = id
+                GUID = id,
+                RedirectAfterSubmitUrl = _url.Action("PasswordResetComplete")
             });
         }
 
@@ -220,7 +256,12 @@ namespace MABMoney.Web.Controllers
 
             _userServices.Save(user);
 
-            return RedirectToAction("Login");
+            return Redirect(model.RedirectAfterSubmitUrl);
+        }
+
+        public ActionResult PasswordResetComplete()
+        {
+            return View();
         }
     }
 }
