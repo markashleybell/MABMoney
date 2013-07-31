@@ -1,4 +1,5 @@
 ﻿@using StackExchange.Profiling;
+@using System.Configuration;
 <!DOCTYPE html>
 <html>
     <head>
@@ -12,7 +13,7 @@
         </style>
         @Styles.Render("~/Content/Css/base")
     </head>
-    <body>
+    <body@(Html.Raw((Convert.ToBoolean(ConfigurationManager.AppSettings["Staging"])) ? " id=\"staging\"" : ""))>
         @{ Html.RenderAction("MainNavigation", "Home"); }
         <div class="container">
         @RenderBody()
@@ -20,5 +21,5 @@
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
         @Scripts.Render("~/Content/Js/base")
         @MiniProfiler.RenderIncludes(position: RenderPosition.Right, useExistingjQuery: true)
-    </body>
+    </body@Html.Raw())>
 </html>
