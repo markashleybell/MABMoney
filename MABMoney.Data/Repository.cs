@@ -30,6 +30,16 @@ namespace MABMoney.Data
             return _dbset.Where(x => !x.Deleted).Where(filter);
         }
 
+        public virtual IQueryable<Type> QueryWithIncludes(Expression<Func<Type, bool>> filter, params string[] includes)
+        {
+            var results = _dbset.AsQueryable();
+
+            foreach (var include in includes)
+                results = results.Include(include);
+
+            return results.Where(x => !x.Deleted).Where(filter);
+        }
+
         public virtual Type Get(KeyType key)
         {
             var result = _dbset.Find(key);

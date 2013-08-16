@@ -10,6 +10,7 @@ namespace MABMoney.Data
     {
         IQueryable<Type> All();
         IQueryable<Type> Query(Expression<Func<Type, bool>> filter);
+        IQueryable<Type> QueryWithIncludes(Expression<Func<Type, bool>> filter, params string[] includes);
         Type Get(KeyType key);
         
         void Add(Type entity);

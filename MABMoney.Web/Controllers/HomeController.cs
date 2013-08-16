@@ -53,23 +53,6 @@ namespace MABMoney.Web.Controllers
         {
             var user = _userServices.Get(userId);
 
-            string debug = null;
-
-            //var key = "ACCOUNT_DTO_" + userId;
-            //AccountDTO account = _cacheProvider.Get<AccountDTO>(key);
-
-            //if (account == null)
-            //{
-            //    account = _accountServices.Get(((accountId.HasValue) ? accountId.Value : user.Accounts.First().AccountID));
-            //    var set = _cacheProvider.Set(key, account);
-
-            //    debug = key + ": NOT IN CACHE, " + ((set) ? "SET" : "FAILED TO SET");
-            //}
-            //else
-            //{
-            //    debug = key + ": RETRIEVED FROM CACHE";
-            //}
-
             // If no account ID has been passed in
             if (!accountId.HasValue)
             {
@@ -90,6 +73,23 @@ namespace MABMoney.Web.Controllers
                     accountId = defaultAccount.AccountID;
                 }
             }
+
+            string debug = null;
+
+            //var key = "ACCOUNT_DTO_" + userId;
+            //AccountDTO account = _cacheProvider.Get<AccountDTO>(key);
+
+            //if (account == null)
+            //{
+            //    account = _accountServices.Get(((accountId.HasValue) ? accountId.Value : user.Accounts.First().AccountID));
+            //    var set = _cacheProvider.Set(key, account);
+
+            //    debug = key + ": NOT IN CACHE, " + ((set) ? "SET" : "FAILED TO SET");
+            //}
+            //else
+            //{
+            //    debug = key + ": RETRIEVED FROM CACHE";
+            //}
 
             var account = _accountServices.Get(accountId.Value);
 

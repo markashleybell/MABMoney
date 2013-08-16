@@ -33,6 +33,7 @@ namespace MABMoney.Services
         public UserDTO Get(int id)
         {
             return MapUser(_users.Get(id));
+            // return MapUser(_users.QueryWithIncludes(x => x.UserID == id, "Accounts").FirstOrDefault());
         }
 
         public UserDTO GetByEmailAddress(string email)

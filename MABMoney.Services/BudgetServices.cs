@@ -55,7 +55,7 @@ namespace MABMoney.Services
             var now = _dateProvider.Now;
             var endOfToday = new DateTime(now.Year, now.Month, now.Day, 23, 59, 59);
 
-            return MapBudget(_budgets.Query(x => x.Account.User_UserID == _userId && x.Account_AccountID == accountId && x.End >= endOfToday)
+            return MapBudget(_budgets.QueryWithIncludes(x => x.Account.User_UserID == _userId && x.Account_AccountID == accountId && x.End >= endOfToday, "Category_Budgets.Category")
                                      .OrderByDescending(x => x.BudgetID)
                                      .FirstOrDefault());
         }
