@@ -32,13 +32,17 @@ namespace MABMoney.Services
 
         public UserDTO Get(int id)
         {
-            return MapUser(_users.Get(id));
-            // return MapUser(_users.QueryWithIncludes(x => x.UserID == id, "Accounts").FirstOrDefault());
+            return MapUser(_users.QueryWithIncludes(x => x.UserID == id, "Accounts", "Accounts.Categories", "Accounts.Transactions").FirstOrDefault());
+        }
+
+        public UserDTO GetMinimal(int id)
+        {
+            return _users.Query(x => x.UserID == id).FirstOrDefault().MapTo<UserDTO>();
         }
 
         public UserDTO GetByEmailAddress(string email)
         {
-            return MapUser(_users.Query(x => x.Email == email).FirstOrDefault());
+            return MapUser(_users.QueryWithIncludes(x => x.Email == email, "Accounts", "Accounts.Categories", "Accounts.Transactions").FirstOrDefault());
         }
 
         private UserDTO MapUser(User user)
@@ -49,7 +53,17 @@ namespace MABMoney.Services
             var dto = user.MapTo<UserDTO>();
 
             if (user.Accounts != null)
-                dto.Accounts = user.Accounts.ToList().MapToList<AccountDTO>();
+            {
+                dto.Accounts = new List<AccountDTO>();
+
+                foreach (var account in user.Accounts)
+                {
+                    var accountModel = account.MapTo<AccountDTO>();
+                    accountModel.Categories = account.Categories.ToList().MapToList<CategoryDTO>();
+
+                    dto.Accounts.Add(accountModel);
+                }
+            }
 
             return dto;
         }

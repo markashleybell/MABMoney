@@ -37,19 +37,6 @@ namespace MABMoney.Tests
             _cacheProvider = MockRepository.GenerateMock<ICacheProvider>();
             _cacheProvider.Stub(x => x.Get<object>(null)).IgnoreArguments().Return(null);
 
-            var accounts = new List<AccountDTO> {
-                new AccountDTO { 
-                    AccountID = 1,
-                    Name = "Current",
-                    StartingBalance = 0
-                },
-                new AccountDTO { 
-                    AccountID = 2,
-                    Name = "Savings",
-                    StartingBalance = 500
-                }
-            };
-
             var categories = new List<CategoryDTO> {
                 new CategoryDTO { 
                     CategoryID = 1,
@@ -80,6 +67,21 @@ namespace MABMoney.Tests
                     Name = "Deposit",
                     Account_AccountID = 2,
                     Type = CategoryTypeDTO.Income
+                }
+            };
+
+            var accounts = new List<AccountDTO> {
+                new AccountDTO { 
+                    AccountID = 1,
+                    Name = "Current",
+                    StartingBalance = 0,
+                    Categories = categories.Where(x => x.Account_AccountID == 1).ToList()
+                },
+                new AccountDTO { 
+                    AccountID = 2,
+                    Name = "Savings",
+                    StartingBalance = 500,
+                    Categories = categories.Where(x => x.Account_AccountID == 2).ToList()
                 }
             };
 
@@ -243,6 +245,7 @@ namespace MABMoney.Tests
             model.Transactions.ShouldNotBeNull();
             model.Transactions.Count.ShouldEqual(3);
             model.Account_AccountID.ShouldEqual(1);
+            model.Account.CurrentBalance.ShouldEqual(400M);
         }
     }
 }

@@ -23,5 +23,7 @@ namespace MABMoney.Services.DTO
         public AccountTypeDTO Type { get; set; }
 
         public List<string> TransactionDescriptionHistory { get; set; }
+
+        public List<CategoryDTO> Categories { get; set; }
     }
 }

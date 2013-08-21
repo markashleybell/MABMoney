@@ -29,7 +29,7 @@ namespace MABMoney.Web.Infrastructure
             var unitOfWork = new UnitOfWork(new DataStoreFactory(userId, new DateTimeProvider(() => DateTime.Now)));
             var userServices = new UserServices(new Repository<User, int>(unitOfWork), unitOfWork, new DateTimeProvider(() => DateTime.Now));
 
-            var user = userServices.Get(userId);
+            var user = userServices.GetMinimal(userId);
 
             if (user == null)
                 return false;

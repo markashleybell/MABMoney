@@ -28,5 +28,7 @@ namespace MABMoney.Domain
         public virtual ICollection<Transaction> Transactions { get; set; }
 
         public string TransactionDescriptionHistory { get; set; }
+
+        public virtual ICollection<Category> Categories { get; set; }
     }
 }

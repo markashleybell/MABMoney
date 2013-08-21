@@ -22,42 +22,65 @@ namespace MABMoney.Web.Helpers
 
         public static IQueryable<SelectListItem> GetAccountSelectOptions(IAccountServices accountServices, bool showBalances = false) 
         {
-            return accountServices.All()
-                                  .Select(x => new SelectListItem { 
-                                      Value = x.AccountID.ToString(),
-                                      Text = x.Name + ((showBalances) ? " / " + x.CurrentBalance : "")
-                                  }).AsQueryable();
+            return accountServices.All().Select(x => new SelectListItem { 
+                Value = x.AccountID.ToString(),
+                Text = x.Name + ((showBalances) ? " / " + x.CurrentBalance : "")
+            }).AsQueryable();
         }
 
         public static IQueryable<SelectListItem> GetCategorySelectOptions(ICategoryServices categoryServices)
         {
-            return categoryServices.All()
-                                   .Select(x => new SelectListItem
-                                   {
-                                       Value = x.CategoryID.ToString(),
-                                       Text = x.Name
-                                   }).AsQueryable();
+            return categoryServices.All().Select(x => new SelectListItem {
+                Value = x.CategoryID.ToString(),
+                Text = x.Name
+            }).AsQueryable();
         }
 
         public static IQueryable<SelectListItem> GetCategorySelectOptions(ICategoryServices categoryServices, int accountId)
         {
-            return categoryServices.All()
-                                   .Where(x => x.Account_AccountID == accountId)
-                                   .Select(x => new SelectListItem
-                                   {
-                                       Value = x.CategoryID.ToString(),
-                                       Text = x.Name
-                                   }).AsQueryable();
+            return categoryServices.All() .Where(x => x.Account_AccountID == accountId).Select(x => new SelectListItem {
+                Value = x.CategoryID.ToString(),
+                Text = x.Name
+            }).AsQueryable();
         }
 
         public static IQueryable<SelectListItem> GetCategorySelectOptions(ICategoryServices categoryServices, int accountId, CategoryTypeDTO type)
         {
-            return categoryServices.All()
-                                   .Where(x => x.Type == type && x.Account_AccountID == accountId)
-                                   .Select(x => new SelectListItem {
-                                       Value = x.CategoryID.ToString(),
-                                       Text = x.Name
-                                   }).AsQueryable();
+            return categoryServices.All().Where(x => x.Type == type && x.Account_AccountID == accountId).Select(x => new SelectListItem {
+                Value = x.CategoryID.ToString(),
+                Text = x.Name
+            }).AsQueryable();
         }
+
+
+
+        public static IQueryable<SelectListItem> GetAccountSelectOptions(UserDTO user, bool showBalances = false)
+        {
+            return user.Accounts.Select(x => new SelectListItem {
+                Value = x.AccountID.ToString(),
+                Text = x.Name + ((showBalances) ? " / " + x.CurrentBalance : "")
+            }).AsQueryable();
+        }
+
+        public static IQueryable<SelectListItem> GetCategorySelectOptions(UserDTO user)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IQueryable<SelectListItem> GetCategorySelectOptions(UserDTO user, int accountId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IQueryable<SelectListItem> GetCategorySelectOptions(UserDTO user, int accountId, CategoryTypeDTO type)
+        {
+            var account = user.Accounts.First(x => x.AccountID == accountId);
+
+            return account.Categories.Where(x => x.Type == type).Select(x => new SelectListItem {
+                Value = x.CategoryID.ToString(),
+                Text = x.Name
+            }).AsQueryable();
+        }
+
     }
 }

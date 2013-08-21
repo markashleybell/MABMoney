@@ -11,5 +11,6 @@ namespace MABMoney.Web.Models.Home
         public ProfileViewModel Profile { get; set; }
         public List<AccountDTO> Accounts { get; set; }
         public decimal NetWorth { get; set; }
+        public string Debug { get; set; }
     }
 }

@@ -91,22 +91,22 @@ namespace MABMoney.Web.Controllers
             //    debug = key + ": RETRIEVED FROM CACHE";
             //}
 
-            var account = _accountServices.Get(accountId.Value);
+            var account = user.Accounts.FirstOrDefault(x => x.AccountID == accountId.Value);
 
             if (account == null)
                 return null;
 
             model.Account = account;
             model.Account_AccountID = account.AccountID;
-            model.IncomeCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, account.AccountID, CategoryTypeDTO.Income);
-            model.ExpenseCategories = DataHelpers.GetCategorySelectOptions(_categoryServices, account.AccountID, CategoryTypeDTO.Expense);
-            model.Accounts = DataHelpers.GetAccountSelectOptions(_accountServices);
-            model.AccountsWithBalances = DataHelpers.GetAccountSelectOptions(_accountServices, true);
+            model.IncomeCategories = DataHelpers.GetCategorySelectOptions(user, account.AccountID, CategoryTypeDTO.Income);
+            model.ExpenseCategories = DataHelpers.GetCategorySelectOptions(user, account.AccountID, CategoryTypeDTO.Expense);
+            model.Accounts = DataHelpers.GetAccountSelectOptions(user);
+            model.AccountsWithBalances = DataHelpers.GetAccountSelectOptions(user, true);
             model.Type = GetDefaultTransactionTypeForAccount(account);
             model.Debug = debug;
             model.BudgetCount = _budgetServices.GetBudgetCount(account.AccountID);
 
-                // If it's a savings account it will not have the payment calc or the budget tab, so just set to income
+            // If it's a savings account it will not have the payment calc or the budget tab, so just set to income
             model.Tab = (account.Type == AccountTypeDTO.Savings) ? DashboardTab.Income : DashboardTab.BudgetOrPaymentCalc;
             model.SourceAccountID = account.AccountID;
 
@@ -274,12 +274,30 @@ namespace MABMoney.Web.Controllers
 
         public ActionResult MainNavigation(ProfileViewModel profile)
         {
+            string debug = null;
+
+            //var key = "SUMMARY_DTO_" + profile.UserID;
+            //List<AccountDTO> accounts = _cacheProvider.Get<List<AccountDTO>>(key);
+
+            //if (accounts == null)
+            //{
+            //    accounts = _accountServices.All().ToList();
+            //    var set = _cacheProvider.Set(key, accounts);
+
+            //    debug = key + ": NOT IN CACHE, " + ((set) ? "SET" : "FAILED TO SET");
+            //}
+            //else
+            //{
+            //    debug = key + ": RETRIEVED FROM CACHE";
+            //}
+
             var accounts = _accountServices.All().ToList();
 
             return View(new MainNavigationViewModel { 
                 Profile = profile,
                 Accounts = accounts,
-                NetWorth = accounts.Sum(x => x.CurrentBalance)
+                NetWorth = accounts.Sum(x => x.CurrentBalance),
+                Debug = debug
             });
         }
     }
