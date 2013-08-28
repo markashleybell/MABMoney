@@ -55,25 +55,35 @@ namespace MABMoney.Services
 
         public void Save(TransactionDTO dto)
         {
-            // Try and get the transaction
-            var transaction = _transactions.Get(dto.TransactionID);
+            // Get all the transactions for this user/account 
+            var account = _accounts.Query(x => x.User_UserID == _userId && x.AccountID == dto.Account_AccountID).FirstOrDefault();
 
-            // If the transaction exists AND belongs to this user
-            if (transaction != null && transaction.Account.User_UserID == _userId)
+            if (account != null)
             {
-                // Update the transaction
-                dto.MapTo(transaction);
-                _unitOfWork.Commit();
-            }
-            else
-            {
-                // Add the transaction
-                transaction = dto.MapTo<Transaction>();
-                _transactions.Add(transaction);
-                _unitOfWork.Commit();
+                // Try and get the transaction
+                var transaction = account.Transactions.FirstOrDefault(x => x.TransactionID == dto.TransactionID);
 
-                // Update the DTO with the new ID
-                dto.TransactionID = transaction.TransactionID;
+                // If the transaction exists AND belongs to this user
+                if (transaction != null && transaction.Account.User_UserID == _userId)
+                {
+                    // Update the transaction
+                    dto.MapTo(transaction);
+                    _unitOfWork.Commit();
+                }
+                else
+                {
+                    // Add the transaction
+                    transaction = dto.MapTo<Transaction>();
+                    _transactions.Add(transaction);
+                    _unitOfWork.Commit();
+
+                    // Update the DTO with the new ID
+                    dto.TransactionID = transaction.TransactionID;
+                }
+
+                // Update the current balance for this account
+                account.CurrentBalance = account.StartingBalance + (account.Transactions.Where(t => !t.Deleted).Select(t => t.Amount).DefaultIfEmpty(0).Sum());
+                _unitOfWork.Commit();
             }
         }
 
@@ -84,6 +94,10 @@ namespace MABMoney.Services
             if(transaction != null)
             {
                 _transactions.Remove(id);
+                _unitOfWork.Commit();
+
+                // Update the current balance for this account
+                transaction.Account.CurrentBalance = transaction.Account.StartingBalance + (transaction.Account.Transactions.Where(t => !t.Deleted).Select(t => t.Amount).DefaultIfEmpty(0).Sum());
                 _unitOfWork.Commit();
             }
         }

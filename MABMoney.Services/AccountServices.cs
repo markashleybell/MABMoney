@@ -34,8 +34,7 @@ namespace MABMoney.Services
                 Type = (AccountTypeDTO)a.Type,
                 Name = a.Name,
                 StartingBalance = a.StartingBalance,
-                // CurrentBalance = a.StartingBalance + (a.Transactions.Where(t => !t.Deleted).Select(t => (decimal?)t.Amount).Sum() ?? 0M),
-                CurrentBalance = a.StartingBalance + (a.Transactions.Where(t => !t.Deleted).Select(t => t.Amount).DefaultIfEmpty(0).Sum()),
+                CurrentBalance = a.CurrentBalance,
                 Default = a.Default
             }).ToList();
 
@@ -50,9 +49,6 @@ namespace MABMoney.Services
                 return null;
 
             var dto = account.MapTo<AccountDTO>();
-
-            var transactions = _transactions.Query(x => x.Account_AccountID == dto.AccountID).ToList();
-            dto.CurrentBalance = dto.StartingBalance + transactions.Sum(x => x.Amount);
 
             var history = account.TransactionDescriptionHistory;
 

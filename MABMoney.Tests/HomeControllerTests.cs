@@ -180,6 +180,9 @@ namespace MABMoney.Tests
                 Accounts = accounts
             };
 
+            accounts[0].CurrentBalance = accounts[0].StartingBalance + (transactions.Where(t => t.Account_AccountID == 1).Select(t => t.Amount).DefaultIfEmpty(0).Sum());
+            accounts[1].CurrentBalance = accounts[1].StartingBalance + (transactions.Where(t => t.Account_AccountID == 2).Select(t => t.Amount).DefaultIfEmpty(0).Sum());
+
             _accountServices = MockRepository.GenerateStub<IAccountServices>();
             _accountServices.Stub(x => x.All()).Return(accounts);
             _accountServices.Stub(x => x.Get(1)).Return(accounts[0]);

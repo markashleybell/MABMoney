@@ -15,7 +15,7 @@ namespace MABMoney.Services.DTO
         public string Name { get; set; }
         [Required]
         public decimal StartingBalance { get; set; }
-
+        [Required]
         public decimal CurrentBalance { get; set; }
 
         public bool Default { get; set; }

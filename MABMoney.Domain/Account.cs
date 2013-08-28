@@ -17,6 +17,8 @@ namespace MABMoney.Domain
         [Required]
         public decimal StartingBalance { get; set; }
         [Required]
+        public decimal CurrentBalance { get; set; }
+        [Required]
         public int User_UserID { get; set; }
         [ForeignKey("User_UserID")]
         public virtual User User { get; set; }
