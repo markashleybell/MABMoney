@@ -89,6 +89,13 @@ namespace MABMoney.Services
                 // Update the DTO with the new ID
                 dto.AccountID = account.AccountID;
             }
+
+            // Update the current balance for this account
+            account.CurrentBalance = account.StartingBalance;
+            if(account.Transactions != null)
+                account.CurrentBalance += (account.Transactions.Where(t => !t.Deleted).Select(t => t.Amount).DefaultIfEmpty(0).Sum());
+
+            _unitOfWork.Commit();
         }
 
         public void Delete(int id)
