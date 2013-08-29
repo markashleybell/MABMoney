@@ -23,10 +23,9 @@ namespace MABMoney.Tests
         private ICategoryServices _categoryServices;
         private ITransactionServices _transactionServices;
         private IBudgetServices _budgetServices;
-        private HttpContextBase _context;
+        private FakeHttpContextProvider _context;
         private ICryptoProvider _crypto;
         private ISiteConfiguration _config;
-        private HttpCookieCollection _cookies;
         private IDateTimeProvider _dateProvider;
         private ICacheProvider _cacheProvider;
         private IUrlHelper _urlHelper;
@@ -65,10 +64,7 @@ namespace MABMoney.Tests
             _categoryServices = MockRepository.GenerateStub<ICategoryServices>();
             _transactionServices = MockRepository.GenerateStub<ITransactionServices>();
             _budgetServices = MockRepository.GenerateStub<IBudgetServices>();
-            _context = MockRepository.GenerateStub<HttpContextBase>();
-
-            _cookies = new HttpCookieCollection();
-            _context.Stub(x => x.Response.Cookies).Return(_cookies);
+            _context = new FakeHttpContextProvider();
 
             _crypto = MockRepository.GenerateStub<ICryptoProvider>();
 
@@ -228,7 +224,7 @@ namespace MABMoney.Tests
 
             _crypto.AssertWasCalled(x => x.VerifyHashedPassword("yyyyy", model.Password));
 
-            Assert.AreEqual("COOKIEKEY", _context.Response.Cookies[0].Name);
+            Assert.AreEqual("COOKIEKEY", _context.Cookies.First().Key);
 
             Assert.NotNull(result);
         }
@@ -240,8 +236,8 @@ namespace MABMoney.Tests
 
             var result = controller.Logout() as RedirectToRouteResult;
 
-            Assert.AreEqual("COOKIEKEY", _context.Response.Cookies[0].Name);
-            Assert.Greater(_dateProvider.Now, _context.Response.Cookies[0].Expires);
+            Assert.AreEqual("COOKIEKEY", _context.Cookies.First().Key);
+            Assert.Greater(_dateProvider.Now, _context.Cookies.First().Value.Item2);
 
             Assert.NotNull(result);
         }

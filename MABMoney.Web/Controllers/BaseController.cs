@@ -17,7 +17,7 @@ namespace MABMoney.Web.Controllers
         protected ICategoryServices _categoryServices;
         protected ITransactionServices _transactionServices;
         protected IBudgetServices _budgetServices;
-        protected HttpContextBase _context;
+        protected IHttpContextProvider _context;
         protected ISiteConfiguration _config;
         protected IDateTimeProvider _dateProvider;
         protected ICacheProvider _cacheProvider;
@@ -29,7 +29,7 @@ namespace MABMoney.Web.Controllers
                               ICategoryServices categoryServices,
                               ITransactionServices transactionServices,
                               IBudgetServices budgetServices,
-                              HttpContextBase context,
+                              IHttpContextProvider context,
                               ISiteConfiguration config,
                               IDateTimeProvider dateProvider,
                               ICacheProvider cacheProvider,

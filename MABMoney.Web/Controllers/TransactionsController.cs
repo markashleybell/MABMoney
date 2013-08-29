@@ -22,7 +22,7 @@ namespace MABMoney.Web.Controllers
                                       ICategoryServices categoryServices,
                                       ITransactionServices transactionServices,
                                       IBudgetServices budgetServices,
-                                      HttpContextBase context,
+                                      IHttpContextProvider context,
                                       ISiteConfiguration config,
                                       IDateTimeProvider dateProvider,
                                       ICacheProvider cacheProvider,

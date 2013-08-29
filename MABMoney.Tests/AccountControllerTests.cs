@@ -24,7 +24,7 @@ namespace MABMoney.Tests
         private ICategoryServices _categoryServices;
         private ITransactionServices _transactionServices;
         private IBudgetServices _budgetServices;
-        private HttpContextBase _context;
+        private IHttpContextProvider _context;
         private ISiteConfiguration _config;
         private ProfileViewModel _profile;
         private IDateTimeProvider _dateProvider;
@@ -68,7 +68,7 @@ namespace MABMoney.Tests
             _categoryServices = MockRepository.GenerateStub<ICategoryServices>();
             _transactionServices = MockRepository.GenerateStub<ITransactionServices>();
             _budgetServices = MockRepository.GenerateStub<IBudgetServices>();
-            _context = MockRepository.GenerateStub<HttpContextBase>();
+            _context = MockRepository.GenerateStub<IHttpContextProvider>();
 
             _config = MockRepository.GenerateStub<ISiteConfiguration>();
 

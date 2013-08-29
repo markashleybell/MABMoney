@@ -25,7 +25,7 @@ namespace MABMoney.Web.Controllers
                                ICategoryServices categoryServices,
                                ITransactionServices transactionServices,
                                IBudgetServices budgetServices,
-                               HttpContextBase context,
+                               IHttpContextProvider context,
                                ISiteConfiguration config,
                                IDateTimeProvider dateProvider,
                                ICacheProvider cacheProvider,
@@ -133,7 +133,7 @@ namespace MABMoney.Web.Controllers
 
             // Encrypt the ID before storing it in a cookie
             var encryptedUserId = EncryptionHelpers.EncryptStringAES(dto.UserID.ToString(), _config.SharedSecret);
-            _context.Response.Cookies.Add(new HttpCookie(_config.CookieKey, encryptedUserId));
+            _context.SetCookie(_config.CookieKey, encryptedUserId);
 
             return Redirect(model.RedirectAfterSubmitUrl);
         }
@@ -159,10 +159,11 @@ namespace MABMoney.Web.Controllers
 
             // Encrypt the ID before storing it in a cookie
             var encryptedUserId = EncryptionHelpers.EncryptStringAES(user.UserID.ToString(), _config.SharedSecret);
-            var cookie = new HttpCookie(_config.CookieKey, encryptedUserId);
+
             if (model.RememberMe)
-                cookie.Expires = _dateProvider.Now.AddDays(7);
-            _context.Response.Cookies.Add(cookie);
+                _context.SetCookie(_config.CookieKey, encryptedUserId, _dateProvider.Now.AddDays(7));
+            else
+                _context.SetCookie(_config.CookieKey, encryptedUserId);
 
             return Redirect(model.RedirectAfterSubmitUrl);
         }
@@ -170,9 +171,7 @@ namespace MABMoney.Web.Controllers
         [HttpGet]
         public ActionResult Logout()
         {
-            var cookie = new HttpCookie(_config.CookieKey, "");
-            cookie.Expires = _dateProvider.Now.AddDays(-1);
-            _context.Response.Cookies.Add(cookie);
+            _context.SetCookie(_config.CookieKey, "", _dateProvider.Now.AddDays(-1));
 
             // TODO: Is there ever going to be a need to define this on the fly with RedirectAfterSubmitUrl?
             return RedirectToAction("Login");

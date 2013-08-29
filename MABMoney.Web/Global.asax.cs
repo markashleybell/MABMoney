@@ -78,7 +78,7 @@ namespace MABMoney.Web
                      .RegisterType<IDataStoreFactory>(new InjectionFactory(c => new DataStoreFactory((HttpContext.Current.Request.Cookies[cookieKey] != null) ? Convert.ToInt32(EncryptionHelpers.DecryptStringAES(HttpContext.Current.Request.Cookies[cookieKey].Value, sharedSecret)) : -1, new DateTimeProvider(() => DateTime.Now))))
                      .RegisterType<ICryptoProvider>(new InjectionFactory(c => new CryptoWrapper()))
                      .RegisterType<IUrlHelper>(new InjectionFactory(c => new UrlHelperAdapter(new UrlHelper(HttpContext.Current.Request.RequestContext))))
-                     .RegisterType<HttpContextBase>(new InjectionFactory(c => new HttpContextWrapper(HttpContext.Current)))
+                     .RegisterType<IHttpContextProvider>(new InjectionFactory(c => new HttpContextProvider(new HttpContextWrapper(HttpContext.Current))))
                      .RegisterType<ISiteConfiguration>(new InjectionFactory(c => new SiteConfiguration(sharedSecret, cookieKey, noReplyEmailAddress, noReplyEmailDisplayName, siteUrl)))
                      .RegisterInstance<ICacheProvider>(new MemcachedCacheProvider(memcachedConfiguration));
 
