@@ -19,7 +19,7 @@
 	}*/
 
 }
-.datepicker-inline {
+.datepicker-inline, .datepicker-inline table {
   width: 220px;
 }
 .datepicker.datepicker-rtl {
@@ -31,6 +31,7 @@
 .datepicker-dropdown {
   top: 0;
   left: 0;
+  /*width: 280px;*/
 }
 .datepicker-dropdown:before {
   content: '';

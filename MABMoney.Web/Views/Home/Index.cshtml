@@ -9,45 +9,26 @@
 
 @if(Model.Debug != null) {
 <div class="row">
-    <div class="span12">@Model.Debug</div>
+    <div class="col-md-12">@Model.Debug</div>
 </div>
 }
 
 <div class="row">
-    <div class="span4">
+    <div class="col-md-4">
         @*@Model.From.ToString("dd/MM/yyyy")-@Model.To.ToString("dd/MM/yyyy")*@
         @using (Html.BeginForm("", "Home", FormMethod.Post, new { id = "account-selector", @class = "form-inline" })) {
-            <p>@Html.DropDownListFor(x => x.Account_AccountID, Model.Accounts, new { @class = "account-selector" }) </p>
+            <p>@Html.DropDownListFor(x => x.Account_AccountID, Model.Accounts, new { @class = "account-selector form-control input-lg" }) </p>
             <noscript><input type="submit" class="btn" value="Go" /></noscript>
         }
 
         @using (Html.BeginForm("", "Home", FormMethod.Post, new { id = "account-selector-mobile", @class = "form-inline" })) {
-            <p>@Html.DropDownListFor(x => x.Account_AccountID, Model.AccountsWithBalances, new { @class = "account-selector" }) </p>
+            <p>@Html.DropDownListFor(x => x.Account_AccountID, Model.AccountsWithBalances, new { @class = "account-selector form-control" }) </p>
             <noscript><input type="submit" class="btn" value="Go" /></noscript>
         }
 
     </div> 
-    <div class="span8" id="current-balance"><div class="heading-mimic">@Model.Account.CurrentBalance.ToString("c")</div></div>
+    <div class="col-md-8" id="current-balance">@Model.Account.CurrentBalance.ToString("c")</div>
 </div>
-
-
-
-@*<p>Starting Balance: @Model.Account.StartingBalance.ToString("#0.00"), Current Balance: @Model.Account.CurrentBalance.ToString("#0.00")</p>*@
-
-@*<div class="row" id="test">
-    <div class="span1">&nbsp;</div>
-    <div class="span1">&nbsp;</div>
-    <div class="span1">&nbsp;</div>
-    <div class="span1">&nbsp;</div>
-    <div class="span1">&nbsp;</div>
-    <div class="span1">&nbsp;</div>
-    <div class="span1">&nbsp;</div>
-    <div class="span1">&nbsp;</div>
-    <div class="span1">&nbsp;</div>
-    <div class="span1">&nbsp;</div>
-    <div class="span1">&nbsp;</div>
-    <div class="span1">&nbsp;</div>
-</div>*@
 
 <ul class="nav nav-tabs lge" id="nav-tabs">
 
@@ -65,7 +46,7 @@
 </ul>
 
 <div class="row" id="mobile-tab-select">
-    <div class="span12">
+    <div class="col-md-12">
         <select>
             
             @if(Model.Account.Type == AccountTypeDTO.Current) {
@@ -93,12 +74,12 @@
 
         @using (Html.BeginForm("CreateTransaction", "Home")) {
             <div class="row">
-                <div class="span2">@Html.EditorFor(x => x.Date, new { @class = "input-block-level", placeholder = "Date" })</div>
-                <div class="span2">@Html.DropDownListFor(x => x.Category_CategoryID, Model.IncomeCategories, "Category...", new { @class = "input-block-level" })</div>
-                <div class="span4">@Html.TextBoxFor(x => x.Description, new { @class = "typeahead input-block-level", placeholder = "Description (optional)", autocomplete = "off" })</div>
-                <div class="span2">@Html.TextBoxFor(x => x.Amount, new { @class = "input-block-level", placeholder = "Amount" })</div>   
-                <div class="span2">
-                    <input type="submit" value="Add Income" class="btn btn-primary btn-fullwidth" />
+                <div class="col-md-2">@Html.EditorFor(x => x.Date, new { @class = "form-control", placeholder = "Date" })</div>
+                <div class="col-md-2">@Html.DropDownListFor(x => x.Category_CategoryID, Model.IncomeCategories, "Category...", new { @class = "form-control" })</div>
+                <div class="col-md-4">@Html.TextBoxFor(x => x.Description, new { @class = "typeahead form-control", placeholder = "Description (optional)", autocomplete = "off" })</div>
+                <div class="col-md-2">@Html.TextBoxFor(x => x.Amount, new { @class = "form-control", placeholder = "Amount" })</div>   
+                <div class="col-md-2">
+                    <input type="submit" value="Add Income" class="btn btn-primary btn-block" />
                 </div>
                 @Html.HiddenFor(x => x.Account_AccountID)
                 <input data-val="true" data-val-required="The Type field is required." name="Type" type="hidden" value="Income">
@@ -109,7 +90,7 @@
         }
         @if (incomeTransactions.Count() > 0) {
             
-            <table class="table table-striped">
+            <table class="table table-striped table-bordered">
                 <caption>Transaction List</caption>
                 <thead>
                     <tr>
@@ -153,12 +134,12 @@
 
         @using (Html.BeginForm("CreateTransaction", "Home")) {
             <div class="row">
-                <div class="span2">@Html.EditorFor(x => x.Date, new { @class = "input-block-level", placeholder = "Date" })</div>
-                <div class="span2">@Html.DropDownListFor(x => x.Category_CategoryID, Model.ExpenseCategories, "Category...", new { @class = "input-block-level" })</div>
-                <div class="span4">@Html.TextBoxFor(x => x.Description, new { @class = "typeahead input-block-level", placeholder = "Description (optional)", autocomplete = "off" })</div>
-                <div class="span2">@Html.TextBoxFor(x => x.Amount, new { @class = "input-block-level", placeholder = "Amount" })</div>   
-                <div class="span2">
-                    <input type="submit" value="Add Expense" class="btn btn-primary btn-fullwidth" />
+                <div class="col-md-2">@Html.EditorFor(x => x.Date, new { @class = "form-control", placeholder = "Date" })</div>
+                <div class="col-md-2">@Html.DropDownListFor(x => x.Category_CategoryID, Model.ExpenseCategories, "Category...", new { @class = "form-control" })</div>
+                <div class="col-md-4">@Html.TextBoxFor(x => x.Description, new { @class = "typeahead form-control", placeholder = "Description (optional)", autocomplete = "off" })</div>
+                <div class="col-md-2">@Html.TextBoxFor(x => x.Amount, new { @class = "form-control", placeholder = "Amount" })</div>   
+                <div class="col-md-2">
+                    <input type="submit" value="Add Expense" class="btn btn-primary btn-block" />
                 </div>
                 @Html.HiddenFor(x => x.Account_AccountID)
                 <input data-val="true" data-val-required="The Type field is required." name="Type" type="hidden" value="Expense">
@@ -169,7 +150,7 @@
         }
         @if (expenseTransactions.Count() > 0) {
             
-            <table class="table table-striped">
+            <table class="table table-striped table-bordered">
                 <caption>Transaction List</caption>
                 <thead>
                     <tr>
@@ -213,12 +194,12 @@
 
         @using (Html.BeginForm("CreateTransfer", "Home")) {
             <div class="row">
-                <div class="span2">@Html.EditorFor(x => x.Date, new { @class = "input-block-level", placeholder = "Date" })</div>
-                <div class="span3">@Html.DropDownListFor(x => x.SourceAccountID, Model.Accounts, "Source...", new { @class = "input-block-level" })</div>
-                <div class="span3">@Html.DropDownListFor(x => x.DestinationAccountID, Model.Accounts, "Destination...", new { @class = "input-block-level" })</div>
-                <div class="span2">@Html.TextBoxFor(x => x.Amount, new { @class = "input-block-level", placeholder = "Amount" })</div>   
-                <div class="span2">
-                    <input type="submit" value="Transfer Funds" class="btn btn-primary btn-fullwidth" />
+                <div class="col-md-2">@Html.EditorFor(x => x.Date, new { @class = "form-control", placeholder = "Date" })</div>
+                <div class="col-md-3">@Html.DropDownListFor(x => x.SourceAccountID, Model.Accounts, "Source...", new { @class = "form-control" })</div>
+                <div class="col-md-3">@Html.DropDownListFor(x => x.DestinationAccountID, Model.Accounts, "Destination...", new { @class = "form-control" })</div>
+                <div class="col-md-2">@Html.TextBoxFor(x => x.Amount, new { @class = "form-control", placeholder = "Amount" })</div>   
+                <div class="col-md-2">
+                    <input type="submit" value="Transfer Funds" class="btn btn-primary btn-block" />
                 </div>
                 @Html.HiddenFor(x => x.Account_AccountID)
                 <input data-val="true" data-val-required="The Type field is required." name="Type" type="hidden" value="Transfer">
@@ -230,7 +211,7 @@
         }
         @if(transferTransactions.Count() > 0) {
             
-            <table class="table table-striped">
+            <table class="table table-striped table-bordered">
                 <caption>Transaction List</caption>
                 <thead>
                     <tr>
@@ -291,16 +272,12 @@
             Html.RenderPartial("~/Views/Budgets/BudgetGraph.cshtml", Model.Budget.Category_Budgets);
         }
 
-        <div class="row button-row">
-            <div class="span3">
-                
-            </div>
-            <div class="span6">&nbsp;</div>
-            <div class="span3">
+        <div class="row">
+            <div class="col-md-3 col-md-offset-9">
                 @if (Model.Budget != null) {
-                    @Html.ActionLink("Edit this budget", "Edit", "Budgets", new { id = Model.Budget.BudgetID }, new { @class = "btn btn-primary input-block-level" })
+                    @Html.ActionLink("Edit this budget", "Edit", "Budgets", new { id = Model.Budget.BudgetID }, new { @class = "btn btn-primary btn-block" })
                 } else {
-                    @Html.ActionLink("Add a new budget", "Create", "Budgets", new { id = Model.Account_AccountID }, new { @class = "btn btn-primary input-block-level pull-right" })
+                    @Html.ActionLink("Add a new budget", "Create", "Budgets", new { id = Model.Account_AccountID }, new { @class = "btn btn-primary btn-block" })
                 }
             </div>
         </div>
@@ -319,25 +296,24 @@
         
         <form action="">
             <div class="row">
-                <div class="span2"><label class="inline-label" for="payment-calculator-currentbalance">Balance:</label></div>
-                <div class="span2"><label class="inline-label" for="payment-calculator-paymentamount">Monthly Payment:</label></div>
-                <div class="span2"><label class="inline-label" for="payment-calculator-interestrate">Interest Rate (%):</label></div>
-                <div class="span2"><label class="inline-label" for="payment-calculator-minpaymentpercentage">Min. Payment (%):</label></div>
-                <div class="span4">&nbsp;</div>
+                <div class="col-md-2"><label class="inline-label" for="payment-calculator-currentbalance">Balance:</label></div>
+                <div class="col-md-2"><label class="inline-label" for="payment-calculator-paymentamount">Monthly Payment:</label></div>
+                <div class="col-md-2"><label class="inline-label" for="payment-calculator-interestrate">Interest Rate (%):</label></div>
+                <div class="col-md-2"><label class="inline-label" for="payment-calculator-minpaymentpercentage">Min. Payment (%):</label></div>
+                <div class="col-md-4">&nbsp;</div>
             </div>
             <div class="row">
-                <div class="span2"><input class="input-block-level" id="payment-calculator-currentbalance" name="payment-calculator-currentbalance" type="text" value="@Math.Abs(Model.Account.CurrentBalance).ToString("#0.00")"></div>
-                <div class="span2"><input class="input-block-level" id="payment-calculator-paymentamount" name="payment-calculator-paymentamount" type="text" value="200"></div>
-                <div class="span2"><input class="input-block-level" id="payment-calculator-interestrate" name="payment-calculator-interestrate" type="text" value="16.9"></div>
-                <div class="span2"><input class="input-block-level" id="payment-calculator-minpaymentpercentage" name="payment-calculator-currentbalance" type="text" value="3"></div>
-                <div class="span2">&nbsp;</div>
-                <div class="span2">
-                    <input type="button" id="payment-calculator-recalculate" value="Recalculate" class="btn btn-primary btn-fullwidth" />
+                <div class="col-md-2"><input class="form-control" id="payment-calculator-currentbalance" name="payment-calculator-currentbalance" type="text" value="@Math.Abs(Model.Account.CurrentBalance).ToString("#0.00")"></div>
+                <div class="col-md-2"><input class="form-control" id="payment-calculator-paymentamount" name="payment-calculator-paymentamount" type="text" value="200"></div>
+                <div class="col-md-2"><input class="form-control" id="payment-calculator-interestrate" name="payment-calculator-interestrate" type="text" value="16.9"></div>
+                <div class="col-md-2"><input class="form-control" id="payment-calculator-minpaymentpercentage" name="payment-calculator-currentbalance" type="text" value="3"></div>
+                <div class="col-md-2 col-md-offset-2">
+                    <input type="button" id="payment-calculator-recalculate" value="Recalculate" class="btn btn-primary btn-block" />
                 </div>
             </div>
         </form>
 
-        <table class="table table-striped" id="payment-calculator-table">
+        <table class="table table-striped table-bordered" id="payment-calculator-table">
             <caption>Transaction List</caption>
             <thead>
                 <tr>
@@ -361,19 +337,3 @@
     <!-- END PAYMENT CALC TAB -->
 
  <p></p>
-
-@* <div class="row" id="test">
-    <div class="span1">&nbsp;</div>
-    <div class="span1">&nbsp;</div>
-    <div class="span1">&nbsp;</div>
-    <div class="span1">&nbsp;</div>
-    <div class="span1">&nbsp;</div>
-    <div class="span1">&nbsp;</div>
-    <div class="span1">&nbsp;</div>
-    <div class="span1">&nbsp;</div>
-    <div class="span1">&nbsp;</div>
-    <div class="span1">&nbsp;</div>
-    <div class="span1">&nbsp;</div>
-    <div class="span1">&nbsp;</div>
-</div>*@
-

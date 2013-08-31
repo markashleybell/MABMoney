@@ -1,4 +1,4 @@
-﻿.clearfix() {
+﻿/*.clearfix() {
 	zoom: 1;
 	&:before { 
 		content: ''; 
@@ -9,10 +9,6 @@
 		display: table; 
 		clear: both; 
 	}
-}
-
-form {
-    padding-top: 20px;
 }
 
 .popover-title {
@@ -73,14 +69,10 @@ form {
     border-radius: 5px;
 }
 
-caption { display: none; }
+
 
 input[type="submit"].btn-fullwidth, input[type="button"].btn-fullwidth {
 	width: 100%; 
-}
-
-.inline-label { 
-    
 }
 
 input[type=text].label-textbox {
@@ -100,9 +92,7 @@ input[type=text].label-textbox {
     margin-top: 0;
 }
 
-#test .span1 {
-	background-color: #e0e0e0;
-}
+
 
 .nav-tabs {
 	&.lge a { 
@@ -121,30 +111,6 @@ div.heading-mimic {
 	margin: 10px 0;
 	font-weight: bold;
 	text-align: right;
-}
-
-#net-worth {
-	padding-top: 9px;
-	.label {
-		&.label-info {
-			padding: 4px 6px 3px 7px;
-			font-size: 1.1em;
-		}
-	}
-}
-
-#net-worth-content {
-    display: none;
-}
-
-#net-worth-content-table {
-    width: 100%;
-    th {
-        text-align: left;
-    }
-    td {
-        text-align: right;
-    }
 }
 
 .row {
@@ -181,26 +147,6 @@ div.heading-mimic {
     margin-top: 2em;
 }
 
-.brand span {
-    display: none;
-}
-
-#staging {
-    .navbar-inverse .navbar-inner {
-        background-color: #008000;
-        background-image: -moz-linear-gradient(top, #008000, #008000);
-        background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#008000), to(#008000));
-        background-image: -webkit-linear-gradient(top, #008000, #008000);
-        background-image: -o-linear-gradient(top, #008000, #008000);
-        background-image: linear-gradient(to bottom, #008000, #008000);
-        background-repeat: repeat-x;
-        border-color: #252525;
-        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff008000', endColorstr='#ff008000', GradientType=0);
-    }
-    .brand span {
-        display: inline;
-    }
-}
 
 @media (max-width: 1200px) {
     .nav-tabs.lge a { 
@@ -272,4 +218,146 @@ div.heading-mimic {
     .tab-pane form {
         margin-top: 20px;
     }
+}*/
+
+body {
+    padding: 30px;
+}
+
+caption { display: none; }
+
+form {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.navbar {
+    margin-bottom: 30px;
+}
+
+#test .col-md-1 div {
+	background-color: #e0e0e0;
+}
+
+#net-worth {
+	padding-top: 16px;
+	.label {
+		&.label-info {
+			padding: 4px 6px 3px 7px;
+			font-size: 1.1em;
+		}
+	}
+}
+
+#net-worth-content {
+    display: none;
+}
+
+#net-worth-content-table {
+    width: 244px;
+    th {
+        text-align: left;
+    }
+    td {
+        text-align: right;
+    }
+}
+
+/*.popover {
+    width: 270px;
+}*/
+
+#account-selector {
+    margin-bottom: 30px;
+}
+
+.nav-tabs {
+	&.lge a { 
+		// font-size: 1.7em; 
+        font-size: 1.5em; 
+		font-weight: bold;
+		// padding: 15px 20px;
+        padding: 12px 20px;
+		margin-right: 10px;
+	}
+}
+
+#account-selector-mobile,  #mobile-tab-select {
+    display: none;
+}
+
+.brand span {
+    display: none;
+}
+
+#staging {
+    .navbar {
+        background-color: #ffb580;
+    }
+
+    .brand span {
+        display: inline;
+    }
+}
+
+.budget-graph {
+    margin-top: 20px;
+}
+
+.category-label { 
+	border: solid 1px #fff;
+	text-align: left;
+	padding: 6px 0;
+	margin: 5px 0;
+	font-weight: bold;
+}
+.category-bar { 
+	position: relative;
+	width: 100%;
+	float: left;
+	background: url(/Content/Img/v-line.gif) #e0e0e0 center top no-repeat;
+	margin: 5px 0;
+	-webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+
+
+}
+.category-stats { 
+	position: absolute;
+	left: 0;
+	top: 0;
+	padding: 6px 12px;
+	font-weight: bold;
+}
+.category-remaining {
+
+    position: absolute;
+	right: 0;
+	top: 0;
+	padding: 6px 12px;
+	font-weight: bold;
+
+}
+.over {
+	.category-progress {
+		background-color: #EB8B75;
+	}
+}
+.category-progress { 
+	display: block;
+	float: left;
+	padding: 6px 0;
+	background-color: #5FCF59;
+	
+	-webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+#current-balance {
+    font-size: 36px;
+    margin-top: 17px;
+    margin-bottom: 10px;
+    text-align: right;
 }

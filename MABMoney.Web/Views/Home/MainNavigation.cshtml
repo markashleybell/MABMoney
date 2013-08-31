@@ -1,46 +1,45 @@
 ﻿@model MABMoney.Web.Models.Home.MainNavigationViewModel
 
-<div class="navbar navbar-inverse navbar-fixed-top">
-    <div class="navbar-inner">
-        <div class="container">
-            <a class="brand" href="/">MABMoney <span>STAGING</span></a>
-
-            @if(Model.Profile.UserID != 0) {
-            <ul class="nav pull-right">
-                <li id="logged-in-user-email">
-                    <a href="#" onclick="return false;">@Model.Profile.UserEmail</a>
-                </li>
-                <li id="net-worth-display">
-                    <a href="#" id="net-worth"><span class="label label-info">Net Worth: @Model.NetWorth.ToString("c")</span></a>
-                    <div id="net-worth-content">
-                        <table id="net-worth-content-table">
-                            @foreach (var account in Model.Accounts)
-                            {
-                                <tr>
-                                    <th>@account.Name</th>
-                                    <td class="r">@account.CurrentBalance.ToString("#0.00")</td>
-                                </tr>
-                            }
-                        </table>
-                        @Model.Debug
-                    </div>
-                </li>
-                <li class="dropdown">
-                    <a href="#" id="drop3" role="button" class="dropdown-toggle" data-toggle="dropdown">Manage <b class="caret"></b></a>
-                    <ul class="dropdown-menu" role="menu" aria-labelledby="drop3">
-                        <li>@Html.ActionLink("Accounts", "Index", "Accounts", null, new { tabindex = -1 })</li>
-                        <li>@Html.ActionLink("Categories", "Index", "Categories", null, new { tabindex = -1 })</li>
-                        <li>@Html.ActionLink("Transactions", "Index", "Transactions", null, new { tabindex = -1 })</li>
-                        <li>@Html.ActionLink("Budgets", "Index", "Budgets", null, new { tabindex = -1 })</li>
-                        <li class="divider"></li>
-                        @if(Model.Profile.IsAdmin) {
-                        <li>@Html.ActionLink("Users", "Index", "Users", null, new { tabindex = -1 })</li>
-                        }
-                        <li>@Html.ActionLink("Logout", "Logout", "Users", null, new { tabindex = -1 })</li>
-                    </ul>
-                </li>
-            </ul>
-            }
+<div class="row">
+    <div class="col-md-4">
+        <a href="/">MABMoney <span>STAGING</span></a>
+    </div>
+    @if(Model.Profile.UserID != 0) {
+    <div class="col-md-3">
+        @Model.Profile.UserEmail
+    </div>
+    <div class="col-md-3" id="net-worth-display">
+        <a href="#" id="net-worth"><span class="label label-info">Net Worth: @Model.NetWorth.ToString("c")</span></a>
+        <div id="net-worth-content">
+            <table id="net-worth-content-table">
+                @foreach (var account in Model.Accounts)
+                {
+                    <tr>
+                        <th>@account.Name</th>
+                        <td class="r">@account.CurrentBalance.ToString("#0.00")</td>
+                    </tr>
+                }
+            </table>
+            @Model.Debug
         </div>
     </div>
+    <div class="col-md-2">
+        <ul>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Manage <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li>@Html.ActionLink("Accounts", "Index", "Accounts", null, new { tabindex = -1 })</li>
+                    <li>@Html.ActionLink("Categories", "Index", "Categories", null, new { tabindex = -1 })</li>
+                    <li>@Html.ActionLink("Transactions", "Index", "Transactions", null, new { tabindex = -1 })</li>
+                    <li>@Html.ActionLink("Budgets", "Index", "Budgets", null, new { tabindex = -1 })</li>
+                    <li class="divider"></li>
+                    @if(Model.Profile.IsAdmin) {
+                    <li>@Html.ActionLink("Users", "Index", "Users", null, new { tabindex = -1 })</li>
+                    }
+                    <li>@Html.ActionLink("Logout", "Logout", "Users", null, new { tabindex = -1 })</li>
+                </ul>
+            </li>
+        </ul>
+    </div>  
+    }
 </div>

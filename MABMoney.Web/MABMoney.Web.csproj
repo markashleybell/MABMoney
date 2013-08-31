@@ -174,6 +174,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\Api\UsersController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
+    <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -233,8 +234,6 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Content Include="Content\Css\bootstrap-responsive.css" />
-    <Content Include="Content\Css\bootstrap-responsive.min.css" />
     <Content Include="Content\Css\bootstrap.css" />
     <Content Include="Content\Css\bootstrap.min.css" />
     <Content Include="Content\Css\datepicker.css" />
@@ -245,6 +244,7 @@
       <DependentUpon>styles.less</DependentUpon>
     </Content>
     <Content Include="Content\EmailTemplates\password-reset.html" />
+    <Content Include="Content\Fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Content\Img\favicon.ico" />
     <Content Include="Content\Img\glyphicons-halflings-white.png" />
     <Content Include="Content\Img\glyphicons-halflings.png" />
@@ -290,6 +290,7 @@
     <Content Include="Content\Js\locales\bootstrap-datepicker.zh-CN.js" />
     <Content Include="Content\Js\locales\bootstrap-datepicker.zh-TW.js" />
     <Content Include="Content\Js\main.js" />
+    <Content Include="Content\Js\typeahead.js" />
     <Content Include="Global.asax" />
     <Content Include="Content\Js\less-1.3.3.min.js" />
     <Content Include="Web.config">
@@ -423,6 +424,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Users\PasswordResetComplete.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\Fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\Fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Content\Fonts\glyphicons-halflings-regular.woff" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

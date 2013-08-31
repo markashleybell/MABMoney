@@ -131,11 +131,17 @@
         trigger: 'focus'
     });
 
-    var tmpl = '<div class="control-group">' +
-               '    <input class="label-textbox" id="Categories_{{INDEX}}__Name" name="Categories[{{INDEX}}].Name" placeholder="Name" type="text" value="">' +
-               '    <div class="controls">' +
-               '        <input data-val="true" data-val-number="The field Amount must be a number." data-val-required="The Amount field is required." id="Categories_{{INDEX}}__Amount" name="Categories[{{INDEX}}].Amount" placeholder="Email" type="text" value="0">' +
-               '        <a class="cat-delete" id="del{{INDEX}}" href="#del0">Delete</a>' +
+    var tmpl = '<div class="form-group">' +
+               '    <div class="col-md-2">' + 
+               '        <input class="form-control" id="Categories_{{INDEX}}__Name" name="Categories[{{INDEX}}].Name" placeholder="Name" type="text" value="">' +
+               '    </div>' +
+               '    <div class="col-md-2">' +
+               '        <input class="form-control" data-val="true" data-val-number="The field Amount must be a number." data-val-required="The Amount field is required." id="Categories_{{INDEX}}__Amount" name="Categories[{{INDEX}}].Amount" placeholder="Email" type="text" value="0">' +
+               '    </div>' +
+               '    <div class="col-md-2">' +
+               '        <a class="cat-delete btn btn-default" id="del{{INDEX}}" href="#del0">Delete</a>' +
+               '    </div>' +
+               '    <div class="col-md-6">' +
                '        <span class="field-validation-valid" data-valmsg-for="Categories[{{INDEX}}].Amount" data-valmsg-replace="true"></span>' +
                '        <input data-val="true" data-val-number="The field Budget_BudgetID must be a number." data-val-required="The Budget_BudgetID field is required." id="Categories_{{INDEX}}__Budget_BudgetID" name="Categories[{{INDEX}}].Budget_BudgetID" type="hidden" value="0">' +
                '        <input data-val="true" data-val-number="The field Category_CategoryID must be a number." data-val-required="The Category_CategoryID field is required." id="Categories_{{INDEX}}__Category_CategoryID" name="Categories[{{INDEX}}].Category_CategoryID" type="hidden" value="0">' +

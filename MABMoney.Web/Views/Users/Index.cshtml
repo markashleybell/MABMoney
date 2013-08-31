@@ -5,33 +5,36 @@
     Layout = "~/Views/Shared/Master.cshtml";
 }
 
-<h2>Users</h2>
-
-<table class="table table-striped">
-    <caption>User List</caption>
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Edit</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var user in Model.Users)
-        {
-        <tr>
-            <td>@user.Forename @user.Surname</td>
-            <td>@user.Email</td>
-            <td>@Html.ActionLink("Edit", "Edit", new { id = user.UserID })</td>
-        </tr>
-        }
-    </tbody>
-</table>
-
-<div class="row button-row">
-    <div class="span2">
-        @Html.ActionLink("Add New User", "Create", null, new { @class = "btn btn-primary" })
+<div class="row">
+    <div class="col-md-12">
+        <h1>Users</h1>
     </div>
-    <div class="span8">&nbsp;</div>
-    <div class="span2">&nbsp;</div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-striped table-bordered">
+            <caption>User List</caption>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Edit</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model.Users)
+                {
+                <tr>
+                    <td>@user.Forename @user.Surname</td>
+                    <td>@user.Email</td>
+                    <td>@Html.ActionLink("Edit", "Edit", new { id = user.UserID })</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">@Html.ActionLink("Add New User", "Create", null, new { @class = "btn btn-primary" })</div>
+    <div class="col-md-10"></div>
 </div>

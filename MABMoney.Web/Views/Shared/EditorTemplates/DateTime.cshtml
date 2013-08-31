@@ -3,7 +3,7 @@
 @{
     
     var par = new {
-        @class = "date-picker" + ((ViewData["class"] != null) ? " " + ViewData["class"] : ""),
+        @class = "date-picker form-control" + ((ViewData["class"] != null) ? " " + ViewData["class"] : ""),
         id = (ViewData["id"] != null) ? ViewData["id"] : ViewData.TemplateInfo.GetFullHtmlFieldId("")
     };
     

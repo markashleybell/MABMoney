@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta name="viewport" content="width=device-width" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>MABMoney</title>
         <link rel="shortcut icon" type="image/x-icon" href="/Content/Img/favicon.ico">
         <style type="text/css">
@@ -14,12 +14,12 @@
         @Styles.Render("~/Content/Css/base")
     </head>
     <body@(Html.Raw((Convert.ToBoolean(ConfigurationManager.AppSettings["Staging"])) ? " id=\"staging\"" : ""))>
-        @{ Html.RenderAction("MainNavigation", "Home"); }
         <div class="container">
-        @RenderBody()
+            @{ Html.RenderAction("MainNavigation", "Home"); }
+            @RenderBody()
         </div>
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
         @Scripts.Render("~/Content/Js/base")
         @MiniProfiler.RenderIncludes(position: RenderPosition.Right, useExistingjQuery: true)
-    </body@Html.Raw())>
+    </body>
 </html>

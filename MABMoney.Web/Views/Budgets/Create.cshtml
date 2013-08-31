@@ -5,14 +5,16 @@
     Layout = "~/Views/Shared/Master.cshtml";
 }
 
-<h2>Create Budget</h2>
+<h1>Create Budget</h1>
 
 @using (Html.BeginForm("CreateFromExistingBudget", "Budgets", FormMethod.Post, new { @class = "form-horizontal" }))
 {
-    <div class="control-group">
-        @Html.LabelFor(x => x.Budget_BudgetID, new { @class = "control-label" })
-        <div class="controls">
-            @Html.DropDownListFor(x => x.Budget_BudgetID, Model.Budgets, "Select a previous budget...")
+    <div class="form-group">
+        @Html.LabelFor(x => x.Budget_BudgetID, new { @class = "control-label col-md-2" })
+        <div class="col-md-3">
+            @Html.DropDownListFor(x => x.Budget_BudgetID, Model.Budgets, "Select a previous budget...", new { @class = "form-control" })
+        </div>
+        <div class="col-md-3">
             @Html.HiddenFor(x => x.Account_AccountID)
             <input type="submit" value="Copy amounts from this budget" class="btn btn-primary" />
         </div>
@@ -37,10 +39,9 @@
     
     @Html.EditorFor(x => x.Categories)
 
-    <div class="control-group">
-        <label class="control-label" for="add-category-button">&nbsp;</label>
-        <div class="controls">
-            <input type="button" value="Add Category" class="btn" id="add-category-button" />
+    <div class="form-group">
+        <div class="col-md-2 col-md-offset-2">
+            <input type="button" value="Add Category" class="btn btn-default" id="add-category-button" />
         </div>
     </div>
     
