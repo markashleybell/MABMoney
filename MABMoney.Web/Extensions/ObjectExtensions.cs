@@ -33,16 +33,20 @@ namespace MABMoney.Web.Extensions
             PropertyDescriptorCollection aproperties = TypeDescriptor.GetProperties(a);
             foreach (PropertyDescriptor property in aproperties)
             {
-                output.Add(property.Name, property.GetValue(a));
+                var propertyName = property.Name.Replace('_', '-');
+
+                output.Add(propertyName, property.GetValue(a));
             }
 
             PropertyDescriptorCollection bproperties = TypeDescriptor.GetProperties(b);
             foreach (PropertyDescriptor property in bproperties)
             {
-                if (!output.ContainsKey(property.Name))
-                    output.Add(property.Name, property.GetValue(b));
+                var propertyName = property.Name.Replace('_', '-');
+
+                if (!output.ContainsKey(propertyName))
+                    output.Add(propertyName, property.GetValue(b));
                 else
-                    output[property.Name] += (" " + property.GetValue(b));
+                    output[propertyName] += (" " + property.GetValue(b));
             }
 
             return output;

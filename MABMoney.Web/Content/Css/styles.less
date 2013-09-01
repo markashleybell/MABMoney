@@ -1,122 +1,7 @@
-﻿/*.clearfix() {
-	zoom: 1;
-	&:before { 
-		content: ''; 
-		display: block; 
-	}
-	&:after { 
-		content: ''; 
-		display: table; 
-		clear: both; 
-	}
-}
-
-.popover-title {
-    color: #0044cc;
-    font-weight: bold;
-}
-
-#nav li { display: inline; }
-            
-.category-label { 
-	border: solid 1px #fff;
-	text-align: left;
-	padding: 6px 0;
-	margin: 5px 0;
-	font-weight: bold;
-}
-.category-bar { 
-	position: relative;
-	width: 100%;
-	float: left;
-	background: url(/Content/Img/v-line.gif) #e0e0e0 center top no-repeat;
-	margin: 5px 0;
-	-webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-
-
-}
-.category-stats { 
-	position: absolute;
-	left: 0;
-	top: 0;
-	padding: 6px 12px;
-	font-weight: bold;
-}
-.category-remaining {
-
-    position: absolute;
-	right: 0;
-	top: 0;
-	padding: 6px 12px;
-	font-weight: bold;
-
-}
-.over {
-	.category-progress {
-		background-color: #EB8B75;
-	}
-}
-.category-progress { 
-	display: block;
-	float: left;
-	padding: 6px 0;
-	background-color: #5FCF59;
-	
-	-webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-}
-
-
-
-input[type="submit"].btn-fullwidth, input[type="button"].btn-fullwidth {
-	width: 100%; 
-}
-
-input[type=text].label-textbox {
-
-    width: 154px;
-    float: left;
-    text-align: right;
-    padding-right: 10px;
-}
-
-.field-validation-error {
-    color: #cc0000;
-    padding-left: 1em;
-}
+﻿/*
 
 .typeahead {
     margin-top: 0;
-}
-
-
-
-.nav-tabs {
-	&.lge a { 
-		// font-size: 1.7em; 
-        font-size: 1.5em; 
-		font-weight: bold;
-		// padding: 15px 20px;
-        padding: 12px 20px;
-		margin-right: 10px;
-	}
-}
-
-div.heading-mimic {
-	font-size: 31.5px;
-	line-height: 40px;
-	margin: 10px 0;
-	font-weight: bold;
-	text-align: right;
-}
-
-.row {
-    &.button-row {
-        margin-top: 30px;
-    }
 }
 
 .before-budget-start {
@@ -143,17 +28,11 @@ div.heading-mimic {
     display: none;
 }
 
-.budget-graph {
-    margin-top: 2em;
-}
-
-
 @media (max-width: 1200px) {
     .nav-tabs.lge a { 
         font-size: 1.3em; 
 	}
 }
-
 
 @media (min-width: 768px) and (max-width: 979px) {
 
@@ -218,7 +97,9 @@ div.heading-mimic {
     .tab-pane form {
         margin-top: 20px;
     }
-}*/
+}
+
+*/
 
 body {
     padding: 30px;
@@ -240,7 +121,6 @@ form {
 }
 
 #net-worth {
-	padding-top: 16px;
 	.label {
 		&.label-info {
 			padding: 4px 6px 3px 7px;
@@ -254,7 +134,7 @@ form {
 }
 
 #net-worth-content-table {
-    width: 244px;
+    width: 240px;
     th {
         text-align: left;
     }
@@ -262,10 +142,6 @@ form {
         text-align: right;
     }
 }
-
-/*.popover {
-    width: 270px;
-}*/
 
 #account-selector {
     margin-bottom: 30px;
@@ -302,6 +178,7 @@ form {
 
 .budget-graph {
     margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .category-label { 
@@ -311,6 +188,7 @@ form {
 	margin: 5px 0;
 	font-weight: bold;
 }
+
 .category-bar { 
 	position: relative;
 	width: 100%;
@@ -320,9 +198,8 @@ form {
 	-webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
-
-
 }
+
 .category-stats { 
 	position: absolute;
 	left: 0;
@@ -330,6 +207,7 @@ form {
 	padding: 6px 12px;
 	font-weight: bold;
 }
+
 .category-remaining {
 
     position: absolute;
@@ -339,11 +217,13 @@ form {
 	font-weight: bold;
 
 }
+
 .over {
 	.category-progress {
 		background-color: #EB8B75;
 	}
 }
+
 .category-progress { 
 	display: block;
 	float: left;
@@ -360,4 +240,25 @@ form {
     margin-top: 17px;
     margin-bottom: 10px;
     text-align: right;
+}
+
+.field-validation-error {
+    color: #cc0000;
+    padding-left: 1em;
+}
+
+.popover-title {
+    color: #0044cc;
+    font-weight: bold;
+}
+
+.dropdown-menu {
+    &.pull-right {
+        &.user-menu {
+            right: 15px;
+            li {
+                text-align: right;
+            }
+        }
+    }
 }

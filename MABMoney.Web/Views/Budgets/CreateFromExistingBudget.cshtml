@@ -5,20 +5,19 @@
     Layout = "~/Views/Shared/Master.cshtml";
 }
 
-<h1>Create Budget From Existing</h1>
+<div class="row">
+    <div class="col-md-12">
+        <h1>Create Budget From Existing</h1>
+    </div>
+</div>
 
 @using (Html.BeginForm("CreateFromExistingBudget", "Budgets", FormMethod.Post, new { @class = "form-horizontal" }))
 {
-    <div class="form-group">
-        @Html.LabelFor(x => x.Budget_BudgetID, new { @class = "control-label col-md-2" })
-        <div class="col-md-3">
-            @Html.DropDownListFor(x => x.Budget_BudgetID, Model.Budgets, "Select a previous budget...", new { @class = "form-control" })
-        </div>
-        <div class="col-md-3">
-            @Html.HiddenFor(x => x.Account_AccountID)
-            <input type="submit" value="Copy amounts from this budget" class="btn btn-primary" />
-        </div>
-    </div>
+    @Html.SelectControlGroupFor(x => x.Budget_BudgetID, Model.Budgets, "Select a previous budget...")
+    
+    @Html.SubmitControlGroup("Copy amounts")
+
+    @Html.HiddenFor(x => x.Account_AccountID)
 }
 
 @using (Html.BeginForm("Create", "Budgets", FormMethod.Post, new { @class = "form-horizontal" }))
@@ -39,11 +38,7 @@
     
     @Html.EditorFor(x => x.Categories)
 
-    <div class="form-group">
-        <div class="col-md-2 col-md-offset-2">
-            <input type="button" value="Add Category" class="btn btn-default" id="add-category-button" />
-        </div>
-    </div>
+    @Html.ButtonControlGroup("Add Category", new { id = "add-category-button" })
     
     @Html.HiddenFor(x => x.RedirectAfterSubmitUrl)
 

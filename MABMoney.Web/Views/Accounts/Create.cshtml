@@ -5,9 +5,12 @@
     Layout = "~/Views/Shared/Master.cshtml";
 }
 
-<h1>Create Account</h1>
-
-<p>Let's set up your first account. Don't worry—you can change any of these things later if you need to!</p>
+<div class="row">
+    <div class="col-md-12">
+        <h1>Create Account</h1>
+        <p>Let's set up your first account. Don't worry—you can change any of these things later if you need to!</p>
+    </div>
+</div>
 
 @using (Html.BeginForm("Create", "Accounts", FormMethod.Post, new { @class = "form-horizontal" }))
 {

@@ -1,20 +1,25 @@
 ﻿$(function () {
+
+    // Set up date picker inputs
     $('.date-picker').datepicker({
         format: 'dd/mm/yyyy',
         autoclose: true
     });
 
+    // Set up net worth table popover
     $('#net-worth').on('click', function (evt) {
         evt.preventDefault();
     }).popover({
         title: 'Accounts',
         placement: 'bottom',
         html: true,
-        content: $('#net-worth-content').html()
+        content: $('#net-worth-content').html(),
+        container: 'body'
     });
 
     var accountSelector = $('.account-selector');
-
+    
+    // Auto-submit account selector form when option is changed
     accountSelector.on('change', function (evt) {
         this.form.submit();
     });
@@ -27,10 +32,10 @@
         $(mobileTabSelect.val()).addClass('active');
     });
 
+    // Set up typeahead inputs (using Bootstrap 2.3.2 typeahead)
     $('.typeahead').typeahead({
         minlength: 1,
         source: function (query, process) {
-
             $.ajax({
                 url: '/Accounts/GetTransactionDescriptionHistory',
                 data: { query: query, id: accountSelector.val() },
@@ -39,19 +44,24 @@
                 console.log(data);
                 process(data);
             });
-
         }
     });
 
+    // Add a confirmation to any delete forms
+    $('form.delete-form').on('submit', function (evt) {
+        return confirm('Are you sure?');
+    });
 
-    function aprCalc(apr) {
+    // Calculate APR
+    var aprCalc = function (apr) {
         apr = apr * 1 / 100;
         return (Math.pow((1 + apr), (1 / 12)) - 1) * 100;
-    }
+    };
 
     var tableBody = $('#payment-calculator-table tbody');
 
-    function buildPaymentCalculatorTable(currentBalance, paymentAmount, interestRate, minPaymentPercentage) {
+    // Build repayments table for card/loan repayment calculator
+    var buildPaymentCalculatorTable = function(currentBalance, paymentAmount, interestRate, minPaymentPercentage) {
 
         currentBalance = parseFloat(currentBalance);
         paymentAmount = parseFloat(paymentAmount);
@@ -75,8 +85,6 @@
 
             var balanceAtMonthEnd = (balance - paymentAmount) + interestAmount;
 
-            // console.log(aprCalc(interestRate));
-
             var model = {
                 month: months[d.getMonth()],
                 monthStart: balance,
@@ -88,15 +96,13 @@
 
             balance = model.monthEnd;
 
-            // console.log(model);
-
             var row = '<tr>' +
-                        '<td>' + model.month + '</td>' +
-                        '<td>' + model.monthStart.toFixed(2) + '</td>' +
-                        '<td>' + model.interest.toFixed(2) + '</td>' +
-                        '<td>' + model.minPayment.toFixed(2) + '</td>' +
-                        '<td>' + model.payment.toFixed(2) + '</td>' +
-                        '<td>' + model.monthEnd.toFixed(2) + '</td>' +
+                          '<td>' + model.month + '</td>' +
+                          '<td>' + model.monthStart.toFixed(2) + '</td>' +
+                          '<td>' + model.interest.toFixed(2) + '</td>' +
+                          '<td>' + model.minPayment.toFixed(2) + '</td>' +
+                          '<td>' + model.payment.toFixed(2) + '</td>' +
+                          '<td>' + model.monthEnd.toFixed(2) + '</td>' +
                       '</tr>';
 
             html.push(row);
@@ -110,10 +116,7 @@
         tableBody.append(html.join(''));
     }
 
-    $('form.delete-form').on('submit', function (evt) {
-        return confirm('Are you sure?');
-    });
-
+    // Set up the payment calculator
     var currentBalance = $('#payment-calculator-currentbalance');
     var paymentAmount = $('#payment-calculator-paymentamount');
     var interestRate = $('#payment-calculator-interestrate');
@@ -126,11 +129,19 @@
         buildPaymentCalculatorTable(currentBalance.val(), paymentAmount.val(), interestRate.val(), minPaymentPercentage.val());
     });
 
+    // Add popover hints to .help classed inputs
     $('input.help, select.help, textarea.help').popover({
         title: 'What\'s this?',
-        trigger: 'focus'
+        trigger: 'focus',
+        container: 'body'
     });
 
+    // Hide any popovers when the window is resized
+    $(window).on('resize', function(e) {
+        $('input.help, select.help, textarea.help, #net-worth').popover('hide');
+    });
+
+    // Form template for new budget category
     var tmpl = '<div class="form-group">' +
                '    <div class="col-md-2">' + 
                '        <input class="form-control" id="Categories_{{INDEX}}__Name" name="Categories[{{INDEX}}].Name" placeholder="Name" type="text" value="">' +
@@ -148,6 +159,7 @@
                '    </div>' +
                '</div>';
 
+    // Form template for a deleted budget category
     var del = '<div><div>' +
               '<input data-val="true" id="Categories_{{INDEX}}__Delete" name="Categories[{{INDEX}}].Delete" type="hidden" value="true">' +
               '<input data-val="true" id="Categories_{{INDEX}}__Amount" name="Categories[{{INDEX}}].Amount" type="hidden" value="0">' +
@@ -155,6 +167,7 @@
               '<input data-val="true" id="Categories_{{INDEX}}__Category_CategoryID" name="Categories[{{INDEX}}].Category_CategoryID" type="hidden" value="{{ID}}">';
               '</div></div>';
 
+    // Add a new budget category form row
     $('#add-category-button').on('click', function (evt) {
         // Grab the last category input that currently exists in the page
         var lastInput = $('input[id^=Categories_]:last');
@@ -167,6 +180,7 @@
         lastInput.parent().parent().after(tmpl.replace(/\{\{INDEX\}\}/g, id));
     });
 
+    // Remove a budget category form row and replace it with the deletion data
     $('form').on('click', '.cat-delete', function (evt) {
 
         evt.preventDefault();

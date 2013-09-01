@@ -29,7 +29,7 @@
                     <td>@category.Name</td>
                     <td>@category.Account.Name</td>
                     <td>@category.Type</td>
-                    <td>@Html.ActionLink("Edit", "Edit", new { id = category.CategoryID }, new { @class = "btn btn-default btn-xs" })</td>
+                    <td>@Html.ActionLink("Edit", "Edit", new { id = category.CategoryID })</td>
                 </tr>
                 }
             </tbody>
@@ -37,6 +37,6 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-2">@Html.ActionLink("Add New Category", "Create", null, new { @class = "btn btn-primary" })</div>
+    <div class="col-md-2">@Html.ActionLink("Add New Category", "Create", null, new { @class = "btn btn-primary btn-block" })</div>
     <div class="col-md-10"></div>
 </div>
