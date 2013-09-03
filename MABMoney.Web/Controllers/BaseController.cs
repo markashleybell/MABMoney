@@ -20,7 +20,6 @@ namespace MABMoney.Web.Controllers
         protected IHttpContextProvider _context;
         protected ISiteConfiguration _config;
         protected IDateTimeProvider _dateProvider;
-        protected ICacheProvider _cacheProvider;
 
         protected IUrlHelper _url;
 
@@ -32,7 +31,6 @@ namespace MABMoney.Web.Controllers
                               IHttpContextProvider context,
                               ISiteConfiguration config,
                               IDateTimeProvider dateProvider,
-                              ICacheProvider cacheProvider,
                               IUrlHelper urlHelper)
         {
             _userServices = userServices;
@@ -43,7 +41,6 @@ namespace MABMoney.Web.Controllers
             _context = context;
             _config = config;
             _dateProvider = dateProvider;
-            _cacheProvider = cacheProvider;
 
             _url = urlHelper;
         }

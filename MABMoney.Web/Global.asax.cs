@@ -17,9 +17,6 @@ using StackExchange.Profiling;
 using MABMoney.Web.Helpers;
 using mab.lib.SimpleMapper;
 using MABMoney.Services.DTO;
-using Enyim.Caching;
-using Enyim.Caching.Configuration;
-using Enyim.Caching.Memcached;
 using System.Web.Optimization;
 
 namespace MABMoney.Web
@@ -46,17 +43,6 @@ namespace MABMoney.Web
             var noReplyEmailDisplayName = ConfigurationManager.AppSettings["NoReplyEmailDisplayName"];
             var siteUrl = ConfigurationManager.AppSettings["SiteUrl"];
 
-            var memcachedConfiguration = new MemcachedClientConfiguration();
-            memcachedConfiguration.AddServer(ConfigurationManager.AppSettings["MEMCACHIER_SERVERS"]);
-            memcachedConfiguration.Protocol = MemcachedProtocol.Binary;
-
-            if (Convert.ToBoolean(ConfigurationManager.AppSettings["MEMCACHIER_AUTH"]))
-            {
-                memcachedConfiguration.Authentication.Type = typeof(PlainTextAuthenticator);
-                memcachedConfiguration.Authentication.Parameters["userName"] = ConfigurationManager.AppSettings["MEMCACHIER_USERNAME"];
-                memcachedConfiguration.Authentication.Parameters["password"] = ConfigurationManager.AppSettings["MEMCACHIER_PASSWORD"];
-                memcachedConfiguration.Authentication.Parameters["zone"] = "";
-            }
 
             // Set up object mappings for Unity DI
             var container = new UnityContainer();
@@ -79,8 +65,7 @@ namespace MABMoney.Web
                      .RegisterType<ICryptoProvider>(new InjectionFactory(c => new CryptoWrapper()))
                      .RegisterType<IUrlHelper>(new InjectionFactory(c => new UrlHelperAdapter(new UrlHelper(HttpContext.Current.Request.RequestContext))))
                      .RegisterType<IHttpContextProvider>(new InjectionFactory(c => new HttpContextProvider(new HttpContextWrapper(HttpContext.Current))))
-                     .RegisterType<ISiteConfiguration>(new InjectionFactory(c => new SiteConfiguration(sharedSecret, cookieKey, noReplyEmailAddress, noReplyEmailDisplayName, siteUrl)))
-                     .RegisterInstance<ICacheProvider>(new MemcachedCacheProvider(memcachedConfiguration));
+                     .RegisterType<ISiteConfiguration>(new InjectionFactory(c => new SiteConfiguration(sharedSecret, cookieKey, noReplyEmailAddress, noReplyEmailDisplayName, siteUrl)));
 
             var resolver = new UnityDependencyResolver(container);
 

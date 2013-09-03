@@ -27,15 +27,11 @@ namespace MABMoney.Tests
         private ICryptoProvider _crypto;
         private ISiteConfiguration _config;
         private IDateTimeProvider _dateProvider;
-        private ICacheProvider _cacheProvider;
         private IUrlHelper _urlHelper;
 
         [SetUp]
         public void SetUp()
         {
-            _cacheProvider = MockRepository.GenerateMock<ICacheProvider>();
-            _cacheProvider.Stub(x => x.Get<object>(null)).IgnoreArguments().Return(null);
-
             var users = new List<UserDTO> {
                 new UserDTO { 
                     UserID = 1,
@@ -84,7 +80,7 @@ namespace MABMoney.Tests
         [Test]
         public void Index_Get()
         {
-            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider, _crypto, _urlHelper);
+            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _crypto, _urlHelper);
 
             var result = controller.Index() as ViewResult;
             
@@ -109,7 +105,7 @@ namespace MABMoney.Tests
         [Test]
         public void Create_Get()
         {
-            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider, _crypto, _urlHelper);
+            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _crypto, _urlHelper);
 
             var result = controller.Create() as ViewResult;
 
@@ -126,7 +122,7 @@ namespace MABMoney.Tests
         [Test]
         public void Create_Post()
         {
-            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider, _crypto, _urlHelper);
+            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _crypto, _urlHelper);
 
             var model = new CreateViewModel {
                 Forename = "Test",
@@ -145,7 +141,7 @@ namespace MABMoney.Tests
         [Test]
         public void Edit_Get()
         {
-            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider, _crypto, _urlHelper);
+            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _crypto, _urlHelper);
 
             var result = controller.Edit(1) as ViewResult;
 
@@ -162,7 +158,7 @@ namespace MABMoney.Tests
         [Test]
         public void Edit_Post()
         {
-            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider, _crypto, _urlHelper);
+            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _crypto, _urlHelper);
 
             var model = new EditViewModel {
                 UserID = 1,
@@ -182,7 +178,7 @@ namespace MABMoney.Tests
         [Test]
         public void Delete_Post()
         {
-            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider, _crypto, _urlHelper);
+            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _crypto, _urlHelper);
 
             var result = controller.Delete(2, "/Users") as RedirectResult;
             
@@ -194,7 +190,7 @@ namespace MABMoney.Tests
         [Test]
         public void Login_Get()
         {
-            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider, _crypto, _urlHelper);
+            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _crypto, _urlHelper);
 
             var result = controller.Login() as ViewResult;
 
@@ -210,7 +206,7 @@ namespace MABMoney.Tests
         [Test]
         public void Login_Post()
         {
-            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider, _crypto, _urlHelper);
+            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _crypto, _urlHelper);
 
             var model = new LoginViewModel {
                 Email = "jane@jane.com",
@@ -232,7 +228,7 @@ namespace MABMoney.Tests
         [Test]
         public void Logout_Get()
         {
-            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _cacheProvider, _crypto, _urlHelper);
+            var controller = new UsersController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _crypto, _urlHelper);
 
             var result = controller.Logout() as RedirectToRouteResult;
 

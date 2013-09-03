@@ -52,9 +52,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="Enyim.Caching">
-      <HintPath>..\packages\EnyimMemcached.2.12\lib\net35\Enyim.Caching.dll</HintPath>
-    </Reference>
     <Reference Include="mab.lib.SimpleMapper, Version=3.2.0.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\mab.lib.SimpleMapper.3.2.0.1\lib\mab.lib.SimpleMapper.dll</HintPath>
@@ -186,12 +183,10 @@
     <Compile Include="Infrastructure\HttpContextProvider.cs" />
     <Compile Include="Infrastructure\CryptoWrapper.cs" />
     <Compile Include="Infrastructure\HttpContextLifetimeManager.cs" />
-    <Compile Include="Infrastructure\ICacheProvider.cs" />
     <Compile Include="Infrastructure\ICryptoProvider.cs" />
     <Compile Include="Infrastructure\IHttpContextProvider.cs" />
     <Compile Include="Infrastructure\ISiteConfiguration.cs" />
     <Compile Include="Infrastructure\IUrlHelper.cs" />
-    <Compile Include="Infrastructure\MemcachedCacheProvider.cs" />
     <Compile Include="Infrastructure\ProfileModelBinder.cs" />
     <Compile Include="Infrastructure\RequireHttpsAttribute.cs" />
     <Compile Include="Infrastructure\ServiceResolverAdapter.cs" />

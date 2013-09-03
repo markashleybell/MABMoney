@@ -26,7 +26,6 @@ namespace MABMoney.Web.Controllers
                               IHttpContextProvider context,
                               ISiteConfiguration config,
                               IDateTimeProvider dateProvider,
-                              ICacheProvider cacheProvider,
                               IUrlHelper urlHelper) : base(userServices,
                                                            accountServices,
                                                            categoryServices,
@@ -35,7 +34,6 @@ namespace MABMoney.Web.Controllers
                                                            context,
                                                            config,
                                                            dateProvider,
-                                                           cacheProvider,
                                                            urlHelper) { }
 
         private TransactionType GetDefaultTransactionTypeForAccount(AccountDTO account)
@@ -75,21 +73,6 @@ namespace MABMoney.Web.Controllers
             }
 
             string debug = null;
-
-            //var key = "ACCOUNT_DTO_" + userId;
-            //AccountDTO account = _cacheProvider.Get<AccountDTO>(key);
-
-            //if (account == null)
-            //{
-            //    account = _accountServices.Get(((accountId.HasValue) ? accountId.Value : user.Accounts.First().AccountID));
-            //    var set = _cacheProvider.Set(key, account);
-
-            //    debug = key + ": NOT IN CACHE, " + ((set) ? "SET" : "FAILED TO SET");
-            //}
-            //else
-            //{
-            //    debug = key + ": RETRIEVED FROM CACHE";
-            //}
 
             var account = user.Accounts.FirstOrDefault(x => x.AccountID == accountId.Value);
 
@@ -275,22 +258,7 @@ namespace MABMoney.Web.Controllers
         public ActionResult MainNavigation(ProfileViewModel profile)
         {
             string debug = null;
-
-            //var key = "SUMMARY_DTO_" + profile.UserID;
-            //List<AccountDTO> accounts = _cacheProvider.Get<List<AccountDTO>>(key);
-
-            //if (accounts == null)
-            //{
-            //    accounts = _accountServices.All().ToList();
-            //    var set = _cacheProvider.Set(key, accounts);
-
-            //    debug = key + ": NOT IN CACHE, " + ((set) ? "SET" : "FAILED TO SET");
-            //}
-            //else
-            //{
-            //    debug = key + ": RETRIEVED FROM CACHE";
-            //}
-
+            
             var accounts = _accountServices.All().ToList();
 
             return View(new MainNavigationViewModel { 

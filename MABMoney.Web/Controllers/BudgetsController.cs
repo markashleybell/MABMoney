@@ -24,7 +24,6 @@ namespace MABMoney.Web.Controllers
                                  IHttpContextProvider context,
                                  ISiteConfiguration config,
                                  IDateTimeProvider dateProvider,
-                                 ICacheProvider cacheProvider,
                                  IUrlHelper urlHelper) : base(userServices,
                                                               accountServices,
                                                               categoryServices,
@@ -33,7 +32,6 @@ namespace MABMoney.Web.Controllers
                                                               context,
                                                               config,
                                                               dateProvider,
-                                                              cacheProvider,
                                                               urlHelper) { }
 
         //
