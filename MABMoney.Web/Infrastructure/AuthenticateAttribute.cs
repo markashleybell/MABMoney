@@ -26,7 +26,14 @@ namespace MABMoney.Web.Infrastructure
 
             var userId = Convert.ToInt32(EncryptionHelpers.DecryptStringAES(encryptedCookieValue, ConfigurationManager.AppSettings["SharedSecret"]));
 
-            var unitOfWork = new UnitOfWork(new DataStoreFactory(userId, new DateTimeProvider(() => DateTime.Now), ConfigurationManager.AppSettings["ExternalDbConnectionString"]));
+            DataStoreFactory dataStoreFactory;
+
+            if (ConfigurationManager.AppSettings["ExternalDbConnectionString"] != null)
+                dataStoreFactory = new DataStoreFactory(userId, new DateTimeProvider(() => DateTime.Now), ConfigurationManager.AppSettings["ExternalDbConnectionString"]);
+            else
+                dataStoreFactory = new DataStoreFactory(userId, new DateTimeProvider(() => DateTime.Now));
+
+            var unitOfWork = new UnitOfWork(dataStoreFactory);
             var userServices = new UserServices(new Repository<User, int>(unitOfWork), unitOfWork, new DateTimeProvider(() => DateTime.Now));
 
             var user = userServices.GetMinimal(userId);
