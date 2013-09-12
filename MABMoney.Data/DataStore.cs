@@ -30,6 +30,12 @@ namespace MABMoney.Data
             _dateProvider = dateProvider;
         }
 
+        public DataStore(int userId, IDateTimeProvider dateProvider, string connectionString) : base(connectionString)
+        {
+            UserID = userId;
+            _dateProvider = dateProvider;
+        }
+
         public virtual IDbSet<T> DbSet<T>() where T : class
         {
             return Set<T>();

@@ -10,6 +10,7 @@ namespace MABMoney.Data
         private DataStore _database;
         private int _userId;
         private IDateTimeProvider _dateTimeServices;
+        private string _connectionString;
 
         public DataStoreFactory(int userId, IDateTimeProvider dateTimeServices)
         {
@@ -17,9 +18,20 @@ namespace MABMoney.Data
             _dateTimeServices = dateTimeServices;
         }
 
+        public DataStoreFactory(int userId, IDateTimeProvider dateTimeServices, string connectionString)
+        {
+            _userId = userId;
+            _dateTimeServices = dateTimeServices;
+            _connectionString = connectionString;
+        }
+
         public IDataStore Get()
         {
-            _database = new DataStore(_userId, _dateTimeServices);
+            if(_connectionString != null)
+                _database = new DataStore(_userId, _dateTimeServices, _connectionString);
+            else
+                _database = new DataStore(_userId, _dateTimeServices);
+
             return _database;
         }
 

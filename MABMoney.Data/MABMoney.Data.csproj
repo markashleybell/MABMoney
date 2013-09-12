@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="DataStore.cs" />
     <Compile Include="DataStoreFactory.cs" />
+    <Compile Include="MigrateDatabaseToLatestVersionWithConnectionString.cs" />
     <Compile Include="DateTimeProvider.cs" />
     <Compile Include="Disposable.cs" />
     <Compile Include="IDataStore.cs" />

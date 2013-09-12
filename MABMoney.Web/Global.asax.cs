@@ -18,6 +18,7 @@ using MABMoney.Web.Helpers;
 using mab.lib.SimpleMapper;
 using MABMoney.Services.DTO;
 using System.Web.Optimization;
+using System.Web.Configuration;
 
 namespace MABMoney.Web
 {
@@ -42,7 +43,7 @@ namespace MABMoney.Web
             var noReplyEmailAddress = ConfigurationManager.AppSettings["NoReplyEmailAddress"];
             var noReplyEmailDisplayName = ConfigurationManager.AppSettings["NoReplyEmailDisplayName"];
             var siteUrl = ConfigurationManager.AppSettings["SiteUrl"];
-
+            var externalDbConnectionString = ConfigurationManager.AppSettings["ExternalDbConnectionString"];
 
             // Set up object mappings for Unity DI
             var container = new UnityContainer();
@@ -61,11 +62,15 @@ namespace MABMoney.Web
                      .RegisterType<IBudgetServices, BudgetServices>(new HttpContextLifetimeManager<BudgetServices>())
                      .RegisterType<IUnitOfWork, UnitOfWork>(new HttpContextLifetimeManager<UnitOfWork>())
                      .RegisterType<IDateTimeProvider, DateTimeProvider>(new InjectionFactory(c => new DateTimeProvider(() => DateTime.Now)))
-                     .RegisterType<IDataStoreFactory>(new InjectionFactory(c => new DataStoreFactory((HttpContext.Current.Request.Cookies[cookieKey] != null) ? Convert.ToInt32(EncryptionHelpers.DecryptStringAES(HttpContext.Current.Request.Cookies[cookieKey].Value, sharedSecret)) : -1, new DateTimeProvider(() => DateTime.Now))))
                      .RegisterType<ICryptoProvider>(new InjectionFactory(c => new CryptoWrapper()))
                      .RegisterType<IUrlHelper>(new InjectionFactory(c => new UrlHelperAdapter(new UrlHelper(HttpContext.Current.Request.RequestContext))))
                      .RegisterType<IHttpContextProvider>(new InjectionFactory(c => new HttpContextProvider(new HttpContextWrapper(HttpContext.Current))))
                      .RegisterType<ISiteConfiguration>(new InjectionFactory(c => new SiteConfiguration(sharedSecret, cookieKey, noReplyEmailAddress, noReplyEmailDisplayName, siteUrl)));
+
+            if(externalDbConnectionString != null)
+                container.RegisterType<IDataStoreFactory>(new InjectionFactory(c => new DataStoreFactory((HttpContext.Current.Request.Cookies[cookieKey] != null) ? Convert.ToInt32(EncryptionHelpers.DecryptStringAES(HttpContext.Current.Request.Cookies[cookieKey].Value, sharedSecret)) : -1, new DateTimeProvider(() => DateTime.Now), externalDbConnectionString)));
+            else
+                container.RegisterType<IDataStoreFactory>(new InjectionFactory(c => new DataStoreFactory((HttpContext.Current.Request.Cookies[cookieKey] != null) ? Convert.ToInt32(EncryptionHelpers.DecryptStringAES(HttpContext.Current.Request.Cookies[cookieKey].Value, sharedSecret)) : -1, new DateTimeProvider(() => DateTime.Now))));
 
             var resolver = new UnityDependencyResolver(container);
 
@@ -81,12 +86,10 @@ namespace MABMoney.Web
             // the correct type
             config.DependencyResolver = resolver.ToServiceResolver();
 
-            //if (Convert.ToBoolean(ConfigurationManager.AppSettings["RegenerateDb"]))
-            //    Database.SetInitializer<DataStore>(new DbInitializer());
-            //else
-            //    Database.SetInitializer<DataStore>(null);
-
-            Database.SetInitializer<DataStore>(new MigrateDatabaseToLatestVersion<DataStore, MABMoney.Data.Migrations.Configuration>());
+            if (externalDbConnectionString != null)
+                Database.SetInitializer<DataStore>(new MigrateDatabaseToLatestVersionWithConnectionString<DataStore, MABMoney.Data.Migrations.Configuration>(externalDbConnectionString));
+            else
+                Database.SetInitializer<DataStore>(new MigrateDatabaseToLatestVersion<DataStore, MABMoney.Data.Migrations.Configuration>());
 
             MiniProfilerEF.Initialize();
 
