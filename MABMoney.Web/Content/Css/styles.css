@@ -145,14 +145,17 @@ form {
 #mobile-tab-select {
   display: none;
 }
-.brand span {
+#brand {
+  line-height: 34px;
+  font-size: 1.35em;
+}
+.staging {
   display: none;
 }
-#staging .navbar {
-  background-color: #ffb580;
-}
-#staging .brand span {
+#staging span.staging {
   display: inline;
+  font-weight: bold;
+  color: #cc0000;
 }
 .budget-graph {
   margin-top: 20px;

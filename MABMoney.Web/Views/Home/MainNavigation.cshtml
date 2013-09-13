@@ -1,8 +1,8 @@
 ﻿@model MABMoney.Web.Models.Home.MainNavigationViewModel
 
-<div class="row">
-    <div class="col-md-6">
-        <a href="/">MABMoney <span>STAGING</span></a>
+<div class="row" id="header">
+    <div class="col-md-6" id="brand">
+        <a href="/">MABMoney <span class="staging">STAGING</span></a>
     </div>
     @if(Model.Profile.UserID != 0) {
     <div class="col-md-3" id="net-worth-display">
