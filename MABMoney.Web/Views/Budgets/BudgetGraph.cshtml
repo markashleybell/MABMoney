@@ -23,7 +23,7 @@
             } else {
             <div class="category-bar @((percentage > 100) ? "over" : "")">
                 <div class="category-stats">@((category.Total).ToString("#0.00")) of @category.Amount.ToString("#0.00")<span class="percentage"> (@percentage.ToString("#0.00")%)</span></div>
-                <div class="category-remaining">@Math.Abs(remaining).ToString("#0.00") @((remaining >= 0) ? "remaining" : "over")</div>
+                <div class="category-remaining">@Math.Abs(remaining).ToString("#0.00") @((remaining >= 0) ? "left" : "over")</div>
                 <div class="category-progress" style="width: @(barwidth)%;">&nbsp;</div>
             </div>
             }

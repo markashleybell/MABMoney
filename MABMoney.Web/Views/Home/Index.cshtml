@@ -22,7 +22,7 @@
         }
 
         @using (Html.BeginForm("", "Home", FormMethod.Post, new { id = "account-selector-mobile", @class = "form-inline" })) {
-            <p>@Html.DropDownListFor(x => x.Account_AccountID, Model.AccountsWithBalances, new { @class = "account-selector form-control" }) </p>
+            <p>@Html.DropDownListFor(x => x.Account_AccountID, Model.AccountsWithBalances, new { @class = "account-selector form-control input-lg" }) </p>
             <noscript><input type="submit" class="btn" value="Go" /></noscript>
         }
 
@@ -47,10 +47,10 @@
 
 <div class="row" id="mobile-tab-select">
     <div class="col-md-12">
-        <select>
+        <select class="form-control input-lg">
             
             @if(Model.Account.Type == AccountTypeDTO.Current) {
-            <option @Html.Raw((Model.Tab == DashboardTab.BudgetOrPaymentCalc) ? "class=\"active\"" : "") value="#budget">Budget @((Model.Budget != null) ? Model.Budget.Start.ToString("dd/MM/yy") + " - " + Model.Budget.End.ToString("dd/MM/yy") : "")</option>
+            <option @Html.Raw((Model.Tab == DashboardTab.BudgetOrPaymentCalc) ? "class=\"active\"" : "") value="#budget">Budget</option>
             }
             @if (Model.Account.Type == AccountTypeDTO.CreditCard || Model.Account.Type == AccountTypeDTO.Loan) {
             <option @Html.Raw((Model.Tab == DashboardTab.BudgetOrPaymentCalc) ? "class=\"active\"" : "") value="#payment-calculator">Payment Calculator</option>
@@ -96,7 +96,7 @@
                     <tr>
                         <th>Date</th>
                         <th>Category</th>
-                        <th>Description</th>
+                        <th class="hidden-xs">Description</th>
                         <th>Amount</th>
                         <th class="edit-column">Edit</th>
                     </tr>
@@ -107,7 +107,7 @@
                     <tr@((transaction.Date < Model.From) ? new MvcHtmlString(" class=\"before-budget-start\"") : new MvcHtmlString(""))>
                         <td>@transaction.Date.ToString("dd/MM/yyyy")</td>
                         <td>@transaction.Category.Name</td>
-                        <td>@transaction.Description</td>
+                        <td class="hidden-xs">@transaction.Description</td>
                         <td>@transaction.Amount.ToString("#0.00")</td>
                         <td class="edit-column">@Html.ActionLink("Edit", "Edit", "Transactions", new { id = transaction.TransactionID }, null)</td>
                     </tr@()>
@@ -156,7 +156,7 @@
                     <tr>
                         <th>Date</th>
                         <th>Category</th>
-                        <th>Description</th>
+                        <th class="hidden-xs">Description</th>
                         <th>Amount</th>
                         <th class="edit-column">Edit</th>
                     </tr>
@@ -167,7 +167,7 @@
                     <tr@((transaction.Date < Model.From) ? new MvcHtmlString(" class=\"before-budget-start\"") : new MvcHtmlString(""))>
                         <td>@transaction.Date.ToString("dd/MM/yyyy")</td>
                         <td>@transaction.Category.Name</td>
-                        <td>@transaction.Description</td>
+                        <td class="hidden-xs">@transaction.Description</td>
                         <td>@transaction.Amount.ToString("#0.00")</td>
                         <td class="edit-column">@Html.ActionLink("Edit", "Edit", "Transactions", new { id = transaction.TransactionID }, null)</td>
                     </tr>
@@ -217,7 +217,7 @@
                     <tr>
                         <th>Date</th>
                         <th>Category</th>
-                        <th>Description</th>
+                        <th class="hidden-xs">Description</th>
                         <th>Amount</th>
                         <th class="edit-column">Edit</th>
                     </tr>
@@ -227,7 +227,7 @@
                     <tr@((transaction.Date < Model.From) ? new MvcHtmlString(" class=\"before-budget-start\"") : new MvcHtmlString(""))>
                         <td>@transaction.Date.ToString("dd/MM/yyyy")</td>
                         <td>@transaction.Category.Name</td>
-                        <td>@transaction.Description</td>
+                        <td class="hidden-xs">@transaction.Description</td>
                         <td>@transaction.Amount.ToString("#0.00")</td>
                         <td class="edit-column">@Html.ActionLink("Edit", "Edit", "Transactions", new { id = transaction.TransactionID }, null)</td>
                     </tr>
@@ -267,7 +267,7 @@
 
         @if (Model.Budget != null) {
             
-            <h2>@((Model.Budget != null) ? Model.Budget.Start.ToString("dd/MM/yy") + " - " + Model.Budget.End.ToString("dd/MM/yy") : "")</h2>
+            <h2 class="budget-date-range-heading">@((Model.Budget != null) ? Model.Budget.Start.ToString("dd/MM/yy") + " - " + Model.Budget.End.ToString("dd/MM/yy") : "")</h2>
             
             Html.RenderPartial("~/Views/Budgets/BudgetGraph.cshtml", Model.Budget.Category_Budgets);
         }
