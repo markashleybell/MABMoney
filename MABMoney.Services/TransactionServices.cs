@@ -101,5 +101,22 @@ namespace MABMoney.Services
                 _unitOfWork.Commit();
             }
         }
+
+        public IEnumerable<TransactionDTO> GetForAccount(int accountId)
+        {
+            return _transactions.Query(x => x.Account.User_UserID == _userId && x.Account_AccountID == accountId)
+                                .Select(t => new TransactionDTO {
+                                    TransactionID = t.TransactionID,
+                                    Account_AccountID = t.Account_AccountID,
+                                    Date = t.Date,
+                                    Amount = t.Amount,
+                                    Description = t.Description,
+                                    Category_CategoryID = t.Category_CategoryID,
+                                    Category = new CategoryDTO {
+                                        Name = (t.Category != null) ? t.Category.Name : null
+                                    },
+                                    TransferGUID = t.TransferGUID
+                                }).ToList();
+        }
     }
 }

@@ -101,7 +101,7 @@ namespace MABMoney.Web.Controllers
             // Get latest budget, if there is one
             var latestBudget = _budgetServices.GetLatest(account.AccountID);
 
-            var transactions = _transactionServices.All().Where(x => x.Account_AccountID == account.AccountID);
+            var transactions = _transactionServices.GetForAccount(account.AccountID);
 
             if (latestBudget != null)
             {

@@ -12,5 +12,7 @@ namespace MABMoney.Services
         TransactionDTO Get(int id);
         void Save(TransactionDTO dto);
         void Delete(int id);
+
+        IEnumerable<TransactionDTO> GetForAccount(int accountId);
     }
 }

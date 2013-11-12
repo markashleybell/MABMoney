@@ -197,6 +197,8 @@ namespace MABMoney.Tests
             _transactionServices.Stub(x => x.Get(1)).Return(transactions[0]);
             _transactionServices.Stub(x => x.Get(2)).Return(transactions[1]);
             _transactionServices.Stub(x => x.Get(3)).Return(transactions[2]);
+            _transactionServices.Stub(x => x.GetForAccount(1)).Return(transactions.Where(x => x.Account_AccountID == 1));
+            _transactionServices.Stub(x => x.GetForAccount(2)).Return(transactions.Where(x => x.Account_AccountID == 2));
 
             _budgetServices = MockRepository.GenerateStub<IBudgetServices>();
             _budgetServices.Stub(x => x.All()).Return(budgets);

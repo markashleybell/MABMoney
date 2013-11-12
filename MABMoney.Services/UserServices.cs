@@ -32,7 +32,7 @@ namespace MABMoney.Services
 
         public UserDTO Get(int id)
         {
-            return MapUser(_users.QueryWithIncludes(x => x.UserID == id, "Accounts", "Accounts.Categories", "Accounts.Transactions").FirstOrDefault());
+            return MapUser(_users.QueryWithIncludes(x => x.UserID == id, "Accounts", "Accounts.Categories").FirstOrDefault());
         }
 
         public UserDTO GetMinimal(int id)
@@ -42,7 +42,7 @@ namespace MABMoney.Services
 
         public UserDTO GetByEmailAddress(string email)
         {
-            return MapUser(_users.QueryWithIncludes(x => x.Email == email, "Accounts", "Accounts.Categories", "Accounts.Transactions").FirstOrDefault());
+            return MapUser(_users.QueryWithIncludes(x => x.Email == email, "Accounts", "Accounts.Categories").FirstOrDefault());
         }
 
         private UserDTO MapUser(User user)
