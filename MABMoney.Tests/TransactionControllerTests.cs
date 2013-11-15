@@ -9,10 +9,10 @@ using MABMoney.Web.Infrastructure;
 using MABMoney.Web.Models;
 using MABMoney.Services.DTO;
 using Rhino.Mocks;
-using System.Web.Mvc;
 using MABMoney.Web.Controllers;
 using MABMoney.Web.Models.Transactions;
 using MABMoney.Data;
+using System.Web.Mvc;
 
 namespace MABMoney.Tests
 {
