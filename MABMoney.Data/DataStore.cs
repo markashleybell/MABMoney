@@ -7,7 +7,6 @@ using MABMoney.Domain;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Data;
 using System.Data.Entity.Infrastructure;
-using System.Data.Objects;
 
 namespace MABMoney.Data
 {

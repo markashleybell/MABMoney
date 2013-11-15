@@ -13,7 +13,6 @@ using Microsoft.Practices.Unity;
 using MABMoney.Services;
 using MABMoney.Web.Models;
 using System.Configuration;
-using StackExchange.Profiling;
 using MABMoney.Web.Helpers;
 using mab.lib.SimpleMapper;
 using MABMoney.Services.DTO;
@@ -90,8 +89,6 @@ namespace MABMoney.Web
                 Database.SetInitializer<DataStore>(new MigrateDatabaseToLatestVersionWithConnectionString<DataStore, MABMoney.Data.Migrations.Configuration>(externalDbConnectionString));
             else
                 Database.SetInitializer<DataStore>(new MigrateDatabaseToLatestVersion<DataStore, MABMoney.Data.Migrations.Configuration>());
-
-            MiniProfilerEF.Initialize();
 
             ICryptoProvider _crypto = new CryptoWrapper();
 
