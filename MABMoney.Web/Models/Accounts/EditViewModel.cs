@@ -22,7 +22,9 @@ namespace MABMoney.Web.Models.Accounts
         [Required]
         public AccountTypeDTO Type { get; set; }
         public SelectList AccountTypes { get; set; }
-
+        [Required]
+        [DisplayName("Display Order")]
+        public int DisplayOrder { get; set; }
         [DisplayName("Default Account")]
         public bool Default { get; set; }
     }

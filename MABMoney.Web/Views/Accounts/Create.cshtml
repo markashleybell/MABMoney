@@ -20,6 +20,8 @@
     
     @Html.TextControlGroupFor(x => x.StartingBalance, new { @class = "help", data_content = "The current balance of this account." })
     
+    @Html.TextControlGroupFor(x => x.DisplayOrder, new { @class = "help", data_content = "Display order when accounts are listed (e.g. Net Worth dropdown)" })
+    
     // Html.CheckboxControlGroupFor(x => x.Default, new { data_content = "Make this the account which loads by default when you open MABMoney (this would usually be your current or checking account)." })
     
     @Html.HiddenFor(x => x.Default)

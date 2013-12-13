@@ -17,9 +17,11 @@
     
     @Html.CheckboxControlGroupFor(x => x.Default)
 
+    @Html.SelectControlGroupFor(x => x.Type, Model.AccountTypes, "Please select...")
+    
     @Html.TextControlGroupFor(x => x.StartingBalance)
     
-    @Html.SelectControlGroupFor(x => x.Type, Model.AccountTypes, "Please select...")
+    @Html.TextControlGroupFor(x => x.DisplayOrder, new { @class = "help", data_content = "Display order when accounts are listed (e.g. Net Worth dropdown)" })
 
     @Html.HiddenFor(x => x.AccountID)
 

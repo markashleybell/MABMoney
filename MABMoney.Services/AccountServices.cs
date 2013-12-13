@@ -29,7 +29,8 @@ namespace MABMoney.Services
 
         public IEnumerable<AccountDTO> All()
         {
-            var dto = _accounts.All().Where(x => x.User_UserID == _userId).Select(a => new AccountDTO { 
+            var dto = _accounts.All().OrderBy(x => x.DisplayOrder).Where(x => x.User_UserID == _userId).Select(a => new AccountDTO
+            { 
                 AccountID = a.AccountID,
                 Type = (AccountTypeDTO)a.Type,
                 Name = a.Name,

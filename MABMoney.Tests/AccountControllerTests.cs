@@ -38,19 +38,22 @@ namespace MABMoney.Tests
                     AccountID = 1,
                     Name = "Current",
                     StartingBalance = 100,
-                    Type = AccountTypeDTO.Current
+                    Type = AccountTypeDTO.Current,
+                    DisplayOrder = 0
                 },
                 new AccountDTO { 
                     AccountID = 2,
                     Name = "Savings",
                     StartingBalance = 200,
-                    Type = AccountTypeDTO.Savings
+                    Type = AccountTypeDTO.Savings,
+                    DisplayOrder = 1
                 },
                 new AccountDTO { 
                     AccountID = 3,
                     Name = "Other",
                     StartingBalance = 150,
-                    Type = AccountTypeDTO.CreditCard
+                    Type = AccountTypeDTO.CreditCard,
+                    DisplayOrder = 2
                 }
             };
 
@@ -127,7 +130,8 @@ namespace MABMoney.Tests
                 Name = "New",
                 StartingBalance = 1000M,
                 Type = AccountTypeDTO.Current,
-                RedirectAfterSubmitUrl = "http://localhost"
+                RedirectAfterSubmitUrl = "http://localhost",
+                DisplayOrder = 4
             };
 
             var result = controller.Create(_profile, model) as RedirectToRouteResult;
@@ -139,6 +143,7 @@ namespace MABMoney.Tests
                     o => o.Name == "New" 
                       && o.StartingBalance == 1000M
                       && o.Type == AccountTypeDTO.Current
+                      && o.DisplayOrder == 4
                 )
             ));
         }
@@ -159,6 +164,7 @@ namespace MABMoney.Tests
             model.StartingBalance.ShouldEqual(100M);
             model.Name.ShouldEqual("Current");
             model.Type.ShouldEqual(AccountTypeDTO.Current);
+            model.DisplayOrder.ShouldEqual(0);
         }
 
         [Test]
@@ -172,7 +178,8 @@ namespace MABMoney.Tests
                 Name = "EDITED",
                 StartingBalance = 750M,
                 Type = AccountTypeDTO.CreditCard,
-                RedirectAfterSubmitUrl = "http://localhost"
+                RedirectAfterSubmitUrl = "http://localhost",
+                DisplayOrder = 5
             };
 
             var result = controller.Edit(_profile, model) as RedirectResult;
@@ -185,6 +192,7 @@ namespace MABMoney.Tests
                       && o.Name == "EDITED" 
                       && o.StartingBalance == 750M
                       && o.Type == AccountTypeDTO.CreditCard
+                      && o.DisplayOrder == 5
                 )
             ));
         }

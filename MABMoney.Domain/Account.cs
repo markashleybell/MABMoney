@@ -32,5 +32,8 @@ namespace MABMoney.Domain
         public string TransactionDescriptionHistory { get; set; }
 
         public virtual ICollection<Category> Categories { get; set; }
+
+        [Required]
+        public int DisplayOrder { get; set; }
     }
 }

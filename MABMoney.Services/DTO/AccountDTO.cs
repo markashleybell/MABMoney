@@ -25,5 +25,8 @@ namespace MABMoney.Services.DTO
         public List<string> TransactionDescriptionHistory { get; set; }
 
         public List<CategoryDTO> Categories { get; set; }
+
+        [Required]
+        public int DisplayOrder { get; set; }
     }
 }
