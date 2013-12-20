@@ -41,7 +41,6 @@
                 data: { query: query, id: accountSelector.val() },
                 type: 'POST'
             }).done(function (data) {
-                console.log(data);
                 process(data);
             });
         }
