@@ -217,6 +217,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Content Include="Content\Css\bootstrap.css" />
     <Content Include="Content\Css\bootstrap.min.css" />
+    <Content Include="Content\Css\datepicker2.css" />
     <Content Include="Content\Css\datepicker.css" />
     <Content Include="Content\Css\styles.css">
       <DependentUpon>styles.less</DependentUpon>
