@@ -129,9 +129,12 @@ namespace MABMoney.Web.Controllers
         // POST: /Account/Delete/5
         [Authenticate]
         [HttpPost]
-        public ActionResult GetTransactionDescriptionHistory(ProfileViewModel profile, string query, int id)
+        public ActionResult GetTransactionDescriptionHistory(ProfileViewModel profile, string query, int? id)
         {
-            var account = _accountServices.Get(id);
+            if (!id.HasValue)
+                return Json(new string[0]);
+
+            var account = _accountServices.Get(id.Value);
 
             return Json(account.TransactionDescriptionHistory.ToArray());
         }

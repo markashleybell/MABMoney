@@ -15,13 +15,13 @@
 {
     @Html.EditorControlGroupFor(x => x.Date)
    
-    @Html.TextControlGroupFor(x => x.Description)
+    @Html.TextControlGroupFor(x => x.Description, new { @class = "typeahead" })
 
     @Html.TextControlGroupFor(x => x.Amount)
     
     @Html.SelectControlGroupFor(x => x.Category_CategoryID, Model.Categories, "Please select...")
     
-    @Html.SelectControlGroupFor(x => x.Account_AccountID, Model.Accounts, "Please select...")
+    @Html.SelectControlGroupFor(x => x.Account_AccountID, Model.Accounts, "Please select...", new { @class = "account-dropdown" })
 
     @Html.HiddenFor(x => x.RedirectAfterSubmitUrl)
     

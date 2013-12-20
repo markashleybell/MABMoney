@@ -18,6 +18,7 @@
     });
 
     var accountSelector = $('.account-selector');
+    var accountDropdown = $('.account-dropdown');
     
     // Auto-submit account selector form when option is changed
     accountSelector.on('change', function (evt) {
@@ -38,7 +39,7 @@
         source: function (query, process) {
             $.ajax({
                 url: '/Accounts/GetTransactionDescriptionHistory',
-                data: { query: query, id: accountSelector.val() },
+                data: { query: query, id: (accountSelector.length) ? accountSelector.val() : accountDropdown.val() },
                 type: 'POST'
             }).done(function (data) {
                 process(data);
