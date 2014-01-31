@@ -275,5 +275,10 @@ namespace MABMoney.Web.Controllers
                 Debug = debug
             });
         }
+
+        public ActionResult PingTarget()
+        {
+            return View();
+        }
     }
 }
