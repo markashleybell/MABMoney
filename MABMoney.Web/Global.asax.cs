@@ -42,6 +42,7 @@ namespace MABMoney.Web
             var noReplyEmailAddress = ConfigurationManager.AppSettings["NoReplyEmailAddress"];
             var noReplyEmailDisplayName = ConfigurationManager.AppSettings["NoReplyEmailDisplayName"];
             var siteUrl = ConfigurationManager.AppSettings["SiteUrl"];
+            var defaultCardPaymentAmount = Convert.ToDecimal(ConfigurationManager.AppSettings["DefaultCardPaymentAmount"]);
             var externalDbConnectionString = ConfigurationManager.AppSettings["ExternalDbConnectionString"];
 
             // Set up object mappings for Unity DI
@@ -64,7 +65,7 @@ namespace MABMoney.Web
                      .RegisterType<ICryptoProvider>(new InjectionFactory(c => new CryptoWrapper()))
                      .RegisterType<IUrlHelper>(new InjectionFactory(c => new UrlHelperAdapter(new UrlHelper(HttpContext.Current.Request.RequestContext))))
                      .RegisterType<IHttpContextProvider>(new InjectionFactory(c => new HttpContextProvider(new HttpContextWrapper(HttpContext.Current))))
-                     .RegisterType<ISiteConfiguration>(new InjectionFactory(c => new SiteConfiguration(sharedSecret, cookieKey, noReplyEmailAddress, noReplyEmailDisplayName, siteUrl)));
+                     .RegisterType<ISiteConfiguration>(new InjectionFactory(c => new SiteConfiguration(sharedSecret, cookieKey, noReplyEmailAddress, noReplyEmailDisplayName, siteUrl, defaultCardPaymentAmount)));
 
             if(externalDbConnectionString != null)
                 container.RegisterType<IDataStoreFactory>(new InjectionFactory(c => new DataStoreFactory((HttpContext.Current.Request.Cookies[cookieKey] != null) ? Convert.ToInt32(EncryptionHelpers.DecryptStringAES(HttpContext.Current.Request.Cookies[cookieKey].Value, sharedSecret)) : -1, new DateTimeProvider(() => DateTime.Now), externalDbConnectionString)));

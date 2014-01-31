@@ -45,5 +45,7 @@ namespace MABMoney.Web.Models.Home
         public int DestinationAccountID { get; set; }
 
         public int BudgetCount { get; set; }
+
+        public decimal DefaultCardPaymentAmount { get; set; }
     }
 }

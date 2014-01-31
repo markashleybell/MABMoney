@@ -12,5 +12,6 @@ namespace MABMoney.Web.Infrastructure
         string NoReplyEmailAddress { get; }
         string NoReplyEmailDisplayName { get; }
         string SiteUrl { get; }
+        decimal DefaultCardPaymentAmount { get; }
     }
 }

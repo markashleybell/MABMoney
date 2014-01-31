@@ -124,8 +124,12 @@
 
     buildPaymentCalculatorTable(currentBalance.val(), paymentAmount.val(), interestRate.val(), minPaymentPercentage.val());
 
+    // Handle the 'Recalculate' button click
     $('#payment-calculator-recalculate').on('click', function (evt) {
         evt.preventDefault();
+        // Store the monthly payment amount in a cookie
+        $.cookie(_COOKIE_KEY + '_DefaultCardPaymentAmount', paymentAmount.val(), { expires: 365 });
+        // Rebuild the payment table
         buildPaymentCalculatorTable(currentBalance.val(), paymentAmount.val(), interestRate.val(), minPaymentPercentage.val());
     });
 

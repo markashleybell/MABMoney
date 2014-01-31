@@ -15,6 +15,12 @@ namespace MABMoney.Web.Infrastructure
             _context = context;
         }
 
+        public T GetCookieValue<T>(string key)
+        {
+            var cookie = _context.Request.Cookies[key];
+            return (cookie != null) ? (T)Convert.ChangeType(cookie.Value, typeof(T)) : default(T);
+        }
+
         public void SetCookie(string key, string value)
         {
             _context.Response.Cookies.Add(new HttpCookie(key, value));

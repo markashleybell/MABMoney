@@ -12,6 +12,11 @@ namespace MABMoney.Tests
     {
         public Dictionary<string, Tuple<string, DateTime>> Cookies = new Dictionary<string, Tuple<string, DateTime>>();
 
+        public T GetCookieValue<T>(string key)
+        {
+            return (Cookies.ContainsKey(key)) ? (T)Convert.ChangeType(Cookies[key].Item1, typeof(T)) : default(T);
+        }
+
         public void SetCookie(string key, string value)
         {
             var values = Tuple.Create<string, DateTime>(value, DateTime.MinValue);

@@ -11,13 +11,15 @@ namespace MABMoney.Web.Infrastructure
                                  string cookieKey, 
                                  string noReplyEmailAddress,
                                  string noReplyEmailDisplayName,
-                                 string siteUrl)
+                                 string siteUrl,
+                                 decimal defaultCardPaymentAmount)
         {
             SharedSecret = sharedSecret;
             CookieKey = cookieKey;
             NoReplyEmailAddress = noReplyEmailAddress;
             NoReplyEmailDisplayName = noReplyEmailDisplayName;
             SiteUrl = siteUrl;
+            DefaultCardPaymentAmount = defaultCardPaymentAmount;
         }
 
         public string SharedSecret { get; private set; }
@@ -25,5 +27,6 @@ namespace MABMoney.Web.Infrastructure
         public string NoReplyEmailAddress { get; private set; }
         public string NoReplyEmailDisplayName { get; private set; }
         public string SiteUrl { get; private set; }
+        public decimal DefaultCardPaymentAmount { get; private set; }
     }
 }

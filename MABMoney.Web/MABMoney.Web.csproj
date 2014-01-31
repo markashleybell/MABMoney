@@ -234,6 +234,7 @@
     <Content Include="Content\Js\bootstrap-typeahead.js" />
     <Content Include="Content\Js\bootstrap.js" />
     <Content Include="Content\Js\bootstrap.min.js" />
+    <Content Include="Content\Js\jquery.cookie.js" />
     <Content Include="Content\Js\locales\bootstrap-datepicker.bg.js" />
     <Content Include="Content\Js\locales\bootstrap-datepicker.ca.js" />
     <Content Include="Content\Js\locales\bootstrap-datepicker.cs.js" />

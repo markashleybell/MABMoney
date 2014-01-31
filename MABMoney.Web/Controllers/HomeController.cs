@@ -126,6 +126,13 @@ namespace MABMoney.Web.Controllers
             var model = new IndexViewModel();
             model.Date = _dateProvider.Now;
 
+            model.DefaultCardPaymentAmount = _config.DefaultCardPaymentAmount;
+
+            var userCardPaymentAmount = _context.GetCookieValue<decimal>(_config.CookieKey + "_DefaultCardPaymentAmount");
+
+            if (userCardPaymentAmount != 0)
+                model.DefaultCardPaymentAmount = userCardPaymentAmount;
+
             if (state != null)
             {
                 var decodedPageState = Encoding.UTF8.GetString(HttpServerUtility.UrlTokenDecode(state));
