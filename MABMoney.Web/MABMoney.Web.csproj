@@ -235,6 +235,7 @@
     <Content Include="Content\Js\bootstrap.js" />
     <Content Include="Content\Js\bootstrap.min.js" />
     <Content Include="Content\Js\jquery.cookie.js" />
+    <Content Include="Content\Js\jquery.js" />
     <Content Include="Content\Js\locales\bootstrap-datepicker.bg.js" />
     <Content Include="Content\Js\locales\bootstrap-datepicker.ca.js" />
     <Content Include="Content\Js\locales\bootstrap-datepicker.cs.js" />
@@ -410,6 +411,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Home\PingTarget.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\Css\bootstrap.css.map" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
