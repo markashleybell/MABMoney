@@ -130,8 +130,8 @@ namespace MABMoney.Web.Controllers
             _userServices.Save(dto);
 
             // Encrypt the ID before storing it in a cookie
-            var encryptedUserId = EncryptionHelpers.EncryptStringAES(dto.UserID.ToString(), _config.SharedSecret);
-            _context.SetCookie(_config.CookieKey, encryptedUserId);
+            var encryptedUserId = EncryptionHelpers.EncryptStringAES(dto.UserID.ToString(), _config.Get<string>("SharedSecret"));
+            _context.SetCookie(_config.Get<string>("CookieKey"), encryptedUserId);
 
             return Redirect(model.RedirectAfterSubmitUrl);
         }
@@ -156,12 +156,12 @@ namespace MABMoney.Web.Controllers
                 return View(model);
 
             // Encrypt the ID before storing it in a cookie
-            var encryptedUserId = EncryptionHelpers.EncryptStringAES(user.UserID.ToString(), _config.SharedSecret);
+            var encryptedUserId = EncryptionHelpers.EncryptStringAES(user.UserID.ToString(), _config.Get<string>("SharedSecret"));
 
             if (model.RememberMe)
-                _context.SetCookie(_config.CookieKey, encryptedUserId, _dateProvider.Now.AddDays(7));
+                _context.SetCookie(_config.Get<string>("CookieKey"), encryptedUserId, _dateProvider.Now.AddDays(7));
             else
-                _context.SetCookie(_config.CookieKey, encryptedUserId);
+                _context.SetCookie(_config.Get<string>("CookieKey"), encryptedUserId);
 
             return Redirect(model.RedirectAfterSubmitUrl);
         }
@@ -169,7 +169,7 @@ namespace MABMoney.Web.Controllers
         [HttpGet]
         public ActionResult Logout()
         {
-            _context.SetCookie(_config.CookieKey, "", _dateProvider.Now.AddDays(-1));
+            _context.SetCookie(_config.Get<string>("CookieKey"), "", _dateProvider.Now.AddDays(-1));
 
             // TODO: Is there ever going to be a need to define this on the fly with RedirectAfterSubmitUrl?
             return RedirectToAction("Login");
@@ -205,12 +205,12 @@ namespace MABMoney.Web.Controllers
                     templateHtml = file.ReadToEnd();
                 }
 
-                templateHtml = Regex.Replace(templateHtml, @"\[\{SITE_URL\}\]", _config.SiteUrl, regexOptions);
+                templateHtml = Regex.Replace(templateHtml, @"\[\{SITE_URL\}\]", _config.Get<string>("SiteUrl"), regexOptions);
                 templateHtml = Regex.Replace(templateHtml, @"\[\{RESET_GUID\}\]", guid, regexOptions);
 
                 var smtp = new SmtpClient();
 
-                var msg = new MailMessage(new MailAddress(_config.NoReplyEmailAddress, _config.NoReplyEmailDisplayName), new MailAddress(user.Email));
+                var msg = new MailMessage(new MailAddress(_config.Get<string>("NoReplyEmailAddress"), _config.Get<string>("NoReplyEmailDisplayName")), new MailAddress(user.Email));
                 msg.Subject = "Reset your Password";
                 msg.IsBodyHtml = true;
                 msg.Body = templateHtml;

@@ -7,11 +7,7 @@ namespace MABMoney.Web.Infrastructure
 {
     public interface ISiteConfiguration
     {
-        string SharedSecret { get; }
-        string CookieKey { get; }
-        string NoReplyEmailAddress { get; }
-        string NoReplyEmailDisplayName { get; }
-        string SiteUrl { get; }
-        decimal DefaultCardPaymentAmount { get; }
+        string this[string key] { get; }
+        T Get<T>(string key);
     }
 }

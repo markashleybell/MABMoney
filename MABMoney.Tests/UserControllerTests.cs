@@ -68,8 +68,8 @@ namespace MABMoney.Tests
 
             _config = MockRepository.GenerateStub<ISiteConfiguration>();
 
-            _config.Stub(x => x.SharedSecret).Return("SHAREDSECRET");
-            _config.Stub(x => x.CookieKey).Return("COOKIEKEY");
+            _config.Stub(x => x.Get<string>("SharedSecret")).Return("SHAREDSECRET");
+            _config.Stub(x => x.Get<string>("CookieKey")).Return("COOKIEKEY");
 
             _dateProvider = MockRepository.GenerateStub<IDateTimeProvider>();
             _dateProvider.Stub(x => x.Now).Return(new DateTime(2020, 01, 01));

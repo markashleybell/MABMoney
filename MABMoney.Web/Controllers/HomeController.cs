@@ -126,9 +126,9 @@ namespace MABMoney.Web.Controllers
             var model = new IndexViewModel();
             model.Date = _dateProvider.Now;
 
-            model.DefaultCardPaymentAmount = _config.DefaultCardPaymentAmount;
+            model.DefaultCardPaymentAmount = _config.Get<decimal>("DefaultCardPaymentAmount");
 
-            var userCardPaymentAmount = _context.GetCookieValue<decimal>(_config.CookieKey + "_DefaultCardPaymentAmount");
+            var userCardPaymentAmount = _context.GetCookieValue<decimal>(_config.Get<string>("CookieKey") + "_DefaultCardPaymentAmount");
 
             if (userCardPaymentAmount != 0)
                 model.DefaultCardPaymentAmount = userCardPaymentAmount;
@@ -136,7 +136,7 @@ namespace MABMoney.Web.Controllers
             if (state != null)
             {
                 var decodedPageState = Encoding.UTF8.GetString(HttpServerUtility.UrlTokenDecode(state));
-                var pageState = EncryptionHelpers.DecryptStringAES(decodedPageState, _config.SharedSecret).Split('-');
+                var pageState = EncryptionHelpers.DecryptStringAES(decodedPageState, _config.Get<string>("SharedSecret")).Split('-');
 
                 model = GetModelData(model, profile.UserID, Convert.ToInt32(pageState[0]));
 
@@ -167,7 +167,7 @@ namespace MABMoney.Web.Controllers
         [HttpPost]
         public ActionResult Index(ProfileViewModel profile, int account_accountId)
         {
-            var pageState = EncryptionHelpers.EncryptStringAES(account_accountId + "-" + TransactionType.Expense + "-" + DashboardTab.BudgetOrPaymentCalc, _config.SharedSecret);
+            var pageState = EncryptionHelpers.EncryptStringAES(account_accountId + "-" + TransactionType.Expense + "-" + DashboardTab.BudgetOrPaymentCalc, _config.Get<string>("SharedSecret"));
             var encodedPageState = HttpServerUtility.UrlTokenEncode(Encoding.UTF8.GetBytes(pageState));
 
             return RedirectToRoute("Home", new { state = encodedPageState });
@@ -208,7 +208,7 @@ namespace MABMoney.Web.Controllers
             account.TransactionDescriptionHistory.Add(dto.Description);
             _accountServices.Save(account);
 
-            var pageState = EncryptionHelpers.EncryptStringAES(model.Account_AccountID + "-" + model.Type + "-" + model.Tab, _config.SharedSecret);
+            var pageState = EncryptionHelpers.EncryptStringAES(model.Account_AccountID + "-" + model.Type + "-" + model.Tab, _config.Get<string>("SharedSecret"));
             var encodedPageState = HttpServerUtility.UrlTokenEncode(Encoding.UTF8.GetBytes(pageState));
 
             return RedirectToRoute("Home", new { state = encodedPageState });
@@ -256,7 +256,7 @@ namespace MABMoney.Web.Controllers
             _transactionServices.Save(sourceTransaction);
             _transactionServices.Save(destinationTransaction);
 
-            var pageState = EncryptionHelpers.EncryptStringAES(model.Account_AccountID + "-" + model.Type + "-" + model.Tab, _config.SharedSecret);
+            var pageState = EncryptionHelpers.EncryptStringAES(model.Account_AccountID + "-" + model.Type + "-" + model.Tab, _config.Get<string>("SharedSecret"));
             var encodedPageState = HttpServerUtility.UrlTokenEncode(Encoding.UTF8.GetBytes(pageState));
 
             return RedirectToRoute("Home", new { state = encodedPageState });
