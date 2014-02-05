@@ -127,8 +127,13 @@
     // Handle the 'Recalculate' button click
     $('#payment-calculator-recalculate').on('click', function (evt) {
         evt.preventDefault();
+        var accountId = accountSelector.first().val();
         // Store the monthly payment amount in a cookie
-        $.cookie(_COOKIE_KEY + '_DefaultCardPaymentAmount', paymentAmount.val(), { expires: 365 });
+        $.cookie(_COOKIE_KEY + '_' + accountId + '_DefaultCardPaymentAmount', paymentAmount.val(), { expires: 365 });
+        // Store the interest rate in a cookie
+        $.cookie(_COOKIE_KEY + '_' + accountId + '_DefaultCardInterestRate', interestRate.val(), { expires: 365 });
+        // Store the interest rate in a cookie
+        $.cookie(_COOKIE_KEY + '_' + accountId + '_DefaultCardMinimumPayment', minPaymentPercentage.val(), { expires: 365 });
         // Rebuild the payment table
         buildPaymentCalculatorTable(currentBalance.val(), paymentAmount.val(), interestRate.val(), minPaymentPercentage.val());
     });

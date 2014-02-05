@@ -117,6 +117,21 @@ namespace MABMoney.Web.Controllers
             model.Transactions = transactions.ToList();
             model.Budget = latestBudget;
 
+            model.DefaultCardPaymentAmount = _config.Get<decimal>("DefaultCardPaymentAmount");
+            model.DefaultCardInterestRate = _config.Get<decimal>("DefaultCardInterestRate");
+            model.DefaultCardMinimumPayment = _config.Get<decimal>("DefaultCardMinimumPayment");
+
+            var userCardPaymentAmount = _context.GetCookieValue<decimal>(_config.Get<string>("CookieKey") + "_" + account.AccountID + "_DefaultCardPaymentAmount");
+            var userCardInterestRate = _context.GetCookieValue<decimal>(_config.Get<string>("CookieKey") + "_" + account.AccountID + "_DefaultCardInterestRate");
+            var userCardMinimumPayment = _context.GetCookieValue<decimal>(_config.Get<string>("CookieKey") + "_" + account.AccountID + "_DefaultCardMinimumPayment");
+
+            if (userCardPaymentAmount != 0)
+            {
+                model.DefaultCardPaymentAmount = userCardPaymentAmount;
+                model.DefaultCardInterestRate = userCardInterestRate;
+                model.DefaultCardMinimumPayment = userCardMinimumPayment;
+            }
+
             return model;
         }
 
@@ -125,13 +140,6 @@ namespace MABMoney.Web.Controllers
         {
             var model = new IndexViewModel();
             model.Date = _dateProvider.Now;
-
-            model.DefaultCardPaymentAmount = _config.Get<decimal>("DefaultCardPaymentAmount");
-
-            var userCardPaymentAmount = _context.GetCookieValue<decimal>(_config.Get<string>("CookieKey") + "_DefaultCardPaymentAmount");
-
-            if (userCardPaymentAmount != 0)
-                model.DefaultCardPaymentAmount = userCardPaymentAmount;
 
             if (state != null)
             {

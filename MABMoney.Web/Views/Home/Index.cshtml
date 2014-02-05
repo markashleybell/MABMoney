@@ -305,8 +305,8 @@
             <div class="row">
                 <div class="col-md-2"><input class="form-control" id="payment-calculator-currentbalance" name="payment-calculator-currentbalance" type="text" value="@Math.Abs(Model.Account.CurrentBalance).ToString("#0.00")"></div>
                 <div class="col-md-2"><input class="form-control" id="payment-calculator-paymentamount" name="payment-calculator-paymentamount" type="text" value="@Model.DefaultCardPaymentAmount.ToString("0.00")"></div>
-                <div class="col-md-2"><input class="form-control" id="payment-calculator-interestrate" name="payment-calculator-interestrate" type="text" value="16.9"></div>
-                <div class="col-md-2"><input class="form-control" id="payment-calculator-minpaymentpercentage" name="payment-calculator-currentbalance" type="text" value="3"></div>
+                <div class="col-md-2"><input class="form-control" id="payment-calculator-interestrate" name="payment-calculator-interestrate" type="text" value="@Model.DefaultCardInterestRate.ToString("0.00")"></div>
+                <div class="col-md-2"><input class="form-control" id="payment-calculator-minpaymentpercentage" name="payment-calculator-currentbalance" type="text" value="@Model.DefaultCardMinimumPayment.ToString("0.00")"></div>
                 <div class="col-md-2 col-md-offset-2">
                     <input type="button" id="payment-calculator-recalculate" value="Recalculate" class="btn btn-primary btn-block" />
                 </div>

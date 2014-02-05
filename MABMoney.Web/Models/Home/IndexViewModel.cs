@@ -47,5 +47,7 @@ namespace MABMoney.Web.Models.Home
         public int BudgetCount { get; set; }
 
         public decimal DefaultCardPaymentAmount { get; set; }
+        public decimal DefaultCardInterestRate { get; set; }
+        public decimal DefaultCardMinimumPayment { get; set; }
     }
 }
