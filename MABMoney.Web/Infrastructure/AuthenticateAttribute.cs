@@ -8,6 +8,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Configuration;
+using StackExchange.Profiling;
 
 namespace MABMoney.Web.Infrastructure
 {
@@ -24,8 +25,15 @@ namespace MABMoney.Web.Infrastructure
 
             var encryptedCookieValue = context.Request.Cookies[ConfigurationManager.AppSettings["CookieKey"]].Value;
 
-            var userId = Convert.ToInt32(EncryptionHelpers.DecryptStringAES(encryptedCookieValue, ConfigurationManager.AppSettings["SharedSecret"]));
+            IDisposable _step;
+            var _profiler = MiniProfiler.Current;
 
+            _step = _profiler.Step("Decrypt Auth Cookie");
+            var userId = Convert.ToInt32(EncryptionHelpers.DecryptStringAES(encryptedCookieValue, ConfigurationManager.AppSettings["SharedSecret"]));
+            _step.Dispose();
+
+            _step = _profiler.Step("Instantiate DB Factory and Service");
+            
             DataStoreFactory dataStoreFactory;
 
             if (ConfigurationManager.AppSettings["ExternalDbConnectionString"] != null)
@@ -35,8 +43,12 @@ namespace MABMoney.Web.Infrastructure
 
             var unitOfWork = new UnitOfWork(dataStoreFactory);
             var userServices = new UserServices(new Repository<User, int>(unitOfWork), unitOfWork, new DateTimeProvider(() => DateTime.Now));
+            
+            _step.Dispose();
 
+            _step = _profiler.Step("Get Minimal User Data");
             var user = userServices.GetMinimal(userId);
+            _step.Dispose();
 
             if (user == null)
                 return false;

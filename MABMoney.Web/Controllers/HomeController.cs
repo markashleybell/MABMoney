@@ -13,11 +13,15 @@ using MABMoney.Web.Infrastructure;
 using MABMoney.Web.Models;
 using System.Text;
 using MABMoney.Data;
+using StackExchange.Profiling;
 
 namespace MABMoney.Web.Controllers
 {
     public class HomeController : BaseController
     {
+        private MiniProfiler _profiler;
+        private IDisposable _step;
+
         public HomeController(IUserServices userServices,
                               IAccountServices accountServices,
                               ICategoryServices categoryServices,
@@ -34,7 +38,9 @@ namespace MABMoney.Web.Controllers
                                                            context,
                                                            config,
                                                            dateProvider,
-                                                           urlHelper) { }
+                                                           urlHelper) { 
+            _profiler = MiniProfiler.Current;
+        }
 
         private TransactionType GetDefaultTransactionTypeForAccount(AccountDTO account)
         {
@@ -49,7 +55,11 @@ namespace MABMoney.Web.Controllers
 
         private IndexViewModel GetModelData(IndexViewModel model, int userId, int? accountId)
         {
+            _step = _profiler.Step("Get User Account");
             var user = _userServices.Get(userId);
+            _step.Dispose();
+
+            _step = _profiler.Step("Get Bank Account");
 
             // If no account ID has been passed in
             if (!accountId.HasValue)
@@ -75,6 +85,8 @@ namespace MABMoney.Web.Controllers
             string debug = null;
 
             var account = user.Accounts.FirstOrDefault(x => x.AccountID == accountId.Value);
+            
+            _step.Dispose();
 
             if (account == null)
                 return null;
@@ -98,8 +110,12 @@ namespace MABMoney.Web.Controllers
             model.From = new DateTime(now.Year, now.Month, 1);
             model.To = new DateTime(now.Year, now.Month, DateTime.DaysInMonth(now.Year, now.Month));
 
+            _step = _profiler.Step("Get Latest Budget");
             // Get latest budget, if there is one
             var latestBudget = _budgetServices.GetLatest(account.AccountID);
+            _step.Dispose();
+
+            _step = _profiler.Step("Get Transactions For Account");
 
             var transactions = _transactionServices.GetForAccount(account.AccountID);
 
@@ -115,6 +131,9 @@ namespace MABMoney.Web.Controllers
             }
 
             model.Transactions = transactions.ToList();
+
+            _step.Dispose();
+
             model.Budget = latestBudget;
 
             model.DefaultCardPaymentAmount = _config.Get<decimal>("DefaultCardPaymentAmount");
@@ -273,8 +292,10 @@ namespace MABMoney.Web.Controllers
         public ActionResult MainNavigation(ProfileViewModel profile)
         {
             string debug = null;
-            
+
+            _step = _profiler.Step("Get Account List");
             var accounts = _accountServices.All().ToList();
+            _step.Dispose();
 
             return View(new MainNavigationViewModel { 
                 Profile = profile,
