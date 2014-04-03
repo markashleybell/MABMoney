@@ -23,7 +23,7 @@
         @Scripts.Render("~/Content/Js/jquery")
         @Scripts.Render("~/Content/Js/bootstrap")
         @Scripts.Render("~/Content/Js/base")
-        @MiniProfiler.RenderIncludes()
+        @MiniProfiler.RenderIncludes(position: RenderPosition.Right, showTrivial: true, showTimeWithChildren: true)
         @if(!(Convert.ToBoolean(ConfigurationManager.AppSettings["Staging"]))) {
         <script>
             (function (i, s, o, g, r, a, m) {
