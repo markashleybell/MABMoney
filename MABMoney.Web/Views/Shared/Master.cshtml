@@ -1,4 +1,5 @@
 ﻿@using System.Configuration;
+@using StackExchange.Profiling;
 <!DOCTYPE html>
 <html>
     <head>
@@ -22,6 +23,7 @@
         @Scripts.Render("~/Content/Js/jquery")
         @Scripts.Render("~/Content/Js/bootstrap")
         @Scripts.Render("~/Content/Js/base")
+        @MiniProfiler.RenderIncludes()
         @if(!(Convert.ToBoolean(ConfigurationManager.AppSettings["Staging"]))) {
         <script>
             (function (i, s, o, g, r, a, m) {

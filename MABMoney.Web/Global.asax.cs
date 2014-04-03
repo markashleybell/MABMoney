@@ -18,6 +18,8 @@ using mab.lib.SimpleMapper;
 using MABMoney.Services.DTO;
 using System.Web.Optimization;
 using System.Web.Configuration;
+using StackExchange.Profiling;
+using StackExchange.Profiling.EntityFramework6;
 
 namespace MABMoney.Web
 {
@@ -35,6 +37,8 @@ namespace MABMoney.Web
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
             ModelBinders.Binders.Add(typeof(ProfileViewModel), new ProfileModelBinder());
+
+            MiniProfilerEF6.Initialize();
 
             var sharedSecret = ConfigurationManager.AppSettings["SharedSecret"];
             var cookieKey = ConfigurationManager.AppSettings["CookieKey"];
@@ -121,6 +125,19 @@ namespace MABMoney.Web
                 d.Email = s.Email;
                 d.Password = (s.Password != null) ? _crypto.HashPassword(s.Password) : null;
             });
+        }
+
+        protected void Application_BeginRequest()
+        {
+            if (Request.IsLocal)
+            {
+                MiniProfiler.Start();
+            } 
+        }
+
+        protected void Application_EndRequest()
+        {
+            MiniProfiler.Stop();
         }
     }
 }
