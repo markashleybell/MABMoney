@@ -86,10 +86,12 @@ namespace MABMoney.Web
             // the correct type
             config.DependencyResolver = resolver.ToServiceResolver();
 
-            if (externalDbConnectionString != null)
-                Database.SetInitializer<DataStore>(new MigrateDatabaseToLatestVersionWithConnectionString<DataStore, MABMoney.Data.Migrations.Configuration>(externalDbConnectionString));
-            else
-                Database.SetInitializer<DataStore>(new MigrateDatabaseToLatestVersion<DataStore, MABMoney.Data.Migrations.Configuration>());
+            Database.SetInitializer<DataStore>(null);
+
+            //if (externalDbConnectionString != null)
+            //    Database.SetInitializer<DataStore>(new MigrateDatabaseToLatestVersionWithConnectionString<DataStore, MABMoney.Data.Migrations.Configuration>(externalDbConnectionString));
+            //else
+            //    Database.SetInitializer<DataStore>(new MigrateDatabaseToLatestVersion<DataStore, MABMoney.Data.Migrations.Configuration>());
 
             ICryptoProvider _crypto = new CryptoWrapper();
 
