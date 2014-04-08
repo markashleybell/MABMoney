@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 2012 for Web
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30110.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MABMoney.Web", "MABMoney.Web\MABMoney.Web.csproj", "{49F5238D-70A2-4C03-B92A-8FAF4398BA52}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MABMoney.Data", "MABMoney.Data\MABMoney.Data.csproj", "{5474C8B1-BD06-4749-AA7D-1D3053D42F91}"
@@ -15,6 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{748447
 	ProjectSection(SolutionItems) = preProject
 		.nuget\packages.config = .nuget\packages.config
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MABMoney.Caching", "MABMoney.Caching\MABMoney.Caching.csproj", "{36557506-E58B-49C3-9CC5-31C1336DBA3A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,6 +46,10 @@ Global
 		{19D6E6B2-E0C5-46B1-831A-8B0BD33083E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19D6E6B2-E0C5-46B1-831A-8B0BD33083E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{19D6E6B2-E0C5-46B1-831A-8B0BD33083E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36557506-E58B-49C3-9CC5-31C1336DBA3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36557506-E58B-49C3-9CC5-31C1336DBA3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36557506-E58B-49C3-9CC5-31C1336DBA3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36557506-E58B-49C3-9CC5-31C1336DBA3A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
