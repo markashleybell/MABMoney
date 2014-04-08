@@ -12,6 +12,7 @@ using MABMoney.Web.Models;
 using MABMoney.Web.Helpers;
 using MABMoney.Data;
 using System.Text;
+using MABMoney.Caching;
 
 namespace MABMoney.Web.Controllers
 {
@@ -25,15 +26,17 @@ namespace MABMoney.Web.Controllers
                                   IHttpContextProvider context,
                                   ISiteConfiguration config,
                                   IDateTimeProvider dateProvider,
-                                  IUrlHelper urlHelper) : base(userServices,
-                                                               accountServices,
-                                                               categoryServices,
-                                                               transactionServices, 
-                                                               budgetServices,
-                                                               context,
-                                                               config,
-                                                               dateProvider,
-                                                               urlHelper) { }
+                                  IUrlHelper urlHelper,
+                                  IModelCache cache) : base(userServices,
+                                                            accountServices,
+                                                            categoryServices,
+                                                            transactionServices, 
+                                                            budgetServices,
+                                                            context,
+                                                            config,
+                                                            dateProvider,
+                                                            urlHelper, 
+                                                            cache) { }
 
         //
         // GET: /Account/

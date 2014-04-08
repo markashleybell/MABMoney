@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using MABMoney.Services;
 using MABMoney.Web.Infrastructure;
 using MABMoney.Data;
+using MABMoney.Caching;
 
 namespace MABMoney.Web.Controllers
 {
@@ -20,8 +21,8 @@ namespace MABMoney.Web.Controllers
         protected IHttpContextProvider _context;
         protected ISiteConfiguration _config;
         protected IDateTimeProvider _dateProvider;
-
         protected IUrlHelper _url;
+        protected IModelCache _cache;
 
         public BaseController(IUserServices userServices,
                               IAccountServices accountServices,
@@ -31,7 +32,8 @@ namespace MABMoney.Web.Controllers
                               IHttpContextProvider context,
                               ISiteConfiguration config,
                               IDateTimeProvider dateProvider,
-                              IUrlHelper urlHelper)
+                              IUrlHelper urlHelper,
+                              IModelCache cache)
         {
             _userServices = userServices;
             _accountServices = accountServices;
@@ -41,9 +43,8 @@ namespace MABMoney.Web.Controllers
             _context = context;
             _config = config;
             _dateProvider = dateProvider;
-
             _url = urlHelper;
+            _cache = cache;
         }
-
     }
 }

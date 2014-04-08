@@ -106,6 +106,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MABMoney.Caching\MABMoney.Caching.csproj">
+      <Project>{36557506-e58b-49c3-9cc5-31c1336dba3a}</Project>
+      <Name>MABMoney.Caching</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MABMoney.Data\MABMoney.Data.csproj">
       <Project>{5474C8B1-BD06-4749-AA7D-1D3053D42F91}</Project>
       <Name>MABMoney.Data</Name>

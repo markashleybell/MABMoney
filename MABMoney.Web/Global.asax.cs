@@ -21,6 +21,7 @@ using System.Web.Configuration;
 using StackExchange.Profiling;
 using StackExchange.Profiling.EntityFramework6;
 using StackExchange.Profiling.Storage;
+using MABMoney.Caching;
 
 namespace MABMoney.Web
 {
@@ -66,6 +67,8 @@ namespace MABMoney.Web
                      .RegisterType<IDateTimeProvider, DateTimeProvider>(new InjectionFactory(c => new DateTimeProvider(() => DateTime.Now)))
                      .RegisterType<ICryptoProvider>(new InjectionFactory(c => new CryptoWrapper()))
                      .RegisterType<IUrlHelper>(new InjectionFactory(c => new UrlHelperAdapter(new UrlHelper(HttpContext.Current.Request.RequestContext))))
+                     .RegisterType<IModelCache>(new HttpContextLifetimeManager<ModelCache>())
+                     .RegisterType<IModelCacheConfig>(new HttpContextLifetimeManager<ModelCacheConfig>())
                      .RegisterType<IHttpContextProvider>(new InjectionFactory(c => new HttpContextProvider(new HttpContextWrapper(HttpContext.Current))))
                      .RegisterType<ISiteConfiguration>(new InjectionFactory(c => new SiteConfiguration()));
 

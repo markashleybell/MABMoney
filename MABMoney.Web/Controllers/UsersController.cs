@@ -13,6 +13,7 @@ using System.Configuration;
 using MABMoney.Data;
 using System.Text.RegularExpressions;
 using System.Net.Mail;
+using MABMoney.Caching;
 
 namespace MABMoney.Web.Controllers
 {
@@ -29,15 +30,17 @@ namespace MABMoney.Web.Controllers
                                ISiteConfiguration config,
                                IDateTimeProvider dateProvider,
                                ICryptoProvider crypto,
-                               IUrlHelper urlHelper) : base(userServices,
-                                                            accountServices,
-                                                            categoryServices,
-                                                            transactionServices, 
-                                                            budgetServices,
-                                                            context,
-                                                            config,
-                                                            dateProvider,
-                                                            urlHelper) 
+                               IUrlHelper urlHelper,
+                               IModelCache cache) : base(userServices,
+                                                         accountServices,
+                                                         categoryServices,
+                                                         transactionServices, 
+                                                         budgetServices,
+                                                         context,
+                                                         config,
+                                                         dateProvider,
+                                                         urlHelper,
+                                                         cache) 
         {
             _crypto = crypto;
         }

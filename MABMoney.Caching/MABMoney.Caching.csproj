@@ -42,11 +42,18 @@
   <ItemGroup>
     <Compile Include="CacheExpiry.cs" />
     <Compile Include="CacheItemInfo.cs" />
+    <Compile Include="CachingBudgetServices.cs" />
     <Compile Include="IModelCache.cs" />
     <Compile Include="IModelCacheConfig.cs" />
     <Compile Include="ModelCache.cs" />
     <Compile Include="ModelCacheConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MABMoney.Services\MABMoney.Services.csproj">
+      <Project>{ed8b4eef-38a1-4847-93d9-4ffa83038e0e}</Project>
+      <Name>MABMoney.Services</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

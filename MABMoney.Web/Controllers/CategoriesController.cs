@@ -11,6 +11,7 @@ using MABMoney.Web.Helpers;
 using MABMoney.Web.Infrastructure;
 using MABMoney.Web.Models;
 using MABMoney.Data;
+using MABMoney.Caching;
 
 namespace MABMoney.Web.Controllers
 {
@@ -24,15 +25,17 @@ namespace MABMoney.Web.Controllers
                                     IHttpContextProvider context,
                                     ISiteConfiguration config,
                                     IDateTimeProvider dateProvider,
-                                    IUrlHelper urlHelper) : base(userServices,
-                                                                 accountServices,
-                                                                 categoryServices,
-                                                                 transactionServices, 
-                                                                 budgetServices,
-                                                                 context,
-                                                                 config,
-                                                                 dateProvider,
-                                                                 urlHelper) { }
+                                    IUrlHelper urlHelper, 
+                                    IModelCache cache) : base(userServices,
+                                                              accountServices,
+                                                              categoryServices,
+                                                              transactionServices, 
+                                                              budgetServices,
+                                                              context,
+                                                              config,
+                                                              dateProvider,
+                                                              urlHelper, 
+                                                              cache) { }
 
         //
         // GET: /Account/
