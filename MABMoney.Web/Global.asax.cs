@@ -20,6 +20,7 @@ using System.Web.Optimization;
 using System.Web.Configuration;
 using StackExchange.Profiling;
 using StackExchange.Profiling.EntityFramework6;
+using StackExchange.Profiling.Storage;
 
 namespace MABMoney.Web
 {
@@ -38,6 +39,7 @@ namespace MABMoney.Web
 
             ModelBinders.Binders.Add(typeof(ProfileViewModel), new ProfileModelBinder());
 
+            MiniProfiler.Settings.Storage = new SqlServerStorage(ConfigurationManager.ConnectionStrings["Profiler"].ConnectionString);
             MiniProfilerEF6.Initialize();
 
             var sharedSecret = ConfigurationManager.AppSettings["SharedSecret"];
