@@ -12,9 +12,9 @@ namespace MABMoney.Caching
     {
         private IBudgetServices _budgetServices;
         private IModelCache _cache;
-        private IModelCacheConfig _cacheConfig;
+        private IModelCacheConfiguration _cacheConfig;
 
-        public CachingBudgetServices(IBudgetServices nonCachingBudgetServices, IModelCache cache, IModelCacheConfig cacheConfig)
+        public CachingBudgetServices(IBudgetServices nonCachingBudgetServices, IModelCache cache, IModelCacheConfiguration cacheConfig)
         {
             _budgetServices = nonCachingBudgetServices;
             _cache = cache;
@@ -33,7 +33,7 @@ namespace MABMoney.Caching
 
         public BudgetDTO GetLatest(int accountId)
         {
-            var key = _cacheConfig.SiteKey + "-latest-budget-" + accountId;
+            var key = _cacheConfig.Get<string>("CookieKey") + "-latest-budget-" + accountId;
             var budget = _cache.Get<BudgetDTO>(key);
 
             if (budget == null)

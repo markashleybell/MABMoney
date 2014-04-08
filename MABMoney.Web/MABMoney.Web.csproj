@@ -427,6 +427,9 @@
   <ItemGroup>
     <Content Include="Content\Css\bootstrap.css.map" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\ShowCacheContents.cshtml" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

@@ -314,5 +314,30 @@ namespace MABMoney.Web.Controllers
 
             return View();
         }
+
+        #region Caching
+
+        public ActionResult ClearCacheContents(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                _cache.Clear();
+                return Content("CLEARED ALL CACHE");
+            }
+            else
+            {
+                _cache.Remove(id);
+                return Content("CLEARED CACHE " + id);
+            }
+        }
+
+        public ActionResult ShowCacheContents()
+        {
+            // We filter on Site Key because newer versions of MVC seem to stuff a load of other data into the memory cache 
+            // which we're not interested in (break on the line below and inspect _cache.BaseCache to see what I mean...)
+            return View(_cache.BaseCache.Where(x => x.Key.StartsWith(_config.Get<string>("CookieKey"))).OrderByDescending(x => x.Hits).ToList());
+        }
+
+        #endregion
     }
 }

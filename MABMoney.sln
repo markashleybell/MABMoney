@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 12.0.30110.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MABMoney.Web", "MABMoney.Web\MABMoney.Web.csproj", "{49F5238D-70A2-4C03-B92A-8FAF4398BA52}"
+	ProjectSection(ProjectDependencies) = postProject
+		{36557506-E58B-49C3-9CC5-31C1336DBA3A} = {36557506-E58B-49C3-9CC5-31C1336DBA3A}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MABMoney.Data", "MABMoney.Data\MABMoney.Data.csproj", "{5474C8B1-BD06-4749-AA7D-1D3053D42F91}"
 EndProject
@@ -12,6 +15,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MABMoney.Domain", "MABMoney.Domain\MABMoney.Domain.csproj", "{7D408CE3-980C-4BC3-986F-436B9B44F10C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MABMoney.Tests", "MABMoney.Tests\MABMoney.Tests.csproj", "{19D6E6B2-E0C5-46B1-831A-8B0BD33083E6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{36557506-E58B-49C3-9CC5-31C1336DBA3A} = {36557506-E58B-49C3-9CC5-31C1336DBA3A}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{74844706-2EAA-4B96-A8D5-CBF5AA6799E9}"
 	ProjectSection(SolutionItems) = preProject

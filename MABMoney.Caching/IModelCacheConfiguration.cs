@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace MABMoney.Caching
 {
-    public interface IModelCacheConfig
+    public interface IModelCacheConfiguration
     {
-        string SiteKey { get; set; }
+        string this[string key] { get; }
+        T Get<T>(string key);
     }
 }
