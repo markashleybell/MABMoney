@@ -23,12 +23,12 @@ namespace MABMoney.Caching
 
         public IEnumerable<BudgetDTO> All()
         {
-            throw new NotImplementedException();
+            return _budgetServices.All();
         }
 
         public BudgetDTO Get(int id)
         {
-            throw new NotImplementedException();
+            return _budgetServices.Get(id);
         }
 
         public BudgetDTO GetLatest(int accountId)
@@ -47,27 +47,27 @@ namespace MABMoney.Caching
 
         public void Save(BudgetDTO dto)
         {
-            throw new NotImplementedException();
+            _budgetServices.Save(dto);
         }
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            _budgetServices.Delete(id);
         }
 
         public void SaveCategoryBudget(Category_BudgetDTO dto)
         {
-            throw new NotImplementedException();
+            _budgetServices.SaveCategoryBudget(dto);
         }
 
         public void DeleteCategoryBudget(int id)
         {
-            throw new NotImplementedException();
+            _budgetServices.DeleteCategoryBudget(id);
         }
 
         public int GetBudgetCount(int accountId)
         {
-            throw new NotImplementedException();
+            return _budgetServices.GetBudgetCount(accountId);
         }
     }
 }

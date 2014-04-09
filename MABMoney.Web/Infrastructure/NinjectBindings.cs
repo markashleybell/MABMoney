@@ -60,7 +60,16 @@ namespace MABMoney.Web.Infrastructure
             Bind<IAccountServices>().To<AccountServices>().InRequestScope();
             Bind<ITransactionServices>().To<TransactionServices>().InRequestScope();
             Bind<ICategoryServices>().To<CategoryServices>().InRequestScope();
-            Bind<IBudgetServices>().To<BudgetServices>().InRequestScope();
+
+            if (enableCaching)
+            {
+                Bind<IBudgetServices>().To<CachingBudgetServices>().InRequestScope();
+                Bind<IBudgetServices>().To<BudgetServices>().When(r => r.Target.Name == "nonCachingBudgetServices").InRequestScope();
+            }
+            else
+            {
+                Bind<IBudgetServices>().To<BudgetServices>().InRequestScope();
+            }
             
             // Unit of work
             Bind<IUnitOfWork>().To<UnitOfWork>().InRequestScope();
