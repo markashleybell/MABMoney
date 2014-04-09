@@ -11,9 +11,9 @@ namespace MABMoney.Web.Infrastructure
     {
         protected UrlHelper _helper;
 
-        public UrlHelperAdapter(UrlHelper helper)
+        public UrlHelperAdapter(HttpContextBase context)
         {
-            _helper = helper;
+            _helper = new UrlHelper(context.Request.RequestContext);
         }
 
         public string Action(string actionName)

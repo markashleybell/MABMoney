@@ -1,27 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Http;
-using System.Web.Mvc;
-using System.Web.Routing;
-using MABMoney.Domain;
-using System.Data.Entity;
+﻿using mab.lib.SimpleMapper;
 using MABMoney.Data;
 using MABMoney.Web.Infrastructure;
-using Microsoft.Practices.Unity;
-using MABMoney.Services;
 using MABMoney.Web.Models;
-using System.Configuration;
-using MABMoney.Web.Helpers;
-using mab.lib.SimpleMapper;
-using MABMoney.Services.DTO;
-using System.Web.Optimization;
-using System.Web.Configuration;
 using StackExchange.Profiling;
 using StackExchange.Profiling.EntityFramework6;
 using StackExchange.Profiling.Storage;
-using MABMoney.Caching;
+using System;
+using System.Configuration;
+using System.Data.Entity;
+using System.Web.Http;
+using System.Web.Mvc;
+using System.Web.Optimization;
+using System.Web.Routing;
 
 namespace MABMoney.Web
 {
@@ -57,48 +47,9 @@ namespace MABMoney.Web
                 MiniProfilerEF6.Initialize();
             }
 
-            // Set up object mappings for Unity DI
-            var container = new UnityContainer();
-
-            // TODO: Look into object lifetime management
-            container.RegisterType<IRepository<User, int>, Repository<User, int>>(new HttpContextLifetimeManager<User>())
-                     .RegisterType<IRepository<Account, int>, Repository<Account, int>>(new HttpContextLifetimeManager<Account>())
-                     .RegisterType<IRepository<Transaction, int>, Repository<Transaction, int>>(new HttpContextLifetimeManager<Transaction>())
-                     .RegisterType<IRepository<Budget, int>, Repository<Budget, int>>(new HttpContextLifetimeManager<Budget>())
-                     .RegisterType<IRepository<Category, int>, Repository<Category, int>>(new HttpContextLifetimeManager<Category>())
-                     .RegisterType<IRepository<Category_Budget, int>, Repository<Category_Budget, int>>(new HttpContextLifetimeManager<Category_Budget>())
-                     .RegisterType<IUserServices, UserServices>(new HttpContextLifetimeManager<UserServices>())
-                     .RegisterType<IAccountServices, AccountServices>(new HttpContextLifetimeManager<AccountServices>())
-                     .RegisterType<ITransactionServices, TransactionServices>(new HttpContextLifetimeManager<TransactionServices>())
-                     .RegisterType<ICategoryServices, CategoryServices>(new HttpContextLifetimeManager<CategoryServices>())
-                     .RegisterType<IBudgetServices, BudgetServices>(new HttpContextLifetimeManager<BudgetServices>())
-                     .RegisterType<IUnitOfWork, UnitOfWork>(new HttpContextLifetimeManager<UnitOfWork>())
-                     .RegisterType<IDateTimeProvider, DateTimeProvider>(new InjectionFactory(c => new DateTimeProvider(() => DateTime.Now)))
-                     .RegisterType<ICryptoProvider>(new InjectionFactory(c => new CryptoWrapper()))
-                     .RegisterType<IUrlHelper>(new InjectionFactory(c => new UrlHelperAdapter(new UrlHelper(HttpContext.Current.Request.RequestContext))))
-                     .RegisterType<IModelCache>(new InjectionFactory(c => new ModelCache()))
-                     .RegisterType<IModelCacheConfiguration>(new InjectionFactory(c => new ModelCacheConfiguration()))
-                     .RegisterType<IHttpContextProvider>(new InjectionFactory(c => new HttpContextProvider(new HttpContextWrapper(HttpContext.Current))))
-                     .RegisterType<ISiteConfiguration>(new InjectionFactory(c => new SiteConfiguration()));
-
-            if(externalDbConnectionString != null)
-                container.RegisterType<IDataStoreFactory>(new InjectionFactory(c => new DataStoreFactory((HttpContext.Current.Request.Cookies[cookieKey] != null) ? Convert.ToInt32(EncryptionHelpers.DecryptStringAES(HttpContext.Current.Request.Cookies[cookieKey].Value, sharedSecret)) : -1, new DateTimeProvider(() => DateTime.Now), externalDbConnectionString)));
-            else
-                container.RegisterType<IDataStoreFactory>(new InjectionFactory(c => new DataStoreFactory((HttpContext.Current.Request.Cookies[cookieKey] != null) ? Convert.ToInt32(EncryptionHelpers.DecryptStringAES(HttpContext.Current.Request.Cookies[cookieKey].Value, sharedSecret)) : -1, new DateTimeProvider(() => DateTime.Now))));
-
-            var resolver = new UnityDependencyResolver(container);
-
-            DependencyResolver.SetResolver(resolver);
-
             // Remove the XML formatter so that Web API actions return JSON by default
             var config = GlobalConfiguration.Configuration;
             config.Formatters.Remove(config.Formatters.XmlFormatter);
-            // Web API controllers have a separate dependency resolver, which 
-            // implements System.Web.Http.Dependencies.IDependencyResolver. 
-            // The resolver we have is a System.Web.Mvc.IDependencyResolver, 
-            // so we need to use an adapter class to get back a resolver of 
-            // the correct type
-            config.DependencyResolver = resolver.ToServiceResolver();
 
             //  If migrations are enabled, set up the initialiser based on the connection string
             if (enableMigrations)

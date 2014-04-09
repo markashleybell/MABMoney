@@ -60,14 +60,6 @@
       <HintPath>..\packages\mab.lib.SimpleMapper.3.2.0.1\lib\mab.lib.SimpleMapper.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Practices.Unity, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Unity.3.0.1304.1\lib\Net45\Microsoft.Practices.Unity.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Practices.Unity.Configuration, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Unity.3.0.1304.1\lib\Net45\Microsoft.Practices.Unity.Configuration.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="MiniProfiler">
       <HintPath>..\packages\MiniProfiler.3.0.10-beta7\lib\net40\MiniProfiler.dll</HintPath>
@@ -81,6 +73,18 @@
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.6.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject">
+      <HintPath>..\packages\Ninject.3.2.2.0\lib\net45-full\Ninject.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject.Web.Common">
+      <HintPath>..\packages\Ninject.Web.Common.3.2.0.0\lib\net45-full\Ninject.Web.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject.Web.Mvc">
+      <HintPath>..\packages\Ninject.MVC5.3.2.0.0\lib\net45-full\Ninject.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject.Web.WebApi">
+      <HintPath>..\packages\Ninject.Web.WebApi.3.2.0.0\lib\net45-full\Ninject.Web.WebApi.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -145,6 +149,9 @@
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="WebActivatorEx">
+      <HintPath>..\packages\WebActivatorEx.2.0\lib\net40\WebActivatorEx.dll</HintPath>
+    </Reference>
     <Reference Include="WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
@@ -152,6 +159,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="Controllers\AccountsController.cs" />
     <Compile Include="Controllers\Api\AccountsController.cs" />
     <Compile Include="Controllers\Api\BudgetsController.cs" />
@@ -175,16 +183,14 @@
     <Compile Include="Infrastructure\AuthenticateAttribute.cs" />
     <Compile Include="Infrastructure\HttpContextProvider.cs" />
     <Compile Include="Infrastructure\CryptoWrapper.cs" />
-    <Compile Include="Infrastructure\HttpContextLifetimeManager.cs" />
     <Compile Include="Infrastructure\ICryptoProvider.cs" />
     <Compile Include="Infrastructure\IHttpContextProvider.cs" />
     <Compile Include="Infrastructure\ISiteConfiguration.cs" />
     <Compile Include="Infrastructure\IUrlHelper.cs" />
+    <Compile Include="Infrastructure\NinjectBindings.cs" />
     <Compile Include="Infrastructure\ProfileModelBinder.cs" />
     <Compile Include="Infrastructure\RequireHttpsAttribute.cs" />
-    <Compile Include="Infrastructure\ServiceResolverAdapter.cs" />
     <Compile Include="Infrastructure\SiteConfiguration.cs" />
-    <Compile Include="Infrastructure\UnityDependencyResolver.cs" />
     <Compile Include="Infrastructure\UrlHelperAdapter.cs" />
     <Compile Include="Models\Accounts\CreateViewModel.cs" />
     <Compile Include="Models\Accounts\EditViewModel.cs" />
