@@ -11,7 +11,7 @@ select
 from 
 	MiniProfilerTimings
 where 
-	Name != 'http://localhost:64201/'
+	Name not like 'http://localhost%'
 group by
 	Name
 order by
@@ -23,6 +23,6 @@ order by
 --from 
 --	MiniProfilerTimings
 --where 
---	Name != 'http://localhost:64201/'
+--	Name != 'http://localhost%'
 --order by
 --	Name, Id
