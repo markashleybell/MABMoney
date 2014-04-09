@@ -31,6 +31,15 @@ namespace MABMoney.Web
     {
         protected void Application_Start()
         {
+            var enableProfiling = Convert.ToBoolean(ConfigurationManager.AppSettings["EnableProfiling"]);
+            var enableMigrations = Convert.ToBoolean(ConfigurationManager.AppSettings["EnableMigrations"]);
+            var enableCaching = Convert.ToBoolean(ConfigurationManager.AppSettings["EnableCaching"]);
+
+            var sharedSecret = ConfigurationManager.AppSettings["SharedSecret"];
+            var cookieKey = ConfigurationManager.AppSettings["CookieKey"];
+            var externalDbConnectionString = ConfigurationManager.AppSettings["ExternalDbConnectionString"];
+            var profilerConnectionString = ConfigurationManager.AppSettings["ProfilerDbConnectionString"];
+
             AreaRegistration.RegisterAllAreas();
 
             GlobalConfiguration.Configure(WebApiConfig.Register);
@@ -40,13 +49,13 @@ namespace MABMoney.Web
 
             ModelBinders.Binders.Add(typeof(ProfileViewModel), new ProfileModelBinder());
 
-            MiniProfiler.Settings.Storage = new SqlServerStorage(ConfigurationManager.ConnectionStrings["Profiler"].ConnectionString);
-            MiniProfilerEF6.Initialize();
+            if (enableProfiling)
+            {
+                if (profilerConnectionString != null)
+                    MiniProfiler.Settings.Storage = new SqlServerStorage(profilerConnectionString);
 
-            var sharedSecret = ConfigurationManager.AppSettings["SharedSecret"];
-            var cookieKey = ConfigurationManager.AppSettings["CookieKey"];
-
-            var externalDbConnectionString = ConfigurationManager.AppSettings["ExternalDbConnectionString"];
+                MiniProfilerEF6.Initialize();
+            }
 
             // Set up object mappings for Unity DI
             var container = new UnityContainer();
@@ -91,12 +100,18 @@ namespace MABMoney.Web
             // the correct type
             config.DependencyResolver = resolver.ToServiceResolver();
 
-            Database.SetInitializer<DataStore>(null);
-
-            //if (externalDbConnectionString != null)
-            //    Database.SetInitializer<DataStore>(new MigrateDatabaseToLatestVersionWithConnectionString<DataStore, MABMoney.Data.Migrations.Configuration>(externalDbConnectionString));
-            //else
-            //    Database.SetInitializer<DataStore>(new MigrateDatabaseToLatestVersion<DataStore, MABMoney.Data.Migrations.Configuration>());
+            //  If migrations are enabled, set up the initialiser based on the connection string
+            if (enableMigrations)
+            {
+                if (externalDbConnectionString != null)
+                    Database.SetInitializer<DataStore>(new MigrateDatabaseToLatestVersionWithConnectionString<DataStore, MABMoney.Data.Migrations.Configuration>(externalDbConnectionString));
+                else
+                    Database.SetInitializer<DataStore>(new MigrateDatabaseToLatestVersion<DataStore, MABMoney.Data.Migrations.Configuration>());
+            }
+            else
+            {
+                Database.SetInitializer<DataStore>(null);
+            }
 
             ICryptoProvider _crypto = new CryptoWrapper();
 
@@ -136,15 +151,14 @@ namespace MABMoney.Web
 
         protected void Application_BeginRequest()
         {
-            if (Request.IsLocal)
-            {
+            if (Convert.ToBoolean(ConfigurationManager.AppSettings["EnableProfiling"]))
                 MiniProfiler.Start();
-            } 
         }
 
         protected void Application_EndRequest()
         {
-            MiniProfiler.Stop();
+            if (Convert.ToBoolean(ConfigurationManager.AppSettings["EnableProfiling"]))
+                MiniProfiler.Stop();
         }
     }
 }
