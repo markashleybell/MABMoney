@@ -8,17 +8,14 @@ using MABMoney.Services.DTO;
 
 namespace MABMoney.Caching
 {
-    public class CachingBudgetServices : IBudgetServices
+    public class CachingBudgetServices : CachingServicesBase, IBudgetServices
     {
         private IBudgetServices _budgetServices;
-        private IModelCache _cache;
-        private IModelCacheConfiguration _cacheConfig;
 
-        public CachingBudgetServices(IBudgetServices nonCachingBudgetServices, IModelCache cache, IModelCacheConfiguration cacheConfig)
+        public CachingBudgetServices(IBudgetServices nonCachingBudgetServices, IModelCache cache, IModelCacheConfiguration cacheConfig) 
+            : base(cache, cacheConfig)
         {
             _budgetServices = nonCachingBudgetServices;
-            _cache = cache;
-            _cacheConfig = cacheConfig;
         }
 
         public IEnumerable<BudgetDTO> All()

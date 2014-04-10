@@ -44,6 +44,8 @@
     <Compile Include="CacheExpiry.cs" />
     <Compile Include="CacheItemInfo.cs" />
     <Compile Include="CachingBudgetServices.cs" />
+    <Compile Include="CachingServicesBase.cs" />
+    <Compile Include="CachingTransactionServices.cs" />
     <Compile Include="IModelCache.cs" />
     <Compile Include="IModelCacheConfiguration.cs" />
     <Compile Include="ModelCache.cs" />

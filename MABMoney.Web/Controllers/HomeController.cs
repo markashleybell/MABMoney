@@ -335,7 +335,7 @@ namespace MABMoney.Web.Controllers
         {
             // We filter on Site Key because newer versions of MVC seem to stuff a load of other data into the memory cache 
             // which we're not interested in (break on the line below and inspect _cache.BaseCache to see what I mean...)
-            return View(_cache.BaseCache.Where(x => x.Key.StartsWith(_config.Get<string>("CookieKey"))).OrderByDescending(x => x.Hits).ToList());
+            return View(_cache.Items.Where(x => x.Key.StartsWith(_config.Get<string>("CookieKey"))).OrderByDescending(x => x.Hits).ToList());
         }
 
         #endregion

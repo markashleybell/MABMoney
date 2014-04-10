@@ -11,7 +11,7 @@ namespace MABMoney.Caching
         static MemoryCache _cache = MemoryCache.Default;
         static Dictionary<string, CacheItemInfo> _cacheInfo = new Dictionary<string, CacheItemInfo>();
 
-        public List<CacheItemInfo> BaseCache
+        public List<CacheItemInfo> Items
         {
             get
             {
