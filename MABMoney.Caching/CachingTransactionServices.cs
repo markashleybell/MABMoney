@@ -20,16 +20,12 @@ namespace MABMoney.Caching
 
         public IEnumerable<TransactionDTO> All()
         {
-            var key = _cacheConfig.Get<string>("CookieKey") + "-alltransactions";
-            var transactions = _cache.Get<IEnumerable<TransactionDTO>>(key);
-
-            if (transactions == null)
-            {
-                transactions = _transactionServices.All();
-                _cache.Add(key, transactions, (int)CacheExpiry.OneHour);
-            }
-
-            return transactions;
+            return CacheAndGetValue<IEnumerable<TransactionDTO>>(
+                "alltransactions", 
+                CacheExpiry.OneHour,
+                () => _transactionServices.All(),
+                "cachebreaker"
+            );
         }
 
         public TransactionDTO Get(int id)

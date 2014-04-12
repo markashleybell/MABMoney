@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="CacheExpiry.cs" />
     <Compile Include="CacheItemInfo.cs" />
+    <Compile Include="CachingAccountServices.cs" />
     <Compile Include="CachingBudgetServices.cs" />
     <Compile Include="CachingServicesBase.cs" />
     <Compile Include="CachingTransactionServices.cs" />

@@ -37,14 +37,25 @@ namespace MABMoney.Caching
             get { return _cache[key]; }
         }
 
-        void IModelCache.Add(string key, object value, int expirationSeconds)
+        public void Add(string key, object value, int expirationSeconds)
         {
-            _cache.Add(key,
-                       value,
-                       new CacheItemPolicy
-                       {
-                           AbsoluteExpiration = DateTimeOffset.Now.AddSeconds(expirationSeconds)
-                       });
+            Add(key, value, expirationSeconds, null);
+        }
+
+        public void Add(string key, object value, int expirationSeconds, params string[] dependencies)
+        {
+            var policy = new CacheItemPolicy {
+                AbsoluteExpiration = DateTimeOffset.Now.AddSeconds(expirationSeconds)
+            };
+
+            if (dependencies != null && dependencies.Count() > 0)
+            {
+                policy.ChangeMonitors.Add(
+                    _cache.CreateCacheEntryChangeMonitor(dependencies)
+                );
+            }
+
+            _cache.Add(key, value, policy);
 
             if (!_cacheInfo.ContainsKey(key))
             {
@@ -52,6 +63,7 @@ namespace MABMoney.Caching
                 {
                     Key = key,
                     Type = value.GetType().ToString(),
+                    Value = value.ToString(),
                     Hits = 0,
                     Misses = 0
                 };
@@ -60,7 +72,7 @@ namespace MABMoney.Caching
             _cacheInfo[key].Misses++;
         }
 
-        T IModelCache.Get<T>(string key)
+        public T Get<T>(string key)
         {
             try
             {
@@ -73,13 +85,18 @@ namespace MABMoney.Caching
             }
         }
 
-        void IModelCache.Remove(string key)
+        public void Set(string key, object value, int expirationSeconds)
+        {
+            _cache.Set(key, value, DateTimeOffset.Now.AddSeconds(expirationSeconds));
+        }
+
+        public void Remove(string key)
         {
             _cache.Remove(key);
             _cacheInfo.Remove(key);
         }
 
-        void IModelCache.Clear()
+        public void Clear()
         {
             List<KeyValuePair<String, Object>> cacheItems = (from n in _cache.AsParallel() select n).ToList();
 

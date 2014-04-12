@@ -30,16 +30,12 @@ namespace MABMoney.Caching
 
         public BudgetDTO GetLatest(int accountId)
         {
-            var key = _cacheConfig.Get<string>("CookieKey") + "-latest-budget-" + accountId;
-            var budget = _cache.Get<BudgetDTO>(key);
-
-            if (budget == null)
-            {
-                budget = _budgetServices.GetLatest(accountId);
-                _cache.Add(key, budget, (int)CacheExpiry.OneHour);
-            }
-
-            return budget;
+            return CacheAndGetValue<BudgetDTO>(
+                "latest-budget-" + accountId,
+                CacheExpiry.OneHour, 
+                () => _budgetServices.GetLatest(accountId),
+                "cachebreaker"
+            );
         }
 
         public void Save(BudgetDTO dto)

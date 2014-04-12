@@ -1,4 +1,5 @@
 ﻿using mab.lib.SimpleMapper;
+using MABMoney.Caching;
 using MABMoney.Data;
 using MABMoney.Web.Infrastructure;
 using MABMoney.Web.Models;
@@ -98,6 +99,9 @@ namespace MABMoney.Web
                 d.Email = s.Email;
                 d.Password = (s.Password != null) ? _crypto.HashPassword(s.Password) : null;
             });
+
+            // Add the cache breaker item to the cache
+            new ModelCache().Add(cookieKey + "-cachebreaker", Guid.NewGuid().ToString(), (int)CacheExpiry.OneHour);
         }
 
         protected void Application_BeginRequest()

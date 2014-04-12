@@ -5,18 +5,18 @@
 }
 
 <!DOCTYPE html>
-
 <html>
-<head>
-    <title>Show Cache Contents</title>
-</head>
-<body>
-    <table id="postmanager" class="redirectmanager">
+    <head>
+        <title>Show Cache Contents</title>
+    </head>
+    <body>
+        <table border="1">
             <tr>
                 <th>Key</th>
-                <th style="width: 90px;">Value</th>
-                <th style="width: 30px;">Hit</th>
-                <th style="width: 30px;">Miss</th>
+                <th>Type</th>
+                <th>Value</th>
+                <th>Hit</th>
+                <th>Miss</th>
             </tr>
 
             @foreach (var entry in Model)
@@ -24,6 +24,7 @@
                 <tr>
                     <td>@entry.Key</td>
                     <td>@entry.Type</td>
+                    <td>@entry.Value</td>
                     <td>@entry.Hits</td>
                     <td>@entry.Misses</td>
                 </tr>
@@ -31,5 +32,5 @@
             }
             
         </table>
-</body>
+    </body>
 </html>
