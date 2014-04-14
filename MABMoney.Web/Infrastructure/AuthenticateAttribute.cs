@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Configuration;
 using StackExchange.Profiling;
+using MABMoney.Caching;
 
 namespace MABMoney.Web.Infrastructure
 {
@@ -42,7 +43,17 @@ namespace MABMoney.Web.Infrastructure
                 dataStoreFactory = new DataStoreFactory(userId, new DateTimeProvider(() => DateTime.Now));
 
             var unitOfWork = new UnitOfWork(dataStoreFactory);
-            var userServices = new UserServices(new Repository<User, int>(unitOfWork), unitOfWork, new DateTimeProvider(() => DateTime.Now));
+            IUserServices userServices;
+
+            if (ConfigurationManager.AppSettings["EnableCaching"] != null)
+            {
+                var nonCachingUserServices = new UserServices(new Repository<User, int>(unitOfWork), unitOfWork, new DateTimeProvider(() => DateTime.Now));
+                userServices = new CachingUserServices(nonCachingUserServices, new ModelCache(), new ModelCacheConfiguration());
+            }
+            else
+            {
+                userServices = new UserServices(new Repository<User, int>(unitOfWork), unitOfWork, new DateTimeProvider(() => DateTime.Now));
+            }
             
             _step.Dispose();
 

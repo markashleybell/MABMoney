@@ -17,6 +17,12 @@ namespace MABMoney.Caching
             _cacheConfig = cacheConfig;
         }
 
+        private void RefreshDependentItems(params string[] dependencies)
+        {
+            foreach(var dependency in dependencies)
+                _cache.Set(_cacheConfig.Get<string>("CookieKey") + "-dependency-" + dependency, Guid.NewGuid(), (int)CacheExpiry.OneHour);
+        }
+
         protected T CacheAndGetValue<T>(string cacheKey, CacheExpiry expiry, Func<T> method)
         {
             return CacheAndGetValue<T>(cacheKey, expiry, method, null);
@@ -26,7 +32,7 @@ namespace MABMoney.Caching
         {
             // Append the cookie key to the beginning of the cache key and all dependency keys
             var key = _cacheConfig.Get<string>("CookieKey") + "-" + cacheKey;
-            dependencies = dependencies.Select(x => _cacheConfig.Get<string>("CookieKey") + "-" + x).ToArray();
+            dependencies = dependencies.Select(x => _cacheConfig.Get<string>("CookieKey") + "-dependency-" + x).ToArray();
 
             var item = _cache.Get<T>(key);
 

@@ -56,11 +56,12 @@ namespace MABMoney.Web.Infrastructure
             Bind<IRepository<Category_Budget, int>>().To<Repository<Category_Budget, int>>().InRequestScope();
             
             // Services
-            Bind<IUserServices>().To<UserServices>().InRequestScope();
             Bind<ICategoryServices>().To<CategoryServices>().InRequestScope();
 
             if (enableCaching)
             {
+                Bind<IUserServices>().To<CachingUserServices>().InRequestScope();
+                Bind<IUserServices>().To<UserServices>().When(r => r.Target.Name == "nonCachingUserServices").InRequestScope();
                 Bind<IAccountServices>().To<CachingAccountServices>().InRequestScope();
                 Bind<IAccountServices>().To<AccountServices>().When(r => r.Target.Name == "nonCachingAccountServices").InRequestScope();
                 Bind<IBudgetServices>().To<CachingBudgetServices>().InRequestScope();
@@ -70,6 +71,7 @@ namespace MABMoney.Web.Infrastructure
             }
             else
             {
+                Bind<IUserServices>().To<UserServices>().InRequestScope();
                 Bind<IAccountServices>().To<CachingAccountServices>().InRequestScope();
                 Bind<IBudgetServices>().To<BudgetServices>().InRequestScope();
                 Bind<ITransactionServices>().To<TransactionServices>().InRequestScope();

@@ -24,7 +24,7 @@ namespace MABMoney.Caching
                 "alltransactions", 
                 CacheExpiry.OneHour,
                 () => _transactionServices.All(),
-                "cachebreaker"
+                "all"
             );
         }
 

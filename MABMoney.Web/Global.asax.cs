@@ -100,8 +100,9 @@ namespace MABMoney.Web
                 d.Password = (s.Password != null) ? _crypto.HashPassword(s.Password) : null;
             });
 
-            // Add the cache breaker item to the cache
-            new ModelCache().Add(cookieKey + "-cachebreaker", Guid.NewGuid().ToString(), (int)CacheExpiry.OneHour);
+            // Add the cache dependency items to the cache
+            new ModelCache().Add(cookieKey + "-dependency-all", Guid.NewGuid().ToString(), (int)CacheExpiry.OneHour);
+            new ModelCache().Add(cookieKey + "-dependency-user", Guid.NewGuid().ToString(), (int)CacheExpiry.OneHour);
         }
 
         protected void Application_BeginRequest()

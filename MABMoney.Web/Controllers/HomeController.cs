@@ -319,10 +319,10 @@ namespace MABMoney.Web.Controllers
             return View(_cache.Items.Where(x => x.Key.StartsWith(_config.Get<string>("CookieKey"))).OrderByDescending(x => x.Hits).ToList());
         }
 
-        public ActionResult InvalidateCache()
+        public ActionResult InvalidateCache(string key)
         {
-            _cache.Set(_config.Get<string>("CookieKey") + "-cachebreaker", Guid.NewGuid(), (int)CacheExpiry.OneHour);
-            return Content("INVALIDATED CACHE");
+            _cache.Set(_config.Get<string>("CookieKey") + "-dependency-" + key, Guid.NewGuid(), (int)CacheExpiry.OneHour);
+            return Content("INVALIDATED DEPENDENCY: " + key);
         }
 
         #endregion
