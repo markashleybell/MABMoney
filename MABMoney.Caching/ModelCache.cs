@@ -44,6 +44,9 @@ namespace MABMoney.Caching
 
         public void Add(string key, object value, int expirationSeconds, params string[] dependencies)
         {
+            if (value == null)
+                return;
+
             var policy = new CacheItemPolicy {
                 AbsoluteExpiration = DateTimeOffset.Now.AddSeconds(expirationSeconds)
             };
