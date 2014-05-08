@@ -47,8 +47,9 @@ namespace MABMoney.Web.Infrastructure
 
             if (ConfigurationManager.AppSettings["EnableCaching"] != null)
             {
+                var cacheConfiguration = new ModelCacheConfiguration();
                 var nonCachingUserServices = new UserServices(new Repository<User, int>(unitOfWork), unitOfWork, new DateTimeProvider(() => DateTime.Now));
-                userServices = new CachingUserServices(nonCachingUserServices, new ModelCache(), new ModelCacheConfiguration());
+                userServices = new CachingUserServices(nonCachingUserServices, new ModelCache(cacheConfiguration), cacheConfiguration);
             }
             else
             {

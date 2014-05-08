@@ -34,7 +34,7 @@ namespace MABMoney.Caching
                 "latest-budget-" + accountId,
                 CacheExpiry.OneHour, 
                 () => _budgetServices.GetLatest(accountId),
-                "all"
+                "budget", "all"
             );
         }
 

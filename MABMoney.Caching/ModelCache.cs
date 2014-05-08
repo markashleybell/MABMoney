@@ -8,8 +8,14 @@ namespace MABMoney.Caching
 {
     public class ModelCache : IModelCache
     {
+        IModelCacheConfiguration _config;
         static MemoryCache _cache = MemoryCache.Default;
         static Dictionary<string, CacheItemInfo> _cacheInfo = new Dictionary<string, CacheItemInfo>();
+
+        public ModelCache(IModelCacheConfiguration config)
+        {
+            _config = config;
+        }
 
         public List<CacheItemInfo> Items
         {
@@ -107,6 +113,13 @@ namespace MABMoney.Caching
                 _cache.Remove(a.Key);
 
             _cacheInfo.Clear();
+        }
+
+        public void InvalidateAllWithDependency(string key)
+        {
+            _cache.Set(_config.Get<string>("CookieKey") + "-dependency-" + key, 
+                       Guid.NewGuid(), 
+                       DateTimeOffset.Now.AddSeconds((int)CacheExpiry.OneHour));
         }
     }
 }

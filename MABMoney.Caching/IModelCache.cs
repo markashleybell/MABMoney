@@ -16,5 +16,6 @@ namespace MABMoney.Caching
         void Set(string key, object value, int expirationSeconds);
         void Remove(string key);
         void Clear();
+        void InvalidateAllWithDependency(string key);
     }
 }

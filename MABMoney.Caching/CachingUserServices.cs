@@ -34,7 +34,7 @@ namespace MABMoney.Caching
                 "user-minimal-" + id,
                 CacheExpiry.OneHour,
                 () => _userServices.GetMinimal(id),
-                "user"
+                "user", "all"
             );
         }
 

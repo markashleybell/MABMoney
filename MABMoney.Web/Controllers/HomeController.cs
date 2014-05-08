@@ -321,7 +321,7 @@ namespace MABMoney.Web.Controllers
 
         public ActionResult InvalidateCache(string key)
         {
-            _cache.Set(_config.Get<string>("CookieKey") + "-dependency-" + key, Guid.NewGuid(), (int)CacheExpiry.OneHour);
+            _cache.InvalidateAllWithDependency(key);
             return Content("INVALIDATED DEPENDENCY: " + key);
         }
 
