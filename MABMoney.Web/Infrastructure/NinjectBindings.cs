@@ -44,8 +44,11 @@ namespace MABMoney.Web.Infrastructure
             }
 
             // Caching
-            Bind<IModelCache>().To<ModelCache>().InRequestScope();
             Bind<IModelCacheConfiguration>().To<ModelCacheConfiguration>().InRequestScope();
+
+            Bind<IModelCache>().To<ModelCache>()
+                               .InRequestScope()
+                               .WithConstructorArgument("userId", c => ((HttpContext.Current.Request.Cookies[cookieKey] != null) ? Convert.ToInt32(EncryptionHelpers.DecryptStringAES(HttpContext.Current.Request.Cookies[cookieKey].Value, sharedSecret)) : -1));
 
             // Repositories
             Bind<IRepository<User, int>>().To<Repository<User, int>>().InRequestScope();

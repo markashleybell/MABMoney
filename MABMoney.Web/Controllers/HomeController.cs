@@ -298,7 +298,7 @@ namespace MABMoney.Web.Controllers
 
         #region Caching
 
-        public ActionResult ClearCacheContents(string id)
+        public ActionResult ClearCacheContents(ProfileViewModel profile, string id)
         {
             if (string.IsNullOrEmpty(id))
             {
@@ -312,14 +312,14 @@ namespace MABMoney.Web.Controllers
             }
         }
 
-        public ActionResult ShowCacheContents()
+        public ActionResult ShowCacheContents(ProfileViewModel profile)
         {
             // We filter on Site Key because newer versions of MVC seem to stuff a load of other data into the memory cache 
             // which we're not interested in (break on the line below and inspect _cache.BaseCache to see what I mean...)
             return View(_cache.Items.Where(x => x.Key.StartsWith(_config.Get<string>("CookieKey"))).OrderByDescending(x => x.Hits).ToList());
         }
 
-        public ActionResult InvalidateCache(string key)
+        public ActionResult InvalidateCache(ProfileViewModel profile, string key)
         {
             _cache.InvalidateAllWithDependency(key);
             return Content("INVALIDATED DEPENDENCY: " + key);

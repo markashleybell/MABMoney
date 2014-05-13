@@ -158,13 +158,22 @@ namespace MABMoney.Web.Controllers
             if(user == null || !_crypto.VerifyHashedPassword(user.Password, model.Password))
                 return View(model);
 
+            var userId = user.UserID.ToString();
+
             // Encrypt the ID before storing it in a cookie
-            var encryptedUserId = EncryptionHelpers.EncryptStringAES(user.UserID.ToString(), _config.Get<string>("SharedSecret"));
+            var encryptedUserId = EncryptionHelpers.EncryptStringAES(userId, _config.Get<string>("SharedSecret"));
 
             if (model.RememberMe)
                 _context.SetCookie(_config.Get<string>("CookieKey"), encryptedUserId, _dateProvider.Now.AddDays(7));
             else
                 _context.SetCookie(_config.Get<string>("CookieKey"), encryptedUserId);
+
+            // Add the cache dependency items to the cache
+            // We have to manually add the user ID to the keys here because it wasn't present when the cache object was injected
+            _cache.Add(_config.Get<string>("CookieKey") + "-dependency-all-" + userId, Guid.NewGuid().ToString(), (int)CacheExpiry.OneHour);
+            _cache.Add(_config.Get<string>("CookieKey") + "-dependency-user-" + userId, Guid.NewGuid().ToString(), (int)CacheExpiry.OneHour);
+            _cache.Add(_config.Get<string>("CookieKey") + "-dependency-transaction-" + userId, Guid.NewGuid().ToString(), (int)CacheExpiry.OneHour);
+            _cache.Add(_config.Get<string>("CookieKey") + "-dependency-budget-" + userId, Guid.NewGuid().ToString(), (int)CacheExpiry.OneHour);
 
             return Redirect(model.RedirectAfterSubmitUrl);
         }

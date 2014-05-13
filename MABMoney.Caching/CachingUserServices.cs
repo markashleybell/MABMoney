@@ -31,7 +31,7 @@ namespace MABMoney.Caching
         public UserDTO GetMinimal(int id)
         {
             return CacheAndGetValue<UserDTO>(
-                "user-minimal-" + id,
+                "user-minimal",
                 CacheExpiry.OneHour,
                 () => _userServices.GetMinimal(id),
                 "user", "all"
@@ -40,22 +40,22 @@ namespace MABMoney.Caching
 
         public UserDTO GetByEmailAddress(string email)
         {
-            throw new NotImplementedException();
+            return _userServices.GetByEmailAddress(email);
         }
 
         public UserDTO GetByPasswordResetGUID(string guid)
         {
-            throw new NotImplementedException();
+            return _userServices.GetByPasswordResetGUID(guid);
         }
 
         public void Save(UserDTO dto)
         {
-            throw new NotImplementedException();
+            _userServices.Save(dto);
         }
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            _userServices.Delete(id);
         }
     }
 }

@@ -99,14 +99,6 @@ namespace MABMoney.Web
                 d.Email = s.Email;
                 d.Password = (s.Password != null) ? _crypto.HashPassword(s.Password) : null;
             });
-
-            var cacheConfiguration = new ModelCacheConfiguration();
-
-            // Add the cache dependency items to the cache
-            new ModelCache(cacheConfiguration).Add(cookieKey + "-dependency-all", Guid.NewGuid().ToString(), (int)CacheExpiry.OneHour);
-            new ModelCache(cacheConfiguration).Add(cookieKey + "-dependency-user", Guid.NewGuid().ToString(), (int)CacheExpiry.OneHour);
-            new ModelCache(cacheConfiguration).Add(cookieKey + "-dependency-transaction", Guid.NewGuid().ToString(), (int)CacheExpiry.OneHour);
-            new ModelCache(cacheConfiguration).Add(cookieKey + "-dependency-budget", Guid.NewGuid().ToString(), (int)CacheExpiry.OneHour);
         }
 
         protected void Application_BeginRequest()
