@@ -20,6 +20,8 @@ namespace MABMoney.Web.Controllers
 {
     public class HomeController : BaseController
     {
+        private ICachingHelpers _cachingHelpers;
+
         public HomeController(IUserServices userServices,
                               IAccountServices accountServices,
                               ICategoryServices categoryServices,
@@ -29,16 +31,20 @@ namespace MABMoney.Web.Controllers
                               ISiteConfiguration config,
                               IDateTimeProvider dateProvider,
                               IUrlHelper urlHelper,
-                              IModelCache cache) : base(userServices,
-                                                        accountServices,
-                                                        categoryServices,
-                                                        transactionServices, 
-                                                        budgetServices,
-                                                        context,
-                                                        config,
-                                                        dateProvider,
-                                                        urlHelper,
-                                                        cache) { }
+                              IModelCache cache,
+                              ICachingHelpers cachingHelpers) : base(userServices,
+                                                                     accountServices,
+                                                                     categoryServices,
+                                                                     transactionServices, 
+                                                                     budgetServices,
+                                                                     context,
+                                                                     config,
+                                                                     dateProvider,
+                                                                     urlHelper,
+                                                                     cache) 
+        {
+            _cachingHelpers = cachingHelpers;
+        }
 
         private TransactionType GetDefaultTransactionTypeForAccount(AccountDTO account)
         {
@@ -321,7 +327,7 @@ namespace MABMoney.Web.Controllers
 
         public ActionResult InvalidateCache(ProfileViewModel profile, string key)
         {
-            _cache.InvalidateAllWithDependency(key);
+            _cache.InvalidateAllWithDependency(_cachingHelpers.GetDependencyKey(key));
             return Content("INVALIDATED DEPENDENCY: " + key);
         }
 

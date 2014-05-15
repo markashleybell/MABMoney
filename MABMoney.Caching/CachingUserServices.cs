@@ -12,8 +12,8 @@ namespace MABMoney.Caching
     {
         private IUserServices _userServices;
 
-        public CachingUserServices(IUserServices nonCachingUserServices, IModelCache cache, IModelCacheConfiguration cacheConfig) 
-            : base(cache, cacheConfig) 
+        public CachingUserServices(IUserServices nonCachingUserServices, IModelCache cache, ICachingHelpers helpers)
+            : base(cache, helpers) 
         {
             _userServices = nonCachingUserServices;
         }

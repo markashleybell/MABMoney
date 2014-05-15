@@ -49,7 +49,7 @@ namespace MABMoney.Web.Infrastructure
             {
                 var cacheConfiguration = new ModelCacheConfiguration();
                 var nonCachingUserServices = new UserServices(new Repository<User, int>(unitOfWork), unitOfWork, new DateTimeProvider(() => DateTime.Now));
-                userServices = new CachingUserServices(nonCachingUserServices, new ModelCache(cacheConfiguration, userId), cacheConfiguration);
+                userServices = new CachingUserServices(nonCachingUserServices, new ModelCache(cacheConfiguration), new CachingHelpers(cacheConfiguration, userId));
             }
             else
             {

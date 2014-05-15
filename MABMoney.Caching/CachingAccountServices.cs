@@ -12,8 +12,8 @@ namespace MABMoney.Caching
     {
         private IAccountServices _accountServices;
 
-        public CachingAccountServices(IAccountServices nonCachingAccountServices, IModelCache cache, IModelCacheConfiguration cacheConfig) 
-            : base(cache, cacheConfig)
+        public CachingAccountServices(IAccountServices nonCachingAccountServices, IModelCache cache, ICachingHelpers helpers)
+            : base(cache, helpers)
         {
             _accountServices = nonCachingAccountServices;
         }

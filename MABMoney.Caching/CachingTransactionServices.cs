@@ -12,8 +12,8 @@ namespace MABMoney.Caching
     {
         ITransactionServices _transactionServices;
 
-        public CachingTransactionServices(ITransactionServices nonCachingTransactionServices, IModelCache cache, IModelCacheConfiguration cacheConfig) 
-            : base(cache, cacheConfig)
+        public CachingTransactionServices(ITransactionServices nonCachingTransactionServices, IModelCache cache, ICachingHelpers helpers)
+            : base(cache, helpers)
         {
             _transactionServices = nonCachingTransactionServices;
         }

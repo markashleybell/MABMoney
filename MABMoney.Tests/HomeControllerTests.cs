@@ -31,6 +31,7 @@ namespace MABMoney.Tests
         private IDateTimeProvider _dateProvider;
         private IUrlHelper _urlHelper;
         private IModelCache _cache;
+        private ICachingHelpers _cachingHelpers;
 
         [SetUp]
         public void SetUp()
@@ -223,12 +224,14 @@ namespace MABMoney.Tests
             _urlHelper = new FakeUrlHelper();
 
             _cache = MockRepository.GenerateStub<IModelCache>();
+
+            _cachingHelpers = MockRepository.GenerateStub<ICachingHelpers>();
         }
 
         [Test]
         public void Index_Get()
         {
-            var controller = new HomeController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _urlHelper, _cache);
+            var controller = new HomeController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _urlHelper, _cache, _cachingHelpers);
 
             var result = controller.Index(_profile) as ViewResult;
 

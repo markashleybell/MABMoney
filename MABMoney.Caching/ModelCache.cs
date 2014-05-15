@@ -11,12 +11,10 @@ namespace MABMoney.Caching
         IModelCacheConfiguration _config;
         static MemoryCache _cache = MemoryCache.Default;
         static Dictionary<string, CacheItemInfo> _cacheInfo = new Dictionary<string, CacheItemInfo>();
-        private int _userId;
 
-        public ModelCache(IModelCacheConfiguration config, int userId)
+        public ModelCache(IModelCacheConfiguration config)
         {
             _config = config;
-            _userId = userId;
         }
 
         public List<CacheItemInfo> Items
@@ -42,7 +40,7 @@ namespace MABMoney.Caching
 
         public object this[string key]
         {
-            get { return _cache[GetUserKey(key)]; }
+            get { return _cache[key]; }
         }
 
         public void Add(string key, object value, int expirationSeconds)
@@ -62,17 +60,17 @@ namespace MABMoney.Caching
             if (dependencies != null && dependencies.Count() > 0)
             {
                 policy.ChangeMonitors.Add(
-                    _cache.CreateCacheEntryChangeMonitor(dependencies.Select(d => GetUserKey(d)))
+                    _cache.CreateCacheEntryChangeMonitor(dependencies)
                 );
             }
 
-            _cache.Add(GetUserKey(key), value, policy);
+            _cache.Add(key, value, policy);
 
-            if (!_cacheInfo.ContainsKey(GetUserKey(key)))
+            if (!_cacheInfo.ContainsKey(key))
             {
-                _cacheInfo[GetUserKey(key)] = new CacheItemInfo
+                _cacheInfo[key] = new CacheItemInfo
                 {
-                    Key = GetUserKey(key),
+                    Key = key,
                     Type = value.GetType().ToString(),
                     Value = value.ToString(),
                     Hits = 0,
@@ -80,15 +78,15 @@ namespace MABMoney.Caching
                 };
             }
 
-            _cacheInfo[GetUserKey(key)].Misses++;
+            _cacheInfo[key].Misses++;
         }
 
         public T Get<T>(string key)
         {
             try
             {
-                _cacheInfo[GetUserKey(key)].Hits++;
-                return (T)_cache[GetUserKey(key)];
+                _cacheInfo[key].Hits++;
+                return (T)_cache[key];
             }
             catch
             {
@@ -98,13 +96,13 @@ namespace MABMoney.Caching
 
         public void Set(string key, object value, int expirationSeconds)
         {
-            _cache.Set(GetUserKey(key), value, DateTimeOffset.Now.AddSeconds(expirationSeconds));
+            _cache.Set(key, value, DateTimeOffset.Now.AddSeconds(expirationSeconds));
         }
 
         public void Remove(string key)
         {
-            _cache.Remove(GetUserKey(key));
-            _cacheInfo.Remove(GetUserKey(key));
+            _cache.Remove(key);
+            _cacheInfo.Remove(key);
         }
 
         public void Clear()
@@ -119,14 +117,9 @@ namespace MABMoney.Caching
 
         public void InvalidateAllWithDependency(string dependencyKey)
         {
-            _cache.Set(_config.Get<string>("CookieKey") + "-dependency-" + GetUserKey(dependencyKey), 
+            _cache.Set(dependencyKey, 
                        Guid.NewGuid(), 
                        DateTimeOffset.Now.AddSeconds((int)CacheExpiry.OneHour));
-        }
-
-        private string GetUserKey(string key)
-        {
-            return (_userId == -1) ? key : key + "-" + _userId.ToString();
         }
     }
 }

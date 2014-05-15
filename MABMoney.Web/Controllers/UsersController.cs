@@ -20,6 +20,7 @@ namespace MABMoney.Web.Controllers
     public class UsersController : BaseController
     {
         private ICryptoProvider _crypto;
+        private ICachingHelpers _cachingHelpers;
 
         public UsersController(IUserServices userServices,
                                IAccountServices accountServices,
@@ -31,18 +32,20 @@ namespace MABMoney.Web.Controllers
                                IDateTimeProvider dateProvider,
                                ICryptoProvider crypto,
                                IUrlHelper urlHelper,
-                               IModelCache cache) : base(userServices,
-                                                         accountServices,
-                                                         categoryServices,
-                                                         transactionServices, 
-                                                         budgetServices,
-                                                         context,
-                                                         config,
-                                                         dateProvider,
-                                                         urlHelper,
-                                                         cache) 
+                               IModelCache cache,
+                               ICachingHelpers cachingHelpers) : base(userServices,
+                                                                      accountServices,
+                                                                      categoryServices,
+                                                                      transactionServices, 
+                                                                      budgetServices,
+                                                                      context,
+                                                                      config,
+                                                                      dateProvider,
+                                                                      urlHelper,
+                                                                      cache) 
         {
             _crypto = crypto;
+            _cachingHelpers = cachingHelpers;
         }
 
         //
@@ -170,10 +173,10 @@ namespace MABMoney.Web.Controllers
 
             // Add the cache dependency items to the cache
             // We have to manually add the user ID to the keys here because it wasn't present when the cache object was injected
-            _cache.Add(_config.Get<string>("CookieKey") + "-dependency-all-" + userId, Guid.NewGuid().ToString(), (int)CacheExpiry.OneHour);
-            _cache.Add(_config.Get<string>("CookieKey") + "-dependency-user-" + userId, Guid.NewGuid().ToString(), (int)CacheExpiry.OneHour);
-            _cache.Add(_config.Get<string>("CookieKey") + "-dependency-transaction-" + userId, Guid.NewGuid().ToString(), (int)CacheExpiry.OneHour);
-            _cache.Add(_config.Get<string>("CookieKey") + "-dependency-budget-" + userId, Guid.NewGuid().ToString(), (int)CacheExpiry.OneHour);
+            _cache.Add(_cachingHelpers.GetDependencyKey("all", userId), Guid.NewGuid().ToString(), (int)CacheExpiry.OneHour);
+            _cache.Add(_cachingHelpers.GetDependencyKey("user", userId), Guid.NewGuid().ToString(), (int)CacheExpiry.OneHour);
+            _cache.Add(_cachingHelpers.GetDependencyKey("transaction", userId), Guid.NewGuid().ToString(), (int)CacheExpiry.OneHour);
+            _cache.Add(_cachingHelpers.GetDependencyKey("budget", userId), Guid.NewGuid().ToString(), (int)CacheExpiry.OneHour);
 
             return Redirect(model.RedirectAfterSubmitUrl);
         }

@@ -12,8 +12,8 @@ namespace MABMoney.Caching
     {
         private IBudgetServices _budgetServices;
 
-        public CachingBudgetServices(IBudgetServices nonCachingBudgetServices, IModelCache cache, IModelCacheConfiguration cacheConfig) 
-            : base(cache, cacheConfig)
+        public CachingBudgetServices(IBudgetServices nonCachingBudgetServices, IModelCache cache, ICachingHelpers helpers)
+            : base(cache, helpers)
         {
             _budgetServices = nonCachingBudgetServices;
         }
