@@ -13,6 +13,8 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using System.Linq;
+using System.Linq.Expressions;
 
 namespace MABMoney.Web
 {
@@ -20,17 +22,19 @@ namespace MABMoney.Web
     // visit http://go.microsoft.com/?LinkId=9394801
     public class MvcApplication : System.Web.HttpApplication
     {
+        private bool enableProfiling = Convert.ToBoolean(ConfigurationManager.AppSettings["EnableProfiling"]);
+        private bool enableMigrations = Convert.ToBoolean(ConfigurationManager.AppSettings["EnableMigrations"]);
+        private bool enableCaching = Convert.ToBoolean(ConfigurationManager.AppSettings["EnableCaching"]);
+
+        private string sharedSecret = ConfigurationManager.AppSettings["SharedSecret"];
+        private string cookieKey = ConfigurationManager.AppSettings["CookieKey"];
+        private string externalDbConnectionString = ConfigurationManager.AppSettings["ExternalDbConnectionString"];
+        private string profilerConnectionString = ConfigurationManager.AppSettings["ProfilerDbConnectionString"];
+
+        private string[] profileExcludes = new string[] { "/home/showcachecontents", "/home/invalidatecache" };
+
         protected void Application_Start()
         {
-            var enableProfiling = Convert.ToBoolean(ConfigurationManager.AppSettings["EnableProfiling"]);
-            var enableMigrations = Convert.ToBoolean(ConfigurationManager.AppSettings["EnableMigrations"]);
-            var enableCaching = Convert.ToBoolean(ConfigurationManager.AppSettings["EnableCaching"]);
-
-            var sharedSecret = ConfigurationManager.AppSettings["SharedSecret"];
-            var cookieKey = ConfigurationManager.AppSettings["CookieKey"];
-            var externalDbConnectionString = ConfigurationManager.AppSettings["ExternalDbConnectionString"];
-            var profilerConnectionString = ConfigurationManager.AppSettings["ProfilerDbConnectionString"];
-
             AreaRegistration.RegisterAllAreas();
 
             GlobalConfiguration.Configure(WebApiConfig.Register);
@@ -101,15 +105,15 @@ namespace MABMoney.Web
             });
         }
 
-        protected void Application_BeginRequest()
+        protected void Application_BeginRequest(object sender, EventArgs e)
         {
-            if (Convert.ToBoolean(ConfigurationManager.AppSettings["EnableProfiling"]))
+            if (enableProfiling && !profileExcludes.Contains(Request.Url.AbsolutePath.ToLower()))
                 MiniProfiler.Start();
         }
 
-        protected void Application_EndRequest()
+        protected void Application_EndRequest(object sender, EventArgs e)
         {
-            if (Convert.ToBoolean(ConfigurationManager.AppSettings["EnableProfiling"]))
+            if (enableProfiling && !profileExcludes.Contains(Request.Url.AbsolutePath.ToLower()))
                 MiniProfiler.Stop();
         }
     }
