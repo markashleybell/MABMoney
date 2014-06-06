@@ -25,7 +25,12 @@ namespace MABMoney.Caching
 
         public UserDTO Get(int id)
         {
-            return _userServices.Get(id);
+            return CacheAndGetValue<UserDTO>(
+                "user-full",
+                CacheExpiry.OneHour,
+                () => _userServices.Get(id),
+                "user", "account", "category", "all"
+            );
         }
 
         public UserDTO GetMinimal(int id)

@@ -171,13 +171,6 @@ namespace MABMoney.Web.Controllers
             else
                 _context.SetCookie(_config.Get<string>("CookieKey"), encryptedUserId);
 
-            // Add the cache dependency items to the cache
-            // We have to manually add the user ID to the keys here because it wasn't present when the cache object was injected
-            _cache.Add(_cachingHelpers.GetDependencyKey("all", userId), Guid.NewGuid().ToString(), (int)CacheExpiry.OneHour);
-            _cache.Add(_cachingHelpers.GetDependencyKey("user", userId), Guid.NewGuid().ToString(), (int)CacheExpiry.OneHour);
-            _cache.Add(_cachingHelpers.GetDependencyKey("transaction", userId), Guid.NewGuid().ToString(), (int)CacheExpiry.OneHour);
-            _cache.Add(_cachingHelpers.GetDependencyKey("budget", userId), Guid.NewGuid().ToString(), (int)CacheExpiry.OneHour);
-
             return Redirect(model.RedirectAfterSubmitUrl);
         }
 
