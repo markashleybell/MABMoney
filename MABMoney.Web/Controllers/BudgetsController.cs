@@ -26,16 +26,18 @@ namespace MABMoney.Web.Controllers
                                  ISiteConfiguration config,
                                  IDateTimeProvider dateProvider,
                                  IUrlHelper urlHelper,
-                                 IModelCache cache) : base(userServices,
-                                                           accountServices,
-                                                           categoryServices,
-                                                           transactionServices, 
-                                                           budgetServices,
-                                                           context,
-                                                           config,
-                                                           dateProvider,
-                                                           urlHelper,
-                                                           cache) { }
+                                 IModelCache cache,
+                                 ICachingHelpers cachingHelpers) : base(userServices,
+                                                                        accountServices,
+                                                                        categoryServices,
+                                                                        transactionServices, 
+                                                                        budgetServices,
+                                                                        context,
+                                                                        config,
+                                                                        dateProvider,
+                                                                        urlHelper,
+                                                                        cache,
+                                                                        cachingHelpers) { }
 
         //
         // GET: /Budget/
@@ -194,6 +196,9 @@ namespace MABMoney.Web.Controllers
                     }
             }
 
+            // Clear the cache of anything that depends upon budgets
+            _cache.InvalidateAllWithDependency(_cachingHelpers.GetDependencyKey(CachingDependency.Budget));
+
             return Redirect(model.RedirectAfterSubmitUrl);
         }
 
@@ -268,7 +273,9 @@ namespace MABMoney.Web.Controllers
                 }
             }
 
-            // return RedirectToAction("Index");
+            // Clear the cache of anything that depends upon budgets
+            _cache.InvalidateAllWithDependency(_cachingHelpers.GetDependencyKey(CachingDependency.Budget));
+
             return Redirect(model.RedirectAfterSubmitUrl);
         }
 
@@ -279,6 +286,10 @@ namespace MABMoney.Web.Controllers
         public ActionResult Delete(ProfileViewModel profile, int id, string redirectAfterSubmitUrl)
         {
             _budgetServices.Delete(id);
+
+            // Clear the cache of anything that depends upon budgets
+            _cache.InvalidateAllWithDependency(_cachingHelpers.GetDependencyKey(CachingDependency.Budget));
+
             return Redirect(redirectAfterSubmitUrl);
         }
     }

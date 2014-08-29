@@ -45,6 +45,7 @@
     <Compile Include="CacheItemInfo.cs" />
     <Compile Include="CachingAccountServices.cs" />
     <Compile Include="CachingBudgetServices.cs" />
+    <Compile Include="CachingDependency.cs" />
     <Compile Include="CachingServicesBase.cs" />
     <Compile Include="CachingTransactionServices.cs" />
     <Compile Include="CachingUserServices.cs" />

@@ -42,7 +42,8 @@ namespace MABMoney.Web.Controllers
                                                                       config,
                                                                       dateProvider,
                                                                       urlHelper,
-                                                                      cache) 
+                                                                      cache,
+                                                                      cachingHelpers) 
         {
             _crypto = crypto;
             _cachingHelpers = cachingHelpers;

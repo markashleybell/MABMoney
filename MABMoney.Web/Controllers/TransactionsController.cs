@@ -27,16 +27,18 @@ namespace MABMoney.Web.Controllers
                                       ISiteConfiguration config,
                                       IDateTimeProvider dateProvider,
                                       IUrlHelper urlHelper,
-                                      IModelCache cache) : base(userServices,
-                                                                accountServices,
-                                                                categoryServices,
-                                                                transactionServices, 
-                                                                budgetServices,
-                                                                context,
-                                                                config,
-                                                                dateProvider,
-                                                                urlHelper,
-                                                                cache) { }
+                                      IModelCache cache,
+                                      ICachingHelpers cachingHelpers) : base(userServices,
+                                                                             accountServices,
+                                                                             categoryServices,
+                                                                             transactionServices, 
+                                                                             budgetServices,
+                                                                             context,
+                                                                             config,
+                                                                             dateProvider,
+                                                                             urlHelper,
+                                                                             cache,
+                                                                             cachingHelpers) { }
 
         //
         // GET: /Transaction/
@@ -88,6 +90,11 @@ namespace MABMoney.Web.Controllers
             var dto = model.MapTo<TransactionDTO>();
             _transactionServices.Save(dto);
 
+            // Clear the cache of anything that depends upon transactions
+            _cache.InvalidateAllWithDependency(_cachingHelpers.GetDependencyKey(CachingDependency.Transaction));
+            // Clear the user because current balance comes from User.Accounts property
+            _cache.InvalidateAllWithDependency(_cachingHelpers.GetDependencyKey(CachingDependency.User));
+
             return Redirect(model.RedirectAfterSubmitUrl);
         }
 
@@ -119,6 +126,11 @@ namespace MABMoney.Web.Controllers
             var dto = model.MapTo<TransactionDTO>();
             _transactionServices.Save(dto);
 
+            // Clear the cache of anything that depends upon transactions
+            _cache.InvalidateAllWithDependency(_cachingHelpers.GetDependencyKey(CachingDependency.Transaction));
+            // Clear the user because current balance comes from User.Accounts property
+            _cache.InvalidateAllWithDependency(_cachingHelpers.GetDependencyKey(CachingDependency.User));
+
             return Redirect(model.RedirectAfterSubmitUrl);
         }
 
@@ -129,6 +141,12 @@ namespace MABMoney.Web.Controllers
         public ActionResult Delete(ProfileViewModel profile, int id, string redirectAfterSubmitUrl)
         {
             _transactionServices.Delete(id);
+
+            // Clear the cache of anything that depends upon transactions
+            _cache.InvalidateAllWithDependency(_cachingHelpers.GetDependencyKey(CachingDependency.Transaction));
+            // Clear the user because current balance comes from User.Accounts property
+            _cache.InvalidateAllWithDependency(_cachingHelpers.GetDependencyKey(CachingDependency.User));
+
             return Redirect(redirectAfterSubmitUrl);
         }
 

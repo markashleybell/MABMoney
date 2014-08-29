@@ -20,8 +20,6 @@ namespace MABMoney.Web.Controllers
 {
     public class HomeController : BaseController
     {
-        private ICachingHelpers _cachingHelpers;
-
         public HomeController(IUserServices userServices,
                               IAccountServices accountServices,
                               ICategoryServices categoryServices,
@@ -41,10 +39,8 @@ namespace MABMoney.Web.Controllers
                                                                      config,
                                                                      dateProvider,
                                                                      urlHelper,
-                                                                     cache) 
-        {
-            _cachingHelpers = cachingHelpers;
-        }
+                                                                     cache,
+                                                                     cachingHelpers) { }
 
         private TransactionType GetDefaultTransactionTypeForAccount(AccountDTO account)
         {
@@ -227,6 +223,11 @@ namespace MABMoney.Web.Controllers
             account.TransactionDescriptionHistory.Add(dto.Description);
             _accountServices.Save(account);
 
+            // Clear the cache of anything that depends upon transactions
+            _cache.InvalidateAllWithDependency(_cachingHelpers.GetDependencyKey(CachingDependency.Transaction));
+            // Clear the user because current balance comes from User.Accounts property
+            _cache.InvalidateAllWithDependency(_cachingHelpers.GetDependencyKey(CachingDependency.User));
+
             var pageState = EncryptionHelpers.EncryptStringAES(model.Account_AccountID + "-" + model.Type + "-" + model.Tab, _config.Get<string>("SharedSecret"));
             var encodedPageState = HttpServerUtility.UrlTokenEncode(Encoding.UTF8.GetBytes(pageState));
 
@@ -274,6 +275,11 @@ namespace MABMoney.Web.Controllers
 
             _transactionServices.Save(sourceTransaction);
             _transactionServices.Save(destinationTransaction);
+
+            // Clear the cache of anything that depends upon transactions
+            _cache.InvalidateAllWithDependency(_cachingHelpers.GetDependencyKey(CachingDependency.Transaction));
+            // Clear the user because current balance comes from User.Accounts property
+            _cache.InvalidateAllWithDependency(_cachingHelpers.GetDependencyKey(CachingDependency.User));
 
             var pageState = EncryptionHelpers.EncryptStringAES(model.Account_AccountID + "-" + model.Type + "-" + model.Tab, _config.Get<string>("SharedSecret"));
             var encodedPageState = HttpServerUtility.UrlTokenEncode(Encoding.UTF8.GetBytes(pageState));
@@ -325,10 +331,10 @@ namespace MABMoney.Web.Controllers
             return View(_cache.Items.Where(x => x.Key.StartsWith(_config.Get<string>("CookieKey"))).OrderByDescending(x => x.Hits).ToList());
         }
 
-        public ActionResult InvalidateCache(ProfileViewModel profile, string key)
+        public ActionResult InvalidateCache(ProfileViewModel profile, string id)
         {
-            _cache.InvalidateAllWithDependency(_cachingHelpers.GetDependencyKey(key));
-            return Content("INVALIDATED DEPENDENCY: " + key);
+            _cache.InvalidateAllWithDependency(_cachingHelpers.GetDependencyKey(id));
+            return Content("INVALIDATED DEPENDENCY: " + id);
         }
 
         #endregion

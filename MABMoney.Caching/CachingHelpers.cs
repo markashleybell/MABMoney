@@ -22,6 +22,11 @@ namespace MABMoney.Caching
             return _config.Get<string>("CookieKey") + "-" + _userId + "-" + key;
         }
 
+        public string GetDependencyKey(CachingDependency dependency)
+        {
+            return GetDependencyKey(dependency.ToString().ToLower(), _userId.ToString());
+        }
+
         public string GetDependencyKey(string key)
         {
             return GetDependencyKey(key, _userId.ToString());

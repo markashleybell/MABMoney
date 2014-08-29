@@ -27,16 +27,18 @@ namespace MABMoney.Web.Controllers
                                   ISiteConfiguration config,
                                   IDateTimeProvider dateProvider,
                                   IUrlHelper urlHelper,
-                                  IModelCache cache) : base(userServices,
-                                                            accountServices,
-                                                            categoryServices,
-                                                            transactionServices, 
-                                                            budgetServices,
-                                                            context,
-                                                            config,
-                                                            dateProvider,
-                                                            urlHelper, 
-                                                            cache) { }
+                                  IModelCache cache,
+                                  ICachingHelpers cachingHelpers) : base(userServices,
+                                                                         accountServices,
+                                                                         categoryServices,
+                                                                         transactionServices, 
+                                                                         budgetServices,
+                                                                         context,
+                                                                         config,
+                                                                         dateProvider,
+                                                                         urlHelper, 
+                                                                         cache,
+                                                                         cachingHelpers) { }
 
         //
         // GET: /Account/

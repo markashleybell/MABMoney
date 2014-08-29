@@ -31,6 +31,7 @@ namespace MABMoney.Tests
         private IDateTimeProvider _dateProvider;
         private IUrlHelper _urlHelper;
         private IModelCache _cache;
+        private ICachingHelpers _cachingHelpers;
 
         [SetUp]
         public void SetUp()
@@ -168,12 +169,14 @@ namespace MABMoney.Tests
             _urlHelper = new FakeUrlHelper();
 
             _cache = MockRepository.GenerateStub<IModelCache>();
+
+            _cachingHelpers = MockRepository.GenerateStub<ICachingHelpers>();
         }
 
         [Test]
         public void Index_Get()
         {
-            var controller = new BudgetsController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _urlHelper, _cache);
+            var controller = new BudgetsController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _urlHelper, _cache, _cachingHelpers);
 
             var result = controller.Index(_profile) as ViewResult;
 
@@ -194,7 +197,7 @@ namespace MABMoney.Tests
         [Test]
         public void Create_Get()
         {
-            var controller = new BudgetsController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _urlHelper, _cache);
+            var controller = new BudgetsController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _urlHelper, _cache, _cachingHelpers);
 
             var result = controller.Create(_profile, 1) as ViewResult;
 
@@ -208,7 +211,7 @@ namespace MABMoney.Tests
         [Test]
         public void Create_Post()
         {
-            var controller = new BudgetsController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _urlHelper, _cache);
+            var controller = new BudgetsController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _urlHelper, _cache, _cachingHelpers);
 
             var model = new CreateViewModel
             {
@@ -247,7 +250,7 @@ namespace MABMoney.Tests
         [Test]
         public void Edit_Get()
         {
-            var controller = new BudgetsController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _urlHelper, _cache);
+            var controller = new BudgetsController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _urlHelper, _cache, _cachingHelpers);
 
             var result = controller.Edit(_profile, 2) as ViewResult;
 
@@ -271,7 +274,7 @@ namespace MABMoney.Tests
         [Test]
         public void Edit_Post()
         {
-            var controller = new BudgetsController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _urlHelper, _cache);
+            var controller = new BudgetsController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _urlHelper, _cache, _cachingHelpers);
 
             var model = new EditViewModel
             {
@@ -312,7 +315,7 @@ namespace MABMoney.Tests
         [Test]
         public void Delete_Post()
         {
-            var controller = new BudgetsController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _urlHelper, _cache);
+            var controller = new BudgetsController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _urlHelper, _cache, _cachingHelpers);
 
             var result = controller.Delete(_profile, 2, "/Budgets") as RedirectResult;
 
