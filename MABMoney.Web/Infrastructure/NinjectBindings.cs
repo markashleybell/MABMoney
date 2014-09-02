@@ -75,7 +75,7 @@ namespace MABMoney.Web.Infrastructure
             else
             {
                 Bind<IUserServices>().To<UserServices>().InRequestScope();
-                Bind<IAccountServices>().To<CachingAccountServices>().InRequestScope();
+                Bind<IAccountServices>().To<AccountServices>().InRequestScope();
                 Bind<IBudgetServices>().To<BudgetServices>().InRequestScope();
                 Bind<ITransactionServices>().To<TransactionServices>().InRequestScope();
             }
