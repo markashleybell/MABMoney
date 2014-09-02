@@ -4,7 +4,7 @@
     <div class="col-md-6" id="brand">
         <a href="/">MABMoney <span class="staging">STAGING</span></a>
     </div>
-    @if(Model.Profile.UserID != 0) {
+    @if(Model.UserID != 0) {
     <div class="col-md-3" id="net-worth-display">
         <button id="net-worth" type="button" class="btn btn-default btn-info btn-block" data-toggle="dropdown">Net Worth: @Model.NetWorth.ToString("c")</button>
         <div id="net-worth-content">
@@ -22,14 +22,14 @@
     </div>
     <div class="col-md-3">
 
-        <button type="button" class="btn btn-default dropdown-toggle btn-block" data-toggle="dropdown">@Model.Profile.UserEmail <span class="caret"></span></button>
+        <button type="button" class="btn btn-default dropdown-toggle btn-block" data-toggle="dropdown">@Model.UserEmail <span class="caret"></span></button>
         <ul class="dropdown-menu pull-right user-menu">
             <li>@Html.ActionLink("Accounts", "Index", "Accounts", null, new { tabindex = -1 })</li>
             <li>@Html.ActionLink("Categories", "Index", "Categories", null, new { tabindex = -1 })</li>
             <li>@Html.ActionLink("Transactions", "Index", "Transactions", null, new { tabindex = -1 })</li>
             <li>@Html.ActionLink("Budgets", "Index", "Budgets", null, new { tabindex = -1 })</li>
             <li class="divider"></li>
-            @if(Model.Profile.IsAdmin) {
+            @if(Model.IsAdmin) {
             <li>@Html.ActionLink("Users", "Index", "Users", null, new { tabindex = -1 })</li>
             }
             <li>@Html.ActionLink("Logout", "Logout", "Users", null, new { tabindex = -1 })</li>

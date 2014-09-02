@@ -36,7 +36,7 @@
   <ItemGroup>
     <Reference Include="mab.lib.SimpleMapper, Version=3.2.0.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\mab.lib.SimpleMapper.3.2.0.1\lib\mab.lib.SimpleMapper.dll</HintPath>
+      <HintPath>..\packages\mab.lib.SimpleMapper.3.2.0.2\lib\mab.lib.SimpleMapper.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />

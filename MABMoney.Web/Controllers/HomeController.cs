@@ -291,10 +291,14 @@ namespace MABMoney.Web.Controllers
         {
             string debug = null;
 
+            var user = _userServices.GetMinimal(profile.UserID);
+
             var accounts = _accountServices.All().ToList();
 
             return View(new MainNavigationViewModel { 
-                Profile = profile,
+                UserID = (user != null) ? user.UserID : 0,
+                UserEmail = (user != null) ? user.Email : null,
+                IsAdmin = (user != null) ? user.IsAdmin : false,
                 Accounts = accounts,
                 NetWorth = accounts.Sum(x => x.CurrentBalance),
                 Debug = debug

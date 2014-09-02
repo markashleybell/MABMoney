@@ -33,9 +33,7 @@ namespace MABMoney.Web.Infrastructure
             var userId = Convert.ToInt32(cookieValue.Split('-')[0]);
             _step.Dispose();
 
-
-
-            _step = _profiler.Step("Instantiate DB Factory and Service");
+            _step = _profiler.Step("Get Session In AuthenticateAttribute");
 
             DataStoreFactory dataStoreFactory;
 
@@ -50,52 +48,12 @@ namespace MABMoney.Web.Infrastructure
 
             var session = sessionServices.GetByUserAndKey(userId, cookieValue);
 
+            _step.Dispose();
+
             if (session == null)
                 return false;
 
-            //IUserServices userServices;
-
-            //if (ConfigurationManager.AppSettings["EnableCaching"] != null)
-            //{
-            //    var cacheConfiguration = new ModelCacheConfiguration();
-            //    var cache = new ModelCache(cacheConfiguration);
-            //    var cachingHelpers = new CachingHelpers(cacheConfiguration, userId);
-            //    var nonCachingUserServices = new UserServices(new Repository<User, int>(unitOfWork), unitOfWork, new DateTimeProvider(() => DateTime.Now));
-            //    userServices = new CachingUserServices(nonCachingUserServices, cache, cachingHelpers);
-
-            //    if (cache.Items.FirstOrDefault(x => x.Key == cachingHelpers.GetDependencyKey("all", userId.ToString())) == null)
-            //    {
-            //        // Add the cache dependency items to the cache
-            //        // We have to manually add the user ID to the keys here because it wasn't present when the cache object was injected
-            //        cache.Add(cachingHelpers.GetDependencyKey("all", userId.ToString()), Guid.NewGuid().ToString(), (int)CacheExpiry.FifteenMinutes);
-            //        cache.Add(cachingHelpers.GetDependencyKey("user", userId.ToString()), Guid.NewGuid().ToString(), (int)CacheExpiry.FifteenMinutes);
-            //        cache.Add(cachingHelpers.GetDependencyKey("transaction", userId.ToString()), Guid.NewGuid().ToString(), (int)CacheExpiry.FifteenMinutes);
-            //        cache.Add(cachingHelpers.GetDependencyKey("budget", userId.ToString()), Guid.NewGuid().ToString(), (int)CacheExpiry.FifteenMinutes);
-            //        cache.Add(cachingHelpers.GetDependencyKey("account", userId.ToString()), Guid.NewGuid().ToString(), (int)CacheExpiry.FifteenMinutes);
-            //        cache.Add(cachingHelpers.GetDependencyKey("category", userId.ToString()), Guid.NewGuid().ToString(), (int)CacheExpiry.FifteenMinutes);
-            //    }
-            //}
-            //else
-            //{
-            //    userServices = new UserServices(new Repository<User, int>(unitOfWork), unitOfWork, new DateTimeProvider(() => DateTime.Now));
-            //}
-            
-            //_step.Dispose();
-
-            //_step = _profiler.Step("Get Minimal User Data");
-            //var user = userServices.GetMinimal(userId);
-            //_step.Dispose();
-
-            //if (user == null)
-            //    return false;
-
-            //context.Items.Add("UserID", user.UserID);
-            //context.Items.Add("IsAdmin", user.IsAdmin);
-            //context.Items.Add("UserEmail", user.Email);
-
             context.Items.Add("UserID", userId);
-            context.Items.Add("IsAdmin", false);
-            context.Items.Add("UserEmail", "me@markashleybell.com");
 
             return true;
         }
