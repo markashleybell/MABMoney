@@ -10,6 +10,7 @@ using System.Web.Mvc;
 using System.Configuration;
 using StackExchange.Profiling;
 using MABMoney.Caching;
+using System.Text;
 
 namespace MABMoney.Web.Infrastructure
 {
@@ -30,7 +31,7 @@ namespace MABMoney.Web.Infrastructure
             var _profiler = MiniProfiler.Current;
 
             _step = _profiler.Step("Decrypt Auth Cookie");
-            var userId = Convert.ToInt32(cookieValue.Split('-')[0]);
+            var userId = Convert.ToInt32(Encoding.UTF8.GetString(Convert.FromBase64String(cookieValue)).Split('-')[0]);
             _step.Dispose();
 
             _step = _profiler.Step("Get Session In AuthenticateAttribute");

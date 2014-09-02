@@ -47,7 +47,7 @@ namespace MABMoney.Services
 
         public void Save(SessionDTO dto)
         {
-            // Add the session (session records will never be updated)
+            // Add the session (sessions will never be updated using this method)
             var session = dto.MapTo<Session>();
             _sessions.Add(session);
             _unitOfWork.Commit();
@@ -58,7 +58,39 @@ namespace MABMoney.Services
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            _sessions.Remove(id);
+            _unitOfWork.Commit();
+        }
+
+        public void DeleteByKey(string key)
+        {
+            var session = _sessions.Query(x => x.Key == key).FirstOrDefault();
+
+            if (session != null)
+            {
+                _sessions.Remove(session.SessionID);
+                _unitOfWork.Commit();
+            }
+        }
+
+        public void DeleteExpiredByUser(int userId)
+        {
+            foreach (var session in _sessions.Query(x => x.User_UserID == userId && x.Expiry <= _dateProvider.Now).ToList())
+                _sessions.Remove(session.SessionID);
+
+            _unitOfWork.Commit();
+        }
+
+        public void UpdateSessionExpiry(int userId, string key, DateTime expiry)
+        {
+            // Try and get the existing session
+            var session = _sessions.Query(x => x.User_UserID == userId && x.Key == key && x.Expiry > _dateProvider.Now).FirstOrDefault();
+
+            if (session != null)
+            {
+                session.Expiry = expiry;
+                _unitOfWork.Commit();
+            }
         }
     }
 }

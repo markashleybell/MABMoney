@@ -36,5 +36,15 @@ namespace MABMoney.Tests
             else
                 Cookies[key] = values;
         }
+
+        public void SetCookie(string key, string value, DateTime expires, bool httpOnly)
+        {
+            var values = Tuple.Create<string, DateTime>(value, expires);
+
+            if (!Cookies.ContainsKey(key))
+                Cookies.Add(key, values);
+            else
+                Cookies[key] = values;
+        }
     }
 }

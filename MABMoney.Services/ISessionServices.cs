@@ -13,5 +13,8 @@ namespace MABMoney.Services
         SessionDTO GetByUserAndKey(int userId, string key);
         void Save(SessionDTO dto);
         void Delete(int id);
+        void DeleteByKey(string key);
+        void DeleteExpiredByUser(int userId);
+        void UpdateSessionExpiry(int userId, string key, DateTime expiry);
     }
 }

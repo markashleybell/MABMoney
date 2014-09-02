@@ -14,6 +14,7 @@ using MABMoney.Data;
 using System.Text.RegularExpressions;
 using System.Net.Mail;
 using MABMoney.Caching;
+using System.Text;
 
 namespace MABMoney.Web.Controllers
 {
@@ -137,9 +138,19 @@ namespace MABMoney.Web.Controllers
             var dto = model.MapTo<UserDTO>();
             _userServices.Save(dto);
 
-            // Encrypt the ID before storing it in a cookie
-            var encryptedUserId = EncryptionHelpers.EncryptStringAES(dto.UserID.ToString(), _config.Get<string>("SharedSecret"));
-            _context.SetCookie(_config.Get<string>("CookieKey"), encryptedUserId);
+            // Create a session record
+            var uniqueKey = System.Web.Security.Membership.GeneratePassword(16, 8);
+            var sessionKey = Convert.ToBase64String(Encoding.UTF8.GetBytes(dto.UserID + "-" + uniqueKey + "-" + _config.Get<string>("SharedSecret")));
+            var sessionExpiry = _dateProvider.Now.AddDays(7);
+
+            _sessionServices.Save(new SessionDTO {
+                User_UserID = dto.UserID,
+                Key = sessionKey,
+                Expiry = sessionExpiry
+            });
+
+            // Set the auth cookie
+            _context.SetCookie(_config.Get<string>("CookieKey"), sessionKey);
 
             return Redirect(model.RedirectAfterSubmitUrl);
         }
@@ -164,18 +175,33 @@ namespace MABMoney.Web.Controllers
                 return View(model);
 
             // Create a session record
-            var sessionKey = user.UserID + "-" + Globals.RNG.GetHashCode() + "-" + _config.Get<string>("SharedSecret");
+            var uniqueKey = System.Web.Security.Membership.GeneratePassword(16, 8);
+            var sessionKey = Convert.ToBase64String(Encoding.UTF8.GetBytes(user.UserID + "-" + uniqueKey + "-" + _config.Get<string>("SharedSecret")));
+            var sessionExpiry = _dateProvider.Now.AddDays(7);
 
+            // The record in the database expires in 7 days regardless
             _sessionServices.Save(new SessionDTO {
                 User_UserID = user.UserID,
                 Key = sessionKey,
-                Expiry = _dateProvider.Now.AddHours(1)
+                Expiry = sessionExpiry
             });
 
+            // If remember me is checked
             if (model.RememberMe)
-                _context.SetCookie(_config.Get<string>("CookieKey"), sessionKey, _dateProvider.Now.AddDays(7));
+            {
+                // The auth cookie expires in 7 days
+                _context.SetCookie(_config.Get<string>("CookieKey"), sessionKey, sessionExpiry);
+            }
             else
+            {
+                // The auth cookie will expire when the browser is closed
+                // This does mean there is a valid session left in the database for up to 7 days, 
+                // but an attacker would have to guess a 16-character random strong password in 
+                // order to forge a cookie to retrieve it
                 _context.SetCookie(_config.Get<string>("CookieKey"), sessionKey);
+            }
+
+            _sessionServices.DeleteExpiredByUser(user.UserID);
 
             return Redirect(model.RedirectAfterSubmitUrl);
         }
@@ -183,7 +209,13 @@ namespace MABMoney.Web.Controllers
         [HttpGet]
         public ActionResult Logout()
         {
-            _context.SetCookie(_config.Get<string>("CookieKey"), "", _dateProvider.Now.AddDays(-1));
+            var cookieKey = _config.Get<string>("CookieKey");
+            // Get the session key value from the auth cookie
+            var sessionKey = _context.GetCookieValue<string>(cookieKey);
+            // Delete the session
+            _sessionServices.DeleteByKey(sessionKey);
+            // Remove the cookie
+            _context.SetCookie(cookieKey, "", _dateProvider.Now.AddDays(-1));
 
             // TODO: Is there ever going to be a need to define this on the fly with RedirectAfterSubmitUrl?
             return RedirectToAction("Login");

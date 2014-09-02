@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 
@@ -31,7 +32,7 @@ namespace MABMoney.Web.Infrastructure
             {
                 Bind<IDataStoreFactory>().To<DataStoreFactory>()
                                          .InRequestScope()
-                                         .WithConstructorArgument("userId", c => ((HttpContext.Current.Request.Cookies[cookieKey] != null) ? Convert.ToInt32(HttpContext.Current.Request.Cookies[cookieKey].Value.Split('-')[0]) : -1))
+                                         .WithConstructorArgument("userId", c => ((HttpContext.Current.Request.Cookies[cookieKey] != null) ? Convert.ToInt32(Encoding.UTF8.GetString(Convert.FromBase64String(HttpContext.Current.Request.Cookies[cookieKey].Value)).Split('-')[0]) : -1))
                                          .WithConstructorArgument("dateTimeServices", new DateTimeProvider(() => DateTime.Now))
                                          .WithConstructorArgument("connectionString", externalDbConnectionString);
             }
@@ -39,7 +40,7 @@ namespace MABMoney.Web.Infrastructure
             {
                 Bind<IDataStoreFactory>().To<DataStoreFactory>()
                                          .InRequestScope()
-                                         .WithConstructorArgument("userId", c => ((HttpContext.Current.Request.Cookies[cookieKey] != null) ? Convert.ToInt32(HttpContext.Current.Request.Cookies[cookieKey].Value.Split('-')[0]) : -1))
+                                         .WithConstructorArgument("userId", c => ((HttpContext.Current.Request.Cookies[cookieKey] != null) ? Convert.ToInt32(Encoding.UTF8.GetString(Convert.FromBase64String(HttpContext.Current.Request.Cookies[cookieKey].Value)).Split('-')[0]) : -1))
                                          .WithConstructorArgument("dateTimeServices", new DateTimeProvider(() => DateTime.Now));
             }
 
@@ -48,7 +49,7 @@ namespace MABMoney.Web.Infrastructure
             Bind<IModelCache>().To<ModelCache>().InRequestScope();
             Bind<ICachingHelpers>().To<CachingHelpers>()
                                    .InRequestScope()
-                                   .WithConstructorArgument("userId", c => ((HttpContext.Current.Request.Cookies[cookieKey] != null) ? Convert.ToInt32(HttpContext.Current.Request.Cookies[cookieKey].Value.Split('-')[0]) : -1));
+                                   .WithConstructorArgument("userId", c => ((HttpContext.Current.Request.Cookies[cookieKey] != null) ? Convert.ToInt32(Encoding.UTF8.GetString(Convert.FromBase64String(HttpContext.Current.Request.Cookies[cookieKey].Value)).Split('-')[0]) : -1));
 
             // Repositories
             Bind<IRepository<User, int>>().To<Repository<User, int>>().InRequestScope();
