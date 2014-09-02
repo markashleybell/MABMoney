@@ -18,6 +18,7 @@ namespace MABMoney.Data
         public virtual IDbSet<Transaction> Transactions { get; set; }
         public virtual IDbSet<Budget> Budgets { get; set; }
         public virtual IDbSet<Category_Budget> Categories_Budgets { get; set; }
+        public virtual IDbSet<Session> Sessions { get; set; }
 
         public int UserID { get; private set; }
 

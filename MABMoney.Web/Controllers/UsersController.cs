@@ -20,7 +20,7 @@ namespace MABMoney.Web.Controllers
     public class UsersController : BaseController
     {
         private ICryptoProvider _crypto;
-        private ICachingHelpers _cachingHelpers;
+        private ISessionServices _sessionServices;
 
         public UsersController(IUserServices userServices,
                                IAccountServices accountServices,
@@ -33,20 +33,21 @@ namespace MABMoney.Web.Controllers
                                ICryptoProvider crypto,
                                IUrlHelper urlHelper,
                                IModelCache cache,
-                               ICachingHelpers cachingHelpers) : base(userServices,
-                                                                      accountServices,
-                                                                      categoryServices,
-                                                                      transactionServices, 
-                                                                      budgetServices,
-                                                                      context,
-                                                                      config,
-                                                                      dateProvider,
-                                                                      urlHelper,
-                                                                      cache,
-                                                                      cachingHelpers) 
+                               ICachingHelpers cachingHelpers,
+                               ISessionServices sessionServices) : base(userServices,
+                                                                        accountServices,
+                                                                        categoryServices,
+                                                                        transactionServices, 
+                                                                        budgetServices,
+                                                                        context,
+                                                                        config,
+                                                                        dateProvider,
+                                                                        urlHelper,
+                                                                        cache,
+                                                                        cachingHelpers) 
         {
             _crypto = crypto;
-            _cachingHelpers = cachingHelpers;
+            _sessionServices = sessionServices;
         }
 
         //
@@ -162,15 +163,19 @@ namespace MABMoney.Web.Controllers
             if(user == null || !_crypto.VerifyHashedPassword(user.Password, model.Password))
                 return View(model);
 
-            var userId = user.UserID.ToString();
+            // Create a session record
+            var sessionKey = user.UserID + "-" + Globals.RNG.GetHashCode() + "-" + _config.Get<string>("SharedSecret");
 
-            // Encrypt the ID before storing it in a cookie
-            var encryptedUserId = EncryptionHelpers.EncryptStringAES(userId, _config.Get<string>("SharedSecret"));
+            _sessionServices.Save(new SessionDTO {
+                User_UserID = user.UserID,
+                Key = sessionKey,
+                Expiry = _dateProvider.Now.AddHours(1)
+            });
 
             if (model.RememberMe)
-                _context.SetCookie(_config.Get<string>("CookieKey"), encryptedUserId, _dateProvider.Now.AddDays(7));
+                _context.SetCookie(_config.Get<string>("CookieKey"), sessionKey, _dateProvider.Now.AddDays(7));
             else
-                _context.SetCookie(_config.Get<string>("CookieKey"), encryptedUserId);
+                _context.SetCookie(_config.Get<string>("CookieKey"), sessionKey);
 
             return Redirect(model.RedirectAfterSubmitUrl);
         }

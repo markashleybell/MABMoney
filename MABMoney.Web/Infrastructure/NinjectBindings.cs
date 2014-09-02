@@ -31,7 +31,7 @@ namespace MABMoney.Web.Infrastructure
             {
                 Bind<IDataStoreFactory>().To<DataStoreFactory>()
                                          .InRequestScope()
-                                         .WithConstructorArgument("userId", c => ((HttpContext.Current.Request.Cookies[cookieKey] != null) ? Convert.ToInt32(EncryptionHelpers.DecryptStringAES(HttpContext.Current.Request.Cookies[cookieKey].Value, sharedSecret)) : -1))
+                                         .WithConstructorArgument("userId", c => ((HttpContext.Current.Request.Cookies[cookieKey] != null) ? Convert.ToInt32(HttpContext.Current.Request.Cookies[cookieKey].Value.Split('-')[0]) : -1))
                                          .WithConstructorArgument("dateTimeServices", new DateTimeProvider(() => DateTime.Now))
                                          .WithConstructorArgument("connectionString", externalDbConnectionString);
             }
@@ -39,7 +39,7 @@ namespace MABMoney.Web.Infrastructure
             {
                 Bind<IDataStoreFactory>().To<DataStoreFactory>()
                                          .InRequestScope()
-                                         .WithConstructorArgument("userId", c => ((HttpContext.Current.Request.Cookies[cookieKey] != null) ? Convert.ToInt32(EncryptionHelpers.DecryptStringAES(HttpContext.Current.Request.Cookies[cookieKey].Value, sharedSecret)) : -1))
+                                         .WithConstructorArgument("userId", c => ((HttpContext.Current.Request.Cookies[cookieKey] != null) ? Convert.ToInt32(HttpContext.Current.Request.Cookies[cookieKey].Value.Split('-')[0]) : -1))
                                          .WithConstructorArgument("dateTimeServices", new DateTimeProvider(() => DateTime.Now));
             }
 
@@ -48,7 +48,7 @@ namespace MABMoney.Web.Infrastructure
             Bind<IModelCache>().To<ModelCache>().InRequestScope();
             Bind<ICachingHelpers>().To<CachingHelpers>()
                                    .InRequestScope()
-                                   .WithConstructorArgument("userId", c => ((HttpContext.Current.Request.Cookies[cookieKey] != null) ? Convert.ToInt32(EncryptionHelpers.DecryptStringAES(HttpContext.Current.Request.Cookies[cookieKey].Value, sharedSecret)) : -1));
+                                   .WithConstructorArgument("userId", c => ((HttpContext.Current.Request.Cookies[cookieKey] != null) ? Convert.ToInt32(HttpContext.Current.Request.Cookies[cookieKey].Value.Split('-')[0]) : -1));
 
             // Repositories
             Bind<IRepository<User, int>>().To<Repository<User, int>>().InRequestScope();
@@ -57,12 +57,15 @@ namespace MABMoney.Web.Infrastructure
             Bind<IRepository<Budget, int>>().To<Repository<Budget, int>>().InRequestScope();
             Bind<IRepository<Category, int>>().To<Repository<Category, int>>().InRequestScope();
             Bind<IRepository<Category_Budget, int>>().To<Repository<Category_Budget, int>>().InRequestScope();
+            Bind<IRepository<Session, int>>().To<Repository<Session, int>>().InRequestScope();
             
-            // Services
+            // Services which are never caching
             Bind<ICategoryServices>().To<CategoryServices>().InRequestScope();
+            Bind<ISessionServices>().To<SessionServices>().InRequestScope(); 
 
             if (enableCaching)
             {
+                // Services which have caching versions
                 Bind<IUserServices>().To<CachingUserServices>().InRequestScope();
                 Bind<IUserServices>().To<UserServices>().When(r => r.Target.Name == "nonCachingUserServices").InRequestScope();
                 Bind<IAccountServices>().To<CachingAccountServices>().InRequestScope();
@@ -74,6 +77,7 @@ namespace MABMoney.Web.Infrastructure
             }
             else
             {
+                // Inject non-caching services everywhere
                 Bind<IUserServices>().To<UserServices>().InRequestScope();
                 Bind<IAccountServices>().To<AccountServices>().InRequestScope();
                 Bind<IBudgetServices>().To<BudgetServices>().InRequestScope();
