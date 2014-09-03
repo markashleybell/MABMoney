@@ -17,5 +17,6 @@ namespace MABMoney.Caching
         void Remove(string key);
         void Clear();
         void InvalidateAllWithDependency(string dependencyKey);
+        bool ContainsKey(string key);
     }
 }

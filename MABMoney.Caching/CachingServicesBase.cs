@@ -28,15 +28,16 @@ namespace MABMoney.Caching
             var key = _helpers.GetCacheKey(cacheKey);
             dependencies = dependencies.Select(x => _helpers.GetDependencyKey(x)).ToArray();
 
-            var item = _cache.Get<T>(key);
-
-            if (item == null)
+            if (_cache.ContainsKey(key))
             {
-                item = (T)method();
-                _cache.Add(key, item, (int)expiry, dependencies);
+                return _cache.Get<T>(key);
             }
-
-            return item;
+            else
+            {
+                var item = (T)method();
+                _cache.Add(key, item, (int)expiry, dependencies);
+                return item;
+            }
         }
     }
 }

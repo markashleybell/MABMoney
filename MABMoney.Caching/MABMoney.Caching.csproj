@@ -55,6 +55,7 @@
     <Compile Include="IModelCacheConfiguration.cs" />
     <Compile Include="ModelCache.cs" />
     <Compile Include="ModelCacheConfiguration.cs" />
+    <Compile Include="CacheItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

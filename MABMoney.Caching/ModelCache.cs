@@ -50,9 +50,6 @@ namespace MABMoney.Caching
 
         public void Add(string key, object value, int expirationSeconds, params string[] dependencies)
         {
-            if (value == null)
-                return;
-
             var policy = new CacheItemPolicy {
                 AbsoluteExpiration = DateTimeOffset.Now.AddSeconds(expirationSeconds)
             };
@@ -64,15 +61,15 @@ namespace MABMoney.Caching
                 );
             }
 
-            _cache.Add(key, value, policy);
+            _cache.Add(key, new CacheItem { Value = value }, policy);
 
             if (!_cacheInfo.ContainsKey(key))
             {
                 _cacheInfo[key] = new CacheItemInfo
                 {
                     Key = key,
-                    Type = value.GetType().ToString(),
-                    Value = value.ToString(),
+                    Type = (value == null) ? "null" : value.GetType().ToString(),
+                    Value = (value == null) ? "null" : value.ToString(),
                     Hits = 0,
                     Misses = 0
                 };
@@ -86,7 +83,7 @@ namespace MABMoney.Caching
             try
             {
                 _cacheInfo[key].Hits++;
-                return (T)_cache[key];
+                return (T)((CacheItem)_cache[key]).Value;
             }
             catch
             {
@@ -120,6 +117,11 @@ namespace MABMoney.Caching
             _cache.Set(dependencyKey, 
                        Guid.NewGuid(), 
                        DateTimeOffset.Now.AddSeconds((int)CacheExpiry.OneHour));
+        }
+
+        public bool ContainsKey(string key)
+        {
+            return _cache[key] != null;
         }
     }
 }
