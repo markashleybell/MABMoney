@@ -20,7 +20,12 @@ namespace MABMoney.Caching
 
         public IEnumerable<AccountDTO> All()
         {
-            return _accountServices.All();
+            return CacheAndGetValue<IEnumerable<AccountDTO>>(
+                "accounts",
+                CacheExpiry.OneHour,
+                () => _accountServices.All(),
+                "account", "transaction", "all"
+            );
         }
 
         public AccountDTO Get(int id)

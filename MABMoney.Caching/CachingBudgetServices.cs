@@ -60,7 +60,12 @@ namespace MABMoney.Caching
 
         public int GetBudgetCount(int accountId)
         {
-            return _budgetServices.GetBudgetCount(accountId);
+            return CacheAndGetValue<int>(
+                "budget-count-" + accountId,
+                CacheExpiry.OneHour,
+                () => _budgetServices.GetBudgetCount(accountId),
+                "budget", "transaction", "all"
+            );
         }
     }
 }
