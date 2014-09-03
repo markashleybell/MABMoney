@@ -33,7 +33,7 @@ BEGIN
 		SET @AccountID = @InsertedIntoAccountID
 	END
 		
-	UPDATE Accounts SET CurrentBalance = StartingBalance + ISNULL((SELECT SUM(Amount) FROM Transactions WHERE Account_AccountID = @AccountID), 0) WHERE AccountID = @AccountID
+	UPDATE Accounts SET CurrentBalance = StartingBalance + ISNULL((SELECT SUM(Amount) FROM Transactions WHERE Deleted = 0 AND Account_AccountID = @AccountID), 0) WHERE AccountID = @AccountID
 	
 END
 GO
@@ -70,7 +70,7 @@ BEGIN
 		SET @AccountID = @InsertedIntoAccountID
 	END
 		
-	UPDATE Accounts SET CurrentBalance = StartingBalance + ISNULL((SELECT SUM(Amount) FROM Transactions WHERE Account_AccountID = @AccountID), 0) WHERE AccountID = @AccountID
+	UPDATE Accounts SET CurrentBalance = StartingBalance + ISNULL((SELECT SUM(Amount) FROM Transactions WHERE Deleted = 0 AND Account_AccountID = @AccountID), 0) WHERE AccountID = @AccountID
 	
 END
 GO
