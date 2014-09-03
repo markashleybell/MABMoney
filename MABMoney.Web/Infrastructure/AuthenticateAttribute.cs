@@ -54,6 +54,25 @@ namespace MABMoney.Web.Infrastructure
             if (session == null)
                 return false;
 
+            if (ConfigurationManager.AppSettings["EnableCaching"] != null && Convert.ToBoolean(ConfigurationManager.AppSettings["EnableCaching"]) == true)
+            {
+                var cacheConfiguration = new ModelCacheConfiguration();
+                var cache = new ModelCache(cacheConfiguration);
+                var cachingHelpers = new CachingHelpers(cacheConfiguration, userId);
+
+                if (cache.Items.FirstOrDefault(x => x.Key == cachingHelpers.GetDependencyKey("all", userId.ToString())) == null)
+                {
+                    // Add the cache dependency items to the cache
+                    // We have to manually add the user ID to the keys here because it wasn't necessarily present when the cache object was injected
+                    cache.Add(cachingHelpers.GetDependencyKey("all", userId.ToString()), Guid.NewGuid().ToString(), (int)CacheExpiry.FifteenMinutes);
+                    cache.Add(cachingHelpers.GetDependencyKey("user", userId.ToString()), Guid.NewGuid().ToString(), (int)CacheExpiry.FifteenMinutes);
+                    cache.Add(cachingHelpers.GetDependencyKey("transaction", userId.ToString()), Guid.NewGuid().ToString(), (int)CacheExpiry.FifteenMinutes);
+                    cache.Add(cachingHelpers.GetDependencyKey("budget", userId.ToString()), Guid.NewGuid().ToString(), (int)CacheExpiry.FifteenMinutes);
+                    cache.Add(cachingHelpers.GetDependencyKey("account", userId.ToString()), Guid.NewGuid().ToString(), (int)CacheExpiry.FifteenMinutes);
+                    cache.Add(cachingHelpers.GetDependencyKey("category", userId.ToString()), Guid.NewGuid().ToString(), (int)CacheExpiry.FifteenMinutes);
+                }
+            }
+
             context.Items.Add("UserID", userId);
 
             return true;
