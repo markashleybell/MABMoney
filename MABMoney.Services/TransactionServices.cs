@@ -80,10 +80,6 @@ namespace MABMoney.Services
                     // Update the DTO with the new ID
                     dto.TransactionID = transaction.TransactionID;
                 }
-
-                // Update the current balance for this account
-                account.CurrentBalance = account.StartingBalance + (account.Transactions.Where(t => !t.Deleted).Select(t => t.Amount).DefaultIfEmpty(0).Sum());
-                _unitOfWork.Commit();
             }
         }
 
@@ -94,10 +90,6 @@ namespace MABMoney.Services
             if(transaction != null)
             {
                 _transactions.Remove(id);
-                _unitOfWork.Commit();
-
-                // Update the current balance for this account
-                transaction.Account.CurrentBalance = transaction.Account.StartingBalance + (transaction.Account.Transactions.Where(t => !t.Deleted).Select(t => t.Amount).DefaultIfEmpty(0).Sum());
                 _unitOfWork.Commit();
             }
         }

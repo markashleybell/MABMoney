@@ -117,6 +117,9 @@ namespace MABMoney.Web.Controllers
             var dto = model.MapTo<AccountDTO>();
             _accountServices.Save(dto);
 
+            // Clear the user because current balance comes from User.Accounts property
+            _cache.InvalidateAllWithDependency(_cachingHelpers.GetDependencyKey(CachingDependency.User));
+
             return Redirect(model.RedirectAfterSubmitUrl);
         }
 
