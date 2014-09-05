@@ -30,9 +30,7 @@ namespace MABMoney.Web.Infrastructure
             IDisposable _step;
             var _profiler = MiniProfiler.Current;
 
-            _step = _profiler.Step("Decrypt Auth Cookie");
             var userId = Convert.ToInt32(Encoding.UTF8.GetString(Convert.FromBase64String(cookieValue)).Split('-')[0]);
-            _step.Dispose();
 
             _step = _profiler.Step("Get Session In AuthenticateAttribute");
 
@@ -54,6 +52,8 @@ namespace MABMoney.Web.Infrastructure
             if (session == null)
                 return false;
 
+            // If caching is enabled, this is the only place we can reliably set up the dependencies
+            // TODO: Could these be added on first Cache.Add() if not already present?
             if (ConfigurationManager.AppSettings["EnableCaching"] != null && Convert.ToBoolean(ConfigurationManager.AppSettings["EnableCaching"]) == true)
             {
                 var cacheConfiguration = new ModelCacheConfiguration();
