@@ -65,9 +65,8 @@ namespace MABMoney.Services
             if (budget == null)
                 return null;
 
-            var transactions = _transactions.Query(x => x.Account_AccountID == budget.Account_AccountID).ToList();
-
-            var budgetTransactions = transactions.Where(x => x.Date >= budget.Start && x.Date < budget.End).ToList();
+            var balanceAtStart = _transactions.Query(x => x.Account_AccountID == budget.Account_AccountID && x.Date < budget.Start).Sum(x => x.Amount);
+            var budgetTransactions = _transactions.Query(x => x.Account_AccountID == budget.Account_AccountID && x.Date >= budget.Start && x.Date < budget.End).ToList();
 
             var dto = budget.MapTo<BudgetDTO>();
 
@@ -98,7 +97,7 @@ namespace MABMoney.Services
                     var account = _accountServices.Get(budget.Account.AccountID);
                     var allocatedSpent = dto.Category_Budgets.Sum(x => x.Total);
 
-                    var balanceAtBudgetStart = transactions.Where(x => x.Date < budget.Start).ToList().Sum(x => x.Amount) + account.StartingBalance;
+                    var balanceAtBudgetStart = balanceAtStart + account.CurrentBalance;
 
                     var unallocatedAmount = ((balanceAtBudgetStart - allocated) - overspend) + budgetTransactions.Where(x => x.Amount > 0).Sum(x => x.Amount);
 
