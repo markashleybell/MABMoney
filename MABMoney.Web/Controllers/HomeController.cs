@@ -104,15 +104,8 @@ namespace MABMoney.Web.Controllers
             model.From = new DateTime(now.Year, now.Month, 1);
             model.To = new DateTime(now.Year, now.Month, DateTime.DaysInMonth(now.Year, now.Month));
 
-            IDisposable _step;
-            var _profiler = MiniProfiler.Current;
-
-            _step = _profiler.Step("Get Latest Budget");
-
             // Get latest budget, if there is one
             var latestBudget = _budgetServices.GetLatest(account.AccountID);
-
-            _step.Dispose();
 
             var transactions = _transactionServices.GetForAccount(account.AccountID);
 
