@@ -97,7 +97,7 @@ namespace MABMoney.Services
                     var account = _accountServices.Get(budget.Account.AccountID);
                     var allocatedSpent = dto.Category_Budgets.Sum(x => x.Total);
 
-                    var balanceAtBudgetStart = balanceAtStart + account.CurrentBalance;
+                    var balanceAtBudgetStart = balanceAtStart + account.StartingBalance;
 
                     var unallocatedAmount = ((balanceAtBudgetStart - allocated) - overspend) + budgetTransactions.Where(x => x.Amount > 0).Sum(x => x.Amount);
 
