@@ -177,7 +177,8 @@ namespace MABMoney.Web.Controllers
             }
         }
 
-        [Authenticate]
+        // We deliberately don't authenticate this action because it doesn't do much and this way we avoid 
+        // an unnecessary DB call every time the accounts drop-down is changed
         [HttpPost]
         public ActionResult Index(ProfileViewModel profile, int account_accountId)
         {
