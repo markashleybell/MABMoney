@@ -150,16 +150,15 @@ namespace MABMoney.Web.Controllers
 
             if (state != null)
             {
-                var decodedPageState = Encoding.UTF8.GetString(HttpServerUtility.UrlTokenDecode(state));
-                var pageState = EncryptionHelpers.DecryptStringAES(decodedPageState, _config.Get<string>("SharedSecret")).Split('-');
+                var pageState = EncryptionHelpers.DecodeReturnParameters(state);
 
                 model = GetModelData(model, profile.UserID, Convert.ToInt32(pageState[0]));
 
                 if (model == null)
                     return RedirectToAction("Create", "Account");
 
-                model.Type = (TransactionType)Enum.Parse(typeof(TransactionType), pageState[1]);
-                model.Tab = (DashboardTab)Enum.Parse(typeof(DashboardTab), pageState[2]);
+                model.Type = (TransactionType)Convert.ToInt32(pageState[1]);
+                model.Tab = (DashboardTab)Convert.ToInt32(pageState[2]);
 
                 // If it's a savings account it will not have the payment calc or the budget tab, so just set to income
                 if (model.Account.Type == AccountTypeDTO.Savings && model.Tab == DashboardTab.BudgetOrPaymentCalc)
@@ -182,9 +181,7 @@ namespace MABMoney.Web.Controllers
         [HttpPost]
         public ActionResult Index(ProfileViewModel profile, int account_accountId)
         {
-            var pageState = EncryptionHelpers.EncryptStringAES(account_accountId + "-" + TransactionType.Expense + "-" + DashboardTab.BudgetOrPaymentCalc, _config.Get<string>("SharedSecret"));
-            var encodedPageState = HttpServerUtility.UrlTokenEncode(Encoding.UTF8.GetBytes(pageState));
-
+            var encodedPageState = EncryptionHelpers.EncodeReturnParameters(account_accountId, TransactionType.Expense, DashboardTab.BudgetOrPaymentCalc);
             return RedirectToRoute("Home", new { state = encodedPageState });
         }
 
@@ -228,8 +225,7 @@ namespace MABMoney.Web.Controllers
             // Clear the user because current balance comes from User.Accounts property
             _cache.InvalidateAllWithDependency(_cachingHelpers.GetDependencyKey(CachingDependency.User));
 
-            var pageState = EncryptionHelpers.EncryptStringAES(model.Account_AccountID + "-" + model.Type + "-" + model.Tab, _config.Get<string>("SharedSecret"));
-            var encodedPageState = HttpServerUtility.UrlTokenEncode(Encoding.UTF8.GetBytes(pageState));
+            var encodedPageState = EncryptionHelpers.EncodeReturnParameters(model.Account_AccountID, model.Type, model.Tab);
 
             return RedirectToRoute("Home", new { state = encodedPageState });
         }
@@ -281,8 +277,7 @@ namespace MABMoney.Web.Controllers
             // Clear the user because current balance comes from User.Accounts property
             _cache.InvalidateAllWithDependency(_cachingHelpers.GetDependencyKey(CachingDependency.User));
 
-            var pageState = EncryptionHelpers.EncryptStringAES(model.Account_AccountID + "-" + model.Type + "-" + model.Tab, _config.Get<string>("SharedSecret"));
-            var encodedPageState = HttpServerUtility.UrlTokenEncode(Encoding.UTF8.GetBytes(pageState));
+            var encodedPageState = EncryptionHelpers.EncodeReturnParameters(model.Account_AccountID, model.Type, model.Tab);
 
             return RedirectToRoute("Home", new { state = encodedPageState });
         }

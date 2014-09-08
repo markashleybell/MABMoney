@@ -52,8 +52,6 @@ namespace MABMoney.Web.Helpers
             }).AsQueryable();
         }
 
-
-
         public static IQueryable<SelectListItem> GetAccountSelectOptions(UserDTO user, bool showBalances = false)
         {
             return user.Accounts.Select(x => new SelectListItem {

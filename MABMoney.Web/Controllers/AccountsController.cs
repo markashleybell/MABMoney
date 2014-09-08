@@ -84,8 +84,7 @@ namespace MABMoney.Web.Controllers
             var dto = model.MapTo<AccountDTO>();
             _accountServices.Save(dto);
 
-            var pageState = EncryptionHelpers.EncryptStringAES(dto.AccountID + "-" + MABMoney.Web.Models.Home.TransactionType.Expense + "-" + MABMoney.Web.Models.Home.DashboardTab.BudgetOrPaymentCalc, _config.Get<string>("SharedSecret"));
-            var encodedPageState = HttpServerUtility.UrlTokenEncode(Encoding.UTF8.GetBytes(pageState));
+            var encodedPageState = EncryptionHelpers.EncodeReturnParameters(dto.AccountID, MABMoney.Web.Models.Home.TransactionType.Expense, MABMoney.Web.Models.Home.DashboardTab.BudgetOrPaymentCalc);
 
             // TODO: This doesn't respect RedirectAfterSubmitUrl, should it?
             return RedirectToRoute("Home", new { state = encodedPageState });

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MABMoney.Web.Models.Home;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -141,6 +142,16 @@ namespace MABMoney.Web.Helpers
             }
 
             return buffer;
+        }
+
+        public static string EncodeReturnParameters(int accountID, TransactionType transactionType, DashboardTab returnTab)
+        {
+            return Convert.ToBase64String(Encoding.UTF8.GetBytes(accountID + "-" + (int)transactionType + "-" + (int)returnTab));
+        }
+
+        public static string[] DecodeReturnParameters(string state)
+        {
+            return Encoding.UTF8.GetString(Convert.FromBase64String(state)).Split('-');
         }
     }
 }
