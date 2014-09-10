@@ -186,6 +186,7 @@ namespace MABMoney.Tests
             _accountServices.Stub(x => x.All()).Return(accounts);
             _accountServices.Stub(x => x.Get(1)).Return(accounts[0]);
             _accountServices.Stub(x => x.Get(2)).Return(accounts[1]);
+            _accountServices.Stub(x => x.GetForUser(1)).Return(accounts);
 
             _categoryServices = MockRepository.GenerateStub<ICategoryServices>();
             _categoryServices.Stub(x => x.All()).Return(categories);
@@ -202,6 +203,7 @@ namespace MABMoney.Tests
             _transactionServices.Stub(x => x.Get(3)).Return(transactions[2]);
             _transactionServices.Stub(x => x.GetForAccount(1)).Return(transactions.Where(x => x.Account_AccountID == 1));
             _transactionServices.Stub(x => x.GetForAccount(2)).Return(transactions.Where(x => x.Account_AccountID == 2));
+            _transactionServices.Stub(x => x.GetForAccount(1, DateTime.Now, DateTime.Now)).Return(transactions.Where(x => x.Account_AccountID == 1)).IgnoreArguments();
 
             _budgetServices = MockRepository.GenerateStub<IBudgetServices>();
             _budgetServices.Stub(x => x.All()).Return(budgets);

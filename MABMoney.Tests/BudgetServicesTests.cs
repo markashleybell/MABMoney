@@ -153,6 +153,7 @@ namespace MABMoney.Tests
 
             _categories_budgets = MockRepository.GenerateStub<IRepository<Category_Budget, int>>();
             _categories_budgets.Stub(x => x.All()).Return(categories_budgets.AsQueryable());
+            _categories_budgets.Stub(x => x.QueryWithIncludes(null)).Return(categories_budgets.AsQueryable()).IgnoreArguments();
 
             _transactions = MockRepository.GenerateStub<IRepository<Transaction, int>>();
             _transactions.Stub(x => x.All()).Return(transactions.AsQueryable());
