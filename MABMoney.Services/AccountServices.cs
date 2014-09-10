@@ -52,7 +52,8 @@ namespace MABMoney.Services
                 Default = a.Default,
                 Categories = a.Categories.Select(c => new CategoryDTO { 
                     CategoryID = c.CategoryID,
-                    Name = c.Name
+                    Name = c.Name,
+                    Type = (CategoryTypeDTO)c.Type
                 }).ToList()
             }).ToList();
 
