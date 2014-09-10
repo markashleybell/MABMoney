@@ -28,6 +28,26 @@ namespace MABMoney.Caching
             );
         }
 
+        public IEnumerable<TransactionDTO> GetForAccount(int accountId)
+        {
+            return CacheAndGetValue<IEnumerable<TransactionDTO>>(
+                "transactionsforaccount-" + accountId,
+                CacheExpiry.OneHour,
+                () => _transactionServices.GetForAccount(accountId),
+                "transaction", "all"
+            );
+        }
+
+        public IEnumerable<TransactionDTO> GetForAccount(int accountId, DateTime from, DateTime to)
+        {
+            return CacheAndGetValue<IEnumerable<TransactionDTO>>(
+                "transactionsforaccount-" + accountId + "-" + from.ToString("yyyyMMdd") + "-" + to.ToString("yyyyMMdd"),
+                CacheExpiry.OneHour,
+                () => _transactionServices.GetForAccount(accountId, from, to),
+                "transaction", "all"
+            );
+        }
+
         public TransactionDTO Get(int id)
         {
             return _transactionServices.Get(id);
@@ -41,16 +61,6 @@ namespace MABMoney.Caching
         public void Delete(int id)
         {
             _transactionServices.Delete(id);
-        }
-
-        public IEnumerable<TransactionDTO> GetForAccount(int accountId)
-        {
-            return CacheAndGetValue<IEnumerable<TransactionDTO>>(
-                "transactionsforaccount-" + accountId,
-                CacheExpiry.OneHour,
-                () => _transactionServices.GetForAccount(accountId),
-                "transaction", "all"
-            );
         }
     }
 }

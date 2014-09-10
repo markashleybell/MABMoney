@@ -55,9 +55,6 @@ namespace MABMoney.Web.Controllers
 
         private IndexViewModel GetModelData(IndexViewModel model, int userId, int? accountId)
         {
-            //IDisposable _step;
-            //var _profiler = MiniProfiler.Current;
-
             var accounts = _accountServices.GetForUser(userId);
 
             // If no account ID has been passed in
@@ -128,32 +125,19 @@ namespace MABMoney.Web.Controllers
             model.From = new DateTime(now.Year, now.Month, 1);
             model.To = new DateTime(now.Year, now.Month, DateTime.DaysInMonth(now.Year, now.Month));
 
-            // _step = _profiler.Step("Get Latest Budget");
-
             // Get latest budget, if there is one
             var latestBudget = _budgetServices.GetLatest(account.AccountID);
 
-            //_step.Dispose();
-
-            //_step = _profiler.Step("Get Transactions For Account");
-
-            // TODO: This is getting ALL transactions for account, we need a date range...
-            var transactions = _transactionServices.GetForAccount(account.AccountID);
-
-            // _step.Dispose();
-
             if (latestBudget != null)
             {
-                transactions = transactions.Where(x => x.Date >= latestBudget.Start.AddDays(-7) && x.Date <= latestBudget.End);
+                model.Transactions = _transactionServices.GetForAccount(account.AccountID, latestBudget.Start.AddDays(-7), latestBudget.End).ToList();
                 model.From = latestBudget.Start;
                 model.To = latestBudget.End;
             }
             else
             {
-                transactions = transactions.Where(x => x.Date >= model.From.AddDays(-7) && x.Date <= model.To);
+                model.Transactions = _transactionServices.GetForAccount(account.AccountID, model.From.AddDays(-7), model.To).ToList();
             }
-
-            model.Transactions = transactions.ToList();
 
             model.Budget = latestBudget;
 
