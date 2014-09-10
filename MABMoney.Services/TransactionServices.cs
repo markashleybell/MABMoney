@@ -93,13 +93,13 @@ namespace MABMoney.Services
 
         public void Save(TransactionDTO dto)
         {
-            // Get all the transactions for this user/account 
+            // Check the account for this transaction exists
             var account = _accounts.Query(x => x.User_UserID == _userId && x.AccountID == dto.Account_AccountID).FirstOrDefault();
 
             if (account != null)
             {
                 // Try and get the transaction
-                var transaction = account.Transactions.FirstOrDefault(x => x.TransactionID == dto.TransactionID);
+                var transaction = _transactions.Get(dto.TransactionID);
 
                 // If the transaction exists AND belongs to this user
                 if (transaction != null && transaction.Account.User_UserID == _userId)
@@ -118,6 +118,18 @@ namespace MABMoney.Services
                     // Update the DTO with the new ID
                     dto.TransactionID = transaction.TransactionID;
                 }
+
+                // Update the transaction description history
+                var history = account.TransactionDescriptionHistory;
+                var historyList = new List<string>();
+                // Turn the history string into a list
+                if (!string.IsNullOrWhiteSpace(history))
+                    historyList = history.Split('|').ToList();
+                // Add the description from the transaction we just added to the history
+                historyList.Add(dto.Description);
+                // Re-flatten the history list (removing any duplicates) and save it against the account
+                account.TransactionDescriptionHistory = string.Join("|", historyList.Where(x => !string.IsNullOrWhiteSpace(x)).Distinct().ToArray());
+                _unitOfWork.Commit();
             }
         }
 

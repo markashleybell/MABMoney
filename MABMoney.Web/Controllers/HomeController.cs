@@ -233,11 +233,6 @@ namespace MABMoney.Web.Controllers
             var dto = model.MapTo<TransactionDTO>();
             _transactionServices.Save(dto);
 
-            // Update the transaction description history for this account
-            var account = _accountServices.Get(model.Account_AccountID);
-            account.TransactionDescriptionHistory.Add(dto.Description);
-            _accountServices.Save(account);
-
             // Clear the cache of anything that depends upon transactions
             _cache.InvalidateAllWithDependency(_cachingHelpers.GetDependencyKey(CachingDependency.Transaction));
             // Clear the user because current balance comes from User.Accounts property
