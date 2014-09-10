@@ -9,6 +9,7 @@ namespace MABMoney.Services
     public interface IAccountServices
     {
         IEnumerable<AccountDTO> All();
+        IEnumerable<AccountDTO> GetForUser(int userId);
         AccountDTO Get(int id);
         void Save(AccountDTO dto);
         void Delete(int id);

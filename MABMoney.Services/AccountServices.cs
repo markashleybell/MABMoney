@@ -29,14 +29,31 @@ namespace MABMoney.Services
 
         public IEnumerable<AccountDTO> All()
         {
-            var dto = _accounts.All().OrderBy(x => x.DisplayOrder).Where(x => x.User_UserID == _userId).Select(a => new AccountDTO
-            { 
+            var dto = _accounts.All().OrderBy(x => x.DisplayOrder).Where(x => x.User_UserID == _userId).Select(a => new AccountDTO { 
                 AccountID = a.AccountID,
                 Type = (AccountTypeDTO)a.Type,
                 Name = a.Name,
                 StartingBalance = a.StartingBalance,
                 CurrentBalance = a.CurrentBalance,
                 Default = a.Default
+            }).ToList();
+
+            return dto;
+        }
+
+        public IEnumerable<AccountDTO> GetForUser(int userId)
+        {
+            var dto = _accounts.Query(x => x.User_UserID == _userId).OrderBy(x => x.DisplayOrder).Select(a => new AccountDTO {
+                AccountID = a.AccountID,
+                Type = (AccountTypeDTO)a.Type,
+                Name = a.Name,
+                StartingBalance = a.StartingBalance,
+                CurrentBalance = a.CurrentBalance,
+                Default = a.Default,
+                Categories = a.Categories.Select(c => new CategoryDTO { 
+                    CategoryID = c.CategoryID,
+                    Name = c.Name
+                }).ToList()
             }).ToList();
 
             return dto;

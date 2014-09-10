@@ -55,21 +55,24 @@ namespace MABMoney.Web.Controllers
 
         private IndexViewModel GetModelData(IndexViewModel model, int userId, int? accountId)
         {
-            var user = _userServices.Get(userId);
+            //IDisposable _step;
+            //var _profiler = MiniProfiler.Current;
+
+            var accounts = _accountServices.GetForUser(userId);
 
             // If no account ID has been passed in
             if (!accountId.HasValue)
             {
-                var defaultAccount = user.Accounts.Where(x => x.Default).FirstOrDefault();
+                var defaultAccount = accounts.Where(x => x.Default).FirstOrDefault();
 
                 // If there isn't a default account
                 if (defaultAccount == null)
                 {
                     // If the user doesn't yet have any accounts, redirect them to the add account screen
-                    if (user.Accounts == null || user.Accounts.Count == 0)
+                    if (accounts == null || accounts.Count() == 0)
                         accountId = 0;
                     else // Just get the first one
-                        accountId = user.Accounts.First().AccountID;
+                        accountId = accounts.First().AccountID;
                 }
                 else
                 {
@@ -80,17 +83,38 @@ namespace MABMoney.Web.Controllers
 
             string debug = null;
 
-            var account = user.Accounts.FirstOrDefault(x => x.AccountID == accountId.Value);
+            var account = accounts.FirstOrDefault(x => x.AccountID == accountId.Value);
 
             if (account == null)
                 return null;
 
             model.Account = account;
             model.Account_AccountID = account.AccountID;
-            model.IncomeCategories = DataHelpers.GetCategorySelectOptions(user, account.AccountID, CategoryTypeDTO.Income);
-            model.ExpenseCategories = DataHelpers.GetCategorySelectOptions(user, account.AccountID, CategoryTypeDTO.Expense);
-            model.Accounts = DataHelpers.GetAccountSelectOptions(user);
-            model.AccountsWithBalances = DataHelpers.GetAccountSelectOptions(user, true);
+
+            model.IncomeCategories = accounts.First(x => x.AccountID == account.AccountID)
+                                                  .Categories.Where(x => x.Type == CategoryTypeDTO.Income)
+                                                  .Select(x => new SelectListItem {
+                                                      Value = x.CategoryID.ToString(),
+                                                      Text = x.Name
+                                                  }).AsQueryable();
+
+            model.ExpenseCategories = accounts.First(x => x.AccountID == account.AccountID)
+                                                   .Categories.Where(x => x.Type == CategoryTypeDTO.Expense)
+                                                   .Select(x => new SelectListItem {
+                                                       Value = x.CategoryID.ToString(),
+                                                       Text = x.Name
+                                                   }).AsQueryable();
+
+            model.Accounts = accounts.Select(x => new SelectListItem {
+                Value = x.AccountID.ToString(),
+                Text = x.Name
+            }).AsQueryable();
+
+            model.AccountsWithBalances = accounts.Select(x => new SelectListItem {
+                Value = x.AccountID.ToString(),
+                Text = x.Name + " / " + x.CurrentBalance
+            }).AsQueryable();
+
             model.Type = GetDefaultTransactionTypeForAccount(account);
             model.Debug = debug;
             model.BudgetCount = _budgetServices.GetBudgetCount(account.AccountID);
@@ -104,10 +128,19 @@ namespace MABMoney.Web.Controllers
             model.From = new DateTime(now.Year, now.Month, 1);
             model.To = new DateTime(now.Year, now.Month, DateTime.DaysInMonth(now.Year, now.Month));
 
+            // _step = _profiler.Step("Get Latest Budget");
+
             // Get latest budget, if there is one
             var latestBudget = _budgetServices.GetLatest(account.AccountID);
 
+            //_step.Dispose();
+
+            //_step = _profiler.Step("Get Transactions For Account");
+
+            // TODO: This is getting ALL transactions for account, we need a date range...
             var transactions = _transactionServices.GetForAccount(account.AccountID);
+
+            // _step.Dispose();
 
             if (latestBudget != null)
             {
