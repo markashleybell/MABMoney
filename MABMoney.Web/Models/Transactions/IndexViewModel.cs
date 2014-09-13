@@ -12,5 +12,7 @@ namespace MABMoney.Web.Models.Transactions
         public int? AccountID { get; set; }
         public List<TransactionDTO> Transactions { get; set; }
         public IEnumerable<SelectListItem> Accounts { get; set; }
+        public DateTime From { get; set; }
+        public DateTime To { get; set; }
     }
 }

@@ -43,29 +43,37 @@ namespace MABMoney.Web.Controllers
         //
         // GET: /Transaction/
         [Authenticate]
-        public ActionResult Index(ProfileViewModel profile, int? id = null)
+        public ActionResult Index(ProfileViewModel profile)
         {
             var accounts = _accountServices.GetForUser(profile.UserID).Select(x => new SelectListItem {
                 Value = x.AccountID.ToString(),
                 Text = x.Name
             });
 
-            var transactions = new List<TransactionDTO>();
-
-            if(id.HasValue)
-                transactions = _transactionServices.GetForAccount(id.Value).OrderByDescending(x => x.Date).ToList();
+            var now = _dateProvider.Now;
+            var to = new DateTime(now.Year, now.Month, now.Day);
+            var from = to.AddDays(-30);
 
             return View(new IndexViewModel {
                 Accounts = accounts,
-                AccountID = id,
-                Transactions = transactions
+                From = from,
+                To = to
             });
         }
 
+        [Authenticate]
         [HttpPost]
         public ActionResult Index(ProfileViewModel profile, IndexViewModel model)
         {
-            return RedirectToAction("Index", new { id = model.AccountID });
+            model.Accounts = _accountServices.GetForUser(profile.UserID).Select(x => new SelectListItem {
+                Value = x.AccountID.ToString(),
+                Text = x.Name
+            });
+
+            if (model.AccountID.HasValue)
+                model.Transactions = _transactionServices.GetForAccount(model.AccountID.Value, model.From, model.To).OrderByDescending(x => x.Date).ToList();
+
+            return View(model);
         }
 
         //

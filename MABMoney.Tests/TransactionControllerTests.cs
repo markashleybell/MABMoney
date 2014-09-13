@@ -124,6 +124,7 @@ namespace MABMoney.Tests
             _transactionServices.Stub(x => x.Get(2)).Return(transactions[1]);
             _transactionServices.Stub(x => x.Get(3)).Return(transactions[2]);
             _transactionServices.Stub(x => x.GetForAccount(1)).Return(transactions.Where(x => x.Account_AccountID == 1));
+            _transactionServices.Stub(x => x.GetForAccount(1, DateTime.Now, DateTime.Now)).Return(transactions.Where(x => x.Account_AccountID == 1)).IgnoreArguments();
 
             _budgetServices = MockRepository.GenerateStub<IBudgetServices>();
             _context = MockRepository.GenerateStub<IHttpContextProvider>();
@@ -147,14 +148,34 @@ namespace MABMoney.Tests
         {
             var controller = new TransactionsController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _urlHelper, _cache, _cachingHelpers);
 
-            var result = controller.Index(_profile, 1) as ViewResult;
+            var result = controller.Index(_profile) as ViewResult;
 
             result.ShouldNotBeNull();
 
             var model = result.Model as IndexViewModel;
 
             model.ShouldNotBeNull();
-            model.Transactions.Count.ShouldEqual(3);
+        }
+
+        [Test]
+        public void Index_Post()
+        {
+            var controller = new TransactionsController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _urlHelper, _cache, _cachingHelpers);
+
+            var model = new IndexViewModel
+            {
+                AccountID = 1,
+                From = DateTime.Now.AddDays(-30),
+                To = DateTime.Now
+            };
+
+            var result = controller.Index(_profile, model) as ViewResult;
+
+            result.ShouldNotBeNull();
+
+            var resultModel = result.Model as IndexViewModel;
+
+            resultModel.ShouldNotBeNull();
         }
 
         [Test]
