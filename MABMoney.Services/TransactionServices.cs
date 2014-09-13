@@ -38,6 +38,7 @@ namespace MABMoney.Services
                         Date = t.Date,
                         Amount = t.Amount,
                         Description = t.Description,
+                        Note = t.Note,
                         Category_CategoryID = t.Category_CategoryID,
                         Category = new CategoryDTO { 
                             Name = (t.Category != null) ? t.Category.Name : null
@@ -58,6 +59,7 @@ namespace MABMoney.Services
                                     Date = t.Date,
                                     Amount = t.Amount,
                                     Description = t.Description,
+                                    Note = t.Note,
                                     Category_CategoryID = t.Category_CategoryID,
                                     Category = new CategoryDTO
                                     {
@@ -77,6 +79,7 @@ namespace MABMoney.Services
                                     Date = t.Date,
                                     Amount = t.Amount,
                                     Description = t.Description,
+                                    Note = t.Note,
                                     Category_CategoryID = t.Category_CategoryID,
                                     Category = new CategoryDTO
                                     {

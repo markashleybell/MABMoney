@@ -13,6 +13,7 @@ namespace MABMoney.Services.DTO
         [Required]
         public DateTime Date { get; set; }
         public string Description { get; set; }
+        public string Note { get; set; }
         [Required]
         public decimal Amount { get; set; }
         public int? Category_CategoryID { get; set; }

@@ -269,8 +269,10 @@ namespace MABMoney.Web.Controllers
                 TransferGUID = guid,
                 Account_AccountID = model.SourceAccountID,
                 Date = model.Date,
+                Category_CategoryID = model.Category_CategoryID,
                 Amount = (model.Amount * -1),
-                Description = "Transfer to " + destinationAccount.Name
+                Description = "Transfer to " + destinationAccount.Name,
+                Note = model.Note
             };
 
             var destinationTransaction = new TransactionDTO
@@ -278,8 +280,11 @@ namespace MABMoney.Web.Controllers
                 TransferGUID = guid,
                 Account_AccountID = model.DestinationAccountID,
                 Date = model.Date,
+                // Don't set the category of the destination because we can't know what it should be
+                // Category_CategoryID = model.Category_CategoryID,
                 Amount = model.Amount,
-                Description = "Transfer from " + sourceAccount.Name
+                Description = "Transfer from " + sourceAccount.Name,
+                Note = model.Note
             };
 
             _transactionServices.Save(sourceTransaction);

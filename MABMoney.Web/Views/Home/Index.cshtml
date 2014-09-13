@@ -70,16 +70,17 @@
 
     <div class="tab-pane@((Model.Tab == DashboardTab.Income) ? " active" : "")" id="income">
 
-        <h2>@((Model.Budget != null) ? Model.Budget.Start.ToString("dd/MM/yy") + " - " + Model.Budget.End.ToString("dd/MM/yy") : "")</h2>
+        <h2>Income @((Model.Budget != null) ? Model.Budget.Start.ToString("dd/MM/yy") + " - " + Model.Budget.End.ToString("dd/MM/yy") : "")</h2>
 
         @using (Html.BeginForm("CreateTransaction", "Home")) {
             <div class="row">
                 <div class="col-md-2">@Html.EditorFor(x => x.Date, new { @class = "form-control", placeholder = "Date" })</div>
                 <div class="col-md-2">@Html.DropDownListFor(x => x.Category_CategoryID, Model.IncomeCategories, "Category...", new { @class = "form-control" })</div>
-                <div class="col-md-4">@Html.TextBoxFor(x => x.Description, new { @class = "typeahead form-control", placeholder = "Description (optional)", autocomplete = "off" })</div>
-                <div class="col-md-2">@Html.TextBoxFor(x => x.Amount, new { @class = "form-control", placeholder = "Amount" })</div>   
-                <div class="col-md-2">
-                    <input type="submit" value="Add Income" class="btn btn-primary btn-block" />
+                <div class="col-md-3">@Html.TextBoxFor(x => x.Description, new { @class = "typeahead form-control", placeholder = "Description (optional)", autocomplete = "off" })</div>
+                <div class="col-md-3">@Html.TextBoxFor(x => x.Note, new { @class = "form-control", placeholder = "Note (optional)" })</div>   
+                <div class="col-md-1">@Html.TextBoxFor(x => x.Amount, new { @class = "form-control", placeholder = "Amount" })</div>   
+                <div class="col-md-1">
+                    <input type="submit" value="Add" class="btn btn-primary btn-block" />
                 </div>
                 @Html.HiddenFor(x => x.Account_AccountID)
                 <input data-val="true" data-val-required="The Type field is required." name="Type" type="hidden" value="Income">
@@ -97,6 +98,7 @@
                         <th>Date</th>
                         <th>Category</th>
                         <th class="hidden-xs">Description</th>
+                        <th class="hidden-xs">Note</th>
                         <th>Amount</th>
                         <th class="edit-column">Edit</th>
                     </tr>
@@ -108,6 +110,7 @@
                         <td>@transaction.Date.ToString("dd/MM/yyyy")</td>
                         <td>@transaction.Category.Name</td>
                         <td class="hidden-xs">@transaction.Description</td>
+                        <td class="hidden-xs">@transaction.Note</td>
                         <td>@transaction.Amount.ToString("#0.00")</td>
                         <td class="edit-column">@Html.ActionLink("Edit", "Edit", "Transactions", new { id = transaction.TransactionID }, null)</td>
                     </tr@()>
@@ -130,16 +133,17 @@
 
     <div class="tab-pane@((Model.Tab == DashboardTab.Expenses) ? " active" : "")" id="expenses">
 
-        <h2>@((Model.Budget != null) ? Model.Budget.Start.ToString("dd/MM/yy") + " - " + Model.Budget.End.ToString("dd/MM/yy") : "")</h2>
+        <h2>Expenses @((Model.Budget != null) ? Model.Budget.Start.ToString("dd/MM/yy") + " - " + Model.Budget.End.ToString("dd/MM/yy") : "")</h2>
 
         @using (Html.BeginForm("CreateTransaction", "Home")) {
             <div class="row">
                 <div class="col-md-2">@Html.EditorFor(x => x.Date, new { @class = "form-control", placeholder = "Date" })</div>
                 <div class="col-md-2">@Html.DropDownListFor(x => x.Category_CategoryID, Model.ExpenseCategories, "Category...", new { @class = "form-control" })</div>
-                <div class="col-md-4">@Html.TextBoxFor(x => x.Description, new { @class = "typeahead form-control", placeholder = "Description (optional)", autocomplete = "off" })</div>
-                <div class="col-md-2">@Html.TextBoxFor(x => x.Amount, new { @class = "form-control", placeholder = "Amount" })</div>   
-                <div class="col-md-2">
-                    <input type="submit" value="Add Expense" class="btn btn-primary btn-block" />
+                <div class="col-md-3">@Html.TextBoxFor(x => x.Description, new { @class = "typeahead form-control", placeholder = "Description (optional)", autocomplete = "off" })</div>
+                <div class="col-md-3">@Html.TextBoxFor(x => x.Note, new { @class = "form-control", placeholder = "Note (optional)" })</div>   
+                <div class="col-md-1">@Html.TextBoxFor(x => x.Amount, new { @class = "form-control", placeholder = "Amount" })</div>   
+                <div class="col-md-1">
+                    <input type="submit" value="Add" class="btn btn-primary btn-block" />
                 </div>
                 @Html.HiddenFor(x => x.Account_AccountID)
                 <input data-val="true" data-val-required="The Type field is required." name="Type" type="hidden" value="Expense">
@@ -157,6 +161,7 @@
                         <th>Date</th>
                         <th>Category</th>
                         <th class="hidden-xs">Description</th>
+                        <th class="hidden-xs">Note</th>
                         <th>Amount</th>
                         <th class="edit-column">Edit</th>
                     </tr>
@@ -168,6 +173,7 @@
                         <td>@transaction.Date.ToString("dd/MM/yyyy")</td>
                         <td>@transaction.Category.Name</td>
                         <td class="hidden-xs">@transaction.Description</td>
+                        <td class="hidden-xs">@transaction.Note</td>
                         <td>@transaction.Amount.ToString("#0.00")</td>
                         <td class="edit-column">@Html.ActionLink("Edit", "Edit", "Transactions", new { id = transaction.TransactionID }, null)</td>
                     </tr>
@@ -190,16 +196,18 @@
 
     <div class="tab-pane@((Model.Tab == DashboardTab.Transfers) ? " active" : "")" id="transfers">
 
-        <h2>@((Model.Budget != null) ? Model.Budget.Start.ToString("dd/MM/yy") + " - " + Model.Budget.End.ToString("dd/MM/yy") : "")</h2>
+        <h2>Transfers @((Model.Budget != null) ? Model.Budget.Start.ToString("dd/MM/yy") + " - " + Model.Budget.End.ToString("dd/MM/yy") : "")</h2>
 
         @using (Html.BeginForm("CreateTransfer", "Home")) {
             <div class="row">
                 <div class="col-md-2">@Html.EditorFor(x => x.Date, new { @class = "form-control", placeholder = "Date" })</div>
-                <div class="col-md-3">@Html.DropDownListFor(x => x.SourceAccountID, Model.Accounts, "Source...", new { @class = "form-control" })</div>
-                <div class="col-md-3">@Html.DropDownListFor(x => x.DestinationAccountID, Model.Accounts, "Destination...", new { @class = "form-control" })</div>
-                <div class="col-md-2">@Html.TextBoxFor(x => x.Amount, new { @class = "form-control", placeholder = "Amount" })</div>   
-                <div class="col-md-2">
-                    <input type="submit" value="Transfer Funds" class="btn btn-primary btn-block" />
+                <div class="col-md-2">@Html.DropDownListFor(x => x.Category_CategoryID, Model.ExpenseCategories, "Category...", new { @class = "form-control" })</div>
+                <div class="col-md-2">@Html.DropDownListFor(x => x.SourceAccountID, Model.Accounts, "Source...", new { @class = "form-control" })</div>
+                <div class="col-md-2">@Html.DropDownListFor(x => x.DestinationAccountID, Model.Accounts, "Destination...", new { @class = "form-control" })</div>
+                <div class="col-md-2">@Html.TextBoxFor(x => x.Note, new { @class = "form-control", placeholder = "Note (optional)" })</div>   
+                <div class="col-md-1">@Html.TextBoxFor(x => x.Amount, new { @class = "form-control", placeholder = "Amount" })</div>   
+                <div class="col-md-1">
+                    <input type="submit" value="Move" class="btn btn-primary btn-block" />
                 </div>
                 @Html.HiddenFor(x => x.Account_AccountID)
                 <input data-val="true" data-val-required="The Type field is required." name="Type" type="hidden" value="Transfer">
@@ -218,6 +226,7 @@
                         <th>Date</th>
                         <th>Category</th>
                         <th class="hidden-xs">Description</th>
+                        <th class="hidden-xs">Note</th>
                         <th>Amount</th>
                         <th class="edit-column">Edit</th>
                     </tr>
@@ -228,6 +237,7 @@
                         <td>@transaction.Date.ToString("dd/MM/yyyy")</td>
                         <td>@transaction.Category.Name</td>
                         <td class="hidden-xs">@transaction.Description</td>
+                        <td class="hidden-xs">@transaction.Note</td>
                         <td>@transaction.Amount.ToString("#0.00")</td>
                         <td class="edit-column">@Html.ActionLink("Edit", "Edit", "Transactions", new { id = transaction.TransactionID }, null)</td>
                     </tr>

@@ -34,6 +34,7 @@ namespace MABMoney.Web.Models.Home
         [Required]
         public DateTime Date { get; set; }
         public string Description { get; set; }
+        public string Note { get; set; }
         [Required]
         public decimal Amount { get; set; }
 
