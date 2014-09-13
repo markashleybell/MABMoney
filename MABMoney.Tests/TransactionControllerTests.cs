@@ -110,6 +110,7 @@ namespace MABMoney.Tests
             _accountServices = MockRepository.GenerateStub<IAccountServices>();
             _accountServices.Stub(x => x.All()).Return(accounts);
             _accountServices.Stub(x => x.Get(1)).Return(accounts[0]);
+            _accountServices.Stub(x => x.GetForUser(1)).Return(accounts);
 
             _categoryServices = MockRepository.GenerateStub<ICategoryServices>();
             _categoryServices.Stub(x => x.All()).Return(categories);
@@ -122,6 +123,7 @@ namespace MABMoney.Tests
             _transactionServices.Stub(x => x.Get(1)).Return(transactions[0]);
             _transactionServices.Stub(x => x.Get(2)).Return(transactions[1]);
             _transactionServices.Stub(x => x.Get(3)).Return(transactions[2]);
+            _transactionServices.Stub(x => x.GetForAccount(1)).Return(transactions.Where(x => x.Account_AccountID == 1));
 
             _budgetServices = MockRepository.GenerateStub<IBudgetServices>();
             _context = MockRepository.GenerateStub<IHttpContextProvider>();
@@ -145,14 +147,14 @@ namespace MABMoney.Tests
         {
             var controller = new TransactionsController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _urlHelper, _cache, _cachingHelpers);
 
-            var result = controller.Index(_profile) as ViewResult;
+            var result = controller.Index(_profile, 1) as ViewResult;
 
             result.ShouldNotBeNull();
 
             var model = result.Model as IndexViewModel;
 
             model.ShouldNotBeNull();
-            model.Transactions.Count.ShouldEqual(4);
+            model.Transactions.Count.ShouldEqual(3);
         }
 
         [Test]
