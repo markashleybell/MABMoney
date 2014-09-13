@@ -43,14 +43,29 @@ namespace MABMoney.Web.Controllers
         //
         // GET: /Transaction/
         [Authenticate]
-        public ActionResult Index(ProfileViewModel profile)
+        public ActionResult Index(ProfileViewModel profile, int? id = null)
         {
-            return View(new IndexViewModel {
-                Transactions = _transactionServices.All()
-                                                   .OrderByDescending(x => x.Date)
-                                                   .ThenByDescending(x => x.TransactionID)
-                                                   .ToList()
+            var accounts = _accountServices.GetForUser(profile.UserID).Select(x => new SelectListItem {
+                Value = x.AccountID.ToString(),
+                Text = x.Name
             });
+
+            var transactions = new List<TransactionDTO>();
+
+            if(id.HasValue)
+                transactions = _transactionServices.GetForAccount(id.Value).OrderByDescending(x => x.Date).ToList();
+
+            return View(new IndexViewModel {
+                Accounts = accounts,
+                AccountID = id,
+                Transactions = transactions
+            });
+        }
+
+        [HttpPost]
+        public ActionResult Index(ProfileViewModel profile, IndexViewModel model)
+        {
+            return RedirectToAction("Index", new { id = model.AccountID });
         }
 
         //
