@@ -37,7 +37,15 @@ namespace MABMoney.Services
 
         public UserDTO GetMinimal(int id)
         {
-            return _users.Query(x => x.UserID == id).FirstOrDefault().MapTo<UserDTO>();
+            return _users.Query(x => x.UserID == id)
+                         .Select(x => new UserDTO {
+                             UserID = x.UserID,
+                             Forename = x.Forename,
+                             Surname = x.Surname,
+                             Email = x.Email,
+                             IsAdmin = x.IsAdmin
+                         })
+                         .FirstOrDefault();
         }
 
         public UserDTO GetByEmailAddress(string email)

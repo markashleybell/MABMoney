@@ -74,8 +74,7 @@ namespace MABMoney.Web.Controllers
             {
                 categories = categories.Where(x => x.Account_AccountID == id.Value);
 
-                budgets = _budgetServices.All().Where(x => x.Account_AccountID == id.Value).Select(x => new SelectListItem
-                {
+                budgets = _budgetServices.All().Where(x => x.Account_AccountID == id.Value).OrderByDescending(x => x.End).Select(x => new SelectListItem {
                     Value = x.BudgetID.ToString(),
                     Text = x.Start.ToString("dd/MM/yyyy") + " - " + x.End.ToString("dd/MM/yyyy")
                 }).AsQueryable();
@@ -108,7 +107,7 @@ namespace MABMoney.Web.Controllers
 
             var categories = _categoryServices.All().Where(x => x.Type == CategoryTypeDTO.Expense && x.Account_AccountID == model.Account_AccountID);
 
-            var budgets = _budgetServices.All().Where(x => x.Account_AccountID == model.Account_AccountID);
+            var budgets = _budgetServices.All().Where(x => x.Account_AccountID == model.Account_AccountID).OrderByDescending(x => x.End);
 
             var now = _dateProvider.Now;
 

@@ -62,20 +62,30 @@ namespace MABMoney.Services
 
         public AccountDTO Get(int id)
         {
-            var account = _accounts.Query(x => x.User_UserID == _userId && x.AccountID == id).FirstOrDefault();
+            var account = _accounts.Query(x => x.User_UserID == _userId && x.AccountID == id)
+                                   .Select(x => new AccountDTO { 
+                                       AccountID = x.AccountID,
+                                       Name = x.Name,
+                                       StartingBalance = x.StartingBalance,
+                                       CurrentBalance = x.CurrentBalance,
+                                       Default = x.Default,
+                                       Type = (AccountTypeDTO)x.Type,
+                                       // Project the string value from the database at first
+                                       TransactionDescriptionHistoryAsString = x.TransactionDescriptionHistory,
+                                       DisplayOrder = x.DisplayOrder
+                                   })
+                                   .FirstOrDefault();
 
             if (account == null)
                 return null;
 
-            var dto = account.MapTo<AccountDTO>();
+            account.TransactionDescriptionHistory = new List<string>();
 
-            var history = account.TransactionDescriptionHistory;
+            // If there's a description history, split the string field from our projected DTO into a list
+            if (!string.IsNullOrWhiteSpace(account.TransactionDescriptionHistoryAsString))
+                account.TransactionDescriptionHistory = account.TransactionDescriptionHistoryAsString.Split('|').ToList();
 
-            dto.TransactionDescriptionHistory = new List<string>();
-            if(!string.IsNullOrWhiteSpace(history))
-                dto.TransactionDescriptionHistory = history.Split('|').ToList();
-
-            return dto;
+            return account;
         }
 
         public void Save(AccountDTO dto)

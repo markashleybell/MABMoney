@@ -37,7 +37,14 @@ namespace MABMoney.Services
 
         public SessionDTO GetByUserAndKey(int userId, string key)
         {
-            var session = _sessions.Query(x => x.User_UserID == userId && x.Key == key && x.Expiry > _dateProvider.Now).FirstOrDefault();
+            var session = _sessions.Query(x => x.User_UserID == userId && x.Key == key && x.Expiry > _dateProvider.Now)
+                                   .Select(x => new SessionDTO { 
+                                       SessionID = x.SessionID,
+                                       Key = x.Key,
+                                       Expiry = x.Expiry,
+                                       User_UserID = x.User_UserID
+                                   })
+                                   .FirstOrDefault();
 
             if(session == null)
                 return null;

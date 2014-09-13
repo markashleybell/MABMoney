@@ -39,13 +39,29 @@ namespace MABMoney.Services
 
         public IEnumerable<BudgetDTO> All()
         {
-            return _budgets.Query(x => x.Account.User_UserID == _userId).ToList().MapToList<BudgetDTO>();
+            return _budgets.Query(x => x.Account.User_UserID == _userId)
+                           .Select(x => new BudgetDTO { 
+                               BudgetID = x.BudgetID,
+                               Account_AccountID = x.Account_AccountID,
+                               Account = new AccountDTO { 
+                                   Name = x.Account.Name
+                               },
+                               Start = x.Start,
+                               End = x.End
+                           })
+                           .ToList();
         }
 
         public BudgetDTO Get(int id)
         {
-            var budgets = _budgets;
-            var q = budgets.Query(x => x.Account.User_UserID == _userId && x.BudgetID == id).FirstOrDefault();
+            var q = _budgets.Query(x => x.Account.User_UserID == _userId && x.BudgetID == id)
+                            .Select(x => new BudgetDTO {
+                                BudgetID = x.BudgetID,
+                                Account_AccountID = x.Account_AccountID,
+                                Start = x.Start,
+                                End = x.End
+                            })
+                            .FirstOrDefault();
 
             return MapBudget(q);
         }
@@ -56,44 +72,65 @@ namespace MABMoney.Services
             var endOfToday = new DateTime(now.Year, now.Month, now.Day, 23, 59, 59);
 
             return MapBudget(_budgets.Query(x => x.Account.User_UserID == _userId && x.Account_AccountID == accountId && x.End >= endOfToday)
+                                     .Select(x => new BudgetDTO { 
+                                         BudgetID = x.BudgetID,
+                                         Account_AccountID = x.Account_AccountID,
+                                         Start = x.Start,
+                                         End = x.End
+                                     })
                                      .OrderByDescending(x => x.BudgetID)
                                      .FirstOrDefault());
         }
 
-        private BudgetDTO MapBudget(Budget budget)
+        private BudgetDTO MapBudget(BudgetDTO budget)
         {
             if (budget == null)
                 return null;
 
             var balanceAtStart = _transactions.Query(x => x.Account_AccountID == budget.Account_AccountID && x.Date < budget.Start).Sum(x => x.Amount);
-            var budgetTransactions = _transactions.Query(x => x.Account_AccountID == budget.Account_AccountID && x.Date >= budget.Start && x.Date < budget.End).ToList();
-
-            var dto = budget.MapTo<BudgetDTO>();
+            var budgetTransactions = _transactions.Query(x => x.Account_AccountID == budget.Account_AccountID && x.Date >= budget.Start && x.Date < budget.End)
+                                                  .Select(x => new TransactionDTO { 
+                                                      //TransactionID = x.TransactionID,
+                                                      //Date = x.Date,
+                                                      //Description = x.Description,
+                                                      //Note = x.Note,
+                                                      Amount = x.Amount,
+                                                      Category_CategoryID = x.Category_CategoryID,
+                                                      //Account_AccountID = x.Account_AccountID,
+                                                      //TransferGUID = x.TransferGUID
+                                                  })
+                                                  .ToList();
 
             // Get any categories which aren't deleted or which were deleted after this budget period ended
-            var category_budgets = _categories_budgets.QueryWithIncludes(x => x.Budget_BudgetID == budget.BudgetID && (!x.Category.Deleted || (x.Category.Deleted && x.Category.DeletedDate > budget.End)), "Category").ToList();
+            var category_budgets = _categories_budgets.QueryWithIncludes(x => x.Budget_BudgetID == budget.BudgetID && (!x.Category.Deleted || (x.Category.Deleted && x.Category.DeletedDate > budget.End)), "Category")
+                                                      .Select(x => new Category_BudgetDTO {
+                                                          Budget_BudgetID = x.Budget_BudgetID,
+                                                          Category_CategoryID = x.Category_CategoryID,
+                                                          Category = new CategoryDTO { 
+                                                              CategoryID = x.Category.CategoryID,
+                                                              Name = x.Category.Name,
+                                                              Type = (CategoryTypeDTO)x.Category.Type
+                                                          },
+                                                          Amount = x.Amount
+                                                      })
+                                                      .ToList();
 
             if (category_budgets.Count > 0)
             {
-                dto.Category_Budgets = category_budgets.Select(x => new Category_BudgetDTO
-                {
-                    Budget_BudgetID = x.Budget_BudgetID,
-                    Category_CategoryID = x.Category_CategoryID,
-                    Budget = x.Budget.MapTo<BudgetDTO>(),
-                    Category = x.Category.MapTo<CategoryDTO>(),
-                    Amount = x.Amount,
-                    Total = budgetTransactions.Where(t => t.Category_CategoryID == x.Category_CategoryID).Sum(t => Math.Abs(t.Amount))
-                }).ToList();
+                // Assign the categories for this budget
+                budget.Category_Budgets = category_budgets;
+                // Work out the total spent in each category so far
+                budget.Category_Budgets.ForEach(x => x.Total = budgetTransactions.Where(t => t.Category_CategoryID == x.Category_CategoryID).Sum(t => Math.Abs(t.Amount)));
 
                 // Work out the total amount overspent across all categories
-                var overspend = dto.Category_Budgets.Where(x => x.Total > x.Amount).Select(x => x.Total - x.Amount).Sum();
+                var overspend = budget.Category_Budgets.Where(x => x.Total > x.Amount).Select(x => x.Total - x.Amount).Sum();
 
                 // Work out how much money has been allocated to budget categories
-                var allocated = dto.Category_Budgets.Sum(x => x.Amount);
+                var allocated = budget.Category_Budgets.Sum(x => x.Amount);
 
                 // Work out how much money has been spent in budget categories
-                var account = _accountServices.Get(budget.Account.AccountID);
-                var allocatedSpent = dto.Category_Budgets.Sum(x => x.Total);
+                var account = _accountServices.Get(budget.Account_AccountID);
+                var allocatedSpent = budget.Category_Budgets.Sum(x => x.Total);
 
                 var balanceAtBudgetStart = balanceAtStart + account.StartingBalance;
 
@@ -106,11 +143,9 @@ namespace MABMoney.Services
                 if (unallocatedAmount > 0)
                 {
                     // Show how much and how much we've spent so far
-                    dto.Category_Budgets.Add(new Category_BudgetDTO
-                    {
+                    budget.Category_Budgets.Add(new Category_BudgetDTO {
                         Budget_BudgetID = budget.BudgetID,
                         Category_CategoryID = 0,
-                        Budget = budget.MapTo<BudgetDTO>(),
                         Category = new CategoryDTO
                         {
                             CategoryID = 0,
@@ -123,7 +158,7 @@ namespace MABMoney.Services
                 }
             }
 
-            return dto;
+            return budget;
         }
 
         public void Save(BudgetDTO dto)

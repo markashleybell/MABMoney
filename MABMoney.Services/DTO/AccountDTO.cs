@@ -24,6 +24,9 @@ namespace MABMoney.Services.DTO
 
         public List<string> TransactionDescriptionHistory { get; set; }
 
+        // We need this so we can use this DTO in LINQ projections
+        public string TransactionDescriptionHistoryAsString { get; set; }
+
         public List<CategoryDTO> Categories { get; set; }
 
         [Required]
