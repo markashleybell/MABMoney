@@ -299,6 +299,7 @@
     <TypeScriptCompile Include="Content\Js\jquery.cookie.d.ts" />
     <TypeScriptCompile Include="Content\Js\jquery.d.ts" />
     <TypeScriptCompile Include="Content\Js\main.ts" />
+    <Content Include="Content\Js\mustache.js" />
     <Content Include="Global.asax" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -312,6 +313,8 @@
     <Content Include="Views\Web.config">
       <SubType>Designer</SubType>
     </Content>
+    <TypeScriptCompile Include="Content\Js\mustache-tests.ts" />
+    <TypeScriptCompile Include="Content\Js\mustache.d.ts" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -23,6 +23,16 @@
         @Scripts.Render("~/Content/Js/bootstrap")
         @Scripts.Render("~/Content/Js/base")
         <script type="text/javascript">MABMoney.setOptions({ cookieKey: '@ConfigurationManager.AppSettings["CookieKey"]' });</script>
+        <script id="tmpl-payment-calc-row" type="x-tmpl-mustache">
+            <tr>
+                <td>{{month}}</td>
+                <td>{{monthStart}}</td>
+                <td>{{interest}}</td>
+                <td>{{minPayment}}</td>
+                <td>{{payment}}</td>
+                <td>{{monthEnd}}</td>
+            </tr>
+        </script>
         @MiniProfiler.RenderIncludes(position: RenderPosition.Right, showTrivial: true, showTimeWithChildren: true)
         @if(!(Convert.ToBoolean(ConfigurationManager.AppSettings["Staging"]))) {
         <script>

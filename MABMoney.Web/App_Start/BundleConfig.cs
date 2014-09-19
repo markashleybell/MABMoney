@@ -28,6 +28,7 @@ namespace MABMoney.Web
                 "~/Content/Js/bootstrap-typeahead.js",
                 "~/Content/Js/bootstrap-datepicker.js",
                 "~/Content/Js/jquery.cookie.js",
+                "~/Content/Js/mustache.js",
                 "~/Content/Js/main.js")
             );
 

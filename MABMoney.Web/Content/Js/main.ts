@@ -1,6 +1,6 @@
 ﻿interface MABMoneyOptions {
     cookieKey: string;
-};
+}
 
 interface MABMoneyUIElements {
     globalAccountSelector: JQuery;
@@ -12,16 +12,16 @@ interface MABMoneyUIElements {
     paymentAmount: JQuery;
     interestRate: JQuery;
     minPaymentPercentage: JQuery;
-};
+}
 
 interface MABMoneyPaymentCalculatorRowModel {
     month: string;
-    monthStart: number;
-    minPayment: number;
-    payment: number;
-    interest: number;
-    monthEnd: number;
-};
+    monthStart: string;
+    minPayment: string;
+    payment: string;
+    interest: string;
+    monthEnd: string;
+}
 
 var MABMoney = (function ($, window, undefined) {
 
@@ -63,33 +63,33 @@ var MABMoney = (function ($, window, undefined) {
 
         var html = [];
 
+        var template = $('#tmpl-payment-calc-row').html();
+        Mustache.parse(template); 
+
         while (balance > 0) {
 
-            var interestAmount = (_aprCalc(interestRate) / 100) * balance;
+            var interestAmount: number = (_aprCalc(interestRate) / 100) * balance;
 
-            var balanceAtMonthEnd = (balance - paymentAmount) + interestAmount;
+            var balanceAtMonthEnd: number = (balance - paymentAmount) + interestAmount;
+
+            // If the balance is now negative, just set it to zero
+            if (balanceAtMonthEnd < 0) { balanceAtMonthEnd = 0; }
 
             var model: MABMoneyPaymentCalculatorRowModel = {
                 month: months[d.getMonth()],
-                monthStart: balance,
-                minPayment: (minPaymentPercentage / 100) * balance,
-                payment: (paymentAmount > balance) ? balance : paymentAmount,
-                interest: interestAmount,
-                monthEnd: (balanceAtMonthEnd > 0) ? balanceAtMonthEnd : 0
+                monthStart: balance.toFixed(2).toString(),
+                minPayment: ((minPaymentPercentage / 100) * balance).toFixed(2).toString(),
+                payment: ((paymentAmount > balance) ? balance : paymentAmount).toFixed(2).toString(),
+                interest: interestAmount.toFixed(2).toString(),
+                monthEnd: balanceAtMonthEnd.toFixed(2).toString()
             };
 
-            balance = model.monthEnd;
+            balance = balanceAtMonthEnd;
 
-            var row = '<tr>' +
-                '<td>' + model.month + '</td>' +
-                '<td>' + model.monthStart.toFixed(2) + '</td>' +
-                '<td>' + model.interest.toFixed(2) + '</td>' +
-                '<td>' + model.minPayment.toFixed(2) + '</td>' +
-                '<td>' + model.payment.toFixed(2) + '</td>' +
-                '<td>' + model.monthEnd.toFixed(2) + '</td>' +
-                '</tr>';
+            
+            var rendered = Mustache.render(template, model);
 
-            html.push(row);
+            html.push(rendered);
 
             d.setMonth(d.getMonth() + 1);
 
