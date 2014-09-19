@@ -14,15 +14,15 @@
         @Styles.Render("~/Content/Css/bootstrap")
         @Styles.Render("~/Content/Css/base")
     </head>
-    <body@(Html.Raw((Convert.ToBoolean(ConfigurationManager.AppSettings["Staging"])) ? " id=\"staging\"" : ""))>
+    <body @(Html.Raw((Convert.ToBoolean(ConfigurationManager.AppSettings["Staging"])) ? "id=\"staging\"" : ""))>
         <div class="container">
             @{ Html.RenderAction("MainNavigation", "Home"); }
             @RenderBody()
         </div>
-        <script type="text/javascript">var _COOKIE_KEY = '@ConfigurationManager.AppSettings["CookieKey"]';</script>
         @Scripts.Render("~/Content/Js/jquery")
         @Scripts.Render("~/Content/Js/bootstrap")
         @Scripts.Render("~/Content/Js/base")
+        <script type="text/javascript">MABMoney.setOptions({ cookieKey: '@ConfigurationManager.AppSettings["CookieKey"]' });</script>
         @MiniProfiler.RenderIncludes(position: RenderPosition.Right, showTrivial: true, showTimeWithChildren: true)
         @if(!(Convert.ToBoolean(ConfigurationManager.AppSettings["Staging"]))) {
         <script>
