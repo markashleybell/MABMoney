@@ -10,7 +10,7 @@ var template2 = "{{title}} spends {{calc}}";
 Mustache.parse(template2, null);
 var output2 = Mustache.render(template2, view);
 
-var person;
+var person = { firstName: "John", lastName: "Smith", blogURL: "http://johnsblog.com" };
 var template = "<h1>{{firstName}} {{lastName}}</h1>Blog: {{blogURL}}";
 var html = Mustache.to_html(template, person);
 //# sourceMappingURL=mustache-tests.js.map

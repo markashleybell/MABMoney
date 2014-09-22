@@ -1,6 +1,8 @@
 ﻿var MABMoney = (function ($, window, undefined) {
+    // Name of the cookie to use to store payment calc data
     var _cookieKey = null;
 
+    // Container for cached UI element selectors
     var _ui = {
         globalAccountSelector: null,
         accountSelector: null,
@@ -13,6 +15,7 @@
         minPaymentPercentage: null
     };
 
+    // Container for cached template HTML
     var _templates = {
         paymentCalcRow: null,
         budgetCategoryEditForm: null,
@@ -32,20 +35,19 @@
 
     // Build repayments table for card/loan repayment calculator
     var _buildPaymentCalculatorTable = function (currentBalance, paymentAmount, interestRate, minPaymentPercentage) {
-        var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-
+        // Set date to the first of next month
         var d = new Date();
-
         d.setDate(1);
         d.setMonth(d.getMonth() + 1);
 
-        var balance = currentBalance;
-
-        var html = [];
+        var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        var balance = currentBalance, html = [];
 
         while (balance > 0) {
+            // Work out how much interest will be paid
             var interestAmount = (_aprCalc(interestRate) / 100) * balance;
 
+            // Work out what the balance will be at the end of the month
             var balanceAtMonthEnd = (balance - paymentAmount) + interestAmount;
 
             // If the balance is now negative, just set it to zero
@@ -62,12 +64,13 @@
                 monthEnd: balanceAtMonthEnd.toFixed(2).toString()
             };
 
+            // Update the balance for the next iteration
             balance = balanceAtMonthEnd;
 
-            var rendered = Mustache.render(_templates.paymentCalcRow, model);
+            // Add the rendered table row to the array
+            html.push(Mustache.render(_templates.paymentCalcRow, model));
 
-            html.push(rendered);
-
+            // Increment the month
             d.setMonth(d.getMonth() + 1);
         }
 
@@ -143,7 +146,7 @@
             return confirm('Are you sure?');
         });
 
-        // Initially populate the paymnt calculator table
+        // Initially populate the payment calculator table
         _buildPaymentCalculatorTable(parseFloat(_ui.currentBalance.val()), parseFloat(_ui.paymentAmount.val()), parseFloat(_ui.interestRate.val()), parseFloat(_ui.minPaymentPercentage.val()));
 
         // Handle the 'Recalculate' button click
@@ -187,6 +190,7 @@
             // Increment the index
             var index = parseInt(match[1], 10) + 1;
 
+            // Add a new input row after the last input
             lastInput.parent().parent().after(Mustache.render(_templates.budgetCategoryEditForm, { INDEX: index }));
         });
 
@@ -196,7 +200,6 @@
             var control = $(this).parent().parent();
             var categoryId = this.hash.substring(4);
             var index = this.id.substring(3);
-
             control.replaceWith(Mustache.render(_templates.budgetCategoryDeleteForm, { INDEX: index, ID: categoryId }));
         });
     };
