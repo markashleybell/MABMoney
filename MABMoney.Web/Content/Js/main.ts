@@ -14,6 +14,12 @@ interface MABMoneyUIElements {
     minPaymentPercentage: JQuery;
 }
 
+interface MABMoneyTemplates {
+    paymentCalcRow: string;
+    budgetCategoryEditForm: string;
+    budgetCategoryDeleteForm: string;
+}
+
 interface MABMoneyPaymentCalculatorRowModel {
     month: string;
     monthStart: string;
@@ -25,7 +31,7 @@ interface MABMoneyPaymentCalculatorRowModel {
 
 var MABMoney = (function ($, window, undefined) {
 
-    var _cookieKey: string = null; 
+    var _cookieKey: string = null;
 
     var _ui: MABMoneyUIElements = {
         globalAccountSelector: null,
@@ -39,6 +45,13 @@ var MABMoney = (function ($, window, undefined) {
         minPaymentPercentage: null
     };
 
+    var _templates: MABMoneyTemplates = {
+        paymentCalcRow: null,
+        budgetCategoryEditForm: null,
+        budgetCategoryDeleteForm: null
+    };
+
+    // Allow setup of options before init() is called
     var _setOptions = function (options: MABMoneyOptions) {
         _cookieKey = options.cookieKey;
     };
@@ -63,9 +76,6 @@ var MABMoney = (function ($, window, undefined) {
 
         var html = [];
 
-        var template = $('#tmpl-payment-calc-row').html();
-        Mustache.parse(template); 
-
         while (balance > 0) {
 
             var interestAmount: number = (_aprCalc(interestRate) / 100) * balance;
@@ -86,8 +96,7 @@ var MABMoney = (function ($, window, undefined) {
 
             balance = balanceAtMonthEnd;
 
-            
-            var rendered = Mustache.render(template, model);
+            var rendered = Mustache.render(_templates.paymentCalcRow, model);
 
             html.push(rendered);
 
@@ -109,6 +118,14 @@ var MABMoney = (function ($, window, undefined) {
         _ui.paymentAmount = $('#payment-calculator-paymentamount');
         _ui.interestRate = $('#payment-calculator-interestrate');
         _ui.minPaymentPercentage = $('#payment-calculator-minpaymentpercentage');
+        // Cache template HTML
+        _templates.paymentCalcRow = $('#tmpl-payment-calc-row').html();
+        _templates.budgetCategoryEditForm = $('#tmpl-budget-category-edit-form').html();
+        _templates.budgetCategoryDeleteForm = $('#tmpl-budget-category-delete-form').html();
+        // Parse and cache compiled templates
+        Mustache.parse(_templates.paymentCalcRow); 
+        Mustache.parse(_templates.budgetCategoryEditForm); 
+        Mustache.parse(_templates.budgetCategoryDeleteForm); 
 
         // Set up date picker inputs
         $('.date-picker').datepicker({
@@ -171,7 +188,7 @@ var MABMoney = (function ($, window, undefined) {
             $.cookie(_cookieKey + '_' + accountId + '_DefaultCardPaymentAmount', _ui.paymentAmount.val(), { expires: 365 });
             // Store the interest rate in a cookie
             $.cookie(_cookieKey + '_' + accountId + '_DefaultCardInterestRate', _ui.interestRate.val(), { expires: 365 });
-            // Store the interest rate in a cookie
+            // Store the minimum payment amount in a cookie
             $.cookie(_cookieKey + '_' + accountId + '_DefaultCardMinimumPayment', _ui.minPaymentPercentage.val(), { expires: 365 });
             // Rebuild the payment table
             _buildPaymentCalculatorTable(parseFloat(_ui.currentBalance.val()),
@@ -192,32 +209,6 @@ var MABMoney = (function ($, window, undefined) {
             $('input.help, select.help, textarea.help, #net-worth').popover('hide');
         });
 
-        // Form template for new budget category
-        var tmpl = '<div class="form-group">' +
-            '    <div class="col-md-2">' +
-            '        <input class="form-control" id="Categories_{{INDEX}}__Name" name="Categories[{{INDEX}}].Name" placeholder="Name" type="text" value="">' +
-            '    </div>' +
-            '    <div class="col-md-2">' +
-            '        <input class="form-control" data-val="true" data-val-number="The field Amount must be a number." data-val-required="The Amount field is required." id="Categories_{{INDEX}}__Amount" name="Categories[{{INDEX}}].Amount" placeholder="Email" type="text" value="0">' +
-            '    </div>' +
-            '    <div class="col-md-2">' +
-            '        <a class="cat-delete btn btn-default" id="del{{INDEX}}" href="#del0">Delete</a>' +
-            '    </div>' +
-            '    <div class="col-md-6">' +
-            '        <span class="field-validation-valid" data-valmsg-for="Categories[{{INDEX}}].Amount" data-valmsg-replace="true"></span>' +
-            '        <input data-val="true" data-val-number="The field Budget_BudgetID must be a number." data-val-required="The Budget_BudgetID field is required." id="Categories_{{INDEX}}__Budget_BudgetID" name="Categories[{{INDEX}}].Budget_BudgetID" type="hidden" value="0">' +
-            '        <input data-val="true" data-val-number="The field Category_CategoryID must be a number." data-val-required="The Category_CategoryID field is required." id="Categories_{{INDEX}}__Category_CategoryID" name="Categories[{{INDEX}}].Category_CategoryID" type="hidden" value="0">' +
-            '    </div>' +
-            '</div>';
-
-        // Form template for a deleted budget category
-        var del = '<div><div>' +
-            '<input data-val="true" id="Categories_{{INDEX}}__Delete" name="Categories[{{INDEX}}].Delete" type="hidden" value="true">' +
-            '<input data-val="true" id="Categories_{{INDEX}}__Amount" name="Categories[{{INDEX}}].Amount" type="hidden" value="0">' +
-            '<input data-val="true" id="Categories_{{INDEX}}__Budget_BudgetID" name="Categories[{{INDEX}}].Budget_BudgetID" type="hidden" value="0">' +
-            '<input data-val="true" id="Categories_{{INDEX}}__Category_CategoryID" name="Categories[{{INDEX}}].Category_CategoryID" type="hidden" value="{{ID}}">';
-        '</div></div>';
-
         // Add a new budget category form row
         $('#add-category-button').on('click', function (evt) {
             // Grab the last category input that currently exists in the page
@@ -226,9 +217,9 @@ var MABMoney = (function ($, window, undefined) {
             // Get the current index from the input's name attribute
             var match = /\[(\d+)\]/.exec(lastInput.attr('name'));
             // Increment the index
-            var id = parseInt(match[1], 10) + 1;
+            var index = parseInt(match[1], 10) + 1;
 
-            lastInput.parent().parent().after(tmpl.replace(/\{\{INDEX\}\}/g, id.toString()));
+            lastInput.parent().parent().after(Mustache.render(_templates.budgetCategoryEditForm, { INDEX: index }));
         });
 
         // Remove a budget category form row and replace it with the deletion data
@@ -239,7 +230,7 @@ var MABMoney = (function ($, window, undefined) {
             var categoryId = this.hash.substring(4);
             var index = this.id.substring(3);
 
-            control.replaceWith(del.replace(/\{\{INDEX\}\}/g, index).replace(/\{\{ID\}\}/g, categoryId))
+            control.replaceWith(Mustache.render(_templates.budgetCategoryDeleteForm, { INDEX: index, ID: categoryId }));
 
         });
     };

@@ -1,4 +1,4 @@
-﻿/// <reference path="mustache.d.ts" />
+/// <reference path="mustache.d.ts" />
 var view = { title: "Joe", calc: function () {
         return 2 + 4;
     } };
