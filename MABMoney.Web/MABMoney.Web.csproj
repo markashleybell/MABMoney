@@ -299,6 +299,8 @@
     <TypeScriptCompile Include="Content\Js\jquery.cookie.d.ts" />
     <TypeScriptCompile Include="Content\Js\jquery.d.ts" />
     <TypeScriptCompile Include="Content\Js\main.ts" />
+    <Content Include="Content\Js\main.js" />
+    <Content Include="Content\Js\mustache-tests.js" />
     <Content Include="Content\Js\mustache.js" />
     <Content Include="Global.asax" />
     <Content Include="Web.config">
@@ -449,6 +451,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Home\ShowCacheContents.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\Js\main.js.map" />
+    <Content Include="Content\Js\mustache-tests.js.map" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
