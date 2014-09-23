@@ -34,6 +34,7 @@
                         <th>Date</th>
                         <th>Category</th>
                         <th>Description</th>
+                        <th>Note</th>
                         <th>Amount</th>
                         <th>Edit</th>
                     </tr>
@@ -45,6 +46,7 @@
                             <td>@transaction.Date.ToString("dd/MM/yyyy")</td>
                             <td>@transaction.Category.Name</td>
                             <td>@transaction.Description</td>
+                            <td>@transaction.Note</td>
                             <td>@transaction.Amount.ToString("#0.00")</td>
                             <td>@Html.ActionLink("Edit", "Edit", new { id = transaction.TransactionID })</td>
                         </tr>
