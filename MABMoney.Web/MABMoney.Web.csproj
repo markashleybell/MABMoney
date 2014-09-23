@@ -300,7 +300,6 @@
     <TypeScriptCompile Include="Content\Js\jquery.d.ts" />
     <TypeScriptCompile Include="Content\Js\main.ts" />
     <Content Include="Content\Js\main.js" />
-    <Content Include="Content\Js\mustache-tests.js" />
     <Content Include="Content\Js\mustache.js" />
     <Content Include="Global.asax" />
     <Content Include="Web.config">
@@ -315,7 +314,6 @@
     <Content Include="Views\Web.config">
       <SubType>Designer</SubType>
     </Content>
-    <TypeScriptCompile Include="Content\Js\mustache-tests.ts" />
     <TypeScriptCompile Include="Content\Js\mustache.d.ts" />
   </ItemGroup>
   <ItemGroup>
@@ -454,7 +452,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Js\main.js.map" />
-    <Content Include="Content\Js\mustache-tests.js.map" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
