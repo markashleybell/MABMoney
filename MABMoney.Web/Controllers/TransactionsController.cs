@@ -40,40 +40,73 @@ namespace MABMoney.Web.Controllers
                                                                              cache,
                                                                              cachingHelpers) { }
 
-        //
-        // GET: /Transaction/
-        [Authenticate]
-        public ActionResult Index(ProfileViewModel profile)
+        private IndexViewModel GetTransactionIndexViewModel(int userId, int? accountId, int? categoryId, DateTime? from, DateTime? to)
         {
-            var accounts = _accountServices.GetForUser(profile.UserID).Select(x => new SelectListItem {
+            var accountList = _accountServices.GetForUser(userId);
+
+            var accounts = accountList.Select(x => new SelectListItem {
                 Value = x.AccountID.ToString(),
                 Text = x.Name
             });
 
-            var now = _dateProvider.Now;
-            var to = new DateTime(now.Year, now.Month, now.Day);
-            var from = to.AddDays(-30);
+            var account = (accountId.HasValue) ? accountList.FirstOrDefault(x => x.AccountID == accountId.Value) : accountList.FirstOrDefault(x => x.Default);
 
-            return View(new IndexViewModel {
-                Accounts = accounts,
-                From = from,
-                To = to
+            if (account == null)
+                account = accountList.First();
+
+            var categoryList = (account != null) ? account.Categories : accountList.First().Categories;
+
+            var categories = categoryList.Select(x => new SelectListItem {
+                Value = x.CategoryID.ToString(),
+                Text = x.Name
             });
+
+            // Default to last 30 days
+            var now = _dateProvider.Now;
+            var defaultTo = new DateTime(now.Year, now.Month, now.Day);
+            var defaultFrom = defaultTo.AddDays(-30);
+
+            var model = new IndexViewModel {
+                Accounts = accounts,
+                AccountID = account.AccountID,
+                Categories = categories,
+                CategoryID = categoryId,
+                From = (from.HasValue) ? from.Value : defaultFrom,
+                To = (to.HasValue) ? to.Value : defaultTo
+            };
+
+            if (accountId.HasValue)
+            {
+                if (categoryId.HasValue)
+                {
+                    model.Transactions = _transactionServices.GetForAccount(model.AccountID.Value, model.CategoryID.Value, model.From, model.To)
+                                                                 .OrderByDescending(x => x.Date)
+                                                                 .ToList();
+                }
+                else
+                {
+                    model.Transactions = _transactionServices.GetForAccount(model.AccountID.Value, model.From, model.To)
+                                                                 .OrderByDescending(x => x.Date)
+                                                                 .ToList();
+                }
+            }
+
+            return model;
+        }
+
+        //
+        // GET: /Transaction/
+        [Authenticate]
+        public ActionResult Index(ProfileViewModel profile, int? id)
+        {
+            return View(GetTransactionIndexViewModel(profile.UserID, id, null, null, null));
         }
 
         [Authenticate]
         [HttpPost]
         public ActionResult Index(ProfileViewModel profile, IndexViewModel model)
         {
-            model.Accounts = _accountServices.GetForUser(profile.UserID).Select(x => new SelectListItem {
-                Value = x.AccountID.ToString(),
-                Text = x.Name
-            });
-
-            if (model.AccountID.HasValue)
-                model.Transactions = _transactionServices.GetForAccount(model.AccountID.Value, model.From, model.To).OrderByDescending(x => x.Date).ToList();
-
-            return View(model);
+            return View(GetTransactionIndexViewModel(profile.UserID, model.AccountID, model.CategoryID, model.From, model.To));
         }
 
         //

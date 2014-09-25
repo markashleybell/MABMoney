@@ -89,6 +89,26 @@ namespace MABMoney.Services
                                 }).ToList();
         }
 
+        public IEnumerable<TransactionDTO> GetForAccount(int accountId, int categoryId, DateTime from, DateTime to)
+        {
+            return _transactions.Query(x => x.Account.User_UserID == _userId && x.Account_AccountID == accountId && x.Category_CategoryID == categoryId && x.Date >= from && x.Date <= to)
+                                .Select(t => new TransactionDTO
+                                {
+                                    TransactionID = t.TransactionID,
+                                    Account_AccountID = t.Account_AccountID,
+                                    Date = t.Date,
+                                    Amount = t.Amount,
+                                    Description = t.Description,
+                                    Note = t.Note,
+                                    Category_CategoryID = t.Category_CategoryID,
+                                    Category = new CategoryDTO
+                                    {
+                                        Name = (t.Category != null) ? t.Category.Name : null
+                                    },
+                                    TransferGUID = t.TransferGUID
+                                }).ToList();
+        }
+
         public TransactionDTO Get(int id)
         {
             return _transactions.Query(x => x.Account.User_UserID == _userId && x.TransactionID == id).FirstOrDefault().MapTo<TransactionDTO>();

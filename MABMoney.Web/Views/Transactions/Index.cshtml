@@ -12,10 +12,11 @@
 </div>
 @using (Html.BeginForm("Index", "Transactions")) {
 <div class="row">
-    <div class="col-md-3">Account @Html.DropDownListFor(x => x.AccountID, Model.Accounts, "Please select an account...", new { @class = "form-control" })</div>
+    <div class="col-md-3">Account @Html.DropDownListFor(x => x.AccountID, Model.Accounts, "Please select an account...", new { @class = "form-control", id = "Transactions_AccountID" })</div>
+    <div class="col-md-3">Category @Html.DropDownListFor(x => x.CategoryID, Model.Categories, "Please select a category...", new { @class = "form-control" })</div>
     <div class="col-md-2">From @Html.EditorFor(x => x.From, new { @class = "form-control", placeholder = "From" })</div>
     <div class="col-md-2">To @Html.EditorFor(x => x.To, new { @class = "form-control", placeholder = "To" })</div>
-    <div class="col-md-1">
+    <div class="col-md-2">
         &nbsp;
         @Html.HiddenFor(x => x.From)
         @Html.HiddenFor(x => x.To)

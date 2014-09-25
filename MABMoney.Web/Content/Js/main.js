@@ -121,6 +121,11 @@
             this.form.submit();
         });
 
+        // Reload transaction index when account is changed
+        $('#Transactions_AccountID').on('change', function (evt) {
+            window.location = '/Transactions/Index/' + $(this).val();
+        });
+
         // Wire in mobile tab replacement dropdown
         _ui.mobileTabSelect.on('change', function (evt) {
             _ui.allTabs.removeClass('active');

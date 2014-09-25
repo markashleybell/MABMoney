@@ -48,6 +48,16 @@ namespace MABMoney.Caching
             );
         }
 
+        public IEnumerable<TransactionDTO> GetForAccount(int accountId, int categoryId, DateTime from, DateTime to)
+        {
+            return CacheAndGetValue<IEnumerable<TransactionDTO>>(
+                "transactionsforaccount-" + accountId + "-" + categoryId + "-" + from.ToString("yyyyMMdd") + "-" + to.ToString("yyyyMMdd"),
+                CacheExpiry.OneHour,
+                () => _transactionServices.GetForAccount(accountId, categoryId, from, to),
+                "transaction", "all"
+            );
+        }
+
         public TransactionDTO Get(int id)
         {
             return _transactionServices.Get(id);

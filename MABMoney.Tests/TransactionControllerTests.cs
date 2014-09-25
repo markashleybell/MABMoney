@@ -36,14 +36,6 @@ namespace MABMoney.Tests
         [SetUp]
         public void SetUp()
         {
-            var accounts = new List<AccountDTO> {
-                new AccountDTO { 
-                    AccountID = 1,
-                    Name = "Current",
-                    StartingBalance = 100
-                }
-            };
-
             var categories = new List<CategoryDTO> {
                 new CategoryDTO { 
                     CategoryID = 1,
@@ -62,6 +54,15 @@ namespace MABMoney.Tests
                     Name = "Fuel",
                     Account_AccountID = 1,
                     Type = CategoryTypeDTO.Expense
+                }
+            };
+
+            var accounts = new List<AccountDTO> {
+                new AccountDTO { 
+                    AccountID = 1,
+                    Name = "Current",
+                    StartingBalance = 100,
+                    Categories = categories.Where(x => x.Account_AccountID == 1).ToList()
                 }
             };
 
@@ -148,7 +149,7 @@ namespace MABMoney.Tests
         {
             var controller = new TransactionsController(_userServices, _accountServices, _categoryServices, _transactionServices, _budgetServices, _context, _config, _dateProvider, _urlHelper, _cache, _cachingHelpers);
 
-            var result = controller.Index(_profile) as ViewResult;
+            var result = controller.Index(_profile, default(int?)) as ViewResult;
 
             result.ShouldNotBeNull();
 
