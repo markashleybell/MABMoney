@@ -52,6 +52,21 @@
                             <td>@Html.ActionLink("Edit", "Edit", new { id = transaction.TransactionID })</td>
                         </tr>
                     }
+                    <tr>
+                        <th colspan="4" class="text-right">Income:</th>
+                        <th>@Model.Transactions.Where(x => x.Amount >= 0).Sum(x => x.Amount).ToString("#0.00")</th>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th colspan="4" class="text-right">Expenses:</th>
+                        <th>@((Model.Transactions.Where(x => x.Amount < 0).Sum(x => x.Amount) * -1).ToString("#0.00"))</th>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th colspan="4" class="text-right">Total:</th>
+                        <th>@Model.Transactions.Sum(x => x.Amount).ToString("#0.00")</th>
+                        <td></td>
+                    </tr>
                 </tbody>
             </table>
         } else {
