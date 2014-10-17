@@ -77,6 +77,9 @@ namespace MABMoney.Web.Controllers
             var dto = model.MapTo<CategoryDTO>();
             _categoryServices.Save(dto);
 
+            // Clear the cache of anything that depends upon categories
+            _cache.InvalidateAllWithDependency(_cachingHelpers.GetDependencyKey(CachingDependency.Category));
+
             return Redirect(model.RedirectAfterSubmitUrl);
         }
 
@@ -108,6 +111,9 @@ namespace MABMoney.Web.Controllers
             var dto = model.MapTo<CategoryDTO>();
             _categoryServices.Save(dto);
 
+            // Clear the cache of anything that depends upon categories
+            _cache.InvalidateAllWithDependency(_cachingHelpers.GetDependencyKey(CachingDependency.Category));
+
             return Redirect(model.RedirectAfterSubmitUrl);
         }
 
@@ -118,6 +124,10 @@ namespace MABMoney.Web.Controllers
         public ActionResult Delete(ProfileViewModel profile, int id, string redirectAfterSubmitUrl)
         {
             _categoryServices.Delete(id);
+
+            // Clear the cache of anything that depends upon categories
+            _cache.InvalidateAllWithDependency(_cachingHelpers.GetDependencyKey(CachingDependency.Category));
+
             return Redirect(redirectAfterSubmitUrl);
         }
     }
