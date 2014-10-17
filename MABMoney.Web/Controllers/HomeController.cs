@@ -128,14 +128,24 @@ namespace MABMoney.Web.Controllers
             // Get latest budget, if there is one
             var latestBudget = _budgetServices.GetLatest(account.AccountID);
 
+            // If there isn't, get the latest budget from the default account
+            if(latestBudget == null) 
+            {
+                var defaultAccount = accounts.Where(x => x.Default).FirstOrDefault();
+                if(defaultAccount != null)
+                    latestBudget = _budgetServices.GetLatest(defaultAccount.AccountID);
+            }
+
             if (latestBudget != null)
             {
+                // Show transactions made during the latest budget period
                 model.Transactions = _transactionServices.GetForAccount(account.AccountID, latestBudget.Start.AddDays(-7), latestBudget.End).ToList();
                 model.From = latestBudget.Start;
                 model.To = latestBudget.End;
             }
             else
             {
+                // If there is no budget at all, for any account, just show transactions from the first of the current month
                 model.Transactions = _transactionServices.GetForAccount(account.AccountID, model.From.AddDays(-7), model.To).ToList();
             }
 
