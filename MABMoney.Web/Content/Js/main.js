@@ -102,7 +102,8 @@
         // Set up date picker inputs
         $('.date-picker').datepicker({
             format: 'dd/mm/yyyy',
-            autoclose: true
+            autoclose: true,
+            weekStart: 1
         });
 
         // Set up net worth table popover
