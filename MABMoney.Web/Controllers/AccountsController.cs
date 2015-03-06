@@ -86,6 +86,11 @@ namespace MABMoney.Web.Controllers
 
             var encodedPageState = EncryptionHelpers.EncodeReturnParameters(dto.AccountID, MABMoney.Web.Models.Home.TransactionType.Expense, MABMoney.Web.Models.Home.DashboardTab.BudgetOrPaymentCalc);
 
+            // Clear the user because current balance comes from User.Accounts property
+            _cache.InvalidateAllWithDependency(_cachingHelpers.GetDependencyKey(CachingDependency.User));
+            // Clear the account cache so redirect is valid
+            _cache.InvalidateAllWithDependency(_cachingHelpers.GetDependencyKey(CachingDependency.Account));
+
             // TODO: This doesn't respect RedirectAfterSubmitUrl, should it?
             return RedirectToRoute("Home", new { state = encodedPageState });
         }
@@ -129,11 +134,15 @@ namespace MABMoney.Web.Controllers
         public ActionResult Delete(ProfileViewModel profile, int id, string redirectAfterSubmitUrl)
         {
             _accountServices.Delete(id);
+
+            // Clear the user because current balance comes from User.Accounts property
+            _cache.InvalidateAllWithDependency(_cachingHelpers.GetDependencyKey(CachingDependency.User));
+            // Clear the cached account list
+            _cache.InvalidateAllWithDependency(_cachingHelpers.GetDependencyKey(CachingDependency.Account));
+
             return Redirect(redirectAfterSubmitUrl);
         }
 
-        //
-        // POST: /Account/Delete/5
         [Authenticate]
         [HttpPost]
         public ActionResult GetTransactionDescriptionHistory(ProfileViewModel profile, string query, int? id)
