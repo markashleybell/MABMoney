@@ -128,14 +128,6 @@ namespace MABMoney.Web.Controllers
             // Get latest budget, if there is one
             var latestBudget = _budgetServices.GetLatest(account.AccountID);
 
-            // If there isn't, get the latest budget from the default account
-            if(latestBudget == null) 
-            {
-                var defaultAccount = accounts.Where(x => x.Default).FirstOrDefault();
-                if(defaultAccount != null)
-                    latestBudget = _budgetServices.GetLatest(defaultAccount.AccountID);
-            }
-
             if (latestBudget != null)
             {
                 // Show transactions made during the latest budget period
