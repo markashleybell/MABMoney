@@ -27,12 +27,17 @@ namespace MABMoney.Web.Infrastructure
 
             var cookieValue = context.Request.Cookies[ConfigurationManager.AppSettings["CookieKey"]].Value;
 
-            IDisposable _step;
-            var _profiler = MiniProfiler.Current;
-
             var userId = Convert.ToInt32(Encoding.UTF8.GetString(Convert.FromBase64String(cookieValue)).Split('-')[0]);
 
-            _step = _profiler.Step("Get Session In AuthenticateAttribute");
+            var enableProfiling = Convert.ToBoolean(ConfigurationManager.AppSettings["EnableProfiling"]);
+
+            IDisposable _step = null;
+
+            if (enableProfiling)
+            {
+                var _profiler = MiniProfiler.Current;
+                _step = _profiler.Step("Get Session In AuthenticateAttribute");
+            }
 
             DataStoreFactory dataStoreFactory;
 
@@ -47,7 +52,10 @@ namespace MABMoney.Web.Infrastructure
 
             var session = sessionServices.GetByUserAndKey(userId, cookieValue);
 
-            _step.Dispose();
+            if (enableProfiling)
+            {
+                _step.Dispose();
+            }
 
             if (session == null)
                 return false;
