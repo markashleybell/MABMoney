@@ -77,9 +77,9 @@
             <div class="row">
                 <div class="col-md-2">@Html.EditorFor(x => x.Date, new { @class = "form-control", placeholder = "Date" })</div>
                 <div class="col-md-2">@Html.DropDownListFor(x => x.Category_CategoryID, Model.IncomeCategories, "Category...", new { @class = "form-control" })</div>
-                <div class="col-md-3">@Html.TextBoxFor(x => x.Description, new { @class = "typeahead form-control", placeholder = "Description (optional)", autocomplete = "off" })</div>
+                <div class="col-md-2">@Html.TextBoxFor(x => x.Description, new { @class = "typeahead form-control", placeholder = "Description (optional)", autocomplete = "off" })</div>
                 <div class="col-md-3">@Html.TextBoxFor(x => x.Note, new { @class = "form-control", placeholder = "Note (optional)" })</div>   
-                <div class="col-md-1">@Html.TextBoxFor(x => x.Amount, new { @class = "form-control", placeholder = "Amount", type = "number", pattern = @"\d*" })</div>   
+                <div class="col-md-2">@Html.TextBoxFor(x => x.Amount, new { @class = "form-control", placeholder = "Amount", type = "number", pattern = @"\d*" })</div>   
                 <div class="col-md-1">
                     <input type="submit" value="Add" class="btn btn-primary btn-block" />
                 </div>
@@ -141,9 +141,9 @@
             <div class="row">
                 <div class="col-md-2">@Html.EditorFor(x => x.Date, new { @class = "form-control", placeholder = "Date" })</div>
                 <div class="col-md-2">@Html.DropDownListFor(x => x.Category_CategoryID, Model.ExpenseCategories, "Category...", new { @class = "form-control" })</div>
-                <div class="col-md-3">@Html.TextBoxFor(x => x.Description, new { @class = "typeahead form-control", placeholder = "Description (optional)", autocomplete = "off" })</div>
+                <div class="col-md-2">@Html.TextBoxFor(x => x.Description, new { @class = "typeahead form-control", placeholder = "Description (optional)", autocomplete = "off" })</div>
                 <div class="col-md-3">@Html.TextBoxFor(x => x.Note, new { @class = "form-control", placeholder = "Note (optional)" })</div>   
-                <div class="col-md-1">@Html.TextBoxFor(x => x.Amount, new { @class = "form-control", placeholder = "Amount", type = "number", pattern = @"\d*" })</div>   
+                <div class="col-md-2">@Html.TextBoxFor(x => x.Amount, new { @class = "form-control", placeholder = "Amount", type = "number", pattern = @"\d*" })</div>   
                 <div class="col-md-1">
                     <input type="submit" value="Add" class="btn btn-primary btn-block" />
                 </div>
@@ -205,14 +205,14 @@
             <div class="row">
                 <div class="col-md-2">@Html.EditorFor(x => x.Date, new { @class = "form-control", placeholder = "Date" })</div>
                 <div class="col-md-2">@Html.DropDownListFor(x => x.Category_CategoryID, Model.ExpenseCategories, "Category...", new { @class = "form-control" })</div>
-                <div class="col-md-2">@Html.DropDownListFor(x => x.SourceAccountID, Model.Accounts, "Source...", new { @class = "form-control" })</div>
                 <div class="col-md-2">@Html.DropDownListFor(x => x.DestinationAccountID, Model.Accounts, "Destination...", new { @class = "form-control" })</div>
-                <div class="col-md-2">@Html.TextBoxFor(x => x.Note, new { @class = "form-control", placeholder = "Note (optional)" })</div>   
-                <div class="col-md-1">@Html.TextBoxFor(x => x.Amount, new { @class = "form-control", placeholder = "Amount", type = "number", pattern = @"\d*" })</div>   
+                <div class="col-md-3">@Html.TextBoxFor(x => x.Note, new { @class = "form-control", placeholder = "Note (optional)" })</div>   
+                <div class="col-md-2">@Html.TextBoxFor(x => x.Amount, new { @class = "form-control", placeholder = "Amount", type = "number", pattern = @"\d*" })</div>   
                 <div class="col-md-1">
                     <input type="submit" value="Move" class="btn btn-primary btn-block" />
                 </div>
                 @Html.HiddenFor(x => x.Account_AccountID)
+                @Html.HiddenFor(x => x.SourceAccountID)
                 <input data-val="true" data-val-required="The Type field is required." name="Type" type="hidden" value="Transfer">
             </div>
         }

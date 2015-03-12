@@ -87,6 +87,7 @@ namespace MABMoney.Web.Controllers
 
             model.Account = account;
             model.Account_AccountID = account.AccountID;
+            model.SourceAccountID = account.AccountID;
 
             model.IncomeCategories = accounts.First(x => x.AccountID == account.AccountID)
                                                   .Categories.Where(x => x.Type == CategoryTypeDTO.Income)
