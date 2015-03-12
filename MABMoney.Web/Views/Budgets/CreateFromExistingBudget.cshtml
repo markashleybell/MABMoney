@@ -20,7 +20,7 @@
     @Html.HiddenFor(x => x.Account_AccountID)
 }
 
-@using (Html.BeginForm("Create", "Budgets", FormMethod.Post, new { @class = "form-horizontal" }))
+@using (Html.BeginForm("Create", "Budgets", FormMethod.Post, new { @class = "form-horizontal", novalidate = "novalidate" }))
 {
     @Html.EditorControlGroupFor(x => x.Start)
     

@@ -72,13 +72,14 @@
 
         <h2>Income @((Model.Budget != null) ? Model.Budget.Start.ToString("dd/MM/yy") + " - " + Model.Budget.End.ToString("dd/MM/yy") : "")</h2>
 
-        @using (Html.BeginForm("CreateTransaction", "Home")) {
+        @using (Html.BeginForm("CreateTransaction", "Home", new { novalidate = "novalidate" }))
+        {
             <div class="row">
                 <div class="col-md-2">@Html.EditorFor(x => x.Date, new { @class = "form-control", placeholder = "Date" })</div>
                 <div class="col-md-2">@Html.DropDownListFor(x => x.Category_CategoryID, Model.IncomeCategories, "Category...", new { @class = "form-control" })</div>
                 <div class="col-md-3">@Html.TextBoxFor(x => x.Description, new { @class = "typeahead form-control", placeholder = "Description (optional)", autocomplete = "off" })</div>
                 <div class="col-md-3">@Html.TextBoxFor(x => x.Note, new { @class = "form-control", placeholder = "Note (optional)" })</div>   
-                <div class="col-md-1">@Html.TextBoxFor(x => x.Amount, new { @class = "form-control", placeholder = "Amount" })</div>   
+                <div class="col-md-1">@Html.TextBoxFor(x => x.Amount, new { @class = "form-control", placeholder = "Amount", type = "number", pattern = @"\d*" })</div>   
                 <div class="col-md-1">
                     <input type="submit" value="Add" class="btn btn-primary btn-block" />
                 </div>
@@ -135,13 +136,14 @@
 
         <h2>Expenses @((Model.Budget != null) ? Model.Budget.Start.ToString("dd/MM/yy") + " - " + Model.Budget.End.ToString("dd/MM/yy") : "")</h2>
 
-        @using (Html.BeginForm("CreateTransaction", "Home")) {
+        @using (Html.BeginForm("CreateTransaction", "Home", new { novalidate = "novalidate" }))
+        {
             <div class="row">
                 <div class="col-md-2">@Html.EditorFor(x => x.Date, new { @class = "form-control", placeholder = "Date" })</div>
                 <div class="col-md-2">@Html.DropDownListFor(x => x.Category_CategoryID, Model.ExpenseCategories, "Category...", new { @class = "form-control" })</div>
                 <div class="col-md-3">@Html.TextBoxFor(x => x.Description, new { @class = "typeahead form-control", placeholder = "Description (optional)", autocomplete = "off" })</div>
                 <div class="col-md-3">@Html.TextBoxFor(x => x.Note, new { @class = "form-control", placeholder = "Note (optional)" })</div>   
-                <div class="col-md-1">@Html.TextBoxFor(x => x.Amount, new { @class = "form-control", placeholder = "Amount" })</div>   
+                <div class="col-md-1">@Html.TextBoxFor(x => x.Amount, new { @class = "form-control", placeholder = "Amount", type = "number", pattern = @"\d*" })</div>   
                 <div class="col-md-1">
                     <input type="submit" value="Add" class="btn btn-primary btn-block" />
                 </div>
@@ -198,14 +200,15 @@
 
         <h2>Transfers @((Model.Budget != null) ? Model.Budget.Start.ToString("dd/MM/yy") + " - " + Model.Budget.End.ToString("dd/MM/yy") : "")</h2>
 
-        @using (Html.BeginForm("CreateTransfer", "Home")) {
+        @using (Html.BeginForm("CreateTransfer", "Home", new { novalidate = "novalidate" }))
+        {
             <div class="row">
                 <div class="col-md-2">@Html.EditorFor(x => x.Date, new { @class = "form-control", placeholder = "Date" })</div>
                 <div class="col-md-2">@Html.DropDownListFor(x => x.Category_CategoryID, Model.ExpenseCategories, "Category...", new { @class = "form-control" })</div>
                 <div class="col-md-2">@Html.DropDownListFor(x => x.SourceAccountID, Model.Accounts, "Source...", new { @class = "form-control" })</div>
                 <div class="col-md-2">@Html.DropDownListFor(x => x.DestinationAccountID, Model.Accounts, "Destination...", new { @class = "form-control" })</div>
                 <div class="col-md-2">@Html.TextBoxFor(x => x.Note, new { @class = "form-control", placeholder = "Note (optional)" })</div>   
-                <div class="col-md-1">@Html.TextBoxFor(x => x.Amount, new { @class = "form-control", placeholder = "Amount" })</div>   
+                <div class="col-md-1">@Html.TextBoxFor(x => x.Amount, new { @class = "form-control", placeholder = "Amount", type = "number", pattern = @"\d*" })</div>   
                 <div class="col-md-1">
                     <input type="submit" value="Move" class="btn btn-primary btn-block" />
                 </div>
@@ -313,10 +316,10 @@
                 <div class="col-md-4">&nbsp;</div>
             </div>
             <div class="row">
-                <div class="col-md-2"><input class="form-control" id="payment-calculator-currentbalance" name="payment-calculator-currentbalance" type="text" value="@Math.Abs(Model.Account.CurrentBalance).ToString("#0.00")"></div>
-                <div class="col-md-2"><input class="form-control" id="payment-calculator-paymentamount" name="payment-calculator-paymentamount" type="text" value="@Model.DefaultCardPaymentAmount.ToString("0.00")"></div>
-                <div class="col-md-2"><input class="form-control" id="payment-calculator-interestrate" name="payment-calculator-interestrate" type="text" value="@Model.DefaultCardInterestRate.ToString("0.00")"></div>
-                <div class="col-md-2"><input class="form-control" id="payment-calculator-minpaymentpercentage" name="payment-calculator-currentbalance" type="text" value="@Model.DefaultCardMinimumPayment.ToString("0.00")"></div>
+                <div class="col-md-2"><input class="form-control" id="payment-calculator-currentbalance" name="payment-calculator-currentbalance" type="number" pattern="\d*" value="@Math.Abs(Model.Account.CurrentBalance).ToString("#0.00")"></div>
+                <div class="col-md-2"><input class="form-control" id="payment-calculator-paymentamount" name="payment-calculator-paymentamount" type="number" pattern="\d*" value="@Model.DefaultCardPaymentAmount.ToString("0.00")"></div>
+                <div class="col-md-2"><input class="form-control" id="payment-calculator-interestrate" name="payment-calculator-interestrate" type="number" pattern="\d*" value="@Model.DefaultCardInterestRate.ToString("0.00")"></div>
+                <div class="col-md-2"><input class="form-control" id="payment-calculator-minpaymentpercentage" name="payment-calculator-currentbalance" type="number" pattern="\d*" value="@Model.DefaultCardMinimumPayment.ToString("0.00")"></div>
                 <div class="col-md-2 col-md-offset-2">
                     <input type="button" id="payment-calculator-recalculate" value="Recalculate" class="btn btn-primary btn-block" />
                 </div>

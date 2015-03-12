@@ -11,7 +11,7 @@
     </div>
 </div>
 
-@using (Html.BeginForm("Edit", "Transactions", FormMethod.Post, new { @class = "form-horizontal" }))
+@using (Html.BeginForm("Edit", "Transactions", FormMethod.Post, new { @class = "form-horizontal", novalidate = "novalidate" }))
 {
     @Html.EditorControlGroupFor(x => x.Date)
    
@@ -19,7 +19,7 @@
     
     @Html.TextControlGroupFor(x => x.Note)
 
-    @Html.TextControlGroupFor(x => x.Amount)
+    @Html.TextControlGroupFor(x => x.Amount, new { type = "number", pattern = @"\d*" })
     
     @Html.SelectControlGroupFor(x => x.Category_CategoryID, Model.Categories, "Please select...")
     

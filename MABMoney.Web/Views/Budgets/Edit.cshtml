@@ -11,7 +11,7 @@
     </div>
 </div>
 
-@using (Html.BeginForm("Edit", "Budgets", FormMethod.Post, new { @class = "form-horizontal" }))
+@using (Html.BeginForm("Edit", "Budgets", FormMethod.Post, new { @class = "form-horizontal", novalidate = "novalidate" }))
 {
     @Html.EditorControlGroupFor(x => x.Start)
     

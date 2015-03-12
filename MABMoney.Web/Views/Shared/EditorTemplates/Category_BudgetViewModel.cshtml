@@ -11,7 +11,7 @@
         @Html.TextBoxFor(x => x.Name, new { placeholder = "Name", @class = "form-control" })
     </div>
     <div class="col-md-2">
-        @Html.TextBoxFor(x => x.Amount, new { placeholder = "Amount", @class = "form-control" })
+        @Html.TextBoxFor(x => x.Amount, new { placeholder = "Amount", @class = "form-control", type = "number", pattern = @"\d*" })
     </div>
     <div class="col-md-2">
         <a class="cat-delete btn btn-default" id="del@(index)" href="#del@(Model.Category_CategoryID)">Delete</a>

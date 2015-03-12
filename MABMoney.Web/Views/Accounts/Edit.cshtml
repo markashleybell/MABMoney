@@ -11,7 +11,7 @@
     </div>
 </div>
 
-@using (Html.BeginForm("Edit", "Accounts", FormMethod.Post, new { @class = "form-horizontal" }))
+@using (Html.BeginForm("Edit", "Accounts", FormMethod.Post, new { @class = "form-horizontal", novalidate = "novalidate" }))
 {
     @Html.TextControlGroupFor(x => x.Name)
     
@@ -19,9 +19,9 @@
 
     @Html.SelectControlGroupFor(x => x.Type, Model.AccountTypes, "Please select...")
     
-    @Html.TextControlGroupFor(x => x.StartingBalance)
+    @Html.TextControlGroupFor(x => x.StartingBalance, new { type = "number", pattern = @"\d*" })
     
-    @Html.TextControlGroupFor(x => x.DisplayOrder, new { @class = "help", data_content = "Display order when accounts are listed (e.g. Net Worth dropdown)" })
+    @Html.TextControlGroupFor(x => x.DisplayOrder, new { type = "number", pattern = @"\d*" })
 
     @Html.HiddenFor(x => x.AccountID)
 
