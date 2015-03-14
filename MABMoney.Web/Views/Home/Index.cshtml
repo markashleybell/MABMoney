@@ -72,7 +72,7 @@
 
         <h2>Income @((Model.Budget != null) ? Model.Budget.Start.ToString("dd/MM/yy") + " - " + Model.Budget.End.ToString("dd/MM/yy") : "")</h2>
 
-        @using (Html.BeginForm("CreateTransaction", "Home", new { novalidate = "novalidate" }))
+        @using (Html.BeginForm("CreateTransaction", "Home", FormMethod.Post, new { novalidate = "novalidate" }))
         {
             <div class="row">
                 <div class="col-md-2">@Html.EditorFor(x => x.Date, new { @class = "form-control", placeholder = "Date" })</div>
@@ -136,7 +136,7 @@
 
         <h2>Expenses @((Model.Budget != null) ? Model.Budget.Start.ToString("dd/MM/yy") + " - " + Model.Budget.End.ToString("dd/MM/yy") : "")</h2>
 
-        @using (Html.BeginForm("CreateTransaction", "Home", new { novalidate = "novalidate" }))
+        @using (Html.BeginForm("CreateTransaction", "Home", FormMethod.Post, new { novalidate = "novalidate" }))
         {
             <div class="row">
                 <div class="col-md-2">@Html.EditorFor(x => x.Date, new { @class = "form-control", placeholder = "Date" })</div>
@@ -200,7 +200,7 @@
 
         <h2>Transfers @((Model.Budget != null) ? Model.Budget.Start.ToString("dd/MM/yy") + " - " + Model.Budget.End.ToString("dd/MM/yy") : "")</h2>
 
-        @using (Html.BeginForm("CreateTransfer", "Home", new { novalidate = "novalidate" }))
+        @using (Html.BeginForm("CreateTransfer", "Home", FormMethod.Post, new { novalidate = "novalidate" }))
         {
             <div class="row">
                 <div class="col-md-2">@Html.EditorFor(x => x.Date, new { @class = "form-control", placeholder = "Date" })</div>
