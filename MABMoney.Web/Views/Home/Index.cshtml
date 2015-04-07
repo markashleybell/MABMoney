@@ -14,7 +14,7 @@
 }
 
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-sm-6 col-md-4">
         @*@Model.From.ToString("dd/MM/yyyy")-@Model.To.ToString("dd/MM/yyyy")*@
         @using (Html.BeginForm("", "Home", FormMethod.Post, new { id = "account-selector", @class = "form-inline" })) {
             <p>@Html.DropDownListFor(x => x.Account_AccountID, Model.Accounts, new { @class = "account-selector form-control input-lg" }) </p>
@@ -27,7 +27,7 @@
         }
 
     </div> 
-    <div class="col-md-8" id="current-balance">@Model.Account.CurrentBalance.ToString("c")</div>
+    <div class="col-sm-6 col-md-8" id="current-balance">@Model.Account.CurrentBalance.ToString("c")</div>
 </div>
 
 <ul class="nav nav-tabs lge" id="nav-tabs">

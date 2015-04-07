@@ -12,8 +12,8 @@
         var remaining = category.Amount - category.Total;
     
     <div class="row">
-        <div class="col-md-2"><div class="category-label">@category.Category.Name</div></div>
-        <div class="col-md-10">
+        <div class="col-sm-3 col-md-2"><div class="category-label">@category.Category.Name</div></div>
+        <div class="col-sm-9 col-md-10">
             @if(category.Amount == 0 && category.Total > 0) {
             <div class="category-bar over">
                 <div class="category-stats">@((category.Total).ToString("#0.00"))</div>
