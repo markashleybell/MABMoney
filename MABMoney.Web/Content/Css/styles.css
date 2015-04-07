@@ -124,7 +124,7 @@ form {
 }
 @media (min-width: 768px) {
   .container {
-    width: 710px;
+    width: 640px;
   }
 }
 @media (min-width: 992px) {
