@@ -243,7 +243,7 @@
       <DependentUpon>styles.less</DependentUpon>
     </Content>
     <Content Include="Content\Css\styles.min.css">
-      <DependentUpon>styles.less</DependentUpon>
+      <DependentUpon>styles.css</DependentUpon>
     </Content>
     <Content Include="Content\EmailTemplates\password-reset.html" />
     <Content Include="Content\Fonts\glyphicons-halflings-regular.svg" />
