@@ -86,40 +86,10 @@ namespace MABMoney.Web.Infrastructure
             return true;
         }
 
-        private void CacheValidateHandler(HttpContext context, object data, ref HttpValidationStatus validationStatus)
+        protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
         {
-            validationStatus = OnCacheAuthorization(new HttpContextWrapper(context));
+            // auth failed, redirect to login page
+            filterContext.Result = new RedirectResult("/Users/Login");
         }
-
-        public override void OnAuthorization(AuthorizationContext filterContext)
-        {
-            if (filterContext == null)
-            {
-                throw new ArgumentNullException("filterContext");
-            }
-
-            if (AuthorizeCore(filterContext.HttpContext))
-            {
-                // ** IMPORTANT **
-                // Since we're performing authorization at the action level, the authorization code runs
-                // after the output caching module. In the worst case this could allow an authorized user
-                // to cause the page to be cached, then an unauthorized user would later be served the
-                // cached page. We work around this by telling proxies not to cache the sensitive page,
-                // then we hook our custom authorization code into the caching mechanism so that we have
-                // the final say on whether a page should be served from the cache.
-
-                HttpCachePolicyBase cachePolicy = filterContext.HttpContext.Response.Cache;
-                cachePolicy.SetProxyMaxAge(new TimeSpan(0));
-                cachePolicy.AddValidationCallback(CacheValidateHandler, null /* data */);
-            }
-            else
-            {
-                // auth failed, redirect to login page
-                filterContext.Result = new RedirectResult("/Users/Login");
-                //filterContext.Result = new RedirectResult("/Users/Login?returnUrl=" +
-                //filterContext.HttpContext.Server.UrlEncode(filterContext.HttpContext.Request.RawUrl));
-            }
-        }
-
     }
 }
