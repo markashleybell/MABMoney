@@ -233,6 +233,20 @@ var MABMoney = (function ($, window, undefined) {
             var index = this.id.substring(3);
             control.replaceWith(Mustache.render(_templates.budgetCategoryDeleteForm, { INDEX: index, ID: categoryId }));
         });
+
+        // Remove zero placeholder in amount fields on input focus
+        // and replace it on blur if field is empty
+        $('input[name$="Amount"]').on('focus', function (e) {
+            var field = $(this);
+            if (parseInt(field.val(), 10) === 0) {
+                field.val('');
+            }
+        }).on('blur', function (e) {
+            var field = $(this);
+            if ($.trim(field.val()) === '' || parseInt(field.val(), 10) === 0) {
+                field.val('0');
+            }
+        });
     };
 
     return {
