@@ -323,7 +323,7 @@ namespace MABMoney.Web.Controllers
 
         public ActionResult PingTarget()
         {
-           // var user = _userServices.Get(1);
+            var user = _userServices.Get(1);
 
             return View();
         }
