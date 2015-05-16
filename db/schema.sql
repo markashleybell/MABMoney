@@ -7,7 +7,7 @@ GO
 USE [MABMoney_New]
 GO
 
-IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Users')
+IF OBJECT_ID('[dbo].[Users]') IS NULL
 BEGIN
 	CREATE TABLE [dbo].[Users] (
 		[UserID] [int] IDENTITY(1,1) NOT NULL,
@@ -32,7 +32,7 @@ BEGIN
 END
 GO
 
-IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Categories')
+IF OBJECT_ID('[dbo].[Categories]') IS NULL
 BEGIN
 	CREATE TABLE [dbo].[Categories] (
 		[CategoryID] [int] IDENTITY(1,1) NOT NULL,
@@ -53,7 +53,7 @@ BEGIN
 END
 GO
 
-IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Transactions')
+IF OBJECT_ID('[dbo].[Transactions]') IS NULL
 BEGIN
 	CREATE TABLE [dbo].[Transactions] (
 		[TransactionID] [int] IDENTITY(1,1) NOT NULL,
@@ -77,9 +77,9 @@ BEGIN
 	)
 END
 
-IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[Transactions]') AND name = N'IX_Transactions.Date_Account_Deleted')
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[Transactions]') AND name = N'IX_dbo.Transactions_Date_Account_AccountID_Deleted')
 BEGIN
-	CREATE NONCLUSTERED INDEX [IX_Transactions.Date_Account_Deleted] ON [dbo].[Transactions] (
+	CREATE NONCLUSTERED INDEX [IX_dbo.Transactions_Date_Account_AccountID_Deleted] ON [dbo].[Transactions] (
 		[Date] ASC,
 		[Account_AccountID] ASC,
 		[Deleted] ASC
@@ -100,7 +100,7 @@ BEGIN
 END
 GO
 
-IF EXISTS (SELECT * FROM sys.triggers WHERE object_id = OBJECT_ID(N'[dbo].[Transactions_UpdateAccountBalance]'))
+IF OBJECT_ID(N'[dbo].[Transactions_UpdateAccountBalance]') IS NOT NULL
 BEGIN
 	DROP TRIGGER [dbo].[Transactions_UpdateAccountBalance]
 END
@@ -140,7 +140,7 @@ BEGIN
 END
 GO
 
-IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Accounts')
+IF OBJECT_ID(N'[dbo].[Accounts]') IS NULL
 BEGIN
 	CREATE TABLE [dbo].[Accounts] (
 		[AccountID] [int] IDENTITY(1,1) NOT NULL,
@@ -166,6 +166,7 @@ BEGIN
 END
 GO
 
+IF OBJECT_ID(N'[dbo].[Accounts_UpdateAccountBalance]') IS NOT NULL
 IF EXISTS (SELECT * FROM sys.triggers WHERE object_id = OBJECT_ID(N'[dbo].[Accounts_UpdateAccountBalance]'))
 BEGIN
 	DROP TRIGGER [dbo].[Accounts_UpdateAccountBalance]
@@ -206,7 +207,7 @@ BEGIN
 END
 GO
 
-IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Budgets')
+IF OBJECT_ID(N'[dbo].[Budgets]') IS NULL
 BEGIN
 	CREATE TABLE [dbo].[Budgets](
 		[BudgetID] [int] IDENTITY(1,1) NOT NULL,
@@ -227,7 +228,7 @@ BEGIN
 END
 GO
 
-IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Categories_Budgets')
+IF OBJECT_ID(N'[dbo].[Categories_Budgets]') IS NULL
 BEGIN
 	CREATE TABLE [dbo].[Categories_Budgets](
 		[Budget_BudgetID] [int] NOT NULL,
@@ -248,7 +249,7 @@ BEGIN
 END
 GO
 
-IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Sessions')
+IF OBJECT_ID(N'[dbo].[Sessions]') IS NULL
 BEGIN
 	CREATE TABLE [dbo].[Sessions](
 		[SessionID] [int] IDENTITY(1,1) NOT NULL,
