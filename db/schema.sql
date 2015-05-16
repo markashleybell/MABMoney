@@ -1,7 +1,10 @@
+USE [master]
+GO
+
 CREATE DATABASE [MABMoney_New]
 GO
 
-USE MABMoney_New
+USE [MABMoney_New]
 GO
 
 IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Users')
@@ -19,7 +22,7 @@ BEGIN
 		[Deleted] [bit] NOT NULL,
 		[DeletedBy] [int] NULL,
 		[DeletedDate] [datetime] NULL,
-		[IsAdmin] [bit] NOT NULL CONSTRAINT DF_Users_IsAdmin DEFAULT 0,
+		[IsAdmin] [bit] NOT NULL CONSTRAINT [DF_dbo.Users_IsAdmin] DEFAULT 0,
 		[PasswordResetGUID] [nvarchar](512) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
 		[PasswordResetExpiry] [datetime] NULL,
 		CONSTRAINT [PK_dbo.Users] PRIMARY KEY CLUSTERED (
@@ -152,10 +155,10 @@ BEGIN
 		[DeletedBy] [int] NULL,
 		[DeletedDate] [datetime] NULL,
 		[Default] [bit] NOT NULL,
-		[Type] [int] NOT NULL CONSTRAINT DF_Transactions_Type DEFAULT 0,
+		[Type] [int] NOT NULL CONSTRAINT [DF_dbo.Transactions_Type] DEFAULT 0,
 		[TransactionDescriptionHistory] [nvarchar](max) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
-		[CurrentBalance] [decimal](18, 2) NOT NULL CONSTRAINT DF_Transactions_CurrentBalance DEFAULT 0,
-		[DisplayOrder] [int] NOT NULL CONSTRAINT DF_Transactions_DisplayOrder DEFAULT 0,
+		[CurrentBalance] [decimal](18, 2) NOT NULL CONSTRAINT [DF_dbo.Transactions_CurrentBalance] DEFAULT 0,
+		[DisplayOrder] [int] NOT NULL CONSTRAINT [DF_dbo.Transactions_DisplayOrder] DEFAULT 0,
 		CONSTRAINT [PK_dbo.Accounts] PRIMARY KEY CLUSTERED (
 			[AccountID] ASC
 		) WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
@@ -267,74 +270,74 @@ END
 GO
 
 IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_dbo.Categories_dbo.Accounts_Account_AccountID]') AND parent_object_id = OBJECT_ID(N'[dbo].[Categories]'))
-ALTER TABLE [dbo].[Categories]  WITH NOCHECK ADD  CONSTRAINT [FK_dbo.Categories_dbo.Accounts_Account_AccountID] FOREIGN KEY([Account_AccountID])
-REFERENCES [dbo].[Accounts] ([AccountID])
+    ALTER TABLE [dbo].[Categories] WITH NOCHECK ADD CONSTRAINT [FK_dbo.Categories_dbo.Accounts_Account_AccountID] FOREIGN KEY([Account_AccountID])
+    REFERENCES [dbo].[Accounts] ([AccountID])
 GO
 
 IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_dbo.Categories_dbo.Accounts_Account_AccountID]') AND parent_object_id = OBJECT_ID(N'[dbo].[Categories]'))
-ALTER TABLE [dbo].[Categories] CHECK CONSTRAINT [FK_dbo.Categories_dbo.Accounts_Account_AccountID]
+    ALTER TABLE [dbo].[Categories] CHECK CONSTRAINT [FK_dbo.Categories_dbo.Accounts_Account_AccountID]
 GO
 
 IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_dbo.Transactions_dbo.Accounts_Account_AccountID]') AND parent_object_id = OBJECT_ID(N'[dbo].[Transactions]'))
-ALTER TABLE [dbo].[Transactions]  WITH NOCHECK ADD  CONSTRAINT [FK_dbo.Transactions_dbo.Accounts_Account_AccountID] FOREIGN KEY([Account_AccountID])
-REFERENCES [dbo].[Accounts] ([AccountID])
+    ALTER TABLE [dbo].[Transactions] WITH NOCHECK ADD CONSTRAINT [FK_dbo.Transactions_dbo.Accounts_Account_AccountID] FOREIGN KEY([Account_AccountID])
+    REFERENCES [dbo].[Accounts] ([AccountID])
 GO
 
 IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_dbo.Transactions_dbo.Accounts_Account_AccountID]') AND parent_object_id = OBJECT_ID(N'[dbo].[Transactions]'))
-ALTER TABLE [dbo].[Transactions] CHECK CONSTRAINT [FK_dbo.Transactions_dbo.Accounts_Account_AccountID]
+    ALTER TABLE [dbo].[Transactions] CHECK CONSTRAINT [FK_dbo.Transactions_dbo.Accounts_Account_AccountID]
 GO
 
 IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_dbo.Transactions_dbo.Categories_Category_CategoryID]') AND parent_object_id = OBJECT_ID(N'[dbo].[Transactions]'))
-ALTER TABLE [dbo].[Transactions]  WITH NOCHECK ADD  CONSTRAINT [FK_dbo.Transactions_dbo.Categories_Category_CategoryID] FOREIGN KEY([Category_CategoryID])
-REFERENCES [dbo].[Categories] ([CategoryID])
+    ALTER TABLE [dbo].[Transactions] WITH NOCHECK ADD CONSTRAINT [FK_dbo.Transactions_dbo.Categories_Category_CategoryID] FOREIGN KEY([Category_CategoryID])
+    REFERENCES [dbo].[Categories] ([CategoryID])
 GO
 
 IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_dbo.Transactions_dbo.Categories_Category_CategoryID]') AND parent_object_id = OBJECT_ID(N'[dbo].[Transactions]'))
-ALTER TABLE [dbo].[Transactions] CHECK CONSTRAINT [FK_dbo.Transactions_dbo.Categories_Category_CategoryID]
+    ALTER TABLE [dbo].[Transactions] CHECK CONSTRAINT [FK_dbo.Transactions_dbo.Categories_Category_CategoryID]
 GO
 
 IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_dbo.Accounts_dbo.Users_User_UserID]') AND parent_object_id = OBJECT_ID(N'[dbo].[Accounts]'))
-ALTER TABLE [dbo].[Accounts]  WITH NOCHECK ADD  CONSTRAINT [FK_dbo.Accounts_dbo.Users_User_UserID] FOREIGN KEY([User_UserID])
-REFERENCES [dbo].[Users] ([UserID])
+    ALTER TABLE [dbo].[Accounts] WITH NOCHECK ADD CONSTRAINT [FK_dbo.Accounts_dbo.Users_User_UserID] FOREIGN KEY([User_UserID])
+    REFERENCES [dbo].[Users] ([UserID])
 GO
 
 IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_dbo.Accounts_dbo.Users_User_UserID]') AND parent_object_id = OBJECT_ID(N'[dbo].[Accounts]'))
-ALTER TABLE [dbo].[Accounts] CHECK CONSTRAINT [FK_dbo.Accounts_dbo.Users_User_UserID]
+    ALTER TABLE [dbo].[Accounts] CHECK CONSTRAINT [FK_dbo.Accounts_dbo.Users_User_UserID]
 GO
 
 IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_dbo.Budgets_dbo.Accounts_Account_AccountID]') AND parent_object_id = OBJECT_ID(N'[dbo].[Budgets]'))
-ALTER TABLE [dbo].[Budgets]  WITH NOCHECK ADD  CONSTRAINT [FK_dbo.Budgets_dbo.Accounts_Account_AccountID] FOREIGN KEY([Account_AccountID])
-REFERENCES [dbo].[Accounts] ([AccountID])
+    ALTER TABLE [dbo].[Budgets] WITH NOCHECK ADD CONSTRAINT [FK_dbo.Budgets_dbo.Accounts_Account_AccountID] FOREIGN KEY([Account_AccountID])
+    REFERENCES [dbo].[Accounts] ([AccountID])
 GO
 
 IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_dbo.Budgets_dbo.Accounts_Account_AccountID]') AND parent_object_id = OBJECT_ID(N'[dbo].[Budgets]'))
-ALTER TABLE [dbo].[Budgets] CHECK CONSTRAINT [FK_dbo.Budgets_dbo.Accounts_Account_AccountID]
+    ALTER TABLE [dbo].[Budgets] CHECK CONSTRAINT [FK_dbo.Budgets_dbo.Accounts_Account_AccountID]
 GO
 
 IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_dbo.Categories_Budgets_dbo.Budgets_Budget_BudgetID]') AND parent_object_id = OBJECT_ID(N'[dbo].[Categories_Budgets]'))
-ALTER TABLE [dbo].[Categories_Budgets]  WITH NOCHECK ADD  CONSTRAINT [FK_dbo.Categories_Budgets_dbo.Budgets_Budget_BudgetID] FOREIGN KEY([Budget_BudgetID])
-REFERENCES [dbo].[Budgets] ([BudgetID])
+    ALTER TABLE [dbo].[Categories_Budgets] WITH NOCHECK ADD CONSTRAINT [FK_dbo.Categories_Budgets_dbo.Budgets_Budget_BudgetID] FOREIGN KEY([Budget_BudgetID])
+    REFERENCES [dbo].[Budgets] ([BudgetID])
 GO
 
 IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_dbo.Categories_Budgets_dbo.Budgets_Budget_BudgetID]') AND parent_object_id = OBJECT_ID(N'[dbo].[Categories_Budgets]'))
-ALTER TABLE [dbo].[Categories_Budgets] CHECK CONSTRAINT [FK_dbo.Categories_Budgets_dbo.Budgets_Budget_BudgetID]
+    ALTER TABLE [dbo].[Categories_Budgets] CHECK CONSTRAINT [FK_dbo.Categories_Budgets_dbo.Budgets_Budget_BudgetID]
 GO
 
 IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_dbo.Categories_Budgets_dbo.Categories_Category_CategoryID]') AND parent_object_id = OBJECT_ID(N'[dbo].[Categories_Budgets]'))
-ALTER TABLE [dbo].[Categories_Budgets]  WITH NOCHECK ADD  CONSTRAINT [FK_dbo.Categories_Budgets_dbo.Categories_Category_CategoryID] FOREIGN KEY([Category_CategoryID])
-REFERENCES [dbo].[Categories] ([CategoryID])
+    ALTER TABLE [dbo].[Categories_Budgets] WITH NOCHECK ADD CONSTRAINT [FK_dbo.Categories_Budgets_dbo.Categories_Category_CategoryID] FOREIGN KEY([Category_CategoryID])
+    REFERENCES [dbo].[Categories] ([CategoryID])
 GO
 
 IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_dbo.Categories_Budgets_dbo.Categories_Category_CategoryID]') AND parent_object_id = OBJECT_ID(N'[dbo].[Categories_Budgets]'))
-ALTER TABLE [dbo].[Categories_Budgets] CHECK CONSTRAINT [FK_dbo.Categories_Budgets_dbo.Categories_Category_CategoryID]
+    ALTER TABLE [dbo].[Categories_Budgets] CHECK CONSTRAINT [FK_dbo.Categories_Budgets_dbo.Categories_Category_CategoryID]
 GO
 
 IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_dbo.Sessions_dbo.Users_User_UserID]') AND parent_object_id = OBJECT_ID(N'[dbo].[Sessions]'))
-ALTER TABLE [dbo].[Sessions]  WITH CHECK ADD  CONSTRAINT [FK_dbo.Sessions_dbo.Users_User_UserID] FOREIGN KEY([User_UserID])
-REFERENCES [dbo].[Users] ([UserID])
+    ALTER TABLE [dbo].[Sessions] WITH CHECK ADD CONSTRAINT [FK_dbo.Sessions_dbo.Users_User_UserID] FOREIGN KEY([User_UserID])
+    REFERENCES [dbo].[Users] ([UserID])
 GO
 
 IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_dbo.Sessions_dbo.Users_User_UserID]') AND parent_object_id = OBJECT_ID(N'[dbo].[Sessions]'))
-ALTER TABLE [dbo].[Sessions] CHECK CONSTRAINT [FK_dbo.Sessions_dbo.Users_User_UserID]
+    ALTER TABLE [dbo].[Sessions] CHECK CONSTRAINT [FK_dbo.Sessions_dbo.Users_User_UserID]
 GO
 
