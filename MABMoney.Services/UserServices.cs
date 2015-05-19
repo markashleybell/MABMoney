@@ -6,51 +6,40 @@ using MABMoney.Domain;
 using MABMoney.Data;
 using MABMoney.Services.DTO;
 using mab.lib.SimpleMapper;
+using MABMoney.Data.Abstract;
 
 namespace MABMoney.Services
 {
     public class UserServices : IUserServices
     {
-        private IRepository<User, int> _users;
-        private IUnitOfWork _unitOfWork;
-        private IDateTimeProvider _dateProvider;
-
+        private IUserRepository _users;
+        
         private int _userId;
 
-        public UserServices(IRepository<User, int> users, IUnitOfWork unitOfWork, IDateTimeProvider dateProvider)
+        public UserServices(IUserRepository users, int currentUserId)
         {
             _users = users;
-            _unitOfWork = unitOfWork;
-            _dateProvider = dateProvider;
-            _userId = unitOfWork.DataStore.UserID;
+            _userId = currentUserId;
         }
 
         public IEnumerable<UserDTO> All()
         {
-            return _users.All().ToList().MapToList<UserDTO>();
+            return _users.All().MapToList<UserDTO>();
         }
 
         public UserDTO Get(int id)
         {
-            return MapUser(_users.QueryWithIncludes(x => x.UserID == id, "Accounts", "Accounts.Categories").FirstOrDefault());
+            return MapUser(_users.Get(id));
         }
 
         public UserDTO GetMinimal(int id)
         {
-            return _users.Query(x => x.UserID == id)
-                         .Select(x => new UserDTO {
-                             UserID = x.UserID,
-                             Forename = x.Forename,
-                             Surname = x.Surname,
-                             Email = x.Email,
-                             IsAdmin = x.IsAdmin
-                         })
-                         .FirstOrDefault();
+            return MapUser(_users.Get(id));
         }
 
         public UserDTO GetByEmailAddress(string email)
         {
-            return MapUser(_users.QueryWithIncludes(x => x.Email == email, "Accounts", "Accounts.Categories").FirstOrDefault());
+            return MapUser(_users.GetByEmailAddress(email));
         }
 
         private UserDTO MapUser(User user)
@@ -82,7 +71,6 @@ namespace MABMoney.Services
             {
                 var entity = dto.MapTo<User>();
                 _users.Add(entity);
-                _unitOfWork.Commit();
                 dto.UserID = entity.UserID;
             }
             else
@@ -97,20 +85,17 @@ namespace MABMoney.Services
                 // If a new password hasn't been supplied, keep the old one
                 if (entity.Password == null)
                     entity.Password = oldPassword;
-
-                _unitOfWork.Commit();
             }
         }
 
         public void Delete(int id)
         {
-            _users.Remove(id);
-            _unitOfWork.Commit();
+            _users.Delete(id);
         }
 
         public UserDTO GetByPasswordResetGUID(string guid)
         {
-            return MapUser(_users.Query(x => x.PasswordResetGUID == guid && x.PasswordResetExpiry >= _dateProvider.Now).FirstOrDefault());
+            return MapUser(_users.GetByPasswordResetGUID(guid));
         }
     }
 }
