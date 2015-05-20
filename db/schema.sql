@@ -1,15 +1,3 @@
-USE [master]
-GO
-
-IF NOT EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE name = N'MABMoney_New')
-BEGIN
-    CREATE DATABASE [MABMoney_New]
-END
-GO
-
-USE [MABMoney_New]
-GO
-
 IF OBJECT_ID('[dbo].[Users]') IS NULL
 BEGIN
 	CREATE TABLE [dbo].[Users] (
@@ -358,4 +346,5 @@ FROM
     [dbo].[Accounts]
 WHERE 
     [Deleted] = 0
-    
+GO
+

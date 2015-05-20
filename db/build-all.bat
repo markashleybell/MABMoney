@@ -1,0 +1,1 @@
+COPY /Y "schema.sql" + "procedures\*.sql" all.sql

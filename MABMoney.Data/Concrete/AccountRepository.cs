@@ -21,7 +21,7 @@ namespace MABMoney.Data.Concrete
         {
             using (var connection = new ProfiledDbConnection(new SqlConnection(_connectionString), MiniProfiler.Current))
             {
-                return connection.Query<Account>("exec mm_Account_Read @UserID = ", new { UserID = _userId }, commandType: CommandType.StoredProcedure);
+                return connection.Query<Account>("mm_Accounts_Read", new { UserID = _userId }, commandType: CommandType.StoredProcedure);
             }
         }
 
