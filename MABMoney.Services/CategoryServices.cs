@@ -6,23 +6,19 @@ using MABMoney.Services.DTO;
 using MABMoney.Data;
 using MABMoney.Domain;
 using mab.lib.SimpleMapper;
+using MABMoney.Data.Abstract;
 
 namespace MABMoney.Services
 {
     public class CategoryServices : ICategoryServices
     {
-        private IRepository<Category, int> _categories;
-        private IRepository<Account, int> _accounts;
-        private IUnitOfWork _unitOfWork;
+        private ICategoryRepository _categories;
+        private IAccountRepository _accounts;
 
-        private int _userId;
-
-        public CategoryServices(IRepository<Category, int> categories, IRepository<Account, int> accounts, IUnitOfWork unitOfWork)
+        public CategoryServices(ICategoryRepository categories, IAccountRepository accounts)
         {
             _categories = categories;
             _accounts = accounts;
-            _unitOfWork = unitOfWork;
-            _userId = unitOfWork.DataStore.UserID;
         }
 
         public IEnumerable<CategoryDTO> All()

@@ -9,14 +9,20 @@ using StackExchange.Profiling;
 using StackExchange.Profiling.Data;
 using Dapper;
 using System.Data;
+using System.Data.SqlClient;
 
 namespace MABMoney.Data.Concrete
 {
-    public class AccountRepository : IAccountRepository
+    public class AccountRepository : BaseRepository, IAccountRepository
     {
-        public List<Account> All()
+        public AccountRepository(string connectionString, int userId) : base(connectionString, userId) { }
+
+        public IEnumerable<Account> All()
         {
-            throw new NotImplementedException();
+            using (var connection = new ProfiledDbConnection(new SqlConnection(_connectionString), MiniProfiler.Current))
+            {
+                return connection.Query<Account>("exec mm_Account_Read @UserID = ", new { UserID = _userId }, commandType: CommandType.StoredProcedure);
+            }
         }
 
         public Account Get(int id)

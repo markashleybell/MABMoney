@@ -12,8 +12,10 @@ using System.Data;
 
 namespace MABMoney.Data.Concrete
 {
-    public class Category_BudgetRepository : ICategory_BudgetRepository
+    public class Category_BudgetRepository : BaseRepository, ICategory_BudgetRepository
     {
+        public Category_BudgetRepository(string connectionString, int userId) : base(connectionString, userId) { }
+
         public IEnumerable<Category_Budget> All(int budgetId)
         {
             throw new NotImplementedException();

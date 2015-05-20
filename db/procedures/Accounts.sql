@@ -5,7 +5,8 @@ END
 GO
 
 CREATE PROC [dbo].[mm_Accounts_Read] 
-    @AccountID int
+    @UserID int,
+    @AccountID int = NULL
 AS 
     SET NOCOUNT ON 
     SET XACT_ABORT ON  
@@ -30,9 +31,11 @@ AS
             [CurrentBalance], 
             [DisplayOrder] 
         FROM   
-            [dbo].[Accounts] 
+            [dbo].[vAccounts] 
         WHERE  
-            ([AccountID] = @AccountID OR @AccountID IS NULL) 
+            [User_UserID] = @UserID
+        AND
+            [AccountID] = CASE WHEN @AccountID IS NULL THEN [AccountID] ELSE @AccountID END
 
     COMMIT
 GO

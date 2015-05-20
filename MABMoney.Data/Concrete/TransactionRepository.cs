@@ -12,8 +12,10 @@ using System.Data;
 
 namespace MABMoney.Data.Concrete
 {
-    public class TransactionRepository : ITransactionRepository
+    public class TransactionRepository : BaseRepository, ITransactionRepository
     {
+        public TransactionRepository(string connectionString, int userId) : base(connectionString, userId) { }
+
         public IEnumerable<Transaction> All()
         {
             throw new NotImplementedException();

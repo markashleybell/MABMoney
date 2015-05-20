@@ -1,7 +1,10 @@
 USE [master]
 GO
 
-CREATE DATABASE [MABMoney_New]
+IF NOT EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE name = N'MABMoney_New')
+BEGIN
+    CREATE DATABASE [MABMoney_New]
+END
 GO
 
 USE [MABMoney_New]
@@ -342,3 +345,17 @@ IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[
     ALTER TABLE [dbo].[Sessions] CHECK CONSTRAINT [FK_dbo.Sessions_dbo.Users_User_UserID]
 GO
 
+IF OBJECT_ID('[dbo].[vAccounts]') IS NOT NULL
+BEGIN 
+    DROP VIEW [dbo].[vAccounts] 
+END 
+GO
+
+CREATE VIEW [dbo].[vAccounts] AS
+SELECT 
+    *
+FROM 
+    [dbo].[Accounts]
+WHERE 
+    [Deleted] = 0
+    

@@ -6,23 +6,21 @@ using MABMoney.Services.DTO;
 using MABMoney.Data;
 using MABMoney.Domain;
 using mab.lib.SimpleMapper;
+using MABMoney.Data.Abstract;
 
 namespace MABMoney.Services
 {
     public class TransactionServices : ITransactionServices
     {
-        private IRepository<Transaction, int> _transactions;
-        private IRepository<Account, int> _accounts;
-        private IUnitOfWork _unitOfWork;
+        private ITransactionRepository _transactions;
+        private IAccountRepository _accounts;
 
         private int _userId;
 
-        public TransactionServices(IRepository<Transaction, int> transactions, IRepository<Account, int> accounts, IUnitOfWork unitOfWork)
+        public TransactionServices(ITransactionRepository transactions, IAccountRepository accounts)
         {
             _transactions = transactions;
             _accounts = accounts;
-            _unitOfWork = unitOfWork;
-            _userId = unitOfWork.DataStore.UserID;
         }
 
         public IEnumerable<TransactionDTO> All()

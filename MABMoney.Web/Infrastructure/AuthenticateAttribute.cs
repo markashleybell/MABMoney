@@ -11,6 +11,7 @@ using System.Configuration;
 using StackExchange.Profiling;
 using MABMoney.Caching;
 using System.Text;
+using MABMoney.Data.Concrete;
 
 namespace MABMoney.Web.Infrastructure
 {
@@ -39,18 +40,9 @@ namespace MABMoney.Web.Infrastructure
                 _step = _profiler.Step("Get Session In AuthenticateAttribute");
             }
 
-            DataStoreFactory dataStoreFactory;
+            var sessionRepository = new SessionRepository();
 
-            if (ConfigurationManager.AppSettings["ExternalDbConnectionString"] != null)
-                dataStoreFactory = new DataStoreFactory(userId, new DateTimeProvider(() => DateTime.Now), ConfigurationManager.AppSettings["ExternalDbConnectionString"]);
-            else
-                dataStoreFactory = new DataStoreFactory(userId, new DateTimeProvider(() => DateTime.Now));
-
-            var unitOfWork = new UnitOfWork(dataStoreFactory);
-
-            var sessionServices = new SessionServices(new DateTimeProvider(() => DateTime.Now), new Repository<Session, int>(unitOfWork), unitOfWork);
-
-            var session = sessionServices.GetByUserAndKey(userId, cookieValue);
+            var session = sessionRepository.GetByUserAndKey(cookieValue);
 
             if (enableProfiling)
             {

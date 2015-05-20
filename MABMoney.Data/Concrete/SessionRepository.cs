@@ -12,8 +12,10 @@ using System.Data;
 
 namespace MABMoney.Data.Concrete
 {
-    public class SessionRepository : ISessionRepository
+    public class SessionRepository : BaseRepository, ISessionRepository
     {
+        public SessionRepository(string connectionString, int userId) : base(connectionString, userId) { }
+
         public IEnumerable<Session> All()
         {
             throw new NotImplementedException();

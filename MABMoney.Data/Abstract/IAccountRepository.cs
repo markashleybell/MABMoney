@@ -9,7 +9,7 @@ namespace MABMoney.Data.Abstract
 {
     public interface IAccountRepository
     {
-        List<Account> All();
+        IEnumerable<Account> All();
         Account Get(int id);
         void Add(Account account);
         void Update(Account account);

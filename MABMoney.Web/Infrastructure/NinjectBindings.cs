@@ -1,5 +1,7 @@
 ﻿using MABMoney.Caching;
 using MABMoney.Data;
+using MABMoney.Data.Abstract;
+using MABMoney.Data.Concrete;
 using MABMoney.Domain;
 using MABMoney.Services;
 using MABMoney.Web.Helpers;
@@ -25,24 +27,8 @@ namespace MABMoney.Web.Infrastructure
 
             var sharedSecret = ConfigurationManager.AppSettings["SharedSecret"];
             var cookieKey = ConfigurationManager.AppSettings["CookieKey"];
-            var externalDbConnectionString = ConfigurationManager.AppSettings["ExternalDbConnectionString"];
+            var dataConnectionString = ConfigurationManager.AppSettings["DataDbConnectionString"];
             var profilerConnectionString = ConfigurationManager.AppSettings["ProfilerDbConnectionString"];
-
-            if (externalDbConnectionString != null)
-            {
-                Bind<IDataStoreFactory>().To<DataStoreFactory>()
-                                         .InRequestScope()
-                                         .WithConstructorArgument("userId", c => ((HttpContext.Current.Request.Cookies[cookieKey] != null) ? Convert.ToInt32(Encoding.UTF8.GetString(Convert.FromBase64String(HttpContext.Current.Request.Cookies[cookieKey].Value)).Split('-')[0]) : -1))
-                                         .WithConstructorArgument("dateTimeServices", new DateTimeProvider(() => DateTime.Now))
-                                         .WithConstructorArgument("connectionString", externalDbConnectionString);
-            }
-            else
-            {
-                Bind<IDataStoreFactory>().To<DataStoreFactory>()
-                                         .InRequestScope()
-                                         .WithConstructorArgument("userId", c => ((HttpContext.Current.Request.Cookies[cookieKey] != null) ? Convert.ToInt32(Encoding.UTF8.GetString(Convert.FromBase64String(HttpContext.Current.Request.Cookies[cookieKey].Value)).Split('-')[0]) : -1))
-                                         .WithConstructorArgument("dateTimeServices", new DateTimeProvider(() => DateTime.Now));
-            }
 
             // Caching
             Bind<IModelCacheConfiguration>().To<ModelCacheConfiguration>().InRequestScope();
@@ -52,13 +38,13 @@ namespace MABMoney.Web.Infrastructure
                                    .WithConstructorArgument("userId", c => ((HttpContext.Current.Request.Cookies[cookieKey] != null) ? Convert.ToInt32(Encoding.UTF8.GetString(Convert.FromBase64String(HttpContext.Current.Request.Cookies[cookieKey].Value)).Split('-')[0]) : -1));
 
             // Repositories
-            Bind<IRepository<User, int>>().To<Repository<User, int>>().InRequestScope();
-            Bind<IRepository<Account, int>>().To<Repository<Account, int>>().InRequestScope();
-            Bind<IRepository<Transaction, int>>().To<Repository<Transaction, int>>().InRequestScope();
-            Bind<IRepository<Budget, int>>().To<Repository<Budget, int>>().InRequestScope();
-            Bind<IRepository<Category, int>>().To<Repository<Category, int>>().InRequestScope();
-            Bind<IRepository<Category_Budget, int>>().To<Repository<Category_Budget, int>>().InRequestScope();
-            Bind<IRepository<Session, int>>().To<Repository<Session, int>>().InRequestScope();
+            Bind<IUserRepository>().To<UserRepository>().InRequestScope();
+            Bind<IAccountRepository>().To<AccountRepository>().InRequestScope();
+            Bind<ITransactionRepository>().To<TransactionRepository>().InRequestScope();
+            Bind<IBudgetRepository>().To<BudgetRepository>().InRequestScope();
+            Bind<ICategoryRepository>().To<CategoryRepository>().InRequestScope();
+            Bind<ICategory_BudgetRepository>().To<Category_BudgetRepository>().InRequestScope();
+            Bind<ISessionRepository>().To<SessionRepository>().InRequestScope();
             
             // Services which are never caching
             Bind<ICategoryServices>().To<CategoryServices>().InRequestScope();

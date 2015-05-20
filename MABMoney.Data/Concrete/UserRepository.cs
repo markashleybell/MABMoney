@@ -10,14 +10,9 @@ using System.Data;
 
 namespace MABMoney.Data.Concrete
 {
-    public class UserRepository : IUserRepository
+    public class UserRepository : BaseRepository, IUserRepository
     {
-        private string _connectionString;
-
-        public UserRepository(string connectionString)
-        {
-            _connectionString = connectionString;
-        }
+        public UserRepository(string connectionString, int userId) : base(connectionString, userId) { }
 
         public IEnumerable<User> All()
         {

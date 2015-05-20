@@ -6,24 +6,21 @@ using MABMoney.Services.DTO;
 using MABMoney.Data;
 using MABMoney.Domain;
 using mab.lib.SimpleMapper;
+using MABMoney.Data.Abstract;
 
 namespace MABMoney.Services
 {
     public class BudgetServices : IBudgetServices
     {
-        private IRepository<Budget, int> _budgets;
-        private IRepository<Account, int> _accounts;
-        private IRepository<Category, int> _categories;
-        private IRepository<Category_Budget, int> _categories_budgets;
-        private IRepository<Transaction, int> _transactions;
+        private IBudgetRepository _budgets;
+        private IAccountRepository _accounts;
+        private ICategoryRepository _categories;
+        private ICategory_BudgetRepository _categories_budgets;
+        private ITransactionRepository _transactions;
         private IAccountServices _accountServices;
         private ICategoryServices _categoryServices;
-        private IDateTimeProvider _dateProvider;
-        private IUnitOfWork _unitOfWork;
 
-        private int _userId;
-
-        public BudgetServices(IRepository<Budget, int> budgets, IRepository<Account, int> accounts, IRepository<Category, int> categories, IRepository<Category_Budget, int> categories_budgets, IRepository<Transaction, int> transactions, IAccountServices accountServices, ICategoryServices categoryServices, IDateTimeProvider dateProvider, IUnitOfWork unitOfWork)
+        public BudgetServices(IBudgetRepository budgets, IAccountRepository accounts, ICategoryRepository categories, ICategory_BudgetRepository categories_budgets, ITransactionRepository transactions, IAccountServices accountServices, ICategoryServices categoryServices)
         {
             _budgets = budgets;
             _accounts = accounts;
@@ -32,9 +29,6 @@ namespace MABMoney.Services
             _transactions = transactions;
             _accountServices = accountServices;
             _categoryServices = categoryServices;
-            _dateProvider = dateProvider;
-            _unitOfWork = unitOfWork;
-            _userId = unitOfWork.DataStore.UserID;
         }
 
         public IEnumerable<BudgetDTO> All()

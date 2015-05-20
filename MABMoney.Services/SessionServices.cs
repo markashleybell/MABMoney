@@ -6,23 +6,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using mab.lib.SimpleMapper;
+using MABMoney.Data.Abstract;
 
 namespace MABMoney.Services
 {
     public class SessionServices : ISessionServices
     {
-        private IDateTimeProvider _dateProvider;
-        private IRepository<Session, int> _sessions;
-        private IUnitOfWork _unitOfWork;
+        private ISessionRepository _sessions;
 
-        private int _userId;
-
-        public SessionServices(IDateTimeProvider dateProvider, IRepository<Session, int> sessions, IUnitOfWork unitOfWork)
+        public SessionServices(ISessionRepository sessions)
         {
-            _dateProvider = dateProvider;
             _sessions = sessions;
-            _unitOfWork = unitOfWork;
-            _userId = unitOfWork.DataStore.UserID;
         }
 
         public IEnumerable<SessionDTO> All()
