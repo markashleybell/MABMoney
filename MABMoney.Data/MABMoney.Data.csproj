@@ -59,6 +59,12 @@
     <Compile Include="Abstract\ITransactionRepository.cs" />
     <Compile Include="Abstract\ICategory_BudgetRepository.cs" />
     <Compile Include="Abstract\IAccountRepository.cs" />
+    <Compile Include="Concrete\BudgetRepository.cs" />
+    <Compile Include="Concrete\CategoryRepository.cs" />
+    <Compile Include="Concrete\Category_BudgetRepository.cs" />
+    <Compile Include="Concrete\SessionRepository.cs" />
+    <Compile Include="Concrete\TransactionRepository.cs" />
+    <Compile Include="Concrete\AccountRepository.cs" />
     <Compile Include="Concrete\UserRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

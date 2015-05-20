@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MABMoney.Data.Abstract;
 using MABMoney.Domain;
 using StackExchange.Profiling;
@@ -22,7 +19,7 @@ namespace MABMoney.Data.Concrete
             _connectionString = connectionString;
         }
 
-        public List<User> All()
+        public IEnumerable<User> All()
         {
             throw new NotImplementedException();
         }
