@@ -1,16 +1,13 @@
-﻿using NUnit.Framework;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Configuration;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Dapper;
 using System.IO;
-using Microsoft.SqlServer.Management.Smo;
-using Microsoft.SqlServer.Management.Common;
+using System.Linq;
+using Dapper;
 using MABMoney.Data.Concrete;
+using Microsoft.SqlServer.Management.Common;
+using Microsoft.SqlServer.Management.Smo;
+using NUnit.Framework;
 
 namespace MABMoney.Test
 {
@@ -68,6 +65,27 @@ namespace MABMoney.Test
         #region Data Layer Tests
 
         [Test]
+        public void Data_Create_User()
+        {
+            var repository = new UserRepository(_dataConnectionString, 1);
+
+            var user = new MABMoney.Domain.User { 
+                Forename = "ADDEDFORENAME",
+                Surname = "ADDEDSURNAME",
+                Email = "added@test.com",
+                Password = "AEVg+8Chm8T0NSff0k0qegArPYXetlQfvKEoaDXwnT0N9fj0TVAjorveDX9vfbcVwA==", // "password"
+                PasswordResetGUID = "0c4ffa03-e3d7-48b6-b657-bdae23f5d14d",
+                PasswordResetExpiry = new DateTime(2015, 1, 1),
+                IsAdmin = false
+            };
+
+            repository.Add(user);
+
+            Assert.IsTrue(user.UserID == 3);
+            Assert.IsTrue(user.CreatedDate.Date == DateTime.Now.Date);
+        }
+
+        [Test]
         public void Data_Read_User()
         {
             var repository = new UserRepository(_dataConnectionString, 1);
@@ -122,13 +140,13 @@ namespace MABMoney.Test
         }
 
         [Test]
-        public void Data_Add_User()
+        public void Data_Update_User()
         {
             var repository = new UserRepository(_dataConnectionString, 1);
 
             var user = new MABMoney.Domain.User { 
-                Forename = "ADDEDFORENAME",
-                Surname = "ADDEDSURNAME",
+                Forename = "UPDATEDFORENAME",
+                Surname = "UPDATEDSURNAME",
                 Email = "added@test.com",
                 Password = "AEVg+8Chm8T0NSff0k0qegArPYXetlQfvKEoaDXwnT0N9fj0TVAjorveDX9vfbcVwA==", // "password"
                 PasswordResetGUID = "0c4ffa03-e3d7-48b6-b657-bdae23f5d14d",
@@ -136,9 +154,10 @@ namespace MABMoney.Test
                 IsAdmin = false
             };
 
-            repository.Add(user);
+            repository.Update(user);
 
-            Assert.IsTrue(user.UserID == 3);
+            Assert.IsTrue(user.UserID == 1);
+            Assert.IsTrue(user.LastModifiedDate.Date == DateTime.Now.Date);
         }
 
 
@@ -170,7 +189,7 @@ namespace MABMoney.Test
                             EXEC(@kill);
                             DROP DATABASE [MABMoney_TEST];";
 
-                //conn.Execute(sql);
+                conn.Execute(sql);
             }
         }
 

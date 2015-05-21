@@ -1703,22 +1703,17 @@ CREATE PROC [dbo].[mm_Users_Update]
     @Surname nvarchar(MAX) = NULL,
     @Email nvarchar(MAX),
     @Password nvarchar(MAX),
-    @CreatedBy int,
-    @CreatedDate datetime,
-    @LastModifiedBy int,
-    @LastModifiedDate datetime,
-    @Deleted bit,
-    @DeletedBy int = NULL,
-    @DeletedDate datetime = NULL,
-    @IsAdmin bit,
     @PasswordResetGUID nvarchar(512) = NULL,
-    @PasswordResetExpiry datetime = NULL
+    @PasswordResetExpiry datetime = NULL,
+    @IsAdmin bit
 AS 
     SET NOCOUNT ON 
     SET XACT_ABORT ON  
     
     BEGIN TRAN
 
+		DECLARE @Now datetime = GETDATE()
+		
         UPDATE 
             [dbo].[Users]
         SET    
@@ -1726,13 +1721,8 @@ AS
             [Surname] = @Surname, 
             [Email] = @Email, 
             [Password] = @Password, 
-            [CreatedBy] = @CreatedBy, 
-            [CreatedDate] = @CreatedDate, 
-            [LastModifiedBy] = @LastModifiedBy, 
-            [LastModifiedDate] = @LastModifiedDate, 
-            [Deleted] = @Deleted, 
-            [DeletedBy] = @DeletedBy, 
-            [DeletedDate] = @DeletedDate, 
+            [LastModifiedBy] = @UserID, 
+            [LastModifiedDate] = @Now, 
             [IsAdmin] = @IsAdmin, 
             [PasswordResetGUID] = @PasswordResetGUID, 
             [PasswordResetExpiry] = @PasswordResetExpiry

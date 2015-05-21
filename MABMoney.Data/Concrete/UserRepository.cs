@@ -1,14 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
+﻿using mab.lib.SimpleMapper;
 using MABMoney.Data.Abstract;
 using MABMoney.Domain;
-using StackExchange.Profiling;
-using StackExchange.Profiling.Data;
-using Dapper;
-using System.Data;
-using System.Linq;
-using mab.lib.SimpleMapper;
 
 namespace MABMoney.Data.Concrete
 {
@@ -23,25 +15,34 @@ namespace MABMoney.Data.Concrete
 
         public void Add(User user)
         {
-            var data = new {
+            var result = AddOrUpdate<User>("mm_Users_Create", new {
                 Forename = user.Forename,
                 Surname = user.Surname,
                 Email = user.Email,
                 Password = user.Password,
                 IsAdmin = user.IsAdmin
-            };
-            var item = AddOrUpdate<User>("mm_Users_Create", data);
-            item.MapTo(user);
+            });
+
+            result.MapTo(user);
         }
 
         public void Update(User user)
         {
-            throw new NotImplementedException();
+            var result = AddOrUpdate<User>("mm_Users_Update", new {
+                UserID = _userId,
+                Forename = user.Forename,
+                Surname = user.Surname,
+                Email = user.Email,
+                Password = user.Password,
+                IsAdmin = user.IsAdmin
+            });
+
+            result.MapTo(user);
         }
 
-        public void Delete(int id)
+        public void Delete()
         {
-            throw new NotImplementedException();
+            Execute("mm_Users_Delete", new { UserID = _userId });
         }
 
         public User GetByEmailAddress(string email)

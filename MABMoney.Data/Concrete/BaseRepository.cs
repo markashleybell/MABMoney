@@ -1,17 +1,14 @@
-﻿using StackExchange.Profiling;
-using StackExchange.Profiling.Data;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Dapper;
+using StackExchange.Profiling;
+using StackExchange.Profiling.Data;
 
 namespace MABMoney.Data.Concrete
 {
-    public class BaseRepository
+    public abstract class BaseRepository
     {
         protected string _connectionString;
         protected int _userId;
@@ -43,6 +40,14 @@ namespace MABMoney.Data.Concrete
             using (var connection = new ProfiledDbConnection(new SqlConnection(_connectionString), MiniProfiler.Current))
             {
                 return connection.Query<T>(procedureName, param, commandType: CommandType.StoredProcedure).Single();
+            }
+        }
+
+        protected void Execute(string procedureName, object param)
+        {
+            using (var connection = new ProfiledDbConnection(new SqlConnection(_connectionString), MiniProfiler.Current))
+            {
+                connection.Execute(procedureName, param, commandType: CommandType.StoredProcedure);
             }
         }
     }

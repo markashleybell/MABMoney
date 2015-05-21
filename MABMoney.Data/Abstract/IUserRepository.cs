@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MABMoney.Domain;
+﻿using MABMoney.Domain;
 
 namespace MABMoney.Data.Abstract
 {
@@ -12,7 +7,7 @@ namespace MABMoney.Data.Abstract
         User Get();
         void Add(User user);
         void Update(User user);
-        void Delete(int id);
+        void Delete();
 
         User GetByEmailAddress(string email);
         User GetByPasswordResetGUID(string guid);
