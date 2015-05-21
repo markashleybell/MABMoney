@@ -9,8 +9,7 @@ namespace MABMoney.Data.Abstract
 {
     public interface IUserRepository
     {
-        IEnumerable<User> All();
-        User Get(int id);
+        User Get();
         void Add(User user);
         void Update(User user);
         void Delete(int id);

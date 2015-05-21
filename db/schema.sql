@@ -333,6 +333,21 @@ IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[
     ALTER TABLE [dbo].[Sessions] CHECK CONSTRAINT [FK_dbo.Sessions_dbo.Users_User_UserID]
 GO
 
+IF OBJECT_ID('[dbo].[vUsers]') IS NOT NULL
+BEGIN 
+    DROP VIEW [dbo].[vUsers] 
+END 
+GO
+
+CREATE VIEW [dbo].[vUsers] AS
+SELECT 
+    *
+FROM 
+    [dbo].[Users]
+WHERE 
+    [Deleted] = 0
+GO
+
 IF OBJECT_ID('[dbo].[vAccounts]') IS NOT NULL
 BEGIN 
     DROP VIEW [dbo].[vAccounts] 

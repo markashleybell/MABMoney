@@ -19,10 +19,7 @@ namespace MABMoney.Data.Concrete
 
         public IEnumerable<Account> All()
         {
-            using (var connection = new ProfiledDbConnection(new SqlConnection(_connectionString), MiniProfiler.Current))
-            {
-                return connection.Query<Account>("mm_Accounts_Read", new { UserID = _userId }, commandType: CommandType.StoredProcedure);
-            }
+            return GetEnumerable<Account>("mm_Accounts_Read", new { UserID = _userId });
         }
 
         public Account Get(int id)

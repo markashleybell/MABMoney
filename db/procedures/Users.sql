@@ -29,9 +29,9 @@ AS
             [PasswordResetGUID], 
             [PasswordResetExpiry] 
         FROM   
-            [dbo].[Users] 
+            [dbo].[vUsers] 
         WHERE  
-            ([UserID] = @UserID OR @UserID IS NULL) 
+            [UserID] = @UserID
 
     COMMIT
 GO
@@ -47,21 +47,16 @@ CREATE PROC [dbo].[mm_Users_Create]
     @Surname nvarchar(MAX) = NULL,
     @Email nvarchar(MAX),
     @Password nvarchar(MAX),
-    @CreatedBy int,
-    @CreatedDate datetime,
-    @LastModifiedBy int,
-    @LastModifiedDate datetime,
-    @Deleted bit,
-    @DeletedBy int = NULL,
-    @DeletedDate datetime = NULL,
-    @IsAdmin bit,
     @PasswordResetGUID nvarchar(512) = NULL,
-    @PasswordResetExpiry datetime = NULL
+    @PasswordResetExpiry datetime = NULL,
+    @IsAdmin bit
 AS 
     SET NOCOUNT ON 
     SET XACT_ABORT ON  
     
     BEGIN TRAN
+    
+        DECLARE @Now datetime = GETDATE()
     
         INSERT INTO 
             [dbo].[Users] (
@@ -85,13 +80,13 @@ AS
             @Surname, 
             @Email, 
             @Password, 
-            @CreatedBy, 
-            @CreatedDate, 
-            @LastModifiedBy, 
-            @LastModifiedDate, 
-            @Deleted, 
-            @DeletedBy, 
-            @DeletedDate, 
+            -1, 
+            @Now, 
+            -1, 
+            @Now, 
+            0, 
+            NULL, 
+            NULL, 
             @IsAdmin, 
             @PasswordResetGUID, 
             @PasswordResetExpiry
@@ -113,7 +108,7 @@ AS
             [PasswordResetGUID], 
             [PasswordResetExpiry]
         FROM   
-            [dbo].[Users]
+            [dbo].[vUsers]
         WHERE  
             [UserID] = SCOPE_IDENTITY()
            
@@ -185,7 +180,7 @@ AS
             [PasswordResetGUID], 
             [PasswordResetExpiry]
         FROM   
-            [dbo].[Users]
+            [dbo].[vUsers]
         WHERE  
             [UserID] = @UserID 
 
@@ -206,11 +201,90 @@ AS
     
     BEGIN TRAN
 
-        DELETE
-        FROM   
+        UPDATE   
             [dbo].[Users]
-        WHERE  
+        SET  
+            [Deleted] = 1,
+            [DeletedBy] = @UserID,
+            [DeletedDate] = GETDATE()
+        WHERE
             [UserID] = @UserID
+
+    COMMIT
+GO
+
+IF OBJECT_ID('[dbo].[mm_Users_GetByEmailAddress]') IS NOT NULL
+BEGIN 
+    DROP PROC [dbo].[mm_Users_GetByEmailAddress] 
+END 
+GO
+
+CREATE PROC [dbo].[mm_Users_GetByEmailAddress] 
+    @Email nvarchar(256)
+AS 
+    SET NOCOUNT ON 
+    SET XACT_ABORT ON  
+
+    BEGIN TRAN
+
+        SELECT 
+            [UserID], 
+            [Forename], 
+            [Surname], 
+            [Email], 
+            [Password], 
+            [CreatedBy], 
+            [CreatedDate], 
+            [LastModifiedBy], 
+            [LastModifiedDate], 
+            [Deleted], 
+            [DeletedBy], 
+            [DeletedDate], 
+            [IsAdmin], 
+            [PasswordResetGUID], 
+            [PasswordResetExpiry] 
+        FROM   
+            [dbo].[vUsers] 
+        WHERE  
+            [Email] = @Email
+
+    COMMIT
+GO
+
+IF OBJECT_ID('[dbo].[mm_Users_GetByPasswordResetGUID]') IS NOT NULL
+BEGIN 
+    DROP PROC [dbo].[mm_Users_GetByPasswordResetGUID] 
+END 
+GO
+
+CREATE PROC [dbo].[mm_Users_GetByPasswordResetGUID] 
+    @GUID nvarchar(128)
+AS 
+    SET NOCOUNT ON 
+    SET XACT_ABORT ON  
+
+    BEGIN TRAN
+
+        SELECT 
+            [UserID], 
+            [Forename], 
+            [Surname], 
+            [Email], 
+            [Password], 
+            [CreatedBy], 
+            [CreatedDate], 
+            [LastModifiedBy], 
+            [LastModifiedDate], 
+            [Deleted], 
+            [DeletedBy], 
+            [DeletedDate], 
+            [IsAdmin], 
+            [PasswordResetGUID], 
+            [PasswordResetExpiry] 
+        FROM   
+            [dbo].[vUsers] 
+        WHERE  
+            [PasswordResetGUID] = @GUID
 
     COMMIT
 GO

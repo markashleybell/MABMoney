@@ -7,6 +7,8 @@ using StackExchange.Profiling;
 using StackExchange.Profiling.Data;
 using Dapper;
 using System.Data;
+using System.Linq;
+using mab.lib.SimpleMapper;
 
 namespace MABMoney.Data.Concrete
 {
@@ -14,22 +16,22 @@ namespace MABMoney.Data.Concrete
     {
         public UserRepository(string connectionString, int userId) : base(connectionString, userId) { }
 
-        public IEnumerable<User> All()
+        public User Get()
         {
-            throw new NotImplementedException();
-        }
-
-        public User Get(int id)
-        {
-            using(var connection = new ProfiledDbConnection(new SqlConnection(_connectionString), MiniProfiler.Current))
-            {
-                return connection.ExecuteScalar<User>("exec mm_User_Read @ID", new { ID = id }, commandType: CommandType.StoredProcedure);
-            }
+            return GetSingle<User>("mm_Users_Read", new { UserID = _userId });
         }
 
         public void Add(User user)
         {
-            throw new NotImplementedException();
+            var data = new {
+                Forename = user.Forename,
+                Surname = user.Surname,
+                Email = user.Email,
+                Password = user.Password,
+                IsAdmin = user.IsAdmin
+            };
+            var item = AddOrUpdate<User>("mm_Users_Create", data);
+            item.MapTo(user);
         }
 
         public void Update(User user)
@@ -44,12 +46,12 @@ namespace MABMoney.Data.Concrete
 
         public User GetByEmailAddress(string email)
         {
-            throw new NotImplementedException();
+            return GetSingle<User>("mm_Users_GetByEmailAddress", new { Email = email });
         }
 
         public User GetByPasswordResetGUID(string guid)
         {
-            throw new NotImplementedException();
+            return GetSingle<User>("mm_Users_GetByPasswordResetGUID", new { GUID = guid });
         }
     }
 }

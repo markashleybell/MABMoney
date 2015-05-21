@@ -1,8 +1,10 @@
 SET IDENTITY_INSERT [dbo].[Users] ON
 GO
 
-INSERT INTO [dbo].[Users]([UserID], [Forename], [Surname], [Email], [Password], [CreatedBy], [CreatedDate], [LastModifiedBy], [LastModifiedDate], [Deleted], [DeletedBy], [DeletedDate], [IsAdmin], [PasswordResetGUID], [PasswordResetExpiry])
-SELECT 1, N'Test', N'User', N'user@test.com', N'AJNzdwx56R+U3ls50NZbLTYQBm8j5Txr+F9mz3jQwzNjjIYjIjFuwBr/2l5VnjhQnw==', -1, '20150101 00:00:00.000', -1, '20150101 00:00:00.000', 0, NULL, NULL, 0, N'7cc68dbb-3d12-487b-8295-e9b226cda017', '20160101 00:00:00.000'
+INSERT INTO [dbo].[Users]
+([UserID], [Forename], [Surname], [Email], [Password], [CreatedBy], [CreatedDate], [LastModifiedBy], [LastModifiedDate], [Deleted], [DeletedBy], [DeletedDate], [IsAdmin], [PasswordResetGUID], [PasswordResetExpiry])
+SELECT 1, N'Test', N'User', N'user@test.com', N'AJNzdwx56R+U3ls50NZbLTYQBm8j5Txr+F9mz3jQwzNjjIYjIjFuwBr/2l5VnjhQnw==', -1, '20150101 00:00:00.000', -1, '20150101 00:00:00.000', 0, NULL, NULL, 0, N'7cc68dbb-3d12-487b-8295-e9b226cda017', '20160101 00:00:00.000' UNION ALL
+SELECT 2, N'Deleted', N'User', N'deleted@test.com', N'AGhkTBPbmkYCxuLt5A0SXO35COIYPF6doq7dALqmR9A3t1y6tr4h58ZjjtLNizQGUw==', -1, '20150101 00:00:00.000', -1, '20150101 00:00:00.000', 1, -1, '20150101 00:00:00.000', 0, N'5b977b67-e7e6-4399-9866-6c011750249f', '20160101 00:00:00.000'
 GO
 
 SET IDENTITY_INSERT [dbo].[Users] OFF
@@ -11,13 +13,35 @@ GO
 SET IDENTITY_INSERT [dbo].[Accounts] ON
 GO
 
-INSERT INTO [dbo].[Accounts]([AccountID], [Name], [StartingBalance], [User_UserID], [CreatedBy], [CreatedDate], [LastModifiedBy], [LastModifiedDate], [Deleted], [DeletedBy], [DeletedDate], [Default], [Type], [TransactionDescriptionHistory], [CurrentBalance], [DisplayOrder])
+INSERT INTO [dbo].[Accounts]
+([AccountID], [Name], [StartingBalance], [User_UserID], [CreatedBy], [CreatedDate], [LastModifiedBy], [LastModifiedDate], [Deleted], [DeletedBy], [DeletedDate], [Default], [Type], [TransactionDescriptionHistory], [CurrentBalance], [DisplayOrder])
 SELECT 1, N'Current', 100.00, 1, 1, '20150101 00:00:00.000', 1, '20150101 00:00:00.000', 0, NULL, NULL, 1, 0, N'TEST1CURRENT|TEST2CURRENT', 100.00, 100 UNION ALL
 SELECT 2, N'Savings', 500.00, 1, 1, '20150101 00:00:00.000', 1, '20150101 00:00:00.000', 0, NULL, NULL, 0, 1, N'TEST1SAVINGS|TEST2SAVINGS', 500.00, 200 UNION ALL
 SELECT 3, N'Credit', 250.00, 1, 1, '20150101 00:00:00.000', 1, '20150101 00:00:00.000', 0, NULL, NULL, 0, 2, N'TEST1CREDIT|TEST2CREDIT', 250.00, 300 UNION ALL
-SELECT 4, N'Deleted', 0.00, 1, 1, '20150101 00:00:00.000', 1, '20150101 00:00:00.000', 1, 1, '20150101 00:00:00.000', 0, 0, N'TEST1DELETED|TEST2DELETED', 0.00, 400
+SELECT 4, N'Deleted', 0.00, 1, 1, '20150101 00:00:00.000', 1, '20150101 00:00:00.000', 1, 1, '20150101 00:00:00.000', 0, 0, N'TEST1DELETED|TEST2DELETED', 0.00, 400 UNION ALL
+SELECT 5, N'Current', 100.00, 2, 2, '20150101 00:00:00.000', 2, '20150101 00:00:00.000', 0, NULL, NULL, 1, 0, N'TEST1CURRENT2|TEST2CURRENT2', 100.00, 100
 GO
 
 SET IDENTITY_INSERT [dbo].[Accounts] OFF
+GO
+
+SET IDENTITY_INSERT [dbo].[Categories] ON
+GO
+
+INSERT INTO [dbo].[Categories]
+([CategoryID], [Name], [Account_AccountID], [Type], [CreatedBy], [CreatedDate], [LastModifiedBy], [LastModifiedDate], [Deleted], [DeletedBy], [DeletedDate])
+SELECT 1, N'Salary', 1, 1, 1, '20150101 00:00:00.000', 1, '20150101 00:00:00.000', 0, NULL, NULL UNION ALL
+SELECT 2, N'Rent', 1, 0, 1, '20150101 00:00:00.000', 1, '20150101 00:00:00.000', 0, NULL, NULL UNION ALL
+SELECT 3, N'Food', 1, 0, 1, '20150101 00:00:00.000', 1, '20150101 00:00:00.000', 0, NULL, NULL UNION ALL
+SELECT 4, N'Bills', 1, 0, 1, '20150101 00:00:00.000', 1, '20150101 00:00:00.000', 0, NULL, NULL UNION ALL
+SELECT 5, N'Deleted', 1, 0, 1, '20150101 00:00:00.000', 1, '20150101 00:00:00.000', 1, 1, '20150101 00:00:00.000' UNION ALL
+SELECT 6, N'Payments', 3, 1, 1, '20150101 00:00:00.000', 1, '20150101 00:00:00.000', 0, NULL, NULL UNION ALL
+SELECT 7, N'Bills', 3, 0, 1, '20150101 00:00:00.000', 1, '20150101 00:00:00.000', 0, NULL, NULL UNION ALL
+SELECT 8, N'Deleted', 3, 0, 1, '20150101 00:00:00.000', 1, '20150101 00:00:00.000', 1, 1, '20150101 00:00:00.000' UNION ALL
+SELECT 9, N'Salary', 5, 1, 2, '20150101 00:00:00.000', 2, '20150101 00:00:00.000', 0, NULL, NULL UNION ALL
+SELECT 10, N'Rent', 5, 0, 2, '20150101 00:00:00.000', 2, '20150101 00:00:00.000', 0, NULL, NULL
+GO
+
+SET IDENTITY_INSERT [dbo].[Categories] OFF
 GO
 

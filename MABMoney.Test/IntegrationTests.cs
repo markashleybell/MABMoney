@@ -68,6 +68,81 @@ namespace MABMoney.Test
         #region Data Layer Tests
 
         [Test]
+        public void Data_Read_User()
+        {
+            var repository = new UserRepository(_dataConnectionString, 1);
+
+            var data = repository.Get();
+
+            Assert.IsTrue(data.UserID == 1);
+            Assert.IsTrue(data.Email == "user@test.com");
+        }
+
+        [Test]
+        public void Data_Read_User_By_Email()
+        {
+            var repository = new UserRepository(_dataConnectionString, 1);
+
+            var data = repository.GetByEmailAddress("user@test.com");
+
+            Assert.IsTrue(data.UserID == 1);
+            Assert.IsTrue(data.Forename == "Test");
+            Assert.IsTrue(data.Surname == "User");
+        }
+
+        [Test]
+        public void Data_Read_Deleted_User_By_Email()
+        {
+            var repository = new UserRepository(_dataConnectionString, 1);
+
+            var data = repository.GetByEmailAddress("deleted@test.com");
+
+            Assert.IsTrue(data == null);
+        }
+
+        [Test]
+        public void Data_Read_User_By_Password_Reset_GUID()
+        {
+            var repository = new UserRepository(_dataConnectionString, 1);
+
+            var data = repository.GetByPasswordResetGUID("7cc68dbb-3d12-487b-8295-e9b226cda017");
+
+            Assert.IsTrue(data.UserID == 1);
+            Assert.IsTrue(data.Email == "user@test.com");
+        }
+
+        [Test]
+        public void Data_Read_Deleted_User_By_Password_Reset_GUID()
+        {
+            var repository = new UserRepository(_dataConnectionString, 1);
+
+            var data = repository.GetByPasswordResetGUID("5b977b67-e7e6-4399-9866-6c011750249f");
+
+            Assert.IsTrue(data == null);
+        }
+
+        [Test]
+        public void Data_Add_User()
+        {
+            var repository = new UserRepository(_dataConnectionString, 1);
+
+            var user = new MABMoney.Domain.User { 
+                Forename = "ADDEDFORENAME",
+                Surname = "ADDEDSURNAME",
+                Email = "added@test.com",
+                Password = "AEVg+8Chm8T0NSff0k0qegArPYXetlQfvKEoaDXwnT0N9fj0TVAjorveDX9vfbcVwA==", // "password"
+                PasswordResetGUID = "0c4ffa03-e3d7-48b6-b657-bdae23f5d14d",
+                PasswordResetExpiry = new DateTime(2015, 1, 1),
+                IsAdmin = false
+            };
+
+            repository.Add(user);
+
+            Assert.IsTrue(user.UserID == 3);
+        }
+
+
+        [Test]
         public void Data_Read_All_Accounts()
         {
             var repository = new AccountRepository(_dataConnectionString, 1);
@@ -95,7 +170,7 @@ namespace MABMoney.Test
                             EXEC(@kill);
                             DROP DATABASE [MABMoney_TEST];";
 
-                conn.Execute(sql);
+                //conn.Execute(sql);
             }
         }
 
