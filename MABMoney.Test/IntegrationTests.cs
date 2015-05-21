@@ -160,6 +160,17 @@ namespace MABMoney.Test
             Assert.IsTrue(user.LastModifiedDate.Date == DateTime.Now.Date);
         }
 
+        [Test]
+        public void Data_Delete_User()
+        {
+            var repository = new UserRepository(_dataConnectionString, 1);
+
+            repository.Delete();
+
+            var user = repository.Get();
+
+            Assert.IsTrue(user == null);
+        }
 
         [Test]
         public void Data_Read_All_Accounts()
