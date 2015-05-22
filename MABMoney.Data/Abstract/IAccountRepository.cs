@@ -11,8 +11,8 @@ namespace MABMoney.Data.Abstract
     {
         IEnumerable<Account> All();
         Account Get(int id);
-        void Add(Account account);
-        void Update(Account account);
-        void Delete(int id);
+        Account Add(Account account);
+        Account Update(Account account);
+        Account Delete(int id);
     }
 }

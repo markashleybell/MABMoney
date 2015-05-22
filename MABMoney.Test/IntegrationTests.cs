@@ -8,6 +8,7 @@ using MABMoney.Data.Concrete;
 using Microsoft.SqlServer.Management.Common;
 using Microsoft.SqlServer.Management.Smo;
 using NUnit.Framework;
+using MABMoney.Domain;
 
 namespace MABMoney.Test
 {
@@ -18,6 +19,27 @@ namespace MABMoney.Test
         private string _dataConnectionString;
         private string _sqlScriptSource;
 
+        private void DeleteTestDatabase(string connectionString)
+        {
+            // Delete the test database
+            using (var conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                var exists = conn.ExecuteScalar("SELECT name FROM master.dbo.sysdatabases WHERE name = N'MABMoney_TEST'");
+
+                if (exists != null)
+                {
+                    var sql = @"DECLARE @kill varchar(8000) = '';
+                                SELECT @kill = @kill + 'kill ' + CONVERT(varchar(5), spid) + ';' FROM master..sysprocesses WHERE dbid = db_id('MABMoney_TEST');
+                                EXEC(@kill);
+                                DROP DATABASE [MABMoney_TEST];";
+
+                    conn.Execute(sql);
+                }
+            }
+        }
+
         #region SetUp
 
         [TestFixtureSetUp]
@@ -26,6 +48,8 @@ namespace MABMoney.Test
             _setupConnectionString = ConfigurationManager.AppSettings["SetUpDbConnectionString"];
             _dataConnectionString = ConfigurationManager.AppSettings["DataDbConnectionString"];
             _sqlScriptSource = ConfigurationManager.AppSettings["SqlScriptSource"];
+
+            DeleteTestDatabase(_setupConnectionString);
 
             // TODO: Make sure SQL build scripts have been run
         }
@@ -64,7 +88,10 @@ namespace MABMoney.Test
 
         #region Data Layer Tests
 
+        #region User
+
         [Test]
+        [Category("User")]
         public void Data_Create_User()
         {
             var repository = new UserRepository(_dataConnectionString, 1);
@@ -74,18 +101,22 @@ namespace MABMoney.Test
                 Surname = "ADDEDSURNAME",
                 Email = "added@test.com",
                 Password = "AEVg+8Chm8T0NSff0k0qegArPYXetlQfvKEoaDXwnT0N9fj0TVAjorveDX9vfbcVwA==", // "password"
-                PasswordResetGUID = "0c4ffa03-e3d7-48b6-b657-bdae23f5d14d",
-                PasswordResetExpiry = new DateTime(2015, 1, 1),
                 IsAdmin = false
             };
 
-            repository.Add(user);
+            var result = repository.Add(user);
 
-            Assert.IsTrue(user.UserID == 3);
-            Assert.IsTrue(user.CreatedDate.Date == DateTime.Now.Date);
+            Assert.IsTrue(result.UserID == 3);
+            Assert.IsTrue(result.Forename == "ADDEDFORENAME");
+            Assert.IsTrue(result.Surname == "ADDEDSURNAME");
+            Assert.IsTrue(result.Email == "added@test.com");
+            Assert.IsTrue(result.Password == "AEVg+8Chm8T0NSff0k0qegArPYXetlQfvKEoaDXwnT0N9fj0TVAjorveDX9vfbcVwA==");
+            Assert.IsTrue(result.IsAdmin == false);
+            Assert.IsTrue(result.CreatedDate.Date == DateTime.Now.Date);
         }
 
         [Test]
+        [Category("User")]
         public void Data_Read_User()
         {
             var repository = new UserRepository(_dataConnectionString, 1);
@@ -97,6 +128,7 @@ namespace MABMoney.Test
         }
 
         [Test]
+        [Category("User")]
         public void Data_Read_User_By_Email()
         {
             var repository = new UserRepository(_dataConnectionString, 1);
@@ -109,6 +141,7 @@ namespace MABMoney.Test
         }
 
         [Test]
+        [Category("User")]
         public void Data_Read_Deleted_User_By_Email()
         {
             var repository = new UserRepository(_dataConnectionString, 1);
@@ -119,6 +152,7 @@ namespace MABMoney.Test
         }
 
         [Test]
+        [Category("User")]
         public void Data_Read_User_By_Password_Reset_GUID()
         {
             var repository = new UserRepository(_dataConnectionString, 1);
@@ -130,6 +164,7 @@ namespace MABMoney.Test
         }
 
         [Test]
+        [Category("User")]
         public void Data_Read_Deleted_User_By_Password_Reset_GUID()
         {
             var repository = new UserRepository(_dataConnectionString, 1);
@@ -140,48 +175,169 @@ namespace MABMoney.Test
         }
 
         [Test]
+        [Category("User")]
         public void Data_Update_User()
         {
             var repository = new UserRepository(_dataConnectionString, 1);
 
-            var user = new MABMoney.Domain.User { 
-                Forename = "UPDATEDFORENAME",
-                Surname = "UPDATEDSURNAME",
-                Email = "added@test.com",
-                Password = "AEVg+8Chm8T0NSff0k0qegArPYXetlQfvKEoaDXwnT0N9fj0TVAjorveDX9vfbcVwA==", // "password"
-                PasswordResetGUID = "0c4ffa03-e3d7-48b6-b657-bdae23f5d14d",
-                PasswordResetExpiry = new DateTime(2015, 1, 1),
-                IsAdmin = false
-            };
+            var user = repository.Get();
 
-            repository.Update(user);
+            user.Forename = "UPDATEDFORENAME";
+            user.Surname = "UPDATEDSURNAME";
+            user.Email = "added@test.com";
+            user.Password = "AEVg+8Chm8T0NSff0k0qegArPYXetlQfvKEoaDXwnT0N9fj0TVAjorveDX9vfbcVwA=="; // "password"
+            user.PasswordResetGUID = "0c4ffa03-e3d7-48b6-b657-bdae23f5d14d";
+            user.PasswordResetExpiry = new DateTime(2015, 1, 1);
+            user.IsAdmin = false;
 
-            Assert.IsTrue(user.UserID == 1);
-            Assert.IsTrue(user.LastModifiedDate.Date == DateTime.Now.Date);
+            var result = repository.Update(user);
+
+            Assert.IsTrue(result.Forename == "UPDATEDFORENAME");
+            Assert.IsTrue(result.Surname == "UPDATEDSURNAME");
+            Assert.IsTrue(result.Email == "added@test.com");
+            Assert.IsTrue(result.Password == "AEVg+8Chm8T0NSff0k0qegArPYXetlQfvKEoaDXwnT0N9fj0TVAjorveDX9vfbcVwA==");
+            Assert.IsTrue(result.PasswordResetGUID == "0c4ffa03-e3d7-48b6-b657-bdae23f5d14d");
+            Assert.IsTrue(result.PasswordResetExpiry == new DateTime(2015, 1, 1));
+            Assert.IsTrue(result.IsAdmin == false);
+            Assert.IsTrue(result.LastModifiedBy == 1);
+            Assert.IsTrue(result.LastModifiedDate.Date == DateTime.Now.Date);
         }
 
         [Test]
+        [Category("User")]
         public void Data_Delete_User()
         {
             var repository = new UserRepository(_dataConnectionString, 1);
 
-            repository.Delete();
+            var result = repository.Delete();
 
             var user = repository.Get();
 
             Assert.IsTrue(user == null);
+            Assert.IsTrue(result.Deleted == true);
+            Assert.IsTrue(result.DeletedBy == 1);
+            Assert.IsTrue(result.DeletedDate.Value.Date == DateTime.Now.Date);
+        }
+
+        #endregion User
+
+        #region Account
+
+        [Test]
+        [Category("Account")]
+        public void Data_Create_Account()
+        {
+            var repository = new AccountRepository(_dataConnectionString, 1);
+
+            var account = new MABMoney.Domain.Account {
+                Name = "ADDED",
+                StartingBalance = 123.45M,
+                Default = true,
+                Type = AccountType.Savings,
+                DisplayOrder = 50
+            };
+
+            var result = repository.Add(account);
+
+            Assert.IsTrue(result.AccountID == 6);
+            Assert.IsTrue(result.Name == "ADDED");
+            Assert.IsTrue(result.StartingBalance == 123.45M);
+            Assert.IsTrue(result.Default == true);
+            Assert.IsTrue(result.Type == AccountType.Savings);
+            Assert.IsTrue(result.DisplayOrder == 50);
+            Assert.IsTrue(result.User_UserID == 1);
+            Assert.IsTrue(result.CreatedBy == 1);
+            Assert.IsTrue(result.CreatedDate.Date == DateTime.Now.Date);
+            Assert.IsTrue(result.LastModifiedBy == 1);
+            Assert.IsTrue(result.LastModifiedDate.Date == DateTime.Now.Date);
+            Assert.IsTrue(result.Type == AccountType.Savings);
+            Assert.IsTrue(result.CurrentBalance == 123.45M);
         }
 
         [Test]
+        [Category("Account")]
         public void Data_Read_All_Accounts()
         {
             var repository = new AccountRepository(_dataConnectionString, 1);
 
-            var data = repository.All();
+            var data = repository.All().ToList();
 
-            // There are actually four accounts in the test SQL, but one is flagged as deleted and so shouldn't be returned
-            Assert.IsTrue(data.Count() == 3);
+            // There are 5 test accounts, but one is deleted and one is for another user
+            Assert.IsTrue(data.Count == 3);
+            Assert.IsTrue(data[0].AccountID == 1);
+            Assert.IsTrue(data[0].Name == "Current");
+            Assert.IsTrue(data[1].AccountID == 2);
+            Assert.IsTrue(data[1].Name == "Savings");
+            Assert.IsTrue(data[2].AccountID == 3);
+            Assert.IsTrue(data[2].Name == "Credit");
         }
+
+        [Test]
+        [Category("Account")]
+        public void Data_Read_Account()
+        {
+            var repository = new AccountRepository(_dataConnectionString, 1);
+
+            var data = repository.Get(1);
+
+            Assert.IsTrue(data.AccountID == 1);
+            Assert.IsTrue(data.Name == "Current");
+        }
+
+        [Test]
+        [Category("Account")]
+        public void Data_Read_Deleted_Account()
+        {
+            var repository = new AccountRepository(_dataConnectionString, 1);
+
+            var data = repository.Get(4);
+
+            Assert.IsTrue(data == null);
+        }
+
+        [Test]
+        [Category("Account")]
+        public void Data_Update_Account()
+        {
+            var repository = new AccountRepository(_dataConnectionString, 1);
+
+            var account = repository.Get(1);
+
+            account.Name = "UPDATED";
+            account.StartingBalance = 256.12M;
+            account.Default = false;
+            account.Type = AccountType.CreditCard;
+            account.DisplayOrder = 126;
+
+            var result = repository.Update(account);
+
+            Assert.IsTrue(result.Name == "UPDATED");
+            Assert.IsTrue(result.StartingBalance == 256.12M);
+            Assert.IsTrue(result.Default == false);
+            Assert.IsTrue(result.Type == AccountType.CreditCard);
+            Assert.IsTrue(result.DisplayOrder == 126);
+            Assert.IsTrue(result.CurrentBalance == 256.12M);
+            Assert.IsTrue(result.LastModifiedBy == 1);
+            Assert.IsTrue(result.LastModifiedDate.Date == DateTime.Now.Date);
+        }
+
+        [Test]
+        [Category("Account")]
+        public void Data_Delete_Account()
+        {
+            var repository = new AccountRepository(_dataConnectionString, 1);
+
+            var result = repository.Delete(1);
+
+            var account = repository.Get(1);
+
+            Assert.IsTrue(account == null);
+            Assert.IsTrue(result.Deleted == true);
+            Assert.IsTrue(result.DeletedBy == 1);
+            Assert.IsTrue(result.DeletedDate.Value.Date == DateTime.Now.Date);
+        }
+
+        #endregion Account
 
         #endregion Data Layer Tests
 
@@ -190,18 +346,7 @@ namespace MABMoney.Test
         [TearDown]
         public void TearDown()
         {
-            // Delete the test database
-            using (var conn = new SqlConnection(_setupConnectionString))
-            {
-                conn.Open();
-
-                var sql = @"DECLARE @kill varchar(8000) = '';
-                            SELECT @kill = @kill + 'kill ' + CONVERT(varchar(5), spid) + ';' FROM master..sysprocesses WHERE dbid = db_id('MABMoney_TEST');
-                            EXEC(@kill);
-                            DROP DATABASE [MABMoney_TEST];";
-
-                conn.Execute(sql);
-            }
+            DeleteTestDatabase(_setupConnectionString);
         }
 
         [TestFixtureTearDown]

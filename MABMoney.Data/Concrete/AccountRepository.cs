@@ -1,4 +1,5 @@
 ﻿using MABMoney.Data.Abstract;
+using mab.lib.SimpleMapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,22 +25,40 @@ namespace MABMoney.Data.Concrete
 
         public Account Get(int id)
         {
-            throw new NotImplementedException();
+            return GetSingle<Account>("mm_Accounts_Read", new { UserID = _userId, AccountID = id });
         }
 
-        public void Add(Account account)
+        public Account Add(Account account)
         {
-            throw new NotImplementedException();
+            return AddOrUpdate<Account>("mm_Accounts_Create", new {
+                UserID = _userId,
+                Name = account.Name,
+                StartingBalance = account.StartingBalance,
+                Default = account.Default,
+                Type = account.Type,
+                DisplayOrder = account.DisplayOrder
+            });
         }
 
-        public void Update(Account account)
+        public Account Update(Account account)
         {
-            throw new NotImplementedException();
+            return AddOrUpdate<Account>("mm_Accounts_Update", new {
+                UserID = _userId,
+                AccountID = account.AccountID,
+                Name = account.Name,
+                StartingBalance = account.StartingBalance,
+                Default = account.Default,
+                Type = account.Type,
+                DisplayOrder = account.DisplayOrder
+            });
         }
 
-        public void Delete(int id)
+        public Account Delete(int id)
         {
-            throw new NotImplementedException();
+            return AddOrUpdate<Account>("mm_Accounts_Delete", new { 
+                UserID = _userId, 
+                AccountID = id 
+            });
         }
     }
 }

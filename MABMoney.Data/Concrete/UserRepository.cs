@@ -13,36 +13,34 @@ namespace MABMoney.Data.Concrete
             return GetSingle<User>("mm_Users_Read", new { UserID = _userId });
         }
 
-        public void Add(User user)
+        public User Add(User user)
         {
-            var result = AddOrUpdate<User>("mm_Users_Create", new {
+            return AddOrUpdate<User>("mm_Users_Create", new {
                 Forename = user.Forename,
                 Surname = user.Surname,
                 Email = user.Email,
                 Password = user.Password,
                 IsAdmin = user.IsAdmin
             });
-
-            result.MapTo(user);
         }
 
-        public void Update(User user)
+        public User Update(User user)
         {
-            var result = AddOrUpdate<User>("mm_Users_Update", new {
+            return AddOrUpdate<User>("mm_Users_Update", new {
                 UserID = _userId,
                 Forename = user.Forename,
                 Surname = user.Surname,
                 Email = user.Email,
                 Password = user.Password,
+                PasswordResetGUID = user.PasswordResetGUID,
+                PasswordResetExpiry = user.PasswordResetExpiry,
                 IsAdmin = user.IsAdmin
             });
-
-            result.MapTo(user);
         }
 
-        public void Delete()
+        public User Delete()
         {
-            Execute("mm_Users_Delete", new { UserID = _userId });
+            return AddOrUpdate<User>("mm_Users_Delete", new { UserID = _userId });
         }
 
         public User GetByEmailAddress(string email)

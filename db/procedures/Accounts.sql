@@ -36,6 +36,8 @@ AS
             [User_UserID] = @UserID
         AND
             [AccountID] = CASE WHEN @AccountID IS NULL THEN [AccountID] ELSE @AccountID END
+        ORDER BY
+            [DisplayOrder]
 
     COMMIT
 GO
@@ -47,26 +49,19 @@ END
 GO
 
 CREATE PROC [dbo].[mm_Accounts_Create] 
+    @UserID int,
     @Name nvarchar(MAX),
     @StartingBalance decimal(18, 2),
-    @User_UserID int,
-    @CreatedBy int,
-    @CreatedDate datetime,
-    @LastModifiedBy int,
-    @LastModifiedDate datetime,
-    @Deleted bit,
-    @DeletedBy int = NULL,
-    @DeletedDate datetime = NULL,
     @Default bit,
     @Type int,
-    @TransactionDescriptionHistory nvarchar(MAX) = NULL,
-    @CurrentBalance decimal(18, 2),
     @DisplayOrder int
 AS 
     SET NOCOUNT ON 
     SET XACT_ABORT ON  
     
     BEGIN TRAN
+    
+        DECLARE @Now datetime = GETDATE()
     
         INSERT INTO 
             [dbo].[Accounts] (
@@ -77,30 +72,20 @@ AS
 				[CreatedDate], 
 				[LastModifiedBy], 
 				[LastModifiedDate], 
-				[Deleted], 
-				[DeletedBy], 
-				[DeletedDate], 
 				[Default], 
 				[Type], 
-				[TransactionDescriptionHistory], 
-				[CurrentBalance], 
 				[DisplayOrder]
 			)
         SELECT 
             @Name, 
             @StartingBalance, 
-            @User_UserID, 
-            @CreatedBy, 
-            @CreatedDate, 
-            @LastModifiedBy, 
-            @LastModifiedDate, 
-            @Deleted, 
-            @DeletedBy, 
-            @DeletedDate, 
+            @UserID, 
+            @UserID, 
+            @Now, 
+            @UserID, 
+            @Now, 
             @Default, 
             @Type, 
-            @TransactionDescriptionHistory, 
-            @CurrentBalance, 
             @DisplayOrder
         
         SELECT 
@@ -114,15 +99,17 @@ AS
             [LastModifiedDate], 
             [Deleted], 
             [DeletedBy], 
-            [DeletedDate], 
+            [DeletedDate],
             [Default], 
             [Type], 
             [TransactionDescriptionHistory], 
             [CurrentBalance], 
             [DisplayOrder]
         FROM   
-            [dbo].[Accounts]
+            [dbo].[vAccounts]
         WHERE  
+            [User_UserID] = @UserID
+        AND
             [AccountID] = SCOPE_IDENTITY()
            
     COMMIT
@@ -135,21 +122,13 @@ END
 GO
 
 CREATE PROC [dbo].[mm_Accounts_Update] 
+    @UserID int,
     @AccountID int,
     @Name nvarchar(MAX),
     @StartingBalance decimal(18, 2),
-    @User_UserID int,
-    @CreatedBy int,
-    @CreatedDate datetime,
-    @LastModifiedBy int,
-    @LastModifiedDate datetime,
-    @Deleted bit,
-    @DeletedBy int = NULL,
-    @DeletedDate datetime = NULL,
     @Default bit,
     @Type int,
     @TransactionDescriptionHistory nvarchar(MAX) = NULL,
-    @CurrentBalance decimal(18, 2),
     @DisplayOrder int
 AS 
     SET NOCOUNT ON 
@@ -157,25 +136,22 @@ AS
     
     BEGIN TRAN
 
+        DECLARE @Now datetime = GETDATE()
+
         UPDATE 
             [dbo].[Accounts]
         SET    
             [Name] = @Name, 
             [StartingBalance] = @StartingBalance, 
-            [User_UserID] = @User_UserID, 
-            [CreatedBy] = @CreatedBy, 
-            [CreatedDate] = @CreatedDate, 
-            [LastModifiedBy] = @LastModifiedBy, 
-            [LastModifiedDate] = @LastModifiedDate, 
-            [Deleted] = @Deleted, 
-            [DeletedBy] = @DeletedBy, 
-            [DeletedDate] = @DeletedDate, 
+            [LastModifiedBy] = @UserID, 
+            [LastModifiedDate] = @Now, 
             [Default] = @Default, 
             [Type] = @Type, 
             [TransactionDescriptionHistory] = @TransactionDescriptionHistory, 
-            [CurrentBalance] = @CurrentBalance, 
             [DisplayOrder] = @DisplayOrder
         WHERE  
+            [User_UserID] = @UserID
+        AND
             [AccountID] = @AccountID
         
         SELECT 
@@ -196,8 +172,10 @@ AS
             [CurrentBalance], 
             [DisplayOrder]
         FROM   
-            [dbo].[Accounts]
+            [dbo].[vAccounts]
         WHERE  
+            [User_UserID] = @UserID
+        AND
             [AccountID] = @AccountID 
 
     COMMIT
@@ -209,7 +187,8 @@ BEGIN
 END 
 GO
 
-CREATE PROC [dbo].[mm_Accounts_Delete] 
+CREATE PROC [dbo].[mm_Accounts_Delete]
+    @UserID int,
     @AccountID int
 AS 
     SET NOCOUNT ON 
@@ -217,11 +196,40 @@ AS
     
     BEGIN TRAN
 
-        DELETE
+        UPDATE   
+            [dbo].[Accounts]
+        SET  
+            [Deleted] = 1,
+            [DeletedBy] = @UserID,
+            [DeletedDate] = GETDATE()
+        WHERE
+            [User_UserID] = @UserID
+        AND
+            [AccountID] = @AccountID
+            
+        SELECT 
+            [AccountID], 
+            [Name], 
+            [StartingBalance], 
+            [User_UserID], 
+            [CreatedBy], 
+            [CreatedDate], 
+            [LastModifiedBy], 
+            [LastModifiedDate], 
+            [Deleted], 
+            [DeletedBy], 
+            [DeletedDate], 
+            [Default], 
+            [Type], 
+            [TransactionDescriptionHistory], 
+            [CurrentBalance], 
+            [DisplayOrder]
         FROM   
             [dbo].[Accounts]
         WHERE  
-            [AccountID] = @AccountID
+            [User_UserID] = @UserID
+        AND
+            [AccountID] = @AccountID 
 
     COMMIT
 GO

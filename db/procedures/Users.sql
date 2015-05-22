@@ -47,8 +47,6 @@ CREATE PROC [dbo].[mm_Users_Create]
     @Surname nvarchar(MAX) = NULL,
     @Email nvarchar(MAX),
     @Password nvarchar(MAX),
-    @PasswordResetGUID nvarchar(512) = NULL,
-    @PasswordResetExpiry datetime = NULL,
     @IsAdmin bit
 AS 
     SET NOCOUNT ON 
@@ -68,12 +66,7 @@ AS
                 [CreatedDate], 
                 [LastModifiedBy], 
                 [LastModifiedDate], 
-                [Deleted], 
-                [DeletedBy], 
-                [DeletedDate], 
-                [IsAdmin], 
-                [PasswordResetGUID], 
-                [PasswordResetExpiry]
+                [IsAdmin]
             )
         SELECT 
             @Forename, 
@@ -84,12 +77,7 @@ AS
             @Now, 
             -1, 
             @Now, 
-            0, 
-            NULL, 
-            NULL, 
-            @IsAdmin, 
-            @PasswordResetGUID, 
-            @PasswordResetExpiry
+            @IsAdmin
         
         SELECT 
             [UserID], 
@@ -198,6 +186,27 @@ AS
             [DeletedBy] = @UserID,
             [DeletedDate] = GETDATE()
         WHERE
+            [UserID] = @UserID
+            
+        SELECT 
+            [UserID], 
+            [Forename], 
+            [Surname], 
+            [Email], 
+            [Password], 
+            [CreatedBy], 
+            [CreatedDate], 
+            [LastModifiedBy], 
+            [LastModifiedDate], 
+            [Deleted], 
+            [DeletedBy], 
+            [DeletedDate], 
+            [IsAdmin], 
+            [PasswordResetGUID], 
+            [PasswordResetExpiry] 
+        FROM   
+            [dbo].[Users] 
+        WHERE  
             [UserID] = @UserID
 
     COMMIT
