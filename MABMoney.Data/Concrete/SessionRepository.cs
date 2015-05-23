@@ -18,47 +18,71 @@ namespace MABMoney.Data.Concrete
 
         public IEnumerable<Session> All()
         {
-            throw new NotImplementedException();
+            return GetEnumerable<Session>("mm_Sessions_Read", new { UserID = _userId });
         }
 
         public Session Get(int id)
         {
-            throw new NotImplementedException();
+            return GetSingle<Session>("mm_Sessions_Read", new { UserID = _userId, SessionID = id });
         }
 
-        public void Add(Session session)
+        public Session Add(Session session)
         {
-            throw new NotImplementedException();
+            return AddOrUpdate<Session>("mm_Sessions_Create", new {
+                UserID = _userId,
+                Key = session.Key,
+                Expiry = session.Expiry
+            });
         }
 
-        public void Update(Session session)
+        public Session Update(Session session)
         {
-            throw new NotImplementedException();
+            return AddOrUpdate<Session>("mm_Sessions_Update", new {
+                UserID = _userId,
+                SessionID = session.SessionID,
+                Key = session.Key,
+                Expiry = session.Expiry
+            });
         }
 
-        public void Delete(int id)
+        public Session Delete(int id)
         {
-            throw new NotImplementedException();
+            return AddOrUpdate<Session>("mm_Sessions_Delete", new { UserID = _userId, SessionID = id });
         }
 
-        public Session GetByUserAndKey(string key)
+        public Session GetByKey(string key)
         {
-            throw new NotImplementedException();
+            return GetSingle<Session>("mm_Sessions_Read_By_Key", new { UserID = _userId, Key = key });
+        }
+        
+        public Session UpdateSessionExpiry(string key, DateTime expiry)
+        {
+            var session = GetByKey(key);
+
+            if (session == null)
+                return null;
+
+            return AddOrUpdate<Session>("mm_Sessions_Update", new {
+                UserID = _userId,
+                SessionID = session.SessionID,
+                Key = key,
+                Expiry = expiry
+            });
         }
 
-        public void DeleteByKey(string key)
+        public Session DeleteByKey(string key)
         {
-            throw new NotImplementedException();
+            var session = GetByKey(key);
+
+            if (session == null)
+                return null;
+
+            return AddOrUpdate<Session>("mm_Sessions_Delete", new { UserID = _userId, SessionID = session.SessionID });
         }
 
-        public void DeleteExpiredForCurrentUser()
+        public void DeleteExpired()
         {
-            throw new NotImplementedException();
-        }
-
-        public void UpdateSessionExpiryForCurrentUser(string key, DateTime expiry)
-        {
-            throw new NotImplementedException();
+            Execute("mm_Sessions_Delete_Expired", new { UserID = _userId });
         }
     }
 }

@@ -4,8 +4,9 @@ BEGIN
 END 
 GO
 
-CREATE PROC [dbo].[mm_Sessions_Read] 
-    @SessionID int
+CREATE PROC [dbo].[mm_Sessions_Read]
+    @UserID int,
+    @SessionID int = NULL
 AS 
     SET NOCOUNT ON 
     SET XACT_ABORT ON  
@@ -25,9 +26,50 @@ AS
             [DeletedBy], 
             [DeletedDate] 
         FROM   
-            [dbo].[Sessions] 
+            [dbo].[vSessions] 
         WHERE  
-            ([SessionID] = @SessionID OR @SessionID IS NULL) 
+            [User_UserID] = @UserID
+        AND
+            [SessionID] = CASE WHEN @SessionID IS NULL THEN [SessionID] ELSE @SessionID END
+        AND
+            [Expiry] > GETDATE()
+
+    COMMIT
+GO
+
+IF OBJECT_ID('[dbo].[mm_Sessions_Read_By_Key]') IS NOT NULL
+BEGIN 
+    DROP PROC [dbo].[mm_Sessions_Read_By_Key] 
+END 
+GO
+
+CREATE PROC [dbo].[mm_Sessions_Read_By_Key]
+    @UserID int,
+    @Key nvarchar(MAX)
+AS 
+    SET NOCOUNT ON 
+    SET XACT_ABORT ON  
+
+    BEGIN TRAN
+
+        SELECT 
+            [SessionID], 
+            [Key], 
+            [Expiry], 
+            [User_UserID], 
+            [CreatedBy], 
+            [CreatedDate], 
+            [LastModifiedBy], 
+            [LastModifiedDate], 
+            [Deleted], 
+            [DeletedBy], 
+            [DeletedDate] 
+        FROM   
+            [dbo].[vSessions] 
+        WHERE  
+            [User_UserID] = @UserID
+        AND
+            [Key] = @Key
 
     COMMIT
 GO
@@ -39,22 +81,17 @@ END
 GO
 
 CREATE PROC [dbo].[mm_Sessions_Create] 
+    @UserID int,
     @Key nvarchar(MAX),
-    @Expiry datetime,
-    @User_UserID int,
-    @CreatedBy int,
-    @CreatedDate datetime,
-    @LastModifiedBy int,
-    @LastModifiedDate datetime,
-    @Deleted bit,
-    @DeletedBy int = NULL,
-    @DeletedDate datetime = NULL
+    @Expiry datetime
 AS 
     SET NOCOUNT ON 
     SET XACT_ABORT ON  
     
     BEGIN TRAN
     
+        DECLARE @Now datetime = GETDATE()
+        
         INSERT INTO 
             [dbo].[Sessions] (
                 [Key], 
@@ -63,22 +100,16 @@ AS
                 [CreatedBy], 
                 [CreatedDate], 
                 [LastModifiedBy], 
-                [LastModifiedDate], 
-                [Deleted], 
-                [DeletedBy], 
-                [DeletedDate]
+                [LastModifiedDate]
             )
         SELECT 
             @Key, 
             @Expiry, 
-            @User_UserID, 
-            @CreatedBy, 
-            @CreatedDate, 
-            @LastModifiedBy, 
-            @LastModifiedDate, 
-            @Deleted, 
-            @DeletedBy, 
-            @DeletedDate
+            @UserID, 
+            @UserID, 
+            @Now, 
+            @UserID, 
+            @Now
         
         SELECT 
             [SessionID], 
@@ -93,8 +124,10 @@ AS
             [DeletedBy], 
             [DeletedDate]
         FROM   
-            [dbo].[Sessions]
+            [dbo].[vSessions]
         WHERE  
+            [User_UserID] = @UserID
+        AND
             [SessionID] = SCOPE_IDENTITY()
            
     COMMIT
@@ -107,37 +140,28 @@ END
 GO
 
 CREATE PROC [dbo].[mm_Sessions_Update] 
+    @UserID int,
     @SessionID int,
     @Key nvarchar(MAX),
-    @Expiry datetime,
-    @User_UserID int,
-    @CreatedBy int,
-    @CreatedDate datetime,
-    @LastModifiedBy int,
-    @LastModifiedDate datetime,
-    @Deleted bit,
-    @DeletedBy int = NULL,
-    @DeletedDate datetime = NULL
+    @Expiry datetime
 AS 
     SET NOCOUNT ON 
     SET XACT_ABORT ON  
     
     BEGIN TRAN
 
+        DECLARE @Now datetime = GETDATE()
+
         UPDATE 
             [dbo].[Sessions]
         SET    
             [Key] = @Key, 
             [Expiry] = @Expiry, 
-            [User_UserID] = @User_UserID, 
-            [CreatedBy] = @CreatedBy, 
-            [CreatedDate] = @CreatedDate, 
-            [LastModifiedBy] = @LastModifiedBy, 
-            [LastModifiedDate] = @LastModifiedDate, 
-            [Deleted] = @Deleted, 
-            [DeletedBy] = @DeletedBy, 
-            [DeletedDate] = @DeletedDate
+            [LastModifiedBy] = @UserID, 
+            [LastModifiedDate] = @Now
         WHERE  
+            [User_UserID] = @UserID
+        AND
             [SessionID] = @SessionID
         
         SELECT 
@@ -153,9 +177,11 @@ AS
             [DeletedBy], 
             [DeletedDate]
         FROM   
-            [dbo].[Sessions]
+            [dbo].[vSessions]
         WHERE  
-            [SessionID] = @SessionID 
+            [User_UserID] = @UserID
+        AND
+            [SessionID] = @SessionID
 
     COMMIT
 GO
@@ -166,7 +192,8 @@ BEGIN
 END 
 GO
 
-CREATE PROC [dbo].[mm_Sessions_Delete] 
+CREATE PROC [dbo].[mm_Sessions_Delete]
+    @UserID int,
     @SessionID int
 AS 
     SET NOCOUNT ON 
@@ -174,11 +201,65 @@ AS
     
     BEGIN TRAN
 
-        DELETE
-        FROM   
+        UPDATE   
             [dbo].[Sessions]
-        WHERE  
+        SET  
+            [Deleted] = 1,
+            [DeletedBy] = @UserID,
+            [DeletedDate] = GETDATE()
+        WHERE
+            [User_UserID] = @UserID
+        AND
             [SessionID] = @SessionID
+            
+        SELECT 
+            [SessionID], 
+            [Key], 
+            [Expiry], 
+            [User_UserID], 
+            [CreatedBy], 
+            [CreatedDate], 
+            [LastModifiedBy], 
+            [LastModifiedDate], 
+            [Deleted], 
+            [DeletedBy], 
+            [DeletedDate] 
+        FROM   
+            [dbo].[Sessions] 
+        WHERE  
+            [User_UserID] = @UserID
+        AND
+            [SessionID] = @SessionID
+
+    COMMIT
+GO
+
+IF OBJECT_ID('[dbo].[mm_Sessions_Delete_Expired]') IS NOT NULL
+BEGIN 
+    DROP PROC [dbo].[mm_Sessions_Delete_Expired] 
+END 
+GO
+
+CREATE PROC [dbo].[mm_Sessions_Delete_Expired]
+    @UserID int
+AS 
+    SET NOCOUNT ON 
+    SET XACT_ABORT ON  
+    
+    BEGIN TRAN
+
+        DECLARE @Now datetime = GETDATE()
+
+        UPDATE   
+            [dbo].[Sessions]
+        SET  
+            [Deleted] = 1,
+            [DeletedBy] = @UserID,
+            [DeletedDate] = @Now
+        WHERE
+            [User_UserID] = @UserID
+        AND
+            [Expiry] <= @Now
 
     COMMIT
 GO

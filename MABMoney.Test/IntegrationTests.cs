@@ -256,7 +256,7 @@ namespace MABMoney.Test
 
         [Test]
         [Category("Account")]
-        public void Data_Read_All_Accounts()
+        public void Data_Read_Accounts()
         {
             var repository = new AccountRepository(_dataConnectionString, 1);
 
@@ -367,7 +367,7 @@ namespace MABMoney.Test
 
         [Test]
         [Category("Category")]
-        public void Data_Read_All_Categories_For_Account()
+        public void Data_Read_Categories()
         {
             var repository = new CategoryRepository(_dataConnectionString, 1);
 
@@ -446,6 +446,171 @@ namespace MABMoney.Test
         }
 
         #endregion Category
+
+        #region Session
+
+        [Test]
+        [Category("Session")]
+        public void Data_Create_Session()
+        {
+            var repository = new SessionRepository(_dataConnectionString, 1);
+
+            var session = new MABMoney.Domain.Session {
+                Key = "ADDED",
+                Expiry = new DateTime(2016, 1, 1)
+            };
+
+            var result = repository.Add(session);
+
+            Assert.IsTrue(result.SessionID == 5);
+            Assert.IsTrue(result.User_UserID == 1);
+            Assert.IsTrue(result.Key == "ADDED");
+            Assert.IsTrue(result.Expiry.Date == new DateTime(2016, 1, 1).Date);
+            Assert.IsTrue(result.CreatedBy == 1);
+            Assert.IsTrue(result.CreatedDate.Date == DateTime.Now.Date);
+            Assert.IsTrue(result.LastModifiedBy == 1);
+            Assert.IsTrue(result.LastModifiedDate.Date == DateTime.Now.Date);
+        }
+
+        [Test]
+        [Category("Session")]
+        public void Data_Read_Sessions()
+        {
+            var repository = new SessionRepository(_dataConnectionString, 1);
+
+            var data = repository.All().OrderBy(x => x.SessionID).ToList();
+
+            // There are 4 test sessions, but only 1 current for this user
+            Assert.IsTrue(data.Count == 1);
+            Assert.IsTrue(data[0].SessionID == 1);
+            Assert.IsTrue(data[0].Key == "USER1SESSION");
+        }
+
+        [Test]
+        [Category("Session")]
+        public void Data_Read_Session()
+        {
+            var repository = new SessionRepository(_dataConnectionString, 1);
+
+            var data = repository.Get(1);
+
+            Assert.IsTrue(data.SessionID == 1);
+            Assert.IsTrue(data.Key == "USER1SESSION");
+        }
+
+        [Test]
+        [Category("Session")]
+        public void Data_Read_Session_By_Key()
+        {
+            var repository = new SessionRepository(_dataConnectionString, 1);
+
+            var data = repository.GetByKey("USER1SESSION");
+
+            Assert.IsTrue(data.SessionID == 1);
+        }
+
+        [Test]
+        [Category("Session")]
+        public void Data_Read_Deleted_Session()
+        {
+            var repository = new SessionRepository(_dataConnectionString, 1);
+
+            var data = repository.Get(2);
+
+            Assert.IsTrue(data == null);
+        }
+
+        [Test]
+        [Category("Session")]
+        public void Data_Update_Session()
+        {
+            var repository = new SessionRepository(_dataConnectionString, 1);
+
+            var session = repository.Get(1);
+
+            session.Key = "UPDATED";
+            session.Expiry = new DateTime(2016, 2, 2);
+
+            var result = repository.Update(session);
+
+            Assert.IsTrue(result.Key == "UPDATED");
+            Assert.IsTrue(result.Expiry.Date == new DateTime(2016, 2, 2).Date);
+            Assert.IsTrue(result.LastModifiedBy == 1);
+            Assert.IsTrue(result.LastModifiedDate.Date == DateTime.Now.Date);
+        }
+
+        [Test]
+        [Category("Session")]
+        public void Data_Update_Session_Expiry()
+        {
+            var repository = new SessionRepository(_dataConnectionString, 1);
+
+            var result = repository.UpdateSessionExpiry("USER1SESSION", new DateTime(2016, 2, 2));
+
+            Assert.IsTrue(result.Key == "USER1SESSION");
+            Assert.IsTrue(result.Expiry.Date == new DateTime(2016, 2, 2).Date);
+            Assert.IsTrue(result.LastModifiedBy == 1);
+            Assert.IsTrue(result.LastModifiedDate.Date == DateTime.Now.Date);
+        }
+
+        [Test]
+        [Category("Session")]
+        public void Data_Delete_Session()
+        {
+            var repository = new SessionRepository(_dataConnectionString, 1);
+
+            var result = repository.Delete(1);
+
+            var session = repository.Get(1);
+
+            Assert.IsTrue(session == null);
+            Assert.IsTrue(result.Deleted == true);
+            Assert.IsTrue(result.DeletedBy == 1);
+            Assert.IsTrue(result.DeletedDate.Value.Date == DateTime.Now.Date);
+        }
+
+        [Test]
+        [Category("Session")]
+        public void Data_Delete_Session_By_Key()
+        {
+            var repository = new SessionRepository(_dataConnectionString, 1);
+
+            var result = repository.DeleteByKey("USER1SESSION");
+
+            var session = repository.Get(1);
+
+            Assert.IsTrue(session == null);
+            Assert.IsTrue(result.Deleted == true);
+            Assert.IsTrue(result.DeletedBy == 1);
+            Assert.IsTrue(result.DeletedDate.Value.Date == DateTime.Now.Date);
+        }
+
+        [Test]
+        [Category("Session")]
+        public void Data_Delete_Session_Expired()
+        {
+            var repository = new SessionRepository(_dataConnectionString, 1);
+
+            repository.DeleteExpired();
+
+            var session = repository.Get(2);
+
+            Assert.IsTrue(session == null);
+
+            // Read the database directly and check the expired session is now marked as deleted
+            using (var conn = new SqlConnection(_dataConnectionString))
+            {
+                conn.Open();
+
+                var expiredSession = conn.Query<Session>("SELECT * FROM [dbo].[Sessions] WHERE [Key] = 'USER1SESSIONEXPIRED'").Single();
+
+                Assert.IsTrue(expiredSession.Deleted == true);
+                Assert.IsTrue(expiredSession.DeletedBy == 1);
+                Assert.IsTrue(expiredSession.DeletedDate.Value.Date == DateTime.Now.Date);
+            }
+        }
+
+        #endregion Session
 
         #endregion Data Layer Tests
 

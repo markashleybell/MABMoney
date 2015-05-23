@@ -377,3 +377,18 @@ FROM
 WHERE 
     [Deleted] = 0
 GO
+
+IF OBJECT_ID('[dbo].[vSessions]') IS NOT NULL
+BEGIN 
+    DROP VIEW [dbo].[vSessions] 
+END 
+GO
+
+CREATE VIEW [dbo].[vSessions] AS
+SELECT 
+    *
+FROM 
+    [dbo].[Sessions]
+WHERE 
+    [Deleted] = 0
+GO

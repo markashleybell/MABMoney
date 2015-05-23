@@ -11,13 +11,13 @@ namespace MABMoney.Data.Abstract
     {
         IEnumerable<Session> All();
         Session Get(int id);
-        void Add(Session session);
-        void Update(Session session);
-        void Delete(int id);
+        Session Add(Session session);
+        Session Update(Session session);
+        Session Delete(int id);
 
-        Session GetByUserAndKey(string key);
-        void DeleteByKey(string key);
-        void DeleteExpiredForCurrentUser();
-        void UpdateSessionExpiryForCurrentUser(string key, DateTime expiry);
+        Session GetByKey(string key);
+        Session UpdateSessionExpiry(string key, DateTime expiry);
+        Session DeleteByKey(string key);
+        void DeleteExpired();
     }
 }
