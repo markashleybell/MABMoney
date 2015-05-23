@@ -55,10 +55,7 @@ namespace MABMoney.Data.Concrete
 
         public Account Delete(int id)
         {
-            return AddOrUpdate<Account>("mm_Accounts_Delete", new { 
-                UserID = _userId, 
-                AccountID = id 
-            });
+            return AddOrUpdate<Account>("mm_Accounts_Delete", new { UserID = _userId, AccountID = id });
         }
     }
 }

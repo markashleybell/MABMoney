@@ -363,3 +363,17 @@ WHERE
     [Deleted] = 0
 GO
 
+IF OBJECT_ID('[dbo].[vCategories]') IS NOT NULL
+BEGIN 
+    DROP VIEW [dbo].[vCategories] 
+END 
+GO
+
+CREATE VIEW [dbo].[vCategories] AS
+SELECT 
+    *
+FROM 
+    [dbo].[Categories]
+WHERE 
+    [Deleted] = 0
+GO

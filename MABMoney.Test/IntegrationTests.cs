@@ -339,6 +339,114 @@ namespace MABMoney.Test
 
         #endregion Account
 
+        #region Category
+
+        [Test]
+        [Category("Category")]
+        public void Data_Create_Category()
+        {
+            var repository = new CategoryRepository(_dataConnectionString, 1);
+
+            var category = new MABMoney.Domain.Category {
+                Account_AccountID = 1,
+                Name = "ADDED",
+                Type = CategoryType.Income
+            };
+
+            var result = repository.Add(category);
+
+            Assert.IsTrue(result.CategoryID == 11);
+            Assert.IsTrue(result.Name == "ADDED");
+            Assert.IsTrue(result.Type == CategoryType.Income);
+            Assert.IsTrue(result.Account_AccountID == 1);
+            Assert.IsTrue(result.CreatedBy == 1);
+            Assert.IsTrue(result.CreatedDate.Date == DateTime.Now.Date);
+            Assert.IsTrue(result.LastModifiedBy == 1);
+            Assert.IsTrue(result.LastModifiedDate.Date == DateTime.Now.Date);
+        }
+
+        [Test]
+        [Category("Category")]
+        public void Data_Read_All_Categories_For_Account()
+        {
+            var repository = new CategoryRepository(_dataConnectionString, 1);
+
+            var data = repository.All(1).OrderBy(x => x.CategoryID).ToList();
+
+            // There are 10 test categories, but ony 4 for this account and user
+            Assert.IsTrue(data.Count == 4);
+            Assert.IsTrue(data[0].CategoryID == 1);
+            Assert.IsTrue(data[0].Name == "Salary");
+            Assert.IsTrue(data[1].CategoryID == 2);
+            Assert.IsTrue(data[1].Name == "Rent");
+            Assert.IsTrue(data[2].CategoryID == 3);
+            Assert.IsTrue(data[2].Name == "Food");
+            Assert.IsTrue(data[3].CategoryID == 4);
+            Assert.IsTrue(data[3].Name == "Bills");
+        }
+
+        [Test]
+        [Category("Category")]
+        public void Data_Read_Category()
+        {
+            var repository = new CategoryRepository(_dataConnectionString, 1);
+
+            var data = repository.Get(1);
+
+            Assert.IsTrue(data.CategoryID == 1);
+            Assert.IsTrue(data.Name == "Salary");
+        }
+
+        [Test]
+        [Category("Category")]
+        public void Data_Read_Deleted_Category()
+        {
+            var repository = new CategoryRepository(_dataConnectionString, 1);
+
+            var data = repository.Get(5);
+
+            Assert.IsTrue(data == null);
+        }
+
+        [Test]
+        [Category("Category")]
+        public void Data_Update_Category()
+        {
+            var repository = new CategoryRepository(_dataConnectionString, 1);
+
+            var category = repository.Get(1);
+
+            category.Account_AccountID = 2;
+            category.Name = "UPDATED";
+            category.Type = CategoryType.Income;
+
+            var result = repository.Update(category);
+
+            Assert.IsTrue(result.Account_AccountID == 2);
+            Assert.IsTrue(result.Name == "UPDATED");
+            Assert.IsTrue(result.Type == CategoryType.Income);
+            Assert.IsTrue(result.LastModifiedBy == 1);
+            Assert.IsTrue(result.LastModifiedDate.Date == DateTime.Now.Date);
+        }
+
+        [Test]
+        [Category("Category")]
+        public void Data_Delete_Category()
+        {
+            var repository = new CategoryRepository(_dataConnectionString, 1);
+
+            var result = repository.Delete(1);
+
+            var category = repository.Get(1);
+
+            Assert.IsTrue(category == null);
+            Assert.IsTrue(result.Deleted == true);
+            Assert.IsTrue(result.DeletedBy == 1);
+            Assert.IsTrue(result.DeletedDate.Value.Date == DateTime.Now.Date);
+        }
+
+        #endregion Category
+
         #endregion Data Layer Tests
 
         #region TearDown
@@ -352,9 +460,9 @@ namespace MABMoney.Test
         [TestFixtureTearDown]
         public void TestFixtureTearDown()
         {
-
-        }
             DeleteTestDatabase(_setupConnectionString);
+        }
+
         #endregion TearDown
     }
 }

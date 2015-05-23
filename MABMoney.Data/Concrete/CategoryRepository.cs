@@ -16,29 +16,40 @@ namespace MABMoney.Data.Concrete
     {
         public CategoryRepository(string connectionString, int userId) : base(connectionString, userId) { }
 
-        public IEnumerable<Category> All()
+        public IEnumerable<Category> All(int accountId)
         {
-            throw new NotImplementedException();
+            return GetEnumerable<Category>("mm_Categories_Read", new { UserID = _userId, AccountID = accountId });
         }
 
         public Category Get(int id)
         {
-            throw new NotImplementedException();
+            return GetSingle<Category>("mm_Categories_Read", new { UserID = _userId, CategoryID = id });
         }
 
-        public void Add(Category category)
+        public Category Add(Category category)
         {
-            throw new NotImplementedException();
+            return AddOrUpdate<Category>("mm_Categories_Create", new {
+                UserID = _userId,
+                Account_AccountID = category.Account_AccountID,
+                Name = category.Name,
+                Type = category.Type
+            });
         }
 
-        public void Update(Category category)
+        public Category Update(Category category)
         {
-            throw new NotImplementedException();
+            return AddOrUpdate<Category>("mm_Categories_Update", new {
+                UserID = _userId,
+                CategoryID = category.CategoryID,
+                Account_AccountID = category.Account_AccountID,
+                Name = category.Name,
+                Type = category.Type
+            });
         }
 
-        public void Delete(int id)
+        public Category Delete(int id)
         {
-            throw new NotImplementedException();
+            return AddOrUpdate<Category>("mm_Categories_Delete", new { UserID = _userId, CategoryID = id });
         }
     }
 }

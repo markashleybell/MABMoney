@@ -9,10 +9,10 @@ namespace MABMoney.Data.Abstract
 {
     public interface ICategoryRepository
     {
-        IEnumerable<Category> All();
+        IEnumerable<Category> All(int accountId);
         Category Get(int id);
-        void Add(Category category);
-        void Update(Category category);
-        void Delete(int id);
+        Category Add(Category category);
+        Category Update(Category category);
+        Category Delete(int id);
     }
 }
