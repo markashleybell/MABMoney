@@ -26,16 +26,14 @@ namespace MABMoney.Test
             {
                 conn.Open();
 
+                var serverConnection = new ServerConnection(conn);
+                var server = new Server(serverConnection);
+
                 var exists = conn.ExecuteScalar("SELECT name FROM master.dbo.sysdatabases WHERE name = N'MABMoney_TEST'");
 
                 if (exists != null)
                 {
-                    var sql = @"DECLARE @kill varchar(8000) = '';
-                                SELECT @kill = @kill + 'kill ' + CONVERT(varchar(5), spid) + ';' FROM master..sysprocesses WHERE dbid = db_id('MABMoney_TEST');
-                                EXEC(@kill);
-                                DROP DATABASE [MABMoney_TEST];";
-
-                    conn.Execute(sql);
+                    server.KillDatabase("MABMoney_TEST");
                 }
             }
         }
@@ -57,6 +55,8 @@ namespace MABMoney.Test
         [SetUp]
         public void SetUp()
         {
+            DeleteTestDatabase(_setupConnectionString);
+
             // Create the test database
             using(var conn = new SqlConnection(_setupConnectionString))
             {
@@ -354,7 +354,7 @@ namespace MABMoney.Test
         {
 
         }
-
+            DeleteTestDatabase(_setupConnectionString);
         #endregion TearDown
     }
 }
