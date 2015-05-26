@@ -11,9 +11,9 @@ namespace MABMoney.Data.Abstract
     {
         IEnumerable<Transaction> All();
         Transaction Get(int id);
-        void Add(Transaction transaction);
-        void Update(Transaction transaction);
-        void Delete(int id);
+        Transaction Add(Transaction transaction);
+        Transaction Update(Transaction transaction);
+        Transaction Delete(int id);
 
         IEnumerable<Transaction> GetForAccount(int accountId);
         IEnumerable<Transaction> GetForAccount(int accountId, DateTime from, DateTime to);

@@ -88,139 +88,6 @@ namespace MABMoney.Test
 
         #region Data Layer Tests
 
-        #region User
-
-        [Test]
-        [Category("User")]
-        public void Data_Create_User()
-        {
-            var repository = new UserRepository(_dataConnectionString, 1);
-
-            var user = new MABMoney.Domain.User { 
-                Forename = "ADDEDFORENAME",
-                Surname = "ADDEDSURNAME",
-                Email = "added@test.com",
-                Password = "AEVg+8Chm8T0NSff0k0qegArPYXetlQfvKEoaDXwnT0N9fj0TVAjorveDX9vfbcVwA==", // "password"
-                IsAdmin = false
-            };
-
-            var result = repository.Add(user);
-
-            Assert.IsTrue(result.UserID == 3);
-            Assert.IsTrue(result.Forename == "ADDEDFORENAME");
-            Assert.IsTrue(result.Surname == "ADDEDSURNAME");
-            Assert.IsTrue(result.Email == "added@test.com");
-            Assert.IsTrue(result.Password == "AEVg+8Chm8T0NSff0k0qegArPYXetlQfvKEoaDXwnT0N9fj0TVAjorveDX9vfbcVwA==");
-            Assert.IsTrue(result.IsAdmin == false);
-            Assert.IsTrue(result.CreatedDate.Date == DateTime.Now.Date);
-        }
-
-        [Test]
-        [Category("User")]
-        public void Data_Read_User()
-        {
-            var repository = new UserRepository(_dataConnectionString, 1);
-
-            var data = repository.Get();
-
-            Assert.IsTrue(data.UserID == 1);
-            Assert.IsTrue(data.Email == "user@test.com");
-        }
-
-        [Test]
-        [Category("User")]
-        public void Data_Read_User_By_Email()
-        {
-            var repository = new UserRepository(_dataConnectionString, 1);
-
-            var data = repository.GetByEmailAddress("user@test.com");
-
-            Assert.IsTrue(data.UserID == 1);
-            Assert.IsTrue(data.Forename == "Test");
-            Assert.IsTrue(data.Surname == "User");
-        }
-
-        [Test]
-        [Category("User")]
-        public void Data_Read_Deleted_User_By_Email()
-        {
-            var repository = new UserRepository(_dataConnectionString, 1);
-
-            var data = repository.GetByEmailAddress("deleted@test.com");
-
-            Assert.IsTrue(data == null);
-        }
-
-        [Test]
-        [Category("User")]
-        public void Data_Read_User_By_Password_Reset_GUID()
-        {
-            var repository = new UserRepository(_dataConnectionString, 1);
-
-            var data = repository.GetByPasswordResetGUID("7cc68dbb-3d12-487b-8295-e9b226cda017");
-
-            Assert.IsTrue(data.UserID == 1);
-            Assert.IsTrue(data.Email == "user@test.com");
-        }
-
-        [Test]
-        [Category("User")]
-        public void Data_Read_Deleted_User_By_Password_Reset_GUID()
-        {
-            var repository = new UserRepository(_dataConnectionString, 1);
-
-            var data = repository.GetByPasswordResetGUID("5b977b67-e7e6-4399-9866-6c011750249f");
-
-            Assert.IsTrue(data == null);
-        }
-
-        [Test]
-        [Category("User")]
-        public void Data_Update_User()
-        {
-            var repository = new UserRepository(_dataConnectionString, 1);
-
-            var user = repository.Get();
-
-            user.Forename = "UPDATEDFORENAME";
-            user.Surname = "UPDATEDSURNAME";
-            user.Email = "added@test.com";
-            user.Password = "AEVg+8Chm8T0NSff0k0qegArPYXetlQfvKEoaDXwnT0N9fj0TVAjorveDX9vfbcVwA=="; // "password"
-            user.PasswordResetGUID = "0c4ffa03-e3d7-48b6-b657-bdae23f5d14d";
-            user.PasswordResetExpiry = new DateTime(2015, 1, 1);
-            user.IsAdmin = false;
-
-            var result = repository.Update(user);
-
-            Assert.IsTrue(result.Forename == "UPDATEDFORENAME");
-            Assert.IsTrue(result.Surname == "UPDATEDSURNAME");
-            Assert.IsTrue(result.Email == "added@test.com");
-            Assert.IsTrue(result.Password == "AEVg+8Chm8T0NSff0k0qegArPYXetlQfvKEoaDXwnT0N9fj0TVAjorveDX9vfbcVwA==");
-            Assert.IsTrue(result.PasswordResetGUID == "0c4ffa03-e3d7-48b6-b657-bdae23f5d14d");
-            Assert.IsTrue(result.PasswordResetExpiry == new DateTime(2015, 1, 1));
-            Assert.IsTrue(result.IsAdmin == false);
-            Assert.IsTrue(result.LastModifiedBy == 1);
-            Assert.IsTrue(result.LastModifiedDate.Date == DateTime.Now.Date);
-        }
-
-        [Test]
-        [Category("User")]
-        public void Data_Delete_User()
-        {
-            var repository = new UserRepository(_dataConnectionString, 1);
-
-            var result = repository.Delete();
-
-            var user = repository.Get();
-
-            Assert.IsTrue(user == null);
-            Assert.IsTrue(result.Deleted == true);
-            Assert.IsTrue(result.DeletedBy == 1);
-            Assert.IsTrue(result.DeletedDate.Value.Date == DateTime.Now.Date);
-        }
-
-        #endregion User
-
         #region Account
 
         [Test]
@@ -611,6 +478,263 @@ namespace MABMoney.Test
         }
 
         #endregion Session
+
+        #region Transaction
+
+        [Test]
+        [Category("Transaction")]
+        public void Data_Create_Transaction()
+        {
+            var repository = new TransactionRepository(_dataConnectionString, 1);
+
+            var transaction = new MABMoney.Domain.Transaction {
+                Account_AccountID = 1,
+                Category_CategoryID = 3,
+                Description = "ADDED",
+                Amount = -10.25M,
+                Date = new DateTime(2015, 1, 10, 18, 35, 10, 0),
+                Note = "BISCUITS",
+                TransferGUID = "5485364b-cac5-4c14-9638-5e7c0235a7c1"
+            };
+
+            var result = repository.Add(transaction);
+
+            Assert.IsTrue(result.TransactionID == 31);
+            Assert.IsTrue(result.Account_AccountID == 1);
+            Assert.IsTrue(result.Category_CategoryID == 3);
+            Assert.IsTrue(result.Description == "ADDED");
+            Assert.IsTrue(result.Amount == -10.25M);
+            Assert.IsTrue(result.Date == new DateTime(2015, 1, 10, 18, 35, 10, 0));
+            Assert.IsTrue(result.Note == "BISCUITS");
+            Assert.IsTrue(result.TransferGUID == "5485364b-cac5-4c14-9638-5e7c0235a7c1");
+            Assert.IsTrue(result.CreatedBy == 1);
+            Assert.IsTrue(result.CreatedDate.Date == DateTime.Now.Date);
+            Assert.IsTrue(result.LastModifiedBy == 1);
+            Assert.IsTrue(result.LastModifiedDate.Date == DateTime.Now.Date);
+        }
+
+        [Test]
+        [Category("Transaction")]
+        public void Data_Read_Transactions()
+        {
+            var repository = new TransactionRepository(_dataConnectionString, 1);
+
+            var data = repository.All().ToList();
+
+            // There are 14 test transactions for this account and one deleted
+            Assert.IsTrue(data.Count == 14);
+            Assert.IsTrue(data[0].TransactionID == 1);
+            Assert.IsTrue(data[0].Description == "USER1CURRENT1");
+            Assert.IsTrue(data[1].TransactionID == 2);
+            Assert.IsTrue(data[1].Description == "USER1CURRENT2");
+            Assert.IsTrue(data[2].TransactionID == 3);
+            Assert.IsTrue(data[2].Description == "USER1CURRENT3");
+        }
+
+        [Test]
+        [Category("Transaction")]
+        public void Data_Read_Transaction()
+        {
+            var repository = new TransactionRepository(_dataConnectionString, 1);
+
+            var data = repository.Get(1);
+
+            Assert.IsTrue(data.TransactionID == 1);
+            Assert.IsTrue(data.Description == "USER1CURRENT1");
+        }
+
+        [Test]
+        [Category("Transaction")]
+        public void Data_Read_Deleted_Transaction()
+        {
+            var repository = new TransactionRepository(_dataConnectionString, 1);
+
+            var data = repository.Get(4);
+
+            Assert.IsTrue(data == null);
+        }
+
+        [Test]
+        [Category("Transaction")]
+        public void Data_Update_Transaction()
+        {
+            var repository = new TransactionRepository(_dataConnectionString, 1);
+
+            var transaction = repository.Get(1);
+
+            transaction.Account_AccountID = 3;
+            transaction.Category_CategoryID = 6;
+            transaction.Description = "UPDATED";
+            transaction.Amount = -30.00M;
+            transaction.Date = new DateTime(2015, 1, 11, 11, 40, 30, 0);
+            transaction.Note = "MOVEDTOCREDIT";
+            transaction.TransferGUID = "5485364b-cac5-4c14-9638-5e7c0235a7c1";
+
+            var result = repository.Update(transaction);
+
+            Assert.IsTrue(result.TransactionID == 1);
+            Assert.IsTrue(result.Account_AccountID == 3);
+            Assert.IsTrue(result.Category_CategoryID == 6);
+            Assert.IsTrue(result.Description == "UPDATED");
+            Assert.IsTrue(result.Amount == -30.00M);
+            Assert.IsTrue(result.Date == new DateTime(2015, 1, 11, 11, 40, 30, 0));
+            Assert.IsTrue(result.Note == "MOVEDTOCREDIT");
+            Assert.IsTrue(result.TransferGUID == "5485364b-cac5-4c14-9638-5e7c0235a7c1");
+            Assert.IsTrue(result.LastModifiedBy == 1);
+            Assert.IsTrue(result.LastModifiedDate.Date == DateTime.Now.Date);
+        }
+
+        [Test]
+        [Category("Transaction")]
+        public void Data_Delete_Transaction()
+        {
+            var repository = new TransactionRepository(_dataConnectionString, 1);
+
+            var result = repository.Delete(1);
+
+            var transaction = repository.Get(1);
+
+            Assert.IsTrue(transaction == null);
+            Assert.IsTrue(result.Deleted == true);
+            Assert.IsTrue(result.DeletedBy == 1);
+            Assert.IsTrue(result.DeletedDate.Value.Date == DateTime.Now.Date);
+        }
+
+        #endregion Transaction
+
+        #region User
+
+        [Test]
+        [Category("User")]
+        public void Data_Create_User()
+        {
+            var repository = new UserRepository(_dataConnectionString, 1);
+
+            var user = new MABMoney.Domain.User
+            {
+                Forename = "ADDEDFORENAME",
+                Surname = "ADDEDSURNAME",
+                Email = "added@test.com",
+                Password = "AEVg+8Chm8T0NSff0k0qegArPYXetlQfvKEoaDXwnT0N9fj0TVAjorveDX9vfbcVwA==", // "password"
+                IsAdmin = false
+            };
+
+            var result = repository.Add(user);
+
+            Assert.IsTrue(result.UserID == 3);
+            Assert.IsTrue(result.Forename == "ADDEDFORENAME");
+            Assert.IsTrue(result.Surname == "ADDEDSURNAME");
+            Assert.IsTrue(result.Email == "added@test.com");
+            Assert.IsTrue(result.Password == "AEVg+8Chm8T0NSff0k0qegArPYXetlQfvKEoaDXwnT0N9fj0TVAjorveDX9vfbcVwA==");
+            Assert.IsTrue(result.IsAdmin == false);
+            Assert.IsTrue(result.CreatedDate.Date == DateTime.Now.Date);
+        }
+
+        [Test]
+        [Category("User")]
+        public void Data_Read_User()
+        {
+            var repository = new UserRepository(_dataConnectionString, 1);
+
+            var data = repository.Get();
+
+            Assert.IsTrue(data.UserID == 1);
+            Assert.IsTrue(data.Email == "user@test.com");
+        }
+
+        [Test]
+        [Category("User")]
+        public void Data_Read_User_By_Email()
+        {
+            var repository = new UserRepository(_dataConnectionString, 1);
+
+            var data = repository.GetByEmailAddress("user@test.com");
+
+            Assert.IsTrue(data.UserID == 1);
+            Assert.IsTrue(data.Forename == "Test");
+            Assert.IsTrue(data.Surname == "User");
+        }
+
+        [Test]
+        [Category("User")]
+        public void Data_Read_Deleted_User_By_Email()
+        {
+            var repository = new UserRepository(_dataConnectionString, 1);
+
+            var data = repository.GetByEmailAddress("deleted@test.com");
+
+            Assert.IsTrue(data == null);
+        }
+
+        [Test]
+        [Category("User")]
+        public void Data_Read_User_By_Password_Reset_GUID()
+        {
+            var repository = new UserRepository(_dataConnectionString, 1);
+
+            var data = repository.GetByPasswordResetGUID("7cc68dbb-3d12-487b-8295-e9b226cda017");
+
+            Assert.IsTrue(data.UserID == 1);
+            Assert.IsTrue(data.Email == "user@test.com");
+        }
+
+        [Test]
+        [Category("User")]
+        public void Data_Read_Deleted_User_By_Password_Reset_GUID()
+        {
+            var repository = new UserRepository(_dataConnectionString, 1);
+
+            var data = repository.GetByPasswordResetGUID("5b977b67-e7e6-4399-9866-6c011750249f");
+
+            Assert.IsTrue(data == null);
+        }
+
+        [Test]
+        [Category("User")]
+        public void Data_Update_User()
+        {
+            var repository = new UserRepository(_dataConnectionString, 1);
+
+            var user = repository.Get();
+
+            user.Forename = "UPDATEDFORENAME";
+            user.Surname = "UPDATEDSURNAME";
+            user.Email = "added@test.com";
+            user.Password = "AEVg+8Chm8T0NSff0k0qegArPYXetlQfvKEoaDXwnT0N9fj0TVAjorveDX9vfbcVwA=="; // "password"
+            user.PasswordResetGUID = "0c4ffa03-e3d7-48b6-b657-bdae23f5d14d";
+            user.PasswordResetExpiry = new DateTime(2015, 1, 1);
+            user.IsAdmin = false;
+
+            var result = repository.Update(user);
+
+            Assert.IsTrue(result.Forename == "UPDATEDFORENAME");
+            Assert.IsTrue(result.Surname == "UPDATEDSURNAME");
+            Assert.IsTrue(result.Email == "added@test.com");
+            Assert.IsTrue(result.Password == "AEVg+8Chm8T0NSff0k0qegArPYXetlQfvKEoaDXwnT0N9fj0TVAjorveDX9vfbcVwA==");
+            Assert.IsTrue(result.PasswordResetGUID == "0c4ffa03-e3d7-48b6-b657-bdae23f5d14d");
+            Assert.IsTrue(result.PasswordResetExpiry == new DateTime(2015, 1, 1));
+            Assert.IsTrue(result.IsAdmin == false);
+            Assert.IsTrue(result.LastModifiedBy == 1);
+            Assert.IsTrue(result.LastModifiedDate.Date == DateTime.Now.Date);
+        }
+
+        [Test]
+        [Category("User")]
+        public void Data_Delete_User()
+        {
+            var repository = new UserRepository(_dataConnectionString, 1);
+
+            var result = repository.Delete();
+
+            var user = repository.Get();
+
+            Assert.IsTrue(user == null);
+            Assert.IsTrue(result.Deleted == true);
+            Assert.IsTrue(result.DeletedBy == 1);
+            Assert.IsTrue(result.DeletedDate.Value.Date == DateTime.Now.Date);
+        }
+
+        #endregion User
 
         #endregion Data Layer Tests
 

@@ -18,42 +18,72 @@ namespace MABMoney.Data.Concrete
 
         public IEnumerable<Transaction> All()
         {
-            throw new NotImplementedException();
+            return GetEnumerable<Transaction>("mm_Transactions_Read", new { UserID = _userId });
         }
 
         public Transaction Get(int id)
         {
-            throw new NotImplementedException();
+            return GetSingle<Transaction>("mm_Transactions_Read", new { UserID = _userId, TransactionID = id });
         }
 
-        public void Add(Transaction transaction)
+        public Transaction Add(Transaction transaction)
         {
-            throw new NotImplementedException();
+            return AddOrUpdate<Transaction>("mm_Transactions_Create", new {
+                UserID = _userId,
+                Account_AccountID = transaction.Account_AccountID,
+                Category_CategoryID = transaction.Category_CategoryID,
+                Date = transaction.Date,
+                Description = transaction.Description,
+                Note = transaction.Note,
+                Amount = transaction.Amount,
+                TransferGUID = transaction.TransferGUID
+            });
         }
 
-        public void Update(Transaction transaction)
+        public Transaction Update(Transaction transaction)
         {
-            throw new NotImplementedException();
+            return AddOrUpdate<Transaction>("mm_Transactions_Update", new {
+                TransactionID = transaction.TransactionID,
+                UserID = _userId,
+                Account_AccountID = transaction.Account_AccountID,
+                Category_CategoryID = transaction.Category_CategoryID,
+                Date = transaction.Date,
+                Description = transaction.Description,
+                Note = transaction.Note,
+                Amount = transaction.Amount,
+                TransferGUID = transaction.TransferGUID
+            });
         }
 
-        public void Delete(int id)
+        public Transaction Delete(int id)
         {
-            throw new NotImplementedException();
+            return AddOrUpdate<Transaction>("mm_Transactions_Delete", new { UserID = _userId, TransactionID = id });
         }
 
         public IEnumerable<Transaction> GetForAccount(int accountId)
         {
-            throw new NotImplementedException();
+            return GetEnumerable<Transaction>("mm_Transactions_Read", new { UserID = _userId, AccountID = accountId });
         }
 
         public IEnumerable<Transaction> GetForAccount(int accountId, DateTime from, DateTime to)
         {
-            throw new NotImplementedException();
+            return GetEnumerable<Transaction>("mm_Transactions_Read", new {
+                UserID = _userId,
+                AccountID = accountId,
+                From = from,
+                To = to
+            });
         }
 
         public IEnumerable<Transaction> GetForAccount(int accountId, int categoryId, DateTime from, DateTime to)
         {
-            throw new NotImplementedException();
+            return GetEnumerable<Transaction>("mm_Transactions_Read", new { 
+                UserID = _userId, 
+                AccountID = accountId,
+                CategoryID = categoryId,
+                From = from,
+                To = to
+            });
         }
     }
 }
