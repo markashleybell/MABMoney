@@ -392,3 +392,18 @@ FROM
 WHERE 
     [Deleted] = 0
 GO
+
+IF OBJECT_ID('[dbo].[vTransactions]') IS NOT NULL
+BEGIN 
+    DROP VIEW [dbo].[vTransactions] 
+END 
+GO
+
+CREATE VIEW [dbo].[vTransactions] AS
+SELECT 
+    *
+FROM 
+    [dbo].[Transactions]
+WHERE 
+    [Deleted] = 0
+GO
