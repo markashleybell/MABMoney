@@ -865,7 +865,7 @@ AS
         FROM   
             [dbo].[vCategories] [c]
         INNER JOIN
-            [dbo].[Accounts] [a] ON [a].[AccountID] = [c].[Account_AccountID]
+            [dbo].[vAccounts] [a] ON [a].[AccountID] = [c].[Account_AccountID]
         WHERE  
             [a].[User_UserID] = @UserID
         AND
@@ -1032,9 +1032,9 @@ AS
             SELECT 
                 [a].[AccountID] 
             FROM 
-                [dbo].[Accounts] [a] 
+                [dbo].[vAccounts] [a] 
             INNER JOIN
-                [dbo].[Categories] [c] ON [c].[Account_AccountID] = [a].[AccountID] AND [c].[CategoryID] = @CategoryID
+                [dbo].[vCategories] [c] ON [c].[Account_AccountID] = [a].[AccountID] AND [c].[CategoryID] = @CategoryID
             WHERE 
                 [a].[User_UserID] = @UserID 
         )
@@ -1047,9 +1047,9 @@ AS
                 [c].[DeletedBy] = @UserID,
                 [c].[DeletedDate] = GETDATE()
             FROM
-                [dbo].[Categories] AS [c]
+                [dbo].[vCategories] AS [c]
             INNER JOIN
-                [dbo].[Accounts] [a] ON [a].[AccountID] = [c].[Account_AccountID]
+                [dbo].[vAccounts] [a] ON [a].[AccountID] = [c].[Account_AccountID]
             WHERE
                 [a].[User_UserID] = @UserID
             AND
@@ -1559,6 +1559,7 @@ CREATE PROC [dbo].[mm_Transactions_Read]
     @UserID int,
     @TransactionID int = NULL,
     @AccountID int = NULL,
+    @CategoryID int = NULL,
     @From datetime = NULL,
     @To datetime = NULL
 AS 
@@ -1584,19 +1585,23 @@ AS
             [t].[TransferGUID], 
             [t].[Note] 
         FROM   
-            [dbo].[Transactions] [t]
+            [dbo].[vTransactions] [t]
         INNER JOIN
-            [dbo].[Accounts] [a] ON [a].[AccountID] = [t].[Account_AccountID]
+            [dbo].[vAccounts] [a] ON [a].[AccountID] = [t].[Account_AccountID]
         WHERE  
             [a].[User_UserID] = @UserID
         AND
             [a].[AccountID] = CASE WHEN @AccountID IS NULL THEN [a].[AccountID] ELSE @AccountID END
+		AND
+            [t].[Category_CategoryID] = CASE WHEN @CategoryID IS NULL THEN [t].[Category_CategoryID] ELSE @CategoryID END            
         AND
             [t].[Date] >= CASE WHEN @From IS NULL THEN [t].[Date] ELSE @From END
         AND
             [t].[Date] <= CASE WHEN @To IS NULL THEN [t].[Date] ELSE @To END
         AND
             [t].[TransactionID] = CASE WHEN @TransactionID IS NULL THEN [t].[TransactionID] ELSE @TransactionID END
+		ORDER BY
+			[t].[Date] DESC
             
     COMMIT
 GO
@@ -1785,9 +1790,9 @@ AS
             SELECT 
                 [a].[AccountID] 
             FROM 
-                [dbo].[Accounts] [a] 
+                [dbo].[vAccounts] [a] 
             INNER JOIN
-                [dbo].[Transactions] [t] ON [t].[Account_AccountID] = [a].[AccountID] AND [t].[TransactionID] = @TransactionID
+                [dbo].[vTransactions] [t] ON [t].[Account_AccountID] = [a].[AccountID] AND [t].[TransactionID] = @TransactionID
             WHERE 
                 [a].[User_UserID] = @UserID 
         )
@@ -1800,9 +1805,9 @@ AS
                 [t].[DeletedBy] = @UserID,
                 [t].[DeletedDate] = GETDATE()
             FROM
-                [dbo].[Transactions] AS [t]
+                [dbo].[vTransactions] AS [t]
             INNER JOIN
-                [dbo].[Accounts] [a] ON [a].[AccountID] = [t].[Account_AccountID]
+                [dbo].[vAccounts] [a] ON [a].[AccountID] = [t].[Account_AccountID]
             WHERE
                 [a].[User_UserID] = @UserID
             AND

@@ -29,7 +29,7 @@ AS
         FROM   
             [dbo].[vCategories] [c]
         INNER JOIN
-            [dbo].[Accounts] [a] ON [a].[AccountID] = [c].[Account_AccountID]
+            [dbo].[vAccounts] [a] ON [a].[AccountID] = [c].[Account_AccountID]
         WHERE  
             [a].[User_UserID] = @UserID
         AND
@@ -196,9 +196,9 @@ AS
             SELECT 
                 [a].[AccountID] 
             FROM 
-                [dbo].[Accounts] [a] 
+                [dbo].[vAccounts] [a] 
             INNER JOIN
-                [dbo].[Categories] [c] ON [c].[Account_AccountID] = [a].[AccountID] AND [c].[CategoryID] = @CategoryID
+                [dbo].[vCategories] [c] ON [c].[Account_AccountID] = [a].[AccountID] AND [c].[CategoryID] = @CategoryID
             WHERE 
                 [a].[User_UserID] = @UserID 
         )
@@ -211,9 +211,9 @@ AS
                 [c].[DeletedBy] = @UserID,
                 [c].[DeletedDate] = GETDATE()
             FROM
-                [dbo].[Categories] AS [c]
+                [dbo].[vCategories] AS [c]
             INNER JOIN
-                [dbo].[Accounts] [a] ON [a].[AccountID] = [c].[Account_AccountID]
+                [dbo].[vAccounts] [a] ON [a].[AccountID] = [c].[Account_AccountID]
             WHERE
                 [a].[User_UserID] = @UserID
             AND

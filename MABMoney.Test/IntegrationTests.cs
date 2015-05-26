@@ -183,7 +183,8 @@ namespace MABMoney.Test
             Assert.IsTrue(result.Default == false);
             Assert.IsTrue(result.Type == AccountType.CreditCard);
             Assert.IsTrue(result.DisplayOrder == 126);
-            Assert.IsTrue(result.CurrentBalance == 256.12M);
+            // This will have been updated by the total calc trigger when the test transactions are inserted
+            Assert.IsTrue(result.CurrentBalance == 506.12M); 
             Assert.IsTrue(result.LastModifiedBy == 1);
             Assert.IsTrue(result.LastModifiedDate.Date == DateTime.Now.Date);
         }
@@ -521,14 +522,71 @@ namespace MABMoney.Test
 
             var data = repository.All().ToList();
 
-            // There are 14 test transactions for this account and one deleted
+            // TODO: Fix SP so there are two ways to call it - one joining onto accounts and one with an IN query of all user's accounts
+
+            // There are 18 test transactions for this user (and one deleted) in date descending order
+            Assert.IsTrue(data.Count == 18);
+            Assert.IsTrue(data[0].TransactionID == 14);
+            Assert.IsTrue(data[0].Description == "USER1CURRENT14");
+            Assert.IsTrue(data[0].Note == "Water");
+            Assert.IsTrue(data[17].TransactionID == 1);
+            Assert.IsTrue(data[17].Description == "USER1CURRENT1");
+        }
+
+        [Test]
+        [Category("Transaction")]
+        public void Data_Read_Transactions_By_Account()
+        {
+            var repository = new TransactionRepository(_dataConnectionString, 1);
+
+            var data = repository.GetForAccount(1).ToList();
+
+            // There are 14 test transactions for this user (and one deleted) in date descending order
             Assert.IsTrue(data.Count == 14);
-            Assert.IsTrue(data[0].TransactionID == 1);
-            Assert.IsTrue(data[0].Description == "USER1CURRENT1");
-            Assert.IsTrue(data[1].TransactionID == 2);
-            Assert.IsTrue(data[1].Description == "USER1CURRENT2");
-            Assert.IsTrue(data[2].TransactionID == 3);
-            Assert.IsTrue(data[2].Description == "USER1CURRENT3");
+            Assert.IsTrue(data[0].TransactionID == 14);
+            Assert.IsTrue(data[0].Description == "USER1CURRENT14");
+            Assert.IsTrue(data[0].Note == "Water");
+            Assert.IsTrue(data[13].TransactionID == 1);
+            Assert.IsTrue(data[13].Description == "USER1CURRENT1");
+        }
+
+        [Test]
+        [Category("Transaction")]
+        public void Data_Read_Transactions_By_Account_And_Date()
+        {
+            var repository = new TransactionRepository(_dataConnectionString, 1);
+
+            var data = repository.GetForAccount(1, new DateTime(2015, 01, 02), new DateTime(2015, 01, 04)).ToList();
+
+            Assert.IsTrue(data.Count == 7);
+            Assert.IsTrue(data[0].TransactionID == 10);
+            Assert.IsTrue(data[0].Description == "USER1CURRENT10");
+            Assert.IsTrue(data[6].TransactionID == 4);
+            Assert.IsTrue(data[6].Description == "USER1CURRENT4");
+            Assert.IsTrue(data[6].Note == "Gas");
+        }
+
+        [Test]
+        [Category("Transaction")]
+        public void Data_Read_Transactions_By_Account_Date_And_Category()
+        {
+            var repository = new TransactionRepository(_dataConnectionString, 1);
+
+            var data = repository.GetForAccount(1, 4, new DateTime(2015, 01, 02), new DateTime(2015, 01, 06)).ToList();
+
+            Assert.IsTrue(data.Count == 4);
+            Assert.IsTrue(data[0].TransactionID == 14);
+            Assert.IsTrue(data[0].Description == "USER1CURRENT14");
+            Assert.IsTrue(data[0].Note == "Water");
+            Assert.IsTrue(data[1].TransactionID == 11);
+            Assert.IsTrue(data[1].Description == "USER1CURRENT11");
+            Assert.IsTrue(data[1].Note == "Electricity");
+            Assert.IsTrue(data[2].TransactionID == 7);
+            Assert.IsTrue(data[2].Description == "USER1CURRENT7");
+            Assert.IsTrue(data[2].Note == "Mobile");
+            Assert.IsTrue(data[3].TransactionID == 4);
+            Assert.IsTrue(data[3].Description == "USER1CURRENT4");
+            Assert.IsTrue(data[3].Note == "Gas");
         }
 
         [Test]
@@ -549,7 +607,7 @@ namespace MABMoney.Test
         {
             var repository = new TransactionRepository(_dataConnectionString, 1);
 
-            var data = repository.Get(4);
+            var data = repository.Get(15);
 
             Assert.IsTrue(data == null);
         }
