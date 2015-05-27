@@ -522,13 +522,16 @@ namespace MABMoney.Test
 
             var data = repository.All().ToList();
 
-            // TODO: Fix SP so there are two ways to call it - one joining onto accounts and one with an IN query of all user's accounts
-
             // There are 18 test transactions for this user (and one deleted) in date descending order
             Assert.IsTrue(data.Count == 18);
+            Assert.IsTrue(data[0].Account_AccountID == 1);
             Assert.IsTrue(data[0].TransactionID == 14);
             Assert.IsTrue(data[0].Description == "USER1CURRENT14");
             Assert.IsTrue(data[0].Note == "Water");
+            Assert.IsTrue(data[5].Account_AccountID == 2);
+            Assert.IsTrue(data[5].TransactionID == 19);
+            Assert.IsTrue(data[5].Description == "USER1SAVINGS19");
+            Assert.IsTrue(data[17].Account_AccountID == 1);
             Assert.IsTrue(data[17].TransactionID == 1);
             Assert.IsTrue(data[17].Description == "USER1CURRENT1");
         }

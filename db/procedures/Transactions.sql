@@ -17,7 +17,22 @@ AS
 
     BEGIN TRAN
 
+        DECLARE @Accounts TABLE (AccountID int)
+        
+        -- Get a table variable containing all the user's account IDs, unless an account ID 
+        -- has been passed in, in which case the table var will only contain that ID
+        INSERT INTO 
+            @Accounts
         SELECT 
+            [a].[AccountID] 
+        FROM 
+            [dbo].[vAccounts] [a] 
+        WHERE 
+            [a].[User_UserID] = @UserID
+        AND 
+            [a].[AccountID] = CASE WHEN @AccountID IS NULL THEN [a].[AccountID] ELSE @AccountID END
+            
+        SELECT          
             [t].[TransactionID], 
             [t].[Date], 
             [t].[Description], 
@@ -33,6 +48,8 @@ AS
             [t].[DeletedDate], 
             [t].[TransferGUID], 
             [t].[Note] 
+        INTO
+            #UserTransactions
         FROM   
             [dbo].[vTransactions] [t]
         INNER JOIN
@@ -40,9 +57,7 @@ AS
         WHERE  
             [a].[User_UserID] = @UserID
         AND
-            [a].[AccountID] = CASE WHEN @AccountID IS NULL THEN [a].[AccountID] ELSE @AccountID END
-		AND
-            [t].[Category_CategoryID] = CASE WHEN @CategoryID IS NULL THEN [t].[Category_CategoryID] ELSE @CategoryID END            
+            [a].[AccountID] IN (SELECT AccountID FROM @Accounts)
         AND
             [t].[Date] >= CASE WHEN @From IS NULL THEN [t].[Date] ELSE @From END
         AND
@@ -51,6 +66,23 @@ AS
             [t].[TransactionID] = CASE WHEN @TransactionID IS NULL THEN [t].[TransactionID] ELSE @TransactionID END
 		ORDER BY
 			[t].[Date] DESC
+        
+        IF @CategoryID IS NOT NULL
+        BEGIN
+            SELECT 
+                *
+            FROM 
+                #UserTransactions [t]
+            WHERE
+                [t].[Category_CategoryID] = @CategoryID
+        END
+        ELSE
+        BEGIN
+            SELECT 
+                * 
+            FROM 
+                #UserTransactions [t]
+        END
             
     COMMIT
 GO
