@@ -269,6 +269,31 @@ namespace MABMoney.Test
 
         [Test]
         [Category("Budget")]
+        public void Data_Read_Budget_Latest()
+        {
+            var repository = new BudgetRepository(_dataConnectionString, 1);
+
+            var data = repository.GetLatest(1);
+
+            Assert.IsTrue(data.BudgetID == 2);
+            Assert.IsTrue(data.Account_AccountID == 1);
+            Assert.IsTrue(data.Start == new DateTime(2015, 2, 1));
+            Assert.IsTrue(data.End == new DateTime(2015, 2, 28));
+        }
+
+        [Test]
+        [Category("Budget")]
+        public void Data_Read_Budget_Count()
+        {
+            var repository = new BudgetRepository(_dataConnectionString, 1);
+
+            var data = repository.GetBudgetCount(1);
+
+            Assert.IsTrue(data == 2);
+        }
+
+        [Test]
+        [Category("Budget")]
         public void Data_Read_Deleted_Budget()
         {
             var repository = new BudgetRepository(_dataConnectionString, 1);

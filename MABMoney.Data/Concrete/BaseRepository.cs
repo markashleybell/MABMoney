@@ -27,6 +27,14 @@ namespace MABMoney.Data.Concrete
             }
         }
 
+        protected T GetScalar<T>(string procedureName, object param)
+        {
+            using (var connection = new ProfiledDbConnection(new SqlConnection(_connectionString), MiniProfiler.Current))
+            {
+                return connection.ExecuteScalar<T>(procedureName, param, commandType: CommandType.StoredProcedure);
+            }
+        }
+
         protected IEnumerable<T> GetEnumerable<T>(string procedureName, object param)
         {
             using (var connection = new ProfiledDbConnection(new SqlConnection(_connectionString), MiniProfiler.Current))

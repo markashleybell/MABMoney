@@ -54,12 +54,12 @@ namespace MABMoney.Data.Concrete
 
         public Budget GetLatest(int accountId)
         {
-            throw new NotImplementedException();
+            return GetSingle<Budget>("mm_Budgets_Read_Latest", new { UserID = _userId, AccountID = accountId });
         }
 
         public int GetBudgetCount(int accountId)
         {
-            throw new NotImplementedException();
+            return GetScalar<int>("mm_Budgets_Count", new { UserID = _userId, AccountID = accountId });
         }
     }
 }

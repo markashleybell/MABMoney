@@ -39,6 +39,104 @@ AS
     COMMIT
 GO
 
+IF OBJECT_ID('[dbo].[mm_Budgets_Read_Latest]') IS NOT NULL
+BEGIN 
+    DROP PROC [dbo].[mm_Budgets_Read_Latest] 
+END 
+GO
+
+CREATE PROC [dbo].[mm_Budgets_Read_Latest] 
+    @UserID int,
+    @AccountID int
+AS 
+    SET NOCOUNT ON 
+    SET XACT_ABORT ON  
+
+    BEGIN TRAN
+    
+		IF EXISTS(
+            SELECT 
+                [AccountID] 
+            FROM 
+                [dbo].[vAccounts] [a] 
+            WHERE 
+                [a].[User_UserID] = @UserID 
+            AND 
+                [a].[AccountID] = @AccountID
+        )
+        BEGIN
+
+			SELECT TOP 1
+				[b].[BudgetID], 
+				[b].[Start], 
+				[b].[End], 
+				[b].[Account_AccountID], 
+				[b].[CreatedBy], 
+				[b].[CreatedDate], 
+				[b].[LastModifiedBy], 
+				[b].[LastModifiedDate], 
+				[b].[Deleted], 
+				[b].[DeletedBy], 
+				[b].[DeletedDate] 
+			FROM   
+				[dbo].[vBudgets] [b]
+			INNER JOIN
+				[dbo].[vAccounts] [a] ON [a].[AccountID] = [b].[Account_AccountID]
+			WHERE  
+				[a].[User_UserID] = @UserID
+			AND 
+                [a].[AccountID] = @AccountID
+			ORDER BY
+				[b].[Start] DESC
+		
+		END
+
+    COMMIT
+GO
+
+IF OBJECT_ID('[dbo].[mm_Budgets_Count]') IS NOT NULL
+BEGIN 
+    DROP PROC [dbo].[mm_Budgets_Count] 
+END 
+GO
+
+CREATE PROC [dbo].[mm_Budgets_Count] 
+    @UserID int,
+    @AccountID int
+AS 
+    SET NOCOUNT ON 
+    SET XACT_ABORT ON  
+
+    BEGIN TRAN
+    
+		IF EXISTS(
+            SELECT 
+                [AccountID] 
+            FROM 
+                [dbo].[vAccounts] [a] 
+            WHERE 
+                [a].[User_UserID] = @UserID 
+            AND 
+                [a].[AccountID] = @AccountID
+        )
+        BEGIN
+
+			SELECT 
+				COUNT(*) 
+			FROM   
+				[dbo].[vBudgets] [b]
+			INNER JOIN
+				[dbo].[vAccounts] [a] ON [a].[AccountID] = [b].[Account_AccountID]
+			WHERE  
+				[a].[User_UserID] = @UserID
+			AND 
+                [a].[AccountID] = @AccountID
+                
+		END
+
+    COMMIT
+GO
+
 IF OBJECT_ID('[dbo].[mm_Budgets_Create]') IS NOT NULL
 BEGIN 
     DROP PROC [dbo].[mm_Budgets_Create] 
