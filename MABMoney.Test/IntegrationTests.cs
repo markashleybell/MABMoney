@@ -207,6 +207,117 @@ namespace MABMoney.Test
 
         #endregion Account
 
+        #region Budget
+
+        [Test]
+        [Category("Budget")]
+        public void Data_Create_Budget()
+        {
+            var repository = new BudgetRepository(_dataConnectionString, 1);
+
+            var budget = new MABMoney.Domain.Budget {
+                Account_AccountID = 2,
+                Start = new DateTime(2015, 3, 1),
+                End = new DateTime(2015, 3, 31)
+            };
+
+            var result = repository.Add(budget);
+
+            Assert.IsTrue(result.BudgetID == 5);
+            Assert.IsTrue(result.Account_AccountID == 2);
+            Assert.IsTrue(result.Start == new DateTime(2015, 3, 1));
+            Assert.IsTrue(result.End == new DateTime(2015, 3, 31));
+            Assert.IsTrue(result.CreatedBy == 1);
+            Assert.IsTrue(result.CreatedDate.Date == DateTime.Now.Date);
+            Assert.IsTrue(result.LastModifiedBy == 1);
+            Assert.IsTrue(result.LastModifiedDate.Date == DateTime.Now.Date);
+        }
+
+        [Test]
+        [Category("Budget")]
+        public void Data_Read_Budgets()
+        {
+            var repository = new BudgetRepository(_dataConnectionString, 1);
+
+            var data = repository.All().ToList();
+
+            // There are 4 test budgets, but one is deleted and one is for another user
+            Assert.IsTrue(data.Count == 2);
+            Assert.IsTrue(data[0].BudgetID == 2);
+            Assert.IsTrue(data[0].Account_AccountID == 1);
+            Assert.IsTrue(data[0].Start == new DateTime(2015, 2, 1));
+            Assert.IsTrue(data[0].End == new DateTime(2015, 2, 28));
+            Assert.IsTrue(data[1].BudgetID == 1);
+            Assert.IsTrue(data[1].Account_AccountID == 1);
+            Assert.IsTrue(data[1].Start == new DateTime(2015, 1, 1));
+            Assert.IsTrue(data[1].End == new DateTime(2015, 1, 31));
+        }
+
+        [Test]
+        [Category("Budget")]
+        public void Data_Read_Budget()
+        {
+            var repository = new BudgetRepository(_dataConnectionString, 1);
+
+            var data = repository.Get(2);
+
+            Assert.IsTrue(data.BudgetID == 2);
+            Assert.IsTrue(data.Account_AccountID == 1);
+            Assert.IsTrue(data.Start == new DateTime(2015, 2, 1));
+            Assert.IsTrue(data.End == new DateTime(2015, 2, 28));
+        }
+
+        [Test]
+        [Category("Budget")]
+        public void Data_Read_Deleted_Budget()
+        {
+            var repository = new BudgetRepository(_dataConnectionString, 1);
+
+            var data = repository.Get(3);
+
+            Assert.IsTrue(data == null);
+        }
+
+        [Test]
+        [Category("Budget")]
+        public void Data_Update_Budget()
+        {
+            var repository = new BudgetRepository(_dataConnectionString, 1);
+
+            var budget = repository.Get(1);
+
+            budget.Account_AccountID = 2;
+            budget.Start = new DateTime(2015, 4, 1);
+            budget.End = new DateTime(2015, 4, 30);
+
+            var result = repository.Update(budget);
+
+            Assert.IsTrue(result.BudgetID == 1);
+            Assert.IsTrue(result.Account_AccountID == 2);
+            Assert.IsTrue(result.Start == new DateTime(2015, 4, 1));
+            Assert.IsTrue(result.End == new DateTime(2015, 4, 30));
+            Assert.IsTrue(result.LastModifiedBy == 1);
+            Assert.IsTrue(result.LastModifiedDate.Date == DateTime.Now.Date);
+        }
+
+        [Test]
+        [Category("Budget")]
+        public void Data_Delete_Budget()
+        {
+            var repository = new BudgetRepository(_dataConnectionString, 1);
+
+            var result = repository.Delete(1);
+
+            var budget = repository.Get(1);
+
+            Assert.IsTrue(budget == null);
+            Assert.IsTrue(result.Deleted == true);
+            Assert.IsTrue(result.DeletedBy == 1);
+            Assert.IsTrue(result.DeletedDate.Value.Date == DateTime.Now.Date);
+        }
+
+        #endregion Budget
+
         #region Category
 
         [Test]

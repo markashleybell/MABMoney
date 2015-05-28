@@ -5,7 +5,8 @@ END
 GO
 
 CREATE PROC [dbo].[mm_Budgets_Read] 
-    @BudgetID int
+    @UserID int,
+    @BudgetID int = NULL
 AS 
     SET NOCOUNT ON 
     SET XACT_ABORT ON  
@@ -13,21 +14,27 @@ AS
     BEGIN TRAN
 
         SELECT 
-            [BudgetID], 
-            [Start], 
-            [End], 
-            [Account_AccountID], 
-            [CreatedBy], 
-            [CreatedDate], 
-            [LastModifiedBy], 
-            [LastModifiedDate], 
-            [Deleted], 
-            [DeletedBy], 
-            [DeletedDate] 
+            [b].[BudgetID], 
+            [b].[Start], 
+            [b].[End], 
+            [b].[Account_AccountID], 
+            [b].[CreatedBy], 
+            [b].[CreatedDate], 
+            [b].[LastModifiedBy], 
+            [b].[LastModifiedDate], 
+            [b].[Deleted], 
+            [b].[DeletedBy], 
+            [b].[DeletedDate] 
         FROM   
-            [dbo].[Budgets] 
+            [dbo].[vBudgets] [b]
+        INNER JOIN
+            [dbo].[vAccounts] [a] ON [a].[AccountID] = [b].[Account_AccountID]
         WHERE  
-            ([BudgetID] = @BudgetID OR @BudgetID IS NULL) 
+            [a].[User_UserID] = @UserID
+        AND
+            [b].[BudgetID] = CASE WHEN @BudgetID IS NULL THEN [b].[BudgetID] ELSE @BudgetID END
+        ORDER BY
+            [b].[Start] DESC
 
     COMMIT
 GO
@@ -39,24 +46,51 @@ END
 GO
 
 CREATE PROC [dbo].[mm_Budgets_Create] 
+    @UserID int,
     @Start datetime,
     @End datetime,
-    @Account_AccountID int,
-    @CreatedBy int,
-    @CreatedDate datetime,
-    @LastModifiedBy int,
-    @LastModifiedDate datetime,
-    @Deleted bit,
-    @DeletedBy int = NULL,
-    @DeletedDate datetime = NULL
+    @Account_AccountID int
 AS 
     SET NOCOUNT ON 
     SET XACT_ABORT ON  
     
     BEGIN TRAN
     
-        INSERT INTO 
-            [dbo].[Budgets] (
+        IF EXISTS(
+            SELECT 
+                [AccountID] 
+            FROM 
+                [dbo].[vAccounts] [a] 
+            WHERE 
+                [a].[User_UserID] = @UserID 
+            AND 
+                [a].[AccountID] = @Account_AccountID
+        )
+        BEGIN
+            
+            DECLARE @Now datetime = GETDATE()
+    
+            INSERT INTO 
+                [dbo].[Budgets] (
+                    [Start], 
+                    [End], 
+                    [Account_AccountID], 
+                    [CreatedBy], 
+                    [CreatedDate], 
+                    [LastModifiedBy], 
+                    [LastModifiedDate]
+                )
+            SELECT 
+                @Start, 
+                @End, 
+                @Account_AccountID, 
+                @UserID, 
+                @Now,
+                @UserID,
+                @Now
+            
+            SELECT 
+                [BudgetID], 
                 [Start], 
                 [End], 
                 [Account_AccountID], 
@@ -67,35 +101,12 @@ AS
                 [Deleted], 
                 [DeletedBy], 
                 [DeletedDate]
-            )
-        SELECT 
-            @Start, 
-            @End, 
-            @Account_AccountID, 
-            @CreatedBy, 
-            @CreatedDate, 
-            @LastModifiedBy, 
-            @LastModifiedDate, 
-            @Deleted, 
-            @DeletedBy, 
-            @DeletedDate
-        
-        SELECT 
-            [BudgetID], 
-            [Start], 
-            [End], 
-            [Account_AccountID], 
-            [CreatedBy], 
-            [CreatedDate], 
-            [LastModifiedBy], 
-            [LastModifiedDate], 
-            [Deleted], 
-            [DeletedBy], 
-            [DeletedDate]
-        FROM   
-            [dbo].[Budgets]
-        WHERE  
-            [BudgetID] = SCOPE_IDENTITY()
+            FROM   
+                [dbo].[vBudgets]
+            WHERE  
+                [BudgetID] = SCOPE_IDENTITY()
+            
+        END
            
     COMMIT
 GO
@@ -107,55 +118,60 @@ END
 GO
 
 CREATE PROC [dbo].[mm_Budgets_Update] 
+    @UserID int,
     @BudgetID int,
     @Start datetime,
     @End datetime,
-    @Account_AccountID int,
-    @CreatedBy int,
-    @CreatedDate datetime,
-    @LastModifiedBy int,
-    @LastModifiedDate datetime,
-    @Deleted bit,
-    @DeletedBy int = NULL,
-    @DeletedDate datetime = NULL
+    @Account_AccountID int
 AS 
     SET NOCOUNT ON 
     SET XACT_ABORT ON  
     
     BEGIN TRAN
 
-        UPDATE 
-            [dbo].[Budgets]
-        SET    
-            [Start] = @Start, 
-            [End] = @End, 
-            [Account_AccountID] = @Account_AccountID, 
-            [CreatedBy] = @CreatedBy, 
-            [CreatedDate] = @CreatedDate, 
-            [LastModifiedBy] = @LastModifiedBy, 
-            [LastModifiedDate] = @LastModifiedDate, 
-            [Deleted] = @Deleted, 
-            [DeletedBy] = @DeletedBy, 
-            [DeletedDate] = @DeletedDate
-        WHERE  
-            [BudgetID] = @BudgetID
-        
-        SELECT 
-            [BudgetID], 
-            [Start], 
-            [End], 
-            [Account_AccountID], 
-            [CreatedBy], 
-            [CreatedDate], 
-            [LastModifiedBy], 
-            [LastModifiedDate], 
-            [Deleted], 
-            [DeletedBy], 
-            [DeletedDate]
-        FROM   
-            [dbo].[Budgets]
-        WHERE  
-            [BudgetID] = @BudgetID 
+        IF EXISTS(
+            SELECT 
+                [AccountID] 
+            FROM 
+                [dbo].[vAccounts] [a] 
+            WHERE 
+                [a].[User_UserID] = @UserID 
+            AND 
+                [a].[AccountID] = @Account_AccountID
+        )
+        BEGIN
+
+            DECLARE @Now datetime = GETDATE()
+
+            UPDATE 
+                [dbo].[Budgets]
+            SET    
+                [Start] = @Start, 
+                [End] = @End, 
+                [Account_AccountID] = @Account_AccountID, 
+                [LastModifiedBy] = @UserID, 
+                [LastModifiedDate] = @Now
+            WHERE  
+                [BudgetID] = @BudgetID
+            
+            SELECT 
+                [BudgetID], 
+                [Start], 
+                [End], 
+                [Account_AccountID], 
+                [CreatedBy], 
+                [CreatedDate], 
+                [LastModifiedBy], 
+                [LastModifiedDate], 
+                [Deleted], 
+                [DeletedBy], 
+                [DeletedDate]
+            FROM   
+                [dbo].[vBudgets]
+            WHERE  
+                [BudgetID] = @BudgetID 
+                
+        END
 
     COMMIT
 GO
@@ -167,6 +183,7 @@ END
 GO
 
 CREATE PROC [dbo].[mm_Budgets_Delete] 
+    @UserID int,
     @BudgetID int
 AS 
     SET NOCOUNT ON 
@@ -174,11 +191,55 @@ AS
     
     BEGIN TRAN
 
-        DELETE
-        FROM   
-            [dbo].[Budgets]
-        WHERE  
-            [BudgetID] = @BudgetID
+        IF EXISTS(
+            SELECT 
+                [a].[AccountID] 
+            FROM 
+                [dbo].[vAccounts] [a] 
+            INNER JOIN
+                [dbo].[vBudgets] [b] ON [b].[Account_AccountID] = [a].[AccountID] AND [b].[BudgetID] = @BudgetID
+            WHERE 
+                [a].[User_UserID] = @UserID 
+        )
+        BEGIN
+
+            UPDATE   
+                [b]
+            SET  
+                [b].[Deleted] = 1,
+                [b].[DeletedBy] = @UserID,
+                [b].[DeletedDate] = GETDATE()
+            FROM
+                [dbo].[vBudgets] AS [b]
+            INNER JOIN
+                [dbo].[vAccounts] [a] ON [a].[AccountID] = [b].[Account_AccountID]
+            WHERE
+                [a].[User_UserID] = @UserID
+            AND
+                [b].[BudgetID] = @BudgetID
+                
+            SELECT 
+                [b].[BudgetID], 
+                [b].[Start], 
+                [b].[End], 
+                [b].[Account_AccountID], 
+                [b].[CreatedBy], 
+                [b].[CreatedDate], 
+                [b].[LastModifiedBy], 
+                [b].[LastModifiedDate], 
+                [b].[Deleted], 
+                [b].[DeletedBy], 
+                [b].[DeletedDate]
+            FROM   
+                [dbo].[Budgets] [b]
+            INNER JOIN
+                [dbo].[Accounts] [a] ON [a].[AccountID] = [b].[Account_AccountID]
+            WHERE  
+                [a].[User_UserID] = @UserID
+            AND
+                [b].[BudgetID] = @BudgetID
+
+        END
 
     COMMIT
 GO

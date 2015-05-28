@@ -11,9 +11,9 @@ namespace MABMoney.Data.Abstract
     {
         IEnumerable<Budget> All();
         Budget Get(int id);
-        void Add(Budget budget);
-        void Update(Budget budget);
-        void Delete(int id);
+        Budget Add(Budget budget);
+        Budget Update(Budget budget);
+        Budget Delete(int id);
 
         Budget GetLatest(int accountId);
         int GetBudgetCount(int accountId);

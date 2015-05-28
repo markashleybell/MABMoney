@@ -407,3 +407,18 @@ FROM
 WHERE 
     [Deleted] = 0
 GO
+
+IF OBJECT_ID('[dbo].[vBudgets]') IS NOT NULL
+BEGIN 
+    DROP VIEW [dbo].[vBudgets] 
+END 
+GO
+
+CREATE VIEW [dbo].[vBudgets] AS
+SELECT 
+    *
+FROM 
+    [dbo].[Budgets]
+WHERE 
+    [Deleted] = 0
+GO

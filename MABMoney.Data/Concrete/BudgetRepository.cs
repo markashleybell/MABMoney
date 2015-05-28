@@ -18,27 +18,38 @@ namespace MABMoney.Data.Concrete
 
         public IEnumerable<Budget> All()
         {
-            throw new NotImplementedException();
+            return GetEnumerable<Budget>("mm_Budgets_Read", new { UserID = _userId });
         }
 
         public Budget Get(int id)
         {
-            throw new NotImplementedException();
+            return GetSingle<Budget>("mm_Budgets_Read", new { UserID = _userId, BudgetID = id });
         }
 
-        public void Add(Budget budget)
+        public Budget Add(Budget budget)
         {
-            throw new NotImplementedException();
+            return AddOrUpdate<Budget>("mm_Budgets_Create", new {
+                UserID = _userId,
+                Account_AccountID = budget.Account_AccountID,
+                Start = budget.Start,
+                End = budget.End
+            });
         }
 
-        public void Update(Budget budget)
+        public Budget Update(Budget budget)
         {
-            throw new NotImplementedException();
+            return AddOrUpdate<Budget>("mm_Budgets_Update", new {
+                UserID = _userId,
+                BudgetID = budget.BudgetID,
+                Account_AccountID = budget.Account_AccountID,
+                Start = budget.Start,
+                End = budget.End
+            });
         }
 
-        public void Delete(int id)
+        public Budget Delete(int id)
         {
-            throw new NotImplementedException();
+            return AddOrUpdate<Budget>("mm_Budgets_Delete", new { UserID = _userId, BudgetID = id });
         }
 
         public Budget GetLatest(int accountId)
