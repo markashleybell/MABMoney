@@ -111,3 +111,10 @@ GO
 
 SET IDENTITY_INSERT [dbo].[Budgets] OFF
 GO
+
+INSERT INTO [dbo].[Categories_Budgets]([Budget_BudgetID], [Category_CategoryID], [Amount], [CreatedBy], [CreatedDate], [LastModifiedBy], [LastModifiedDate], [Deleted], [DeletedBy], [DeletedDate])
+SELECT 1, 2, 500.00, 1, '20150101 00:00:00.000', 1, '20150101 00:00:00.000', 0, NULL, NULL UNION ALL
+SELECT 1, 3, 250.00, 1, '20150101 00:00:00.000', 1, '20150101 00:00:00.000', 0, NULL, NULL UNION ALL
+SELECT 1, 5, 100.00, 1, '20150101 00:00:00.000', 1, '20150101 00:00:00.000', 1, 1, '20150101 00:00:00.000' UNION ALL
+SELECT 4, 9, 2000.00, 2, '20150101 00:00:00.000', 2, '20150101 00:00:00.000', 0, NULL, NULL
+

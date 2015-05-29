@@ -18,27 +18,48 @@ namespace MABMoney.Data.Concrete
 
         public IEnumerable<Category_Budget> All(int budgetId)
         {
-            throw new NotImplementedException();
+            return GetEnumerable<Category_Budget>("mm_Categories_Budgets_Read", new { 
+                UserID = _userId,
+                Budget_BudgetID = budgetId 
+            });
         }
 
-        public Category_Budget Get(int id)
+        public Category_Budget Get(int budgetId, int categoryId)
         {
-            throw new NotImplementedException();
+            return GetSingle<Category_Budget>("mm_Categories_Budgets_Read", new { 
+                UserID = _userId, 
+                Budget_BudgetID = budgetId, 
+                Category_CategoryID = categoryId 
+            });
         }
 
-        public void Add(Category_Budget category_budget)
+        public Category_Budget Add(Category_Budget category_budget)
         {
-            throw new NotImplementedException();
+            return AddOrUpdate<Category_Budget>("mm_Categories_Budgets_Create", new {
+                UserID = _userId,
+                Budget_BudgetID = category_budget.Budget_BudgetID,
+                Category_CategoryID = category_budget.Category_CategoryID,
+                Amount = category_budget.Amount
+            });
         }
 
-        public void Update(Category_Budget category_budget)
+        public Category_Budget Update(Category_Budget category_budget)
         {
-            throw new NotImplementedException();
+            return AddOrUpdate<Category_Budget>("mm_Categories_Budgets_Update", new {
+                UserID = _userId,
+                Budget_BudgetID = category_budget.Budget_BudgetID,
+                Category_CategoryID = category_budget.Category_CategoryID,
+                Amount = category_budget.Amount
+            });
         }
 
-        public void Delete(int id)
+        public Category_Budget Delete(int budgetId, int categoryId)
         {
-            throw new NotImplementedException();
+            return AddOrUpdate<Category_Budget>("mm_Categories_Budgets_Delete", new { 
+                UserID = _userId,
+                Budget_BudgetID = budgetId,
+                Category_CategoryID = categoryId 
+            });
         }
     }
 }

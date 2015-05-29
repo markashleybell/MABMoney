@@ -451,6 +451,114 @@ namespace MABMoney.Test
 
         #endregion Category
 
+        #region Category_Budget
+
+        [Test]
+        [Category("Category_Budget")]
+        public void Data_Create_Category_Budget()
+        {
+            var repository = new Category_BudgetRepository(_dataConnectionString, 1);
+
+            var category_budget = new MABMoney.Domain.Category_Budget {
+                Budget_BudgetID = 1,
+                Category_CategoryID = 4,
+                Amount = 250.00M
+            };
+
+            var result = repository.Add(category_budget);
+
+            Assert.IsTrue(result.Budget_BudgetID == 1);
+            Assert.IsTrue(result.Category_CategoryID == 4);
+            Assert.IsTrue(result.Amount == 250.00M);
+            Assert.IsTrue(result.CreatedBy == 1);
+            Assert.IsTrue(result.CreatedDate.Date == DateTime.Now.Date);
+            Assert.IsTrue(result.LastModifiedBy == 1);
+            Assert.IsTrue(result.LastModifiedDate.Date == DateTime.Now.Date);
+        }
+
+        [Test]
+        [Category("Category_Budget")]
+        public void Data_Read_Category_Budgets()
+        {
+            var repository = new Category_BudgetRepository(_dataConnectionString, 1);
+
+            var data = repository.All(1).OrderBy(x => x.Category_CategoryID).ToList();
+
+            Assert.IsTrue(data.Count == 2);
+            Assert.IsTrue(data[0].Budget_BudgetID == 1);
+            Assert.IsTrue(data[0].Category_CategoryID == 2);
+            Assert.IsTrue(data[0].Amount == 500.00M);
+            Assert.IsTrue(data[1].Budget_BudgetID == 1);
+            Assert.IsTrue(data[1].Category_CategoryID == 3);
+            Assert.IsTrue(data[1].Amount == 250.00M);
+        }
+
+        [Test]
+        [Category("Category_Budget")]
+        public void Data_Read_Category_Budget()
+        {
+            var repository = new Category_BudgetRepository(_dataConnectionString, 1);
+
+            var data = repository.Get(1, 2);
+
+            Assert.IsTrue(data.Budget_BudgetID == 1);
+            Assert.IsTrue(data.Category_CategoryID == 2);
+            Assert.IsTrue(data.Amount == 500.00M);
+        }
+
+        [Test]
+        [Category("Category_Budget")]
+        public void Data_Read_Deleted_Category_Budget()
+        {
+            var repository = new Category_BudgetRepository(_dataConnectionString, 1);
+
+            var data = repository.Get(1, 5);
+
+            Assert.IsTrue(data == null);
+        }
+
+        [Test]
+        [Category("Category_Budget")]
+        public void Data_Update_Category_Budget()
+        {
+            var repository = new Category_BudgetRepository(_dataConnectionString, 1);
+
+            var category = repository.Get(1, 2);
+
+            // TODO: This is failing because we are trying to update the keys - what should happen in this situation?
+            category.Budget_BudgetID = 2;
+            category.Category_CategoryID = 4;
+            category.Amount = 123.45M;
+
+            var result = repository.Update(category);
+
+            Assert.IsTrue(result.Budget_BudgetID == 2);
+            Assert.IsTrue(result.Category_CategoryID == 4);
+            Assert.IsTrue(result.Amount == 123.45M);
+            Assert.IsTrue(result.CreatedBy == 1);
+            Assert.IsTrue(result.CreatedDate.Date == DateTime.Now.Date);
+            Assert.IsTrue(result.LastModifiedBy == 1);
+            Assert.IsTrue(result.LastModifiedDate.Date == DateTime.Now.Date);
+        }
+
+        [Test]
+        [Category("Category_Budget")]
+        public void Data_Delete_Category_Budget()
+        {
+            var repository = new Category_BudgetRepository(_dataConnectionString, 1);
+
+            var result = repository.Delete(1, 3);
+
+            var category = repository.Get(1, 3);
+
+            Assert.IsTrue(category == null);
+            Assert.IsTrue(result.Deleted == true);
+            Assert.IsTrue(result.DeletedBy == 1);
+            Assert.IsTrue(result.DeletedDate.Value.Date == DateTime.Now.Date);
+        }
+
+        #endregion Category_Budget
+
         #region Session
 
         [Test]
