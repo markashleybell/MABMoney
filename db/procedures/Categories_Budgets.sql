@@ -168,8 +168,6 @@ AS
             UPDATE 
                 [dbo].[Categories_Budgets]
             SET    
-                [Budget_BudgetID] = @Budget_BudgetID, 
-                [Category_CategoryID] = @Category_CategoryID, 
                 [Amount] = @Amount, 
                 [LastModifiedBy] = @UserID, 
                 [LastModifiedDate] = @Now

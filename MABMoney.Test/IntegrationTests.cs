@@ -525,18 +525,13 @@ namespace MABMoney.Test
 
             var category = repository.Get(1, 2);
 
-            // TODO: This is failing because we are trying to update the keys - what should happen in this situation?
-            category.Budget_BudgetID = 2;
-            category.Category_CategoryID = 4;
             category.Amount = 123.45M;
 
             var result = repository.Update(category);
 
-            Assert.IsTrue(result.Budget_BudgetID == 2);
-            Assert.IsTrue(result.Category_CategoryID == 4);
+            Assert.IsTrue(result.Budget_BudgetID == 1);
+            Assert.IsTrue(result.Category_CategoryID == 2);
             Assert.IsTrue(result.Amount == 123.45M);
-            Assert.IsTrue(result.CreatedBy == 1);
-            Assert.IsTrue(result.CreatedDate.Date == DateTime.Now.Date);
             Assert.IsTrue(result.LastModifiedBy == 1);
             Assert.IsTrue(result.LastModifiedDate.Date == DateTime.Now.Date);
         }
