@@ -1314,7 +1314,9 @@ AS
             [cb].[LastModifiedDate], 
             [cb].[Deleted], 
             [cb].[DeletedBy], 
-            [cb].[DeletedDate] 
+            [cb].[DeletedDate],
+            [c].[Name] AS CategoryName,
+            [c].[Type] AS CategoryType
         FROM   
             [dbo].[vCategories_Budgets] [cb]
         INNER JOIN
@@ -1399,7 +1401,9 @@ AS
                 [cb].[LastModifiedDate], 
                 [cb].[Deleted], 
                 [cb].[DeletedBy], 
-                [cb].[DeletedDate]
+                [cb].[DeletedDate],
+                [c].[Name] AS CategoryName,
+                [c].[Type] AS CategoryType
             FROM   
                 [dbo].[vCategories_Budgets] [cb]
             INNER JOIN
@@ -1476,7 +1480,9 @@ AS
                 [cb].[LastModifiedDate], 
                 [cb].[Deleted], 
                 [cb].[DeletedBy], 
-                [cb].[DeletedDate]
+                [cb].[DeletedDate],
+                [c].[Name] AS CategoryName,
+                [c].[Type] AS CategoryType
             FROM   
                 [dbo].[vCategories_Budgets] [cb]
             INNER JOIN
@@ -1560,7 +1566,9 @@ AS
                 [cb].[LastModifiedDate], 
                 [cb].[Deleted], 
                 [cb].[DeletedBy], 
-                [cb].[DeletedDate]
+                [cb].[DeletedDate],
+                [c].[Name] AS CategoryName,
+                [c].[Type] AS CategoryType
             FROM   
                 [dbo].[Categories_Budgets] [cb]
             INNER JOIN

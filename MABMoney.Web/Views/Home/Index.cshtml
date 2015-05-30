@@ -282,7 +282,7 @@
             
             <h2 class="budget-date-range-heading">@((Model.Budget != null) ? Model.Budget.Start.ToString("dd/MM/yy") + " - " + Model.Budget.End.ToString("dd/MM/yy") : "")</h2>
             
-            //Html.RenderPartial("~/Views/Budgets/BudgetGraph.cshtml", Model.Budget.Category_Budgets);
+            Html.RenderPartial("~/Views/Budgets/BudgetGraph.cshtml", Model.Budget.Category_Budgets);
         }
 
         <div class="row">

@@ -58,7 +58,7 @@ namespace MABMoney.Web
                 dest.StartingBalance = src.StartingBalance;
                 dest.CurrentBalance = src.CurrentBalance;
                 dest.Default = src.Default;
-                dest.Type = (AccountTypeDTO)dest.Type;
+                dest.Type = (AccountTypeDTO)src.Type;
                 dest.TransactionDescriptionHistoryAsString = src.TransactionDescriptionHistory;
                 dest.DisplayOrder = src.DisplayOrder;
             });

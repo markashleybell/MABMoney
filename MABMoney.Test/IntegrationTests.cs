@@ -517,6 +517,8 @@ namespace MABMoney.Test
 
             Assert.IsTrue(result.Budget_BudgetID == 1);
             Assert.IsTrue(result.Category_CategoryID == 4);
+            Assert.IsTrue(result.CategoryName == "Bills");
+            Assert.IsTrue(result.CategoryType == CategoryType.Expense);
             Assert.IsTrue(result.Amount == 250.00M);
             Assert.IsTrue(result.CreatedBy == 1);
             Assert.IsTrue(result.CreatedDate.Date == DateTime.Now.Date);
@@ -535,10 +537,14 @@ namespace MABMoney.Test
             Assert.IsTrue(data.Count == 2);
             Assert.IsTrue(data[0].Budget_BudgetID == 1);
             Assert.IsTrue(data[0].Category_CategoryID == 2);
+            Assert.IsTrue(data[0].CategoryName == "Rent");
+            Assert.IsTrue(data[0].CategoryType == CategoryType.Expense);
             Assert.IsTrue(data[0].Amount == 500.00M);
             Assert.IsTrue(data[1].Budget_BudgetID == 1);
             Assert.IsTrue(data[1].Category_CategoryID == 3);
             Assert.IsTrue(data[1].Amount == 250.00M);
+            Assert.IsTrue(data[1].CategoryName == "Food");
+            Assert.IsTrue(data[1].CategoryType == CategoryType.Expense);
         }
 
         [Test]
@@ -551,6 +557,8 @@ namespace MABMoney.Test
 
             Assert.IsTrue(data.Budget_BudgetID == 1);
             Assert.IsTrue(data.Category_CategoryID == 2);
+            Assert.IsTrue(data.CategoryName == "Rent");
+            Assert.IsTrue(data.CategoryType == CategoryType.Expense);
             Assert.IsTrue(data.Amount == 500.00M);
         }
 
@@ -579,6 +587,8 @@ namespace MABMoney.Test
 
             Assert.IsTrue(result.Budget_BudgetID == 1);
             Assert.IsTrue(result.Category_CategoryID == 2);
+            Assert.IsTrue(result.CategoryName == "Rent");
+            Assert.IsTrue(result.CategoryType == CategoryType.Expense);
             Assert.IsTrue(result.Amount == 123.45M);
             Assert.IsTrue(result.LastModifiedBy == 1);
             Assert.IsTrue(result.LastModifiedDate.Date == DateTime.Now.Date);

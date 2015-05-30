@@ -56,16 +56,18 @@ namespace MABMoney.Services
 
             // var balanceAtStart = _transactions.Query(x => x.Account_AccountID == budget.Account_AccountID && x.Date < budget.Start).Sum(x => x.Amount);
 
-            //var balanceAtStart = _transactions.GetForAccount(budget.Account_AccountID, DateTime.MinValue, budget.Start).Sum(x => x.Amount);
+            var balanceAtStart = _transactions.GetForAccount(budget.Account_AccountID, new DateTime(2000, 1, 1), budget.Start).Sum(x => x.Amount);
 
-            //var budgetTransactions = _transactions.GetForAccount(budget.Account_AccountID, budget.Start, budget.End).Sum(x => x.Amount);
+            var budgetTransactions = _transactions.GetForAccount(budget.Account_AccountID, budget.Start, budget.End);
 
-            //// Get any categories which aren't deleted or which were deleted after this budget period ended
+            // Get any categories which aren't deleted or which were deleted after this budget period ended
             //var category_budgets = _categories_budgets.QueryWithIncludes(x => x.Budget_BudgetID == budget.BudgetID && (!x.Category.Deleted || (x.Category.Deleted && x.Category.DeletedDate > budget.End)), "Category")
-            //                                          .Select(x => new Category_BudgetDTO {
+            //                                          .Select(x => new Category_BudgetDTO
+            //                                          {
             //                                              Budget_BudgetID = x.Budget_BudgetID,
             //                                              Category_CategoryID = x.Category_CategoryID,
-            //                                              Category = new CategoryDTO { 
+            //                                              Category = new CategoryDTO
+            //                                              {
             //                                                  CategoryID = x.Category.CategoryID,
             //                                                  Name = x.Category.Name,
             //                                                  Type = (CategoryTypeDTO)x.Category.Type
@@ -74,48 +76,53 @@ namespace MABMoney.Services
             //                                          })
             //                                          .ToList();
 
-            //if (category_budgets.Count > 0)
-            //{
-            //    // Assign the categories for this budget
-            //    budget.Category_Budgets = category_budgets;
-            //    // Work out the total spent in each category so far
-            //    budget.Category_Budgets.ForEach(x => x.Total = budgetTransactions.Where(t => t.Category_CategoryID == x.Category_CategoryID).Sum(t => Math.Abs(t.Amount)));
+            var category_budgets = _categories_budgets.All(budget.BudgetID).Select(x => new Category_BudgetDTO {
+                                                          Budget_BudgetID = x.Budget_BudgetID,
+                                                          Category_CategoryID = x.Category_CategoryID,
+                                                          CategoryName = x.CategoryName,
+                                                          CategoryType = (CategoryTypeDTO)x.CategoryType,
+                                                          Amount = x.Amount
+                                                      }).ToList();
 
-            //    // Work out the total amount overspent across all categories
-            //    var overspend = budget.Category_Budgets.Where(x => x.Total > x.Amount).Select(x => x.Total - x.Amount).Sum();
+            if (category_budgets.Count > 0)
+            {
+                // Assign the categories for this budget
+                budget.Category_Budgets = category_budgets;
+                // Work out the total spent in each category so far
+                budget.Category_Budgets.ForEach(x => x.Total = budgetTransactions.Where(t => t.Category_CategoryID == x.Category_CategoryID).Sum(t => Math.Abs(t.Amount)));
 
-            //    // Work out how much money has been allocated to budget categories
-            //    var allocated = budget.Category_Budgets.Sum(x => x.Amount);
+                // Work out the total amount overspent across all categories
+                var overspend = budget.Category_Budgets.Where(x => x.Total > x.Amount).Select(x => x.Total - x.Amount).Sum();
 
-            //    // Work out how much money has been spent in budget categories
-            //    var account = _accountServices.Get(budget.Account_AccountID);
-            //    var allocatedSpent = budget.Category_Budgets.Sum(x => x.Total);
+                // Work out how much money has been allocated to budget categories
+                var allocated = budget.Category_Budgets.Sum(x => x.Amount);
 
-            //    var balanceAtBudgetStart = balanceAtStart + account.StartingBalance;
+                // Work out how much money has been spent in budget categories
+                var account = _accountServices.Get(budget.Account_AccountID);
+                var allocatedSpent = budget.Category_Budgets.Sum(x => x.Total);
 
-            //    var unallocatedAmount = ((balanceAtBudgetStart - allocated) - overspend) + budgetTransactions.Where(x => x.Amount > 0).Sum(x => x.Amount);
+                var balanceAtBudgetStart = balanceAtStart + account.StartingBalance;
 
-            //    // Work out how much money was spent in transactions not assigned to a category
-            //    var unallocatedSpent = budgetTransactions.Where(x => x.Amount < 0 && x.Category_CategoryID == null).ToList().Sum(x => Math.Abs(x.Amount));
+                var unallocatedAmount = ((balanceAtBudgetStart - allocated) - overspend) + budgetTransactions.Where(x => x.Amount > 0).Sum(x => x.Amount);
 
-            //    // If there is money left over after all budget category amounts and any overspend have been subtracted
-            //    if (unallocatedAmount > 0)
-            //    {
-            //        // Show how much and how much we've spent so far
-            //        budget.Category_Budgets.Add(new Category_BudgetDTO {
-            //            Budget_BudgetID = budget.BudgetID,
-            //            Category_CategoryID = 0,
-            //            Category = new CategoryDTO
-            //            {
-            //                CategoryID = 0,
-            //                Name = "Unallocated",
-            //                Type = CategoryTypeDTO.Expense
-            //            },
-            //            Amount = unallocatedAmount,
-            //            Total = unallocatedSpent
-            //        });
-            //    }
-            //}
+                // Work out how much money was spent in transactions not assigned to a category
+                var unallocatedSpent = budgetTransactions.Where(x => x.Amount < 0 && x.Category_CategoryID == null).ToList().Sum(x => Math.Abs(x.Amount));
+
+                // If there is money left over after all budget category amounts and any overspend have been subtracted
+                if (unallocatedAmount > 0)
+                {
+                    // Show how much and how much we've spent so far
+                    budget.Category_Budgets.Add(new Category_BudgetDTO
+                    {
+                        Budget_BudgetID = budget.BudgetID,
+                        Category_CategoryID = 0,
+                        CategoryName = "Unallocated",
+                        CategoryType = CategoryTypeDTO.Expense,
+                        Amount = unallocatedAmount,
+                        Total = unallocatedSpent
+                    });
+                }
+            }
 
             return budget;
         }
@@ -143,9 +150,13 @@ namespace MABMoney.Services
 
         public void SaveCategoryBudget(Category_BudgetDTO dto)
         {
-            _categoryServices.Save(dto.Category);
+            _categoryServices.Save(new CategoryDTO { 
+                CategoryID = dto.Category_CategoryID,
+                Name = dto.CategoryName,
+                Type = dto.CategoryType
+            });
 
-            dto.Category_CategoryID = dto.Category.CategoryID;
+            dto.Category_CategoryID = dto.Category_CategoryID;
 
             var cb = _categories_budgets.Get(dto.Budget_BudgetID, dto.Category_CategoryID);
 

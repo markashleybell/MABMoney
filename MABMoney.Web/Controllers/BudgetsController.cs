@@ -119,7 +119,7 @@ namespace MABMoney.Web.Controllers
                 var budget = _budgetServices.Get(model.Budget_BudgetID);
 
                 categoryAmounts = budget.Category_Budgets.Where(x => x.Category_CategoryID != 0).Select(x => new Category_BudgetViewModel { 
-                    Name = x.Category.Name,
+                    Name = x.CategoryName,
                     Budget_BudgetID = x.Budget_BudgetID,
                     Category_CategoryID = x.Category_CategoryID,
                     Amount = x.Amount,
@@ -180,12 +180,6 @@ namespace MABMoney.Web.Controllers
                     {
 
                 _budgetServices.SaveCategoryBudget(new Category_BudgetDTO { 
-                    Category = new CategoryDTO {
-                        CategoryID = category.Category_CategoryID,
-                        Name = category.Name,
-                        Type = CategoryTypeDTO.Expense,
-                        Account_AccountID = model.Account_AccountID
-                    },
                     Budget_BudgetID = dto.BudgetID,
                     Category_CategoryID = category.Category_CategoryID,
                     Amount = category.Amount
@@ -209,7 +203,7 @@ namespace MABMoney.Web.Controllers
             var model = dto.MapTo<EditViewModel>();
             model.Accounts = DataHelpers.GetAccountSelectOptions(_accountServices);
             model.Categories = dto.Category_Budgets.Where(x => x.Category_CategoryID != 0).Select(x => new Category_BudgetViewModel { 
-                Name = x.Category.Name,
+                Name = x.CategoryName,
                 Budget_BudgetID = x.Budget_BudgetID,
                 Category_CategoryID = x.Category_CategoryID,
                 Amount = x.Amount,
@@ -256,13 +250,6 @@ namespace MABMoney.Web.Controllers
                 {
                     _budgetServices.SaveCategoryBudget(new Category_BudgetDTO
                     {
-                        Category = new CategoryDTO
-                        {
-                            CategoryID = category.Category_CategoryID,
-                            Name = category.Name,
-                            Type = CategoryTypeDTO.Expense,
-                            Account_AccountID = model.Account_AccountID
-                        },
                         Budget_BudgetID = dto.BudgetID,
                         Category_CategoryID = category.Category_CategoryID,
                         Amount = category.Amount
