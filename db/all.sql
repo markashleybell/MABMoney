@@ -391,6 +391,8 @@ FROM
     [dbo].[Sessions]
 WHERE 
     [Deleted] = 0
+AND
+    [Expiry] > GETDATE()
 GO
 
 IF OBJECT_ID('[dbo].[vTransactions]') IS NOT NULL
@@ -725,7 +727,8 @@ GO
 
 CREATE PROC [dbo].[mm_Budgets_Read_Latest] 
     @UserID int,
-    @AccountID int
+    @AccountID int,
+    @Date datetime
 AS 
     SET NOCOUNT ON 
     SET XACT_ABORT ON  
@@ -764,8 +767,10 @@ AS
 				[a].[User_UserID] = @UserID
 			AND 
                 [a].[AccountID] = @AccountID
+            AND
+                [b].[End] >= @Date
 			ORDER BY
-				[b].[Start] DESC
+				[b].[BudgetID] DESC
 		
 		END
 
@@ -1050,7 +1055,8 @@ AS
             [c].[LastModifiedDate], 
             [c].[Deleted], 
             [c].[DeletedBy], 
-            [c].[DeletedDate] 
+            [c].[DeletedDate],
+            [a].[Name] AS [AccountName]
         FROM   
             [dbo].[vCategories] [c]
         INNER JOIN
@@ -1061,6 +1067,8 @@ AS
             [c].[CategoryID] = CASE WHEN @CategoryID IS NULL THEN [c].[CategoryID] ELSE @CategoryID END
         AND
             [a].[AccountID] = CASE WHEN @AccountID IS NULL THEN [a].[AccountID] ELSE @AccountID END
+        ORDER BY
+            [c].[CategoryID]
 
     COMMIT
 GO
@@ -1116,21 +1124,24 @@ AS
                 @Now
             
             SELECT 
-                [CategoryID], 
-                [Name], 
-                [Account_AccountID], 
-                [Type], 
-                [CreatedBy], 
-                [CreatedDate], 
-                [LastModifiedBy], 
-                [LastModifiedDate], 
-                [Deleted], 
-                [DeletedBy], 
-                [DeletedDate]
+                [c].[CategoryID], 
+                [c].[Name], 
+                [c].[Account_AccountID], 
+                [c].[Type], 
+                [c].[CreatedBy], 
+                [c].[CreatedDate], 
+                [c].[LastModifiedBy], 
+                [c].[LastModifiedDate], 
+                [c].[Deleted], 
+                [c].[DeletedBy], 
+                [c].[DeletedDate],
+                [a].[Name] AS [AccountName]
             FROM   
-                [dbo].[vCategories]
+                [dbo].[vCategories] [c]
+            INNER JOIN
+                [dbo].[vAccounts] [a] ON [a].[AccountID] = [c].[Account_AccountID]
             WHERE  
-                [CategoryID] = SCOPE_IDENTITY()
+                [c].[CategoryID] = SCOPE_IDENTITY()
                 
         END 
           
@@ -1181,21 +1192,24 @@ AS
                 [CategoryID] = @CategoryID
             
             SELECT 
-                [CategoryID], 
-                [Name], 
-                [Account_AccountID], 
-                [Type], 
-                [CreatedBy], 
-                [CreatedDate], 
-                [LastModifiedBy], 
-                [LastModifiedDate], 
-                [Deleted], 
-                [DeletedBy], 
-                [DeletedDate] 
+                [c].[CategoryID], 
+                [c].[Name], 
+                [c].[Account_AccountID], 
+                [c].[Type], 
+                [c].[CreatedBy], 
+                [c].[CreatedDate], 
+                [c].[LastModifiedBy], 
+                [c].[LastModifiedDate], 
+                [c].[Deleted], 
+                [c].[DeletedBy], 
+                [c].[DeletedDate],
+                [a].[Name] AS [AccountName]
             FROM   
-                [dbo].[vCategories]
+                [dbo].[vCategories] [c]
+            INNER JOIN
+                [dbo].[vAccounts] [a] ON [a].[AccountID] = [c].[Account_AccountID]
             WHERE  
-                [CategoryID] = @CategoryID 
+                [c].[CategoryID] = @CategoryID 
             
         END
 
@@ -1255,7 +1269,8 @@ AS
                 [c].[LastModifiedDate], 
                 [c].[Deleted], 
                 [c].[DeletedBy], 
-                [c].[DeletedDate] 
+                [c].[DeletedDate],
+                [a].[Name] AS [AccountName]
             FROM   
                 [dbo].[Categories] [c]
             INNER JOIN
@@ -1575,7 +1590,8 @@ GO
 
 CREATE PROC [dbo].[mm_Sessions_Read]
     @UserID int,
-    @SessionID int = NULL
+    @SessionID int = NULL,
+    @Key nvarchar(MAX) = NULL
 AS 
     SET NOCOUNT ON 
     SET XACT_ABORT ON  
@@ -1601,45 +1617,8 @@ AS
         AND
             [SessionID] = CASE WHEN @SessionID IS NULL THEN [SessionID] ELSE @SessionID END
         AND
-            [Expiry] > GETDATE()
-
-    COMMIT
-GO
-
-IF OBJECT_ID('[dbo].[mm_Sessions_Read_By_Key]') IS NOT NULL
-BEGIN 
-    DROP PROC [dbo].[mm_Sessions_Read_By_Key] 
-END 
-GO
-
-CREATE PROC [dbo].[mm_Sessions_Read_By_Key]
-    @UserID int,
-    @Key nvarchar(MAX)
-AS 
-    SET NOCOUNT ON 
-    SET XACT_ABORT ON  
-
-    BEGIN TRAN
-
-        SELECT 
-            [SessionID], 
-            [Key], 
-            [Expiry], 
-            [User_UserID], 
-            [CreatedBy], 
-            [CreatedDate], 
-            [LastModifiedBy], 
-            [LastModifiedDate], 
-            [Deleted], 
-            [DeletedBy], 
-            [DeletedDate] 
-        FROM   
-            [dbo].[vSessions] 
-        WHERE  
-            [User_UserID] = @UserID
-        AND
-            [Key] = @Key
-
+            [Key] = CASE WHEN @Key IS NULL THEN [Key] ELSE @Key END
+    
     COMMIT
 GO
 

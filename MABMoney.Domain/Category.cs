@@ -13,6 +13,7 @@ namespace MABMoney.Domain
         [Required]
         public string Name { get; set; }
         public int Account_AccountID { get; set; }
+        public string AccountName { get; set; }
         public CategoryType Type { get; set; }
     }
 }

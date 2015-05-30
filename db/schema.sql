@@ -391,6 +391,8 @@ FROM
     [dbo].[Sessions]
 WHERE 
     [Deleted] = 0
+AND
+    [Expiry] > GETDATE()
 GO
 
 IF OBJECT_ID('[dbo].[vTransactions]') IS NOT NULL

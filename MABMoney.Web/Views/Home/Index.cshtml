@@ -109,7 +109,7 @@
                     @foreach (var transaction in incomeTransactions) {
                     <tr@((transaction.Date < Model.From) ? new MvcHtmlString(" class=\"before-budget-start\"") : new MvcHtmlString(""))>
                         <td>@transaction.Date.ToString("dd/MM/yyyy")</td>
-                        <td>@transaction.Category.Name</td>
+                        <td>@transaction.CategoryName</td>
                         <td class="hidden-xs">@transaction.Description</td>
                         <td class="hidden-xs">@transaction.Note</td>
                         <td>@transaction.Amount.ToString("#0.00")</td>
@@ -173,7 +173,7 @@
                     @foreach (var transaction in expenseTransactions) {
                     <tr@((transaction.Date < Model.From) ? new MvcHtmlString(" class=\"before-budget-start\"") : new MvcHtmlString(""))>
                         <td>@transaction.Date.ToString("dd/MM/yyyy")</td>
-                        <td>@transaction.Category.Name</td>
+                        <td>@transaction.CategoryName</td>
                         <td class="hidden-xs">@transaction.Description</td>
                         <td class="hidden-xs">@transaction.Note</td>
                         <td>@transaction.Amount.ToString("#0.00")</td>
@@ -238,7 +238,7 @@
                     @foreach (var transaction in transferTransactions) {
                     <tr@((transaction.Date < Model.From) ? new MvcHtmlString(" class=\"before-budget-start\"") : new MvcHtmlString(""))>
                         <td>@transaction.Date.ToString("dd/MM/yyyy")</td>
-                        <td>@transaction.Category.Name</td>
+                        <td>@transaction.CategoryName</td>
                         <td class="hidden-xs">@transaction.Description</td>
                         <td class="hidden-xs">@transaction.Note</td>
                         <td>@transaction.Amount.ToString("#0.00")</td>
@@ -282,7 +282,7 @@
             
             <h2 class="budget-date-range-heading">@((Model.Budget != null) ? Model.Budget.Start.ToString("dd/MM/yy") + " - " + Model.Budget.End.ToString("dd/MM/yy") : "")</h2>
             
-            Html.RenderPartial("~/Views/Budgets/BudgetGraph.cshtml", Model.Budget.Category_Budgets);
+            //Html.RenderPartial("~/Views/Budgets/BudgetGraph.cshtml", Model.Budget.Category_Budgets);
         }
 
         <div class="row">

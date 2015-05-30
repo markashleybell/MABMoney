@@ -47,7 +47,8 @@ GO
 
 CREATE PROC [dbo].[mm_Budgets_Read_Latest] 
     @UserID int,
-    @AccountID int
+    @AccountID int,
+    @Date datetime
 AS 
     SET NOCOUNT ON 
     SET XACT_ABORT ON  
@@ -86,8 +87,10 @@ AS
 				[a].[User_UserID] = @UserID
 			AND 
                 [a].[AccountID] = @AccountID
+            AND
+                [b].[End] >= @Date
 			ORDER BY
-				[b].[Start] DESC
+				[b].[BudgetID] DESC
 		
 		END
 

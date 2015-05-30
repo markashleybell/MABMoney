@@ -25,7 +25,6 @@ namespace MABMoney.Web.Controllers
                                       IBudgetServices budgetServices,
                                       IHttpContextProvider context,
                                       ISiteConfiguration config,
-                                      IDateTimeProvider dateProvider,
                                       IUrlHelper urlHelper,
                                       IModelCache cache,
                                       ICachingHelpers cachingHelpers) : base(userServices,
@@ -35,14 +34,13 @@ namespace MABMoney.Web.Controllers
                                                                              budgetServices,
                                                                              context,
                                                                              config,
-                                                                             dateProvider,
                                                                              urlHelper,
                                                                              cache,
                                                                              cachingHelpers) { }
 
         private IndexViewModel GetTransactionIndexViewModel(int userId, int? accountId, int? categoryId, DateTime? from, DateTime? to)
         {
-            var accountList = _accountServices.GetForUser(userId);
+            var accountList = _accountServices.All();
 
             var accounts = accountList.Select(x => new SelectListItem {
                 Value = x.AccountID.ToString(),
@@ -62,7 +60,7 @@ namespace MABMoney.Web.Controllers
             });
 
             // Default to last 30 days
-            var now = _dateProvider.Now;
+            var now = DateTime.Now;
             var defaultTo = new DateTime(now.Year, now.Month, now.Day);
             var defaultFrom = defaultTo.AddDays(-30);
 
@@ -125,7 +123,7 @@ namespace MABMoney.Web.Controllers
             return View(new CreateViewModel {
                 Categories = DataHelpers.GetCategorySelectOptions(_categoryServices),
                 Accounts = DataHelpers.GetAccountSelectOptions(_accountServices),
-                Date = _dateProvider.Now,
+                Date = DateTime.Now,
                 RedirectAfterSubmitUrl = _url.Action("Index")
             });
         }

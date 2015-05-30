@@ -10,11 +10,11 @@ namespace MABMoney.Services
     {
         IEnumerable<SessionDTO> All();
         SessionDTO Get(int id);
-        SessionDTO GetByUserAndKey(int userId, string key);
+        SessionDTO GetByKey(string key);
         void Save(SessionDTO dto);
         void Delete(int id);
         void DeleteByKey(string key);
-        void DeleteExpiredByUser(int userId);
-        void UpdateSessionExpiry(int userId, string key, DateTime expiry);
+        void DeleteExpired();
+        void UpdateSessionExpiry(string key, DateTime expiry);
     }
 }

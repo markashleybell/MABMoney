@@ -15,7 +15,7 @@ namespace MABMoney.Data.Abstract
         Budget Update(Budget budget);
         Budget Delete(int id);
 
-        Budget GetLatest(int accountId);
+        Budget GetLatest(int accountId, DateTime date);
         int GetBudgetCount(int accountId);
     }
 }

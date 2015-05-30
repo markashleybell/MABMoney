@@ -16,6 +16,11 @@ namespace MABMoney.Data.Concrete
     {
         public CategoryRepository(string connectionString, int userId) : base(connectionString, userId) { }
 
+        public IEnumerable<Category> All()
+        {
+            return GetEnumerable<Category>("mm_Categories_Read", new { UserID = _userId });
+        }
+
         public IEnumerable<Category> All(int accountId)
         {
             return GetEnumerable<Category>("mm_Categories_Read", new { UserID = _userId, AccountID = accountId });

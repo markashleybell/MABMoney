@@ -24,7 +24,6 @@ namespace MABMoney.Web.Controllers
                                  IBudgetServices budgetServices,
                                  IHttpContextProvider context,
                                  ISiteConfiguration config,
-                                 IDateTimeProvider dateProvider,
                                  IUrlHelper urlHelper,
                                  IModelCache cache,
                                  ICachingHelpers cachingHelpers) : base(userServices,
@@ -34,7 +33,6 @@ namespace MABMoney.Web.Controllers
                                                                         budgetServices,
                                                                         context,
                                                                         config,
-                                                                        dateProvider,
                                                                         urlHelper,
                                                                         cache,
                                                                         cachingHelpers) { }
@@ -80,7 +78,7 @@ namespace MABMoney.Web.Controllers
                 }).AsQueryable();
 
             }
-            var now = _dateProvider.Now;
+            var now = DateTime.Now;
             
             return View(new CreateViewModel {
                 Start = new DateTime(now.Year, now.Month, 1),
@@ -109,7 +107,7 @@ namespace MABMoney.Web.Controllers
 
             var budgets = _budgetServices.All().Where(x => x.Account_AccountID == model.Account_AccountID).OrderByDescending(x => x.End);
 
-            var now = _dateProvider.Now;
+            var now = DateTime.Now;
 
             var categoryAmounts = categories.ToList().Select(x => new Category_BudgetViewModel {
                 Category_CategoryID = x.CategoryID,

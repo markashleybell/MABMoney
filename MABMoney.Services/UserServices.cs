@@ -14,27 +14,14 @@ namespace MABMoney.Services
     {
         private IUserRepository _users;
         
-        private int _userId;
-
-        public UserServices(IUserRepository users, int currentUserId)
+        public UserServices(IUserRepository users)
         {
             _users = users;
-            _userId = currentUserId;
-        }
-
-        public IEnumerable<UserDTO> All()
-        {
-            return _users.All().MapToList<UserDTO>();
         }
 
         public UserDTO Get(int id)
         {
-            return MapUser(_users.Get(id));
-        }
-
-        public UserDTO GetMinimal(int id)
-        {
-            return MapUser(_users.Get(id));
+            return MapUser(_users.Get());
         }
 
         public UserDTO GetByEmailAddress(string email)
@@ -49,18 +36,18 @@ namespace MABMoney.Services
 
             var dto = user.MapTo<UserDTO>();
 
-            if (user.Accounts != null)
-            {
-                dto.Accounts = new List<AccountDTO>();
+            //if (user.Accounts != null)
+            //{
+            //    dto.Accounts = new List<AccountDTO>();
 
-                foreach (var account in user.Accounts)
-                {
-                    var accountModel = account.MapTo<AccountDTO>();
-                    accountModel.Categories = account.Categories.ToList().MapToList<CategoryDTO>();
+            //    foreach (var account in user.Accounts)
+            //    {
+            //        var accountModel = account.MapTo<AccountDTO>();
+            //        accountModel.Categories = account.Categories.ToList().MapToList<CategoryDTO>();
 
-                    dto.Accounts.Add(accountModel);
-                }
-            }
+            //        dto.Accounts.Add(accountModel);
+            //    }
+            //}
 
             return dto;
         }
@@ -69,28 +56,29 @@ namespace MABMoney.Services
         {
             if (dto.UserID == 0)
             {
-                var entity = dto.MapTo<User>();
-                _users.Add(entity);
-                dto.UserID = entity.UserID;
+                var user = _users.Add(dto.MapTo<User>());
+                dto.UserID = user.UserID;
             }
             else
             {
-                var entity = _users.Get(dto.UserID);
+                throw new NotImplementedException();
 
-                // Store the existing password
-                var oldPassword = entity.Password;
+                //var user = _users.Get(dto.UserID);
 
-                dto.MapTo(entity);
+                //// Store the existing password
+                //var oldPassword = user.Password;
 
-                // If a new password hasn't been supplied, keep the old one
-                if (entity.Password == null)
-                    entity.Password = oldPassword;
+                //dto.MapTo(entity);
+
+                //// If a new password hasn't been supplied, keep the old one
+                //if (entity.Password == null)
+                //    entity.Password = oldPassword;
             }
         }
 
-        public void Delete(int id)
+        public void Delete()
         {
-            _users.Delete(id);
+            _users.Delete();
         }
 
         public UserDTO GetByPasswordResetGUID(string guid)

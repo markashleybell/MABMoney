@@ -29,7 +29,7 @@ namespace MABMoney.Data.Concrete
         public Session Add(Session session)
         {
             return AddOrUpdate<Session>("mm_Sessions_Create", new {
-                UserID = _userId,
+                UserID = session.User_UserID, // We must allow this to be passed in or login cannot work...
                 Key = session.Key,
                 Expiry = session.Expiry
             });
@@ -52,7 +52,7 @@ namespace MABMoney.Data.Concrete
 
         public Session GetByKey(string key)
         {
-            return GetSingle<Session>("mm_Sessions_Read_By_Key", new { UserID = _userId, Key = key });
+            return GetSingle<Session>("mm_Sessions_Read", new { UserID = _userId, Key = key });
         }
         
         public Session UpdateSessionExpiry(string key, DateTime expiry)

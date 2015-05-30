@@ -6,7 +6,8 @@ GO
 
 CREATE PROC [dbo].[mm_Sessions_Read]
     @UserID int,
-    @SessionID int = NULL
+    @SessionID int = NULL,
+    @Key nvarchar(MAX) = NULL
 AS 
     SET NOCOUNT ON 
     SET XACT_ABORT ON  
@@ -32,45 +33,8 @@ AS
         AND
             [SessionID] = CASE WHEN @SessionID IS NULL THEN [SessionID] ELSE @SessionID END
         AND
-            [Expiry] > GETDATE()
-
-    COMMIT
-GO
-
-IF OBJECT_ID('[dbo].[mm_Sessions_Read_By_Key]') IS NOT NULL
-BEGIN 
-    DROP PROC [dbo].[mm_Sessions_Read_By_Key] 
-END 
-GO
-
-CREATE PROC [dbo].[mm_Sessions_Read_By_Key]
-    @UserID int,
-    @Key nvarchar(MAX)
-AS 
-    SET NOCOUNT ON 
-    SET XACT_ABORT ON  
-
-    BEGIN TRAN
-
-        SELECT 
-            [SessionID], 
-            [Key], 
-            [Expiry], 
-            [User_UserID], 
-            [CreatedBy], 
-            [CreatedDate], 
-            [LastModifiedBy], 
-            [LastModifiedDate], 
-            [Deleted], 
-            [DeletedBy], 
-            [DeletedDate] 
-        FROM   
-            [dbo].[vSessions] 
-        WHERE  
-            [User_UserID] = @UserID
-        AND
-            [Key] = @Key
-
+            [Key] = CASE WHEN @Key IS NULL THEN [Key] ELSE @Key END
+    
     COMMIT
 GO
 

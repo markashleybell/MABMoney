@@ -17,10 +17,10 @@ namespace MABMoney.Services.DTO
         [Required]
         public decimal Amount { get; set; }
         public int? Category_CategoryID { get; set; }
-        public CategoryDTO Category { get; set; }
+        public string CategoryName { get; set; }
         [Required]
         public int Account_AccountID { get; set; }
-        public AccountDTO Account { get; set; }
+        public string AccountName { get; set; }
 
         public string TransferGUID { get; set; }
     }

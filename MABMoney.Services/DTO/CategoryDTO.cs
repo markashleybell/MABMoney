@@ -14,7 +14,7 @@ namespace MABMoney.Services.DTO
         public string Name { get; set; }
         [Required]
         public int Account_AccountID { get; set; }
-        public AccountDTO Account { get; set; }
+        public string AccountName { get; set; }
         [Required]
         public CategoryTypeDTO Type { get; set; }
     }

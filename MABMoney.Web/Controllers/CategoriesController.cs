@@ -24,7 +24,6 @@ namespace MABMoney.Web.Controllers
                                     IBudgetServices budgetServices,
                                     IHttpContextProvider context,
                                     ISiteConfiguration config,
-                                    IDateTimeProvider dateProvider,
                                     IUrlHelper urlHelper, 
                                     IModelCache cache,
                                     ICachingHelpers cachingHelpers) : base(userServices,
@@ -34,7 +33,6 @@ namespace MABMoney.Web.Controllers
                                                                            budgetServices,
                                                                            context,
                                                                            config,
-                                                                           dateProvider,
                                                                            urlHelper, 
                                                                            cache,
                                                                            cachingHelpers) { }

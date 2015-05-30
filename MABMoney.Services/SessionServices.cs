@@ -29,69 +29,41 @@ namespace MABMoney.Services
             throw new NotImplementedException();
         }
 
-        public SessionDTO GetByUserAndKey(int userId, string key)
+        public SessionDTO GetByKey(string key)
         {
-            var session = _sessions.Query(x => x.User_UserID == userId && x.Key == key && x.Expiry > _dateProvider.Now)
-                                   .Select(x => new SessionDTO { 
-                                       SessionID = x.SessionID,
-                                       Key = x.Key,
-                                       Expiry = x.Expiry,
-                                       User_UserID = x.User_UserID
-                                   })
-                                   .FirstOrDefault();
-
-            if(session == null)
-                return null;
-
-            return session.MapTo<SessionDTO>();
+            return _sessions.GetByKey(key).MapTo<SessionDTO>();
         }
 
         public void Save(SessionDTO dto)
         {
             // Add the session (sessions will never be updated using this method)
-            var session = dto.MapTo<Session>();
-            _sessions.Add(session);
-            _unitOfWork.Commit();
-
-            // Update the DTO with the new ID
+            var session = _sessions.Add(dto.MapTo<Session>());
             dto.SessionID = session.SessionID;
         }
 
         public void Delete(int id)
         {
-            _sessions.Remove(id);
-            _unitOfWork.Commit();
+            _sessions.Delete(id);
         }
 
         public void DeleteByKey(string key)
         {
-            var session = _sessions.Query(x => x.Key == key).FirstOrDefault();
+            var session = _sessions.GetByKey(key);
 
             if (session != null)
             {
-                _sessions.Remove(session.SessionID);
-                _unitOfWork.Commit();
+                _sessions.Delete(session.SessionID);
             }
         }
 
-        public void DeleteExpiredByUser(int userId)
+        public void DeleteExpired()
         {
-            foreach (var session in _sessions.Query(x => x.User_UserID == userId && x.Expiry <= _dateProvider.Now).ToList())
-                _sessions.Remove(session.SessionID);
-
-            _unitOfWork.Commit();
+            _sessions.DeleteExpired();
         }
 
-        public void UpdateSessionExpiry(int userId, string key, DateTime expiry)
+        public void UpdateSessionExpiry(string key, DateTime expiry)
         {
-            // Try and get the existing session
-            var session = _sessions.Query(x => x.User_UserID == userId && x.Key == key && x.Expiry > _dateProvider.Now).FirstOrDefault();
-
-            if (session != null)
-            {
-                session.Expiry = expiry;
-                _unitOfWork.Commit();
-            }
+            _sessions.UpdateSessionExpiry(key, expiry);
         }
     }
 }

@@ -52,9 +52,13 @@ namespace MABMoney.Data.Concrete
             return AddOrUpdate<Budget>("mm_Budgets_Delete", new { UserID = _userId, BudgetID = id });
         }
 
-        public Budget GetLatest(int accountId)
+        public Budget GetLatest(int accountId, DateTime date)
         {
-            return GetSingle<Budget>("mm_Budgets_Read_Latest", new { UserID = _userId, AccountID = accountId });
+            return GetSingle<Budget>("mm_Budgets_Read_Latest", new { 
+                UserID = _userId, 
+                AccountID = accountId,
+                Date = date
+            });
         }
 
         public int GetBudgetCount(int accountId)

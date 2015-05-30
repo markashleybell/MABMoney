@@ -154,16 +154,11 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="Controllers\AccountsController.cs" />
-    <Compile Include="Controllers\Api\AccountsController.cs" />
-    <Compile Include="Controllers\Api\BudgetsController.cs" />
-    <Compile Include="Controllers\Api\CategoriesController.cs" />
-    <Compile Include="Controllers\Api\TransactionsController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\CategoriesController.cs" />
     <Compile Include="Controllers\TransactionsController.cs" />
     <Compile Include="Controllers\BudgetsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\Api\UsersController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Global.asax.cs">

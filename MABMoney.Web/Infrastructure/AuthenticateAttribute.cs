@@ -40,9 +40,9 @@ namespace MABMoney.Web.Infrastructure
                 _step = _profiler.Step("Get Session In AuthenticateAttribute");
             }
 
-            var sessionRepository = new SessionRepository();
+            var sessionRepository = new SessionRepository(ConfigurationManager.AppSettings["DataDbConnectionString"], userId);
 
-            var session = sessionRepository.GetByUserAndKey(cookieValue);
+            var session = sessionRepository.GetByKey(cookieValue);
 
             if (enableProfiling)
             {

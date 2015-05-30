@@ -27,7 +27,6 @@ namespace MABMoney.Web.Controllers
                               IBudgetServices budgetServices,
                               IHttpContextProvider context,
                               ISiteConfiguration config,
-                              IDateTimeProvider dateProvider,
                               IUrlHelper urlHelper,
                               IModelCache cache,
                               ICachingHelpers cachingHelpers) : base(userServices,
@@ -37,7 +36,6 @@ namespace MABMoney.Web.Controllers
                                                                      budgetServices,
                                                                      context,
                                                                      config,
-                                                                     dateProvider,
                                                                      urlHelper,
                                                                      cache,
                                                                      cachingHelpers) { }
@@ -55,7 +53,7 @@ namespace MABMoney.Web.Controllers
 
         private IndexViewModel GetModelData(IndexViewModel model, int userId, int? accountId)
         {
-            var accounts = _accountServices.GetForUser(userId);
+            var accounts = _accountServices.All();
 
             // If no account ID has been passed in
             if (!accountId.HasValue)
@@ -89,19 +87,19 @@ namespace MABMoney.Web.Controllers
             model.Account_AccountID = account.AccountID;
             model.SourceAccountID = account.AccountID;
 
-            model.IncomeCategories = accounts.First(x => x.AccountID == account.AccountID)
-                                                  .Categories.Where(x => x.Type == CategoryTypeDTO.Income)
-                                                  .Select(x => new SelectListItem {
-                                                      Value = x.CategoryID.ToString(),
-                                                      Text = x.Name
-                                                  }).AsQueryable();
+            var categories = _categoryServices.All().Where(a => a.Account_AccountID == account.AccountID);
 
-            model.ExpenseCategories = accounts.First(x => x.AccountID == account.AccountID)
-                                                   .Categories.Where(x => x.Type == CategoryTypeDTO.Expense)
-                                                   .Select(x => new SelectListItem {
-                                                       Value = x.CategoryID.ToString(),
-                                                       Text = x.Name
-                                                   }).AsQueryable();
+            model.IncomeCategories = categories.Where(c => c.Type == CategoryTypeDTO.Income)
+                                               .Select(c => new SelectListItem {
+                                                   Value = c.CategoryID.ToString(),
+                                                   Text = c.Name
+                                               }).AsQueryable();
+
+            model.ExpenseCategories = categories.Where(c => c.Type == CategoryTypeDTO.Expense)
+                                                .Select(c => new SelectListItem {
+                                                    Value = c.CategoryID.ToString(),
+                                                    Text = c.Name
+                                                }).AsQueryable();
 
             model.Accounts = accounts.Select(x => new SelectListItem {
                 Value = x.AccountID.ToString(),
@@ -121,7 +119,7 @@ namespace MABMoney.Web.Controllers
             model.Tab = (account.Type == AccountTypeDTO.Savings) ? DashboardTab.Income : DashboardTab.BudgetOrPaymentCalc;
             model.SourceAccountID = account.AccountID;
 
-            var now = _dateProvider.Now;
+            var now = DateTime.Now;
 
             model.From = new DateTime(now.Year, now.Month, 1);
             model.To = new DateTime(now.Year, now.Month, DateTime.DaysInMonth(now.Year, now.Month));
@@ -166,7 +164,7 @@ namespace MABMoney.Web.Controllers
         public ActionResult Index(ProfileViewModel profile, string state = null)
         {
             var model = new IndexViewModel();
-            model.Date = _dateProvider.Now;
+            model.Date = DateTime.Now;
 
             if (state != null)
             {
@@ -307,7 +305,7 @@ namespace MABMoney.Web.Controllers
         {
             string debug = null;
 
-            var user = _userServices.GetMinimal(profile.UserID);
+            var user = _userServices.Get(profile.UserID);
 
             var accounts = _accountServices.All().ToList();
 

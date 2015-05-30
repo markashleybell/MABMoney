@@ -25,52 +25,12 @@ namespace MABMoney.Services
 
         public IEnumerable<AccountDTO> All()
         {
-            var dto = _accounts.All().OrderBy(x => x.DisplayOrder).Where(x => x.User_UserID == _userId).Select(a => new AccountDTO { 
-                AccountID = a.AccountID,
-                Type = (AccountTypeDTO)a.Type,
-                Name = a.Name,
-                StartingBalance = a.StartingBalance,
-                CurrentBalance = a.CurrentBalance,
-                Default = a.Default
-            }).ToList();
-
-            return dto;
-        }
-
-        public IEnumerable<AccountDTO> GetForUser(int userId)
-        {
-            var dto = _accounts.Query(x => x.User_UserID == _userId).OrderBy(x => x.DisplayOrder).Select(a => new AccountDTO {
-                AccountID = a.AccountID,
-                Type = (AccountTypeDTO)a.Type,
-                Name = a.Name,
-                StartingBalance = a.StartingBalance,
-                CurrentBalance = a.CurrentBalance,
-                Default = a.Default,
-                Categories = a.Categories.Select(c => new CategoryDTO { 
-                    CategoryID = c.CategoryID,
-                    Name = c.Name,
-                    Type = (CategoryTypeDTO)c.Type
-                }).ToList()
-            }).ToList();
-
-            return dto;
+            return _accounts.All().MapToList<AccountDTO>();
         }
 
         public AccountDTO Get(int id)
         {
-            var account = _accounts.Query(x => x.User_UserID == _userId && x.AccountID == id)
-                                   .Select(x => new AccountDTO { 
-                                       AccountID = x.AccountID,
-                                       Name = x.Name,
-                                       StartingBalance = x.StartingBalance,
-                                       CurrentBalance = x.CurrentBalance,
-                                       Default = x.Default,
-                                       Type = (AccountTypeDTO)x.Type,
-                                       // Project the string value from the database at first
-                                       TransactionDescriptionHistoryAsString = x.TransactionDescriptionHistory,
-                                       DisplayOrder = x.DisplayOrder
-                                   })
-                                   .FirstOrDefault();
+            var account = _accounts.Get(id).MapTo<AccountDTO>();
 
             if (account == null)
                 return null;
@@ -89,8 +49,8 @@ namespace MABMoney.Services
             // Try and get the account
             var account = _accounts.Get(dto.AccountID);
 
-            // If the account exists AND belongs to this user
-            if (account != null && account.User_UserID == _userId)
+            // If the account exists
+            if (account != null)
             {
                 // Update the account
                 dto.MapTo(account);
@@ -100,33 +60,21 @@ namespace MABMoney.Services
                     // Convert the list of descriptions back into a flat string, removing duplicates
                     account.TransactionDescriptionHistory = string.Join("|", dto.TransactionDescriptionHistory.Where(x => !string.IsNullOrWhiteSpace(x)).Distinct().ToArray());
                 }
-
-                _unitOfWork.Commit();
             }
             else
             {
                 // Add the account
                 account = dto.MapTo<Account>();
-                account.User_UserID = _userId;
                 _accounts.Add(account);
-                _unitOfWork.Commit();
 
                 // Update the DTO with the new ID
                 dto.AccountID = account.AccountID;
             }
-
-            _unitOfWork.Commit();
         }
 
         public void Delete(int id)
         {
-            var account = _accounts.Query(x => x.User_UserID == _userId && x.AccountID == id).FirstOrDefault();
-
-            if(account != null)
-            {
-                _accounts.Remove(id);
-                _unitOfWork.Commit();
-            }
+            _accounts.Delete(id);
         }
     }
 }

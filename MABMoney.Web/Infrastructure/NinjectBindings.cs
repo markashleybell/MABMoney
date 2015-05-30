@@ -5,6 +5,7 @@ using MABMoney.Data.Concrete;
 using MABMoney.Domain;
 using MABMoney.Services;
 using MABMoney.Web.Helpers;
+using Ninject.Activation;
 using Ninject.Modules;
 using Ninject.Web.Common;
 using System;
@@ -19,32 +20,62 @@ namespace MABMoney.Web.Infrastructure
 {
     public class NinjectBindings : NinjectModule
     {
+        private int GetUserIDFromCookie(HttpContext httpContext)
+        {
+            var cookieKey = ConfigurationManager.AppSettings["CookieKey"];
+            var sessionCookie = httpContext.Request.Cookies[cookieKey];
+            return (sessionCookie != null) ? Convert.ToInt32(Encoding.UTF8.GetString(Convert.FromBase64String(sessionCookie.Value)).Split('-')[0]) : -1;
+        }
+
         public override void Load()
         {
             var enableProfiling = Convert.ToBoolean(ConfigurationManager.AppSettings["EnableProfiling"]);
-            var enableMigrations = Convert.ToBoolean(ConfigurationManager.AppSettings["EnableMigrations"]);
             var enableCaching = Convert.ToBoolean(ConfigurationManager.AppSettings["EnableCaching"]);
 
-            var sharedSecret = ConfigurationManager.AppSettings["SharedSecret"];
-            var cookieKey = ConfigurationManager.AppSettings["CookieKey"];
             var dataConnectionString = ConfigurationManager.AppSettings["DataDbConnectionString"];
-            var profilerConnectionString = ConfigurationManager.AppSettings["ProfilerDbConnectionString"];
-
+        
             // Caching
             Bind<IModelCacheConfiguration>().To<ModelCacheConfiguration>().InRequestScope();
             Bind<IModelCache>().To<ModelCache>().InRequestScope();
             Bind<ICachingHelpers>().To<CachingHelpers>()
                                    .InRequestScope()
-                                   .WithConstructorArgument("userId", c => ((HttpContext.Current.Request.Cookies[cookieKey] != null) ? Convert.ToInt32(Encoding.UTF8.GetString(Convert.FromBase64String(HttpContext.Current.Request.Cookies[cookieKey].Value)).Split('-')[0]) : -1));
+                                   .WithConstructorArgument("userId", c => GetUserIDFromCookie(HttpContext.Current));
 
             // Repositories
-            Bind<IUserRepository>().To<UserRepository>().InRequestScope();
-            Bind<IAccountRepository>().To<AccountRepository>().InRequestScope();
-            Bind<ITransactionRepository>().To<TransactionRepository>().InRequestScope();
-            Bind<IBudgetRepository>().To<BudgetRepository>().InRequestScope();
-            Bind<ICategoryRepository>().To<CategoryRepository>().InRequestScope();
-            Bind<ICategory_BudgetRepository>().To<Category_BudgetRepository>().InRequestScope();
-            Bind<ISessionRepository>().To<SessionRepository>().InRequestScope();
+            Bind<IUserRepository>().To<UserRepository>()
+                                   .InRequestScope()
+                                   .WithConstructorArgument("connectionString", dataConnectionString)
+                                   .WithConstructorArgument("userId", c => GetUserIDFromCookie(HttpContext.Current));
+
+            Bind<IAccountRepository>().To<AccountRepository>()
+                                      .InRequestScope()
+                                      .WithConstructorArgument("connectionString", dataConnectionString)
+                                      .WithConstructorArgument("userId", c => GetUserIDFromCookie(HttpContext.Current));
+
+            Bind<ITransactionRepository>().To<TransactionRepository>()
+                                          .InRequestScope()
+                                          .WithConstructorArgument("connectionString", dataConnectionString)
+                                          .WithConstructorArgument("userId", c => GetUserIDFromCookie(HttpContext.Current));
+
+            Bind<IBudgetRepository>().To<BudgetRepository>()
+                                     .InRequestScope()
+                                     .WithConstructorArgument("connectionString", dataConnectionString)
+                                     .WithConstructorArgument("userId", c => GetUserIDFromCookie(HttpContext.Current));
+
+            Bind<ICategoryRepository>().To<CategoryRepository>()
+                                       .InRequestScope()
+                                       .WithConstructorArgument("connectionString", dataConnectionString)
+                                       .WithConstructorArgument("userId", c => GetUserIDFromCookie(HttpContext.Current));
+
+            Bind<ICategory_BudgetRepository>().To<Category_BudgetRepository>()
+                                              .InRequestScope()
+                                              .WithConstructorArgument("connectionString", dataConnectionString)
+                                              .WithConstructorArgument("userId", c => GetUserIDFromCookie(HttpContext.Current));
+
+            Bind<ISessionRepository>().To<SessionRepository>()
+                                      .InRequestScope()
+                                      .WithConstructorArgument("connectionString", dataConnectionString)
+                                      .WithConstructorArgument("userId", c => GetUserIDFromCookie(HttpContext.Current));
             
             // Services which are never caching
             Bind<ICategoryServices>().To<CategoryServices>().InRequestScope();
@@ -71,13 +102,10 @@ namespace MABMoney.Web.Infrastructure
                 Bind<ITransactionServices>().To<TransactionServices>().InRequestScope();
             }
             
-            // Unit of work
-            Bind<IUnitOfWork>().To<UnitOfWork>().InRequestScope();
-
             // Providers
             Bind<IHttpContextProvider>().To<HttpContextProvider>().InRequestScope().WithConstructorArgument("context", c => new HttpContextWrapper(HttpContext.Current));
-            Bind<Func<DateTime>>().ToMethod(m => () => DateTime.Now).WhenInjectedInto<DateTimeProvider>();
-            Bind<IDateTimeProvider>().To<DateTimeProvider>().InRequestScope();
+            //Bind<Func<DateTime>>().ToMethod(m => () => DateTime.Now).WhenInjectedInto<DateTimeProvider>();
+            //Bind<IDateTimeProvider>().To<DateTimeProvider>().InRequestScope();
             Bind<ICryptoProvider>().To<CryptoWrapper>().InRequestScope();
             Bind<IUrlHelper>().To<UrlHelperAdapter>().InRequestScope().WithConstructorArgument("context", c => new HttpContextWrapper(HttpContext.Current));
 

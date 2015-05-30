@@ -25,7 +25,8 @@ AS
             [c].[LastModifiedDate], 
             [c].[Deleted], 
             [c].[DeletedBy], 
-            [c].[DeletedDate] 
+            [c].[DeletedDate],
+            [a].[Name] AS [AccountName]
         FROM   
             [dbo].[vCategories] [c]
         INNER JOIN
@@ -36,6 +37,8 @@ AS
             [c].[CategoryID] = CASE WHEN @CategoryID IS NULL THEN [c].[CategoryID] ELSE @CategoryID END
         AND
             [a].[AccountID] = CASE WHEN @AccountID IS NULL THEN [a].[AccountID] ELSE @AccountID END
+        ORDER BY
+            [c].[CategoryID]
 
     COMMIT
 GO
@@ -91,21 +94,24 @@ AS
                 @Now
             
             SELECT 
-                [CategoryID], 
-                [Name], 
-                [Account_AccountID], 
-                [Type], 
-                [CreatedBy], 
-                [CreatedDate], 
-                [LastModifiedBy], 
-                [LastModifiedDate], 
-                [Deleted], 
-                [DeletedBy], 
-                [DeletedDate]
+                [c].[CategoryID], 
+                [c].[Name], 
+                [c].[Account_AccountID], 
+                [c].[Type], 
+                [c].[CreatedBy], 
+                [c].[CreatedDate], 
+                [c].[LastModifiedBy], 
+                [c].[LastModifiedDate], 
+                [c].[Deleted], 
+                [c].[DeletedBy], 
+                [c].[DeletedDate],
+                [a].[Name] AS [AccountName]
             FROM   
-                [dbo].[vCategories]
+                [dbo].[vCategories] [c]
+            INNER JOIN
+                [dbo].[vAccounts] [a] ON [a].[AccountID] = [c].[Account_AccountID]
             WHERE  
-                [CategoryID] = SCOPE_IDENTITY()
+                [c].[CategoryID] = SCOPE_IDENTITY()
                 
         END 
           
@@ -156,21 +162,24 @@ AS
                 [CategoryID] = @CategoryID
             
             SELECT 
-                [CategoryID], 
-                [Name], 
-                [Account_AccountID], 
-                [Type], 
-                [CreatedBy], 
-                [CreatedDate], 
-                [LastModifiedBy], 
-                [LastModifiedDate], 
-                [Deleted], 
-                [DeletedBy], 
-                [DeletedDate] 
+                [c].[CategoryID], 
+                [c].[Name], 
+                [c].[Account_AccountID], 
+                [c].[Type], 
+                [c].[CreatedBy], 
+                [c].[CreatedDate], 
+                [c].[LastModifiedBy], 
+                [c].[LastModifiedDate], 
+                [c].[Deleted], 
+                [c].[DeletedBy], 
+                [c].[DeletedDate],
+                [a].[Name] AS [AccountName]
             FROM   
-                [dbo].[vCategories]
+                [dbo].[vCategories] [c]
+            INNER JOIN
+                [dbo].[vAccounts] [a] ON [a].[AccountID] = [c].[Account_AccountID]
             WHERE  
-                [CategoryID] = @CategoryID 
+                [c].[CategoryID] = @CategoryID 
             
         END
 
@@ -230,7 +239,8 @@ AS
                 [c].[LastModifiedDate], 
                 [c].[Deleted], 
                 [c].[DeletedBy], 
-                [c].[DeletedDate] 
+                [c].[DeletedDate],
+                [a].[Name] AS [AccountName]
             FROM   
                 [dbo].[Categories] [c]
             INNER JOIN

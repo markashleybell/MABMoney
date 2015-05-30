@@ -4,11 +4,9 @@ using MABMoney.Data;
 using MABMoney.Web.Infrastructure;
 using MABMoney.Web.Models;
 using StackExchange.Profiling;
-using StackExchange.Profiling.EntityFramework6;
 using StackExchange.Profiling.Storage;
 using System;
 using System.Configuration;
-using System.Data.Entity;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
@@ -16,6 +14,7 @@ using System.Web.Routing;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Cryptography;
+using MABMoney.Services.DTO;
 
 namespace MABMoney.Web
 {
@@ -38,7 +37,6 @@ namespace MABMoney.Web
         {
             AreaRegistration.RegisterAllAreas();
 
-            GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
@@ -49,28 +47,21 @@ namespace MABMoney.Web
             {
                 if (profilerConnectionString != null)
                     MiniProfiler.Settings.Storage = new SqlServerStorage(profilerConnectionString);
-
-                MiniProfilerEF6.Initialize();
-            }
-
-            // Remove the XML formatter so that Web API actions return JSON by default
-            var config = GlobalConfiguration.Configuration;
-            config.Formatters.Remove(config.Formatters.XmlFormatter);
-
-            //  If migrations are enabled, set up the initialiser based on the connection string
-            if (enableMigrations)
-            {
-                if (externalDbConnectionString != null)
-                    Database.SetInitializer<DataStore>(new MigrateDatabaseToLatestVersionWithConnectionString<DataStore, MABMoney.Data.Migrations.Configuration>(externalDbConnectionString));
-                else
-                    Database.SetInitializer<DataStore>(new MigrateDatabaseToLatestVersion<DataStore, MABMoney.Data.Migrations.Configuration>());
-            }
-            else
-            {
-                Database.SetInitializer<DataStore>(null);
             }
 
             ICryptoProvider _crypto = new CryptoWrapper();
+
+            Mapper.AddMapping<MABMoney.Domain.Account, MABMoney.Services.DTO.AccountDTO>((src, dest) =>
+            {
+                dest.AccountID = src.AccountID;
+                dest.Name = src.Name;
+                dest.StartingBalance = src.StartingBalance;
+                dest.CurrentBalance = src.CurrentBalance;
+                dest.Default = src.Default;
+                dest.Type = (AccountTypeDTO)dest.Type;
+                dest.TransactionDescriptionHistoryAsString = src.TransactionDescriptionHistory;
+                dest.DisplayOrder = src.DisplayOrder;
+            });
 
             Mapper.AddMapping<MABMoney.Web.Models.Users.SignupViewModel, MABMoney.Services.DTO.UserDTO>((s, d) =>
             {

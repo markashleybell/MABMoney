@@ -30,7 +30,6 @@ namespace MABMoney.Web.Controllers
                                IBudgetServices budgetServices,
                                IHttpContextProvider context,
                                ISiteConfiguration config,
-                               IDateTimeProvider dateProvider,
                                ICryptoProvider crypto,
                                IUrlHelper urlHelper,
                                IModelCache cache,
@@ -42,7 +41,6 @@ namespace MABMoney.Web.Controllers
                                                                         budgetServices,
                                                                         context,
                                                                         config,
-                                                                        dateProvider,
                                                                         urlHelper,
                                                                         cache,
                                                                         cachingHelpers) 
@@ -51,15 +49,15 @@ namespace MABMoney.Web.Controllers
             _sessionServices = sessionServices;
         }
 
-        //
-        // GET: /Users/
-        [Authenticate]
-        public ActionResult Index()
-        {
-            return View(new IndexViewModel { 
-                Users = _userServices.All().ToList()
-            });
-        }
+        ////
+        //// GET: /Users/
+        //[Authenticate]
+        //public ActionResult Index()
+        //{
+        //    return View(new IndexViewModel { 
+        //        Users = _userServices.All().ToList()
+        //    });
+        //}
 
         //
         // GET: /Users/Create
@@ -117,7 +115,7 @@ namespace MABMoney.Web.Controllers
         [HttpPost]
         public ActionResult Delete(int id, string redirectAfterSubmitUrl)
         {
-            _userServices.Delete(id);
+            _userServices.Delete();
 
             return Redirect(redirectAfterSubmitUrl);
         }
@@ -141,7 +139,7 @@ namespace MABMoney.Web.Controllers
             // Create a session record
             var uniqueKey = System.Web.Security.Membership.GeneratePassword(16, 8);
             var sessionKey = Convert.ToBase64String(Encoding.UTF8.GetBytes(dto.UserID + "-" + uniqueKey + "-" + _config.Get<string>("SharedSecret")));
-            var sessionExpiry = _dateProvider.Now.AddDays(7);
+            var sessionExpiry = DateTime.Now.AddDays(7);
 
             _sessionServices.Save(new SessionDTO {
                 User_UserID = dto.UserID,
@@ -177,7 +175,7 @@ namespace MABMoney.Web.Controllers
             // Create a session record
             var uniqueKey = System.Web.Security.Membership.GeneratePassword(16, 8);
             var sessionKey = Convert.ToBase64String(Encoding.UTF8.GetBytes(user.UserID + "-" + uniqueKey + "-" + _config.Get<string>("SharedSecret")));
-            var sessionExpiry = _dateProvider.Now.AddDays(7);
+            var sessionExpiry = DateTime.Now.AddDays(7);
 
             // The record in the database expires in 7 days regardless
             _sessionServices.Save(new SessionDTO {
@@ -201,7 +199,7 @@ namespace MABMoney.Web.Controllers
                 _context.SetCookie(_config.Get<string>("CookieKey"), sessionKey);
             }
 
-            _sessionServices.DeleteExpiredByUser(user.UserID);
+            _sessionServices.DeleteExpired();
 
             return Redirect(model.RedirectAfterSubmitUrl);
         }
@@ -215,7 +213,7 @@ namespace MABMoney.Web.Controllers
             // Delete the session
             _sessionServices.DeleteByKey(sessionKey);
             // Remove the cookie
-            _context.SetCookie(cookieKey, "", _dateProvider.Now.AddDays(-1));
+            _context.SetCookie(cookieKey, "", DateTime.Now.AddDays(-1));
 
             // TODO: Is there ever going to be a need to define this on the fly with RedirectAfterSubmitUrl?
             return RedirectToAction("Login");

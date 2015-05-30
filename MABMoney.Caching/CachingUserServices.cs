@@ -18,11 +18,6 @@ namespace MABMoney.Caching
             _userServices = nonCachingUserServices;
         }
 
-        public IEnumerable<UserDTO> All()
-        {
-            return _userServices.All();
-        }
-
         public UserDTO Get(int id)
         {
             return CacheAndGetValue<UserDTO>(
@@ -30,16 +25,6 @@ namespace MABMoney.Caching
                 CacheExpiry.OneHour,
                 () => _userServices.Get(id),
                 "user", "account", "category", "all"
-            );
-        }
-
-        public UserDTO GetMinimal(int id)
-        {
-            return CacheAndGetValue<UserDTO>(
-                "user-minimal",
-                CacheExpiry.OneHour,
-                () => _userServices.GetMinimal(id),
-                "user", "all"
             );
         }
 
@@ -58,9 +43,9 @@ namespace MABMoney.Caching
             _userServices.Save(dto);
         }
 
-        public void Delete(int id)
+        public void Delete()
         {
-            _userServices.Delete(id);
+            _userServices.Delete();
         }
     }
 }

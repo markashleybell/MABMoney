@@ -28,16 +28,6 @@ namespace MABMoney.Caching
             );
         }
 
-        public IEnumerable<AccountDTO> GetForUser(int userId)
-        {
-            return CacheAndGetValue<IEnumerable<AccountDTO>>(
-                "accountsforuser-" + userId,
-                CacheExpiry.OneHour,
-                () => _accountServices.GetForUser(userId),
-                "account", "transaction", "all"
-            );
-        }
-
         public AccountDTO Get(int id)
         {
             return _accountServices.Get(id);

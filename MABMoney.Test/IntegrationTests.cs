@@ -273,7 +273,7 @@ namespace MABMoney.Test
         {
             var repository = new BudgetRepository(_dataConnectionString, 1);
 
-            var data = repository.GetLatest(1);
+            var data = repository.GetLatest(1, new DateTime(2015, 2, 24, 23, 59, 59));
 
             Assert.IsTrue(data.BudgetID == 2);
             Assert.IsTrue(data.Account_AccountID == 1);
@@ -363,6 +363,7 @@ namespace MABMoney.Test
             Assert.IsTrue(result.Name == "ADDED");
             Assert.IsTrue(result.Type == CategoryType.Income);
             Assert.IsTrue(result.Account_AccountID == 1);
+            Assert.IsTrue(result.AccountName == "Current");
             Assert.IsTrue(result.CreatedBy == 1);
             Assert.IsTrue(result.CreatedDate.Date == DateTime.Now.Date);
             Assert.IsTrue(result.LastModifiedBy == 1);
@@ -375,18 +376,62 @@ namespace MABMoney.Test
         {
             var repository = new CategoryRepository(_dataConnectionString, 1);
 
+            var data = repository.All().OrderBy(x => x.CategoryID).ToList();
+
+            // There are 8 test categories for this user but 2 are deleted
+            Assert.IsTrue(data.Count == 6);
+            Assert.IsTrue(data[0].CategoryID == 1);
+            Assert.IsTrue(data[0].Name == "Salary");
+            Assert.IsTrue(data[0].Account_AccountID == 1);
+            Assert.IsTrue(data[0].AccountName == "Current");
+            Assert.IsTrue(data[1].CategoryID == 2);
+            Assert.IsTrue(data[1].Name == "Rent");
+            Assert.IsTrue(data[1].Account_AccountID == 1);
+            Assert.IsTrue(data[1].AccountName == "Current");
+            Assert.IsTrue(data[2].CategoryID == 3);
+            Assert.IsTrue(data[2].Name == "Food");
+            Assert.IsTrue(data[2].Account_AccountID == 1);
+            Assert.IsTrue(data[2].AccountName == "Current");
+            Assert.IsTrue(data[3].CategoryID == 4);
+            Assert.IsTrue(data[3].Name == "Bills");
+            Assert.IsTrue(data[3].Account_AccountID == 1);
+            Assert.IsTrue(data[3].AccountName == "Current");
+            Assert.IsTrue(data[4].CategoryID == 6);
+            Assert.IsTrue(data[4].Name == "Payments");
+            Assert.IsTrue(data[4].Account_AccountID == 3);
+            Assert.IsTrue(data[4].AccountName == "Credit");
+            Assert.IsTrue(data[5].CategoryID == 7);
+            Assert.IsTrue(data[5].Name == "Bills");
+            Assert.IsTrue(data[5].Account_AccountID == 3);
+            Assert.IsTrue(data[5].AccountName == "Credit");
+        }
+
+        [Test]
+        [Category("Category")]
+        public void Data_Read_Categories_By_Account()
+        {
+            var repository = new CategoryRepository(_dataConnectionString, 1);
+
             var data = repository.All(1).OrderBy(x => x.CategoryID).ToList();
 
-            // There are 10 test categories, but ony 4 for this account and user
+            // There are 10 test categories, but only 4 for this account and user
             Assert.IsTrue(data.Count == 4);
             Assert.IsTrue(data[0].CategoryID == 1);
             Assert.IsTrue(data[0].Name == "Salary");
+            Assert.IsTrue(data[0].Account_AccountID == 1);
+            Assert.IsTrue(data[0].AccountName == "Current");
             Assert.IsTrue(data[1].CategoryID == 2);
             Assert.IsTrue(data[1].Name == "Rent");
+            Assert.IsTrue(data[1].Account_AccountID == 1);
+            Assert.IsTrue(data[1].AccountName == "Current");
             Assert.IsTrue(data[2].CategoryID == 3);
             Assert.IsTrue(data[2].Name == "Food");
+            Assert.IsTrue(data[2].Account_AccountID == 1);
+            Assert.IsTrue(data[2].AccountName == "Current");
             Assert.IsTrue(data[3].CategoryID == 4);
             Assert.IsTrue(data[3].Name == "Bills");
+            Assert.IsTrue(data[3].Account_AccountID == 1);
+            Assert.IsTrue(data[3].AccountName == "Current");
         }
 
         [Test]
@@ -399,6 +444,8 @@ namespace MABMoney.Test
 
             Assert.IsTrue(data.CategoryID == 1);
             Assert.IsTrue(data.Name == "Salary");
+            Assert.IsTrue(data.Account_AccountID == 1);
+            Assert.IsTrue(data.AccountName == "Current");
         }
 
         [Test]
@@ -427,6 +474,7 @@ namespace MABMoney.Test
             var result = repository.Update(category);
 
             Assert.IsTrue(result.Account_AccountID == 2);
+            Assert.IsTrue(result.AccountName == "Savings");
             Assert.IsTrue(result.Name == "UPDATED");
             Assert.IsTrue(result.Type == CategoryType.Income);
             Assert.IsTrue(result.LastModifiedBy == 1);
