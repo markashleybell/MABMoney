@@ -741,7 +741,9 @@ namespace MABMoney.Test
 
             Assert.IsTrue(result.TransactionID == 31);
             Assert.IsTrue(result.Account_AccountID == 1);
+            Assert.IsTrue(result.AccountName == "Current");
             Assert.IsTrue(result.Category_CategoryID == 3);
+            Assert.IsTrue(result.CategoryName == "Food");
             Assert.IsTrue(result.Description == "ADDED");
             Assert.IsTrue(result.Amount == -10.25M);
             Assert.IsTrue(result.Date == new DateTime(2015, 1, 10, 18, 35, 10, 0));
@@ -764,14 +766,23 @@ namespace MABMoney.Test
             // There are 18 test transactions for this user (and one deleted) in date descending order
             Assert.IsTrue(data.Count == 18);
             Assert.IsTrue(data[0].Account_AccountID == 1);
+            Assert.IsTrue(data[0].AccountName == "Current");
             Assert.IsTrue(data[0].TransactionID == 14);
+            Assert.IsTrue(data[0].Category_CategoryID == 4);
+            Assert.IsTrue(data[0].CategoryName == "Bills");
             Assert.IsTrue(data[0].Description == "USER1CURRENT14");
             Assert.IsTrue(data[0].Note == "Water");
             Assert.IsTrue(data[5].Account_AccountID == 2);
+            Assert.IsTrue(data[5].AccountName == "Savings");
             Assert.IsTrue(data[5].TransactionID == 19);
+            Assert.IsTrue(data[5].Category_CategoryID == null);
+            Assert.IsTrue(data[5].CategoryName == null);
             Assert.IsTrue(data[5].Description == "USER1SAVINGS19");
             Assert.IsTrue(data[17].Account_AccountID == 1);
+            Assert.IsTrue(data[17].AccountName == "Current");
             Assert.IsTrue(data[17].TransactionID == 1);
+            Assert.IsTrue(data[17].Category_CategoryID == 1);
+            Assert.IsTrue(data[17].CategoryName == "Salary");
             Assert.IsTrue(data[17].Description == "USER1CURRENT1");
         }
 
@@ -786,9 +797,13 @@ namespace MABMoney.Test
             // There are 14 test transactions for this user (and one deleted) in date descending order
             Assert.IsTrue(data.Count == 14);
             Assert.IsTrue(data[0].TransactionID == 14);
+            Assert.IsTrue(data[0].Category_CategoryID == 4);
+            Assert.IsTrue(data[0].CategoryName == "Bills");
             Assert.IsTrue(data[0].Description == "USER1CURRENT14");
             Assert.IsTrue(data[0].Note == "Water");
             Assert.IsTrue(data[13].TransactionID == 1);
+            Assert.IsTrue(data[13].Category_CategoryID == 1);
+            Assert.IsTrue(data[13].CategoryName == "Salary");
             Assert.IsTrue(data[13].Description == "USER1CURRENT1");
         }
 
@@ -802,8 +817,13 @@ namespace MABMoney.Test
 
             Assert.IsTrue(data.Count == 7);
             Assert.IsTrue(data[0].TransactionID == 10);
+            Assert.IsTrue(data[0].Category_CategoryID == 3);
+            Assert.IsTrue(data[0].CategoryName == "Food");
             Assert.IsTrue(data[0].Description == "USER1CURRENT10");
+            Assert.IsTrue(data[0].Note == null);
             Assert.IsTrue(data[6].TransactionID == 4);
+            Assert.IsTrue(data[6].Category_CategoryID == 4);
+            Assert.IsTrue(data[6].CategoryName == "Bills");
             Assert.IsTrue(data[6].Description == "USER1CURRENT4");
             Assert.IsTrue(data[6].Note == "Gas");
         }
@@ -818,15 +838,23 @@ namespace MABMoney.Test
 
             Assert.IsTrue(data.Count == 4);
             Assert.IsTrue(data[0].TransactionID == 14);
+            Assert.IsTrue(data[0].Category_CategoryID == 4);
+            Assert.IsTrue(data[0].CategoryName == "Bills");
             Assert.IsTrue(data[0].Description == "USER1CURRENT14");
             Assert.IsTrue(data[0].Note == "Water");
             Assert.IsTrue(data[1].TransactionID == 11);
+            Assert.IsTrue(data[1].Category_CategoryID == 4);
+            Assert.IsTrue(data[1].CategoryName == "Bills");
             Assert.IsTrue(data[1].Description == "USER1CURRENT11");
             Assert.IsTrue(data[1].Note == "Electricity");
             Assert.IsTrue(data[2].TransactionID == 7);
+            Assert.IsTrue(data[2].Category_CategoryID == 4);
+            Assert.IsTrue(data[2].CategoryName == "Bills");
             Assert.IsTrue(data[2].Description == "USER1CURRENT7");
             Assert.IsTrue(data[2].Note == "Mobile");
             Assert.IsTrue(data[3].TransactionID == 4);
+            Assert.IsTrue(data[3].Category_CategoryID == 4);
+            Assert.IsTrue(data[3].CategoryName == "Bills");
             Assert.IsTrue(data[3].Description == "USER1CURRENT4");
             Assert.IsTrue(data[3].Note == "Gas");
         }
@@ -840,6 +868,8 @@ namespace MABMoney.Test
             var data = repository.Get(1);
 
             Assert.IsTrue(data.TransactionID == 1);
+            Assert.IsTrue(data.Category_CategoryID == 1);
+            Assert.IsTrue(data.CategoryName == "Salary");
             Assert.IsTrue(data.Description == "USER1CURRENT1");
         }
 
@@ -874,7 +904,9 @@ namespace MABMoney.Test
 
             Assert.IsTrue(result.TransactionID == 1);
             Assert.IsTrue(result.Account_AccountID == 3);
+            Assert.IsTrue(result.AccountName == "Credit");
             Assert.IsTrue(result.Category_CategoryID == 6);
+            Assert.IsTrue(result.CategoryName == "Payments");
             Assert.IsTrue(result.Description == "UPDATED");
             Assert.IsTrue(result.Amount == -30.00M);
             Assert.IsTrue(result.Date == new DateTime(2015, 1, 11, 11, 40, 30, 0));

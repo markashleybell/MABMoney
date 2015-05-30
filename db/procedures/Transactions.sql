@@ -47,13 +47,17 @@ AS
             [t].[DeletedBy], 
             [t].[DeletedDate], 
             [t].[TransferGUID], 
-            [t].[Note] 
+            [t].[Note],
+            [c].[Name] AS [CategoryName],
+            [a].[Name] AS [AccountName]
         INTO
             #UserTransactions
         FROM   
             [dbo].[vTransactions] [t]
         INNER JOIN
             [dbo].[vAccounts] [a] ON [a].[AccountID] = [t].[Account_AccountID]
+        LEFT JOIN
+            [dbo].[vCategories] [c] ON [c].[CategoryID] = [t].[Category_CategoryID]
         WHERE  
             [a].[User_UserID] = @UserID
         AND
@@ -150,25 +154,31 @@ AS
                 @Note
             
             SELECT 
-                [TransactionID], 
-                [Date], 
-                [Description], 
-                [Amount], 
-                [Category_CategoryID], 
-                [Account_AccountID], 
-                [CreatedBy], 
-                [CreatedDate], 
-                [LastModifiedBy], 
-                [LastModifiedDate], 
-                [Deleted], 
-                [DeletedBy], 
-                [DeletedDate], 
-                [TransferGUID], 
-                [Note]
+                [t].[TransactionID], 
+                [t].[Date], 
+                [t].[Description], 
+                [t].[Amount], 
+                [t].[Category_CategoryID], 
+                [t].[Account_AccountID], 
+                [t].[CreatedBy], 
+                [t].[CreatedDate], 
+                [t].[LastModifiedBy], 
+                [t].[LastModifiedDate], 
+                [t].[Deleted], 
+                [t].[DeletedBy], 
+                [t].[DeletedDate], 
+                [t].[TransferGUID], 
+                [t].[Note],
+                [c].[Name] AS [CategoryName],
+                [a].[Name] AS [AccountName]
             FROM   
-                [dbo].[Transactions]
+                [dbo].[vTransactions] [t]
+            INNER JOIN
+                [dbo].[vAccounts] [a] ON [a].[AccountID] = [t].[Account_AccountID]
+            LEFT JOIN
+                [dbo].[vCategories] [c] ON [c].[CategoryID] = [t].[Category_CategoryID]
             WHERE  
-                [TransactionID] = SCOPE_IDENTITY()
+                [t].[TransactionID] = SCOPE_IDENTITY()
             
         END
            
@@ -225,27 +235,33 @@ AS
                 [Note] = @Note
             WHERE  
                 [TransactionID] = @TransactionID
-            
+                
             SELECT 
-                [TransactionID], 
-                [Date], 
-                [Description], 
-                [Amount], 
-                [Category_CategoryID], 
-                [Account_AccountID], 
-                [CreatedBy], 
-                [CreatedDate], 
-                [LastModifiedBy], 
-                [LastModifiedDate], 
-                [Deleted], 
-                [DeletedBy], 
-                [DeletedDate], 
-                [TransferGUID], 
-                [Note]
+                [t].[TransactionID], 
+                [t].[Date], 
+                [t].[Description], 
+                [t].[Amount], 
+                [t].[Category_CategoryID], 
+                [t].[Account_AccountID], 
+                [t].[CreatedBy], 
+                [t].[CreatedDate], 
+                [t].[LastModifiedBy], 
+                [t].[LastModifiedDate], 
+                [t].[Deleted], 
+                [t].[DeletedBy], 
+                [t].[DeletedDate], 
+                [t].[TransferGUID], 
+                [t].[Note],
+                [c].[Name] AS [CategoryName],
+                [a].[Name] AS [AccountName]
             FROM   
-                [dbo].[Transactions]
+                [dbo].[vTransactions] [t]
+            INNER JOIN
+                [dbo].[vAccounts] [a] ON [a].[AccountID] = [t].[Account_AccountID]
+            LEFT JOIN
+                [dbo].[vCategories] [c] ON [c].[CategoryID] = [t].[Category_CategoryID]
             WHERE  
-                [TransactionID] = @TransactionID 
+                [t].[TransactionID] = @TransactionID
 
         END
         
