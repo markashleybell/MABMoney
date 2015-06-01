@@ -372,6 +372,32 @@ namespace MABMoney.Test
 
         [Test]
         [Category("Category")]
+        public void Data_Create_Existing_Deleted_Category()
+        {
+            var repository = new CategoryRepository(_dataConnectionString, 1);
+
+            var category = new MABMoney.Domain.Category {
+                Account_AccountID = 1,
+                Name = "Deleted",
+                Type = CategoryType.Expense
+            };
+
+            var result = repository.Add(category);
+
+            Assert.IsTrue(result.CategoryID == 5);
+            Assert.IsTrue(result.Name == "Deleted");
+            Assert.IsTrue(result.Type == CategoryType.Expense);
+            Assert.IsTrue(result.Account_AccountID == 1);
+            Assert.IsTrue(result.AccountName == "Current");
+            Assert.IsTrue(result.LastModifiedBy == 1);
+            Assert.IsTrue(result.LastModifiedDate.Date == DateTime.Now.Date);
+            Assert.IsTrue(result.Deleted == false);
+            Assert.IsTrue(result.DeletedDate == null);
+            Assert.IsTrue(result.DeletedBy == null);
+        }
+
+        [Test]
+        [Category("Category")]
         public void Data_Read_Categories()
         {
             var repository = new CategoryRepository(_dataConnectionString, 1);
