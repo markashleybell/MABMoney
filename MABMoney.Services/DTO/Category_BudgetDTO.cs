@@ -8,6 +8,7 @@ namespace MABMoney.Services.DTO
 {
     public class Category_BudgetDTO
     {
+        public int Account_AccountID { get; set; }
         [Required]
         public int Budget_BudgetID { get; set; }
         [Required]

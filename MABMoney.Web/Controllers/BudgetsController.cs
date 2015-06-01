@@ -176,15 +176,16 @@ namespace MABMoney.Web.Controllers
                 {
                     _categoryServices.Delete(category.Category_CategoryID);
                 }
-                    else
-                    {
-
-                _budgetServices.SaveCategoryBudget(new Category_BudgetDTO { 
-                    Budget_BudgetID = dto.BudgetID,
-                    Category_CategoryID = category.Category_CategoryID,
-                    Amount = category.Amount
-                });
-                    }
+                else
+                {
+                    _budgetServices.SaveCategoryBudget(new Category_BudgetDTO { 
+                        Account_AccountID = model.Account_AccountID,
+                        Budget_BudgetID = dto.BudgetID,
+                        Category_CategoryID = category.Category_CategoryID,
+                        CategoryName = category.Name,
+                        Amount = category.Amount
+                    });
+                }
             }
 
             // Clear the cache of anything that depends upon budgets
@@ -198,11 +199,11 @@ namespace MABMoney.Web.Controllers
         [Authenticate]
         public ActionResult Edit(ProfileViewModel profile, int id)
         {
-            var dto = _budgetServices.Get(id);
+            var budget = _budgetServices.Get(id);
 
-            var model = dto.MapTo<EditViewModel>();
+            var model = budget.MapTo<EditViewModel>();
             model.Accounts = DataHelpers.GetAccountSelectOptions(_accountServices);
-            model.Categories = dto.Category_Budgets.Where(x => x.Category_CategoryID != 0).Select(x => new Category_BudgetViewModel { 
+            model.Categories = budget.Category_Budgets.Where(x => x.Category_CategoryID != 0).Select(x => new Category_BudgetViewModel { 
                 Name = x.CategoryName,
                 Budget_BudgetID = x.Budget_BudgetID,
                 Category_CategoryID = x.Category_CategoryID,
@@ -212,7 +213,7 @@ namespace MABMoney.Web.Controllers
             model.RedirectAfterSubmitUrl = _url.Action("Index");
 
             var categories = _categoryServices.All()
-                                              .Where(x => x.Account_AccountID == dto.Account_AccountID && x.Type == CategoryTypeDTO.Expense && !model.Categories.Any(c => c.Category_CategoryID == x.CategoryID))
+                                              .Where(x => x.Account_AccountID == budget.Account_AccountID && x.Type == CategoryTypeDTO.Expense && !model.Categories.Any(c => c.Category_CategoryID == x.CategoryID))
                                               .Select(x => new Category_BudgetViewModel
                                               {
                                                   Category_CategoryID = x.CategoryID,
@@ -248,10 +249,11 @@ namespace MABMoney.Web.Controllers
                 }
                 else
                 {
-                    _budgetServices.SaveCategoryBudget(new Category_BudgetDTO
-                    {
+                    _budgetServices.SaveCategoryBudget(new Category_BudgetDTO {
                         Budget_BudgetID = dto.BudgetID,
+                        Account_AccountID = model.Account_AccountID,
                         Category_CategoryID = category.Category_CategoryID,
+                        CategoryName = category.Name,
                         Amount = category.Amount
                     });
                 }

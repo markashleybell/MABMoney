@@ -94,6 +94,7 @@ namespace MABMoney.Services
                 if (unallocatedAmount > 0)
                 {
                     // Show how much and how much we've spent so far
+                    budget.Category_Budgets.Add(new Category_BudgetDTO {
                         Budget_BudgetID = budget.BudgetID,
                         Category_CategoryID = 0,
                         CategoryName = "Unallocated",
@@ -131,12 +132,11 @@ namespace MABMoney.Services
         public void SaveCategoryBudget(Category_BudgetDTO dto)
         {
             _categoryServices.Save(new CategoryDTO { 
+                Account_AccountID = dto.Account_AccountID,
                 CategoryID = dto.Category_CategoryID,
                 Name = dto.CategoryName,
-                Type = dto.CategoryType
+                Type = CategoryTypeDTO.Expense // TODO: Is this always the case?
             });
-
-            dto.Category_CategoryID = dto.Category_CategoryID;
 
             var cb = _categories_budgets.Get(dto.Budget_BudgetID, dto.Category_CategoryID);
 
