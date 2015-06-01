@@ -52,7 +52,9 @@ namespace MABMoney.Web.Controllers
             if (account == null)
                 account = accountList.First();
 
-            var categoryList = (account != null) ? account.Categories : accountList.First().Categories;
+            var allCategories = _categoryServices.All();
+
+            var categoryList = (account != null) ? allCategories.Where(c => c.Account_AccountID == account.AccountID) : allCategories.Where(c => c.Account_AccountID == accountList.First().AccountID);
 
             var categories = categoryList.Select(x => new SelectListItem {
                 Value = x.CategoryID.ToString(),
