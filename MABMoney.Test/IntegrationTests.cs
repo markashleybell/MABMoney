@@ -621,6 +621,7 @@ namespace MABMoney.Test
             var repository = new SessionRepository(_dataConnectionString, 1);
 
             var session = new MABMoney.Domain.Session {
+                User_UserID = 1,
                 Key = "ADDED",
                 Expiry = new DateTime(2016, 1, 1)
             };
