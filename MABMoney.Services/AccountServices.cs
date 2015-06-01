@@ -60,12 +60,13 @@ namespace MABMoney.Services
                     // Convert the list of descriptions back into a flat string, removing duplicates
                     account.TransactionDescriptionHistory = string.Join("|", dto.TransactionDescriptionHistory.Where(x => !string.IsNullOrWhiteSpace(x)).Distinct().ToArray());
                 }
+
+                _accounts.Update(account);
             }
             else
             {
                 // Add the account
-                account = dto.MapTo<Account>();
-                _accounts.Add(account);
+                account = _accounts.Add(dto.MapTo<Account>());
 
                 // Update the DTO with the new ID
                 dto.AccountID = account.AccountID;
