@@ -105,8 +105,15 @@ BEGIN
 	
 	DECLARE @DeletedFromAccountID int, @InsertedIntoAccountID int, @AccountID int
 
-	SELECT @DeletedFromAccountID = [Account_AccountID] FROM DELETED
-	SELECT @InsertedIntoAccountID = [Account_AccountID] FROM INSERTED
+	SELECT 
+	    @DeletedFromAccountID = [Account_AccountID] 
+    FROM 
+        DELETED
+        
+	SELECT 
+	    @InsertedIntoAccountID = [Account_AccountID] 
+    FROM 
+        INSERTED
 	
 	IF @DeletedFromAccountID IS NOT NULL AND @InsertedIntoAccountID IS NULL
 	BEGIN
@@ -126,7 +133,19 @@ BEGIN
 		SET @AccountID = @InsertedIntoAccountID
 	END
 		
-	UPDATE Accounts SET CurrentBalance = StartingBalance + ISNULL((SELECT SUM(Amount) FROM Transactions WHERE Deleted = 0 AND Account_AccountID = @AccountID), 0) WHERE AccountID = @AccountID
+	UPDATE 
+	    [dbo].[Accounts]
+	SET 
+	    [CurrentBalance] = [StartingBalance] + ISNULL((
+	        SELECT 
+	            SUM([t].[Amount]) 
+            FROM 
+                [dbo].[vTransactions] [t] 
+            WHERE 
+                [t].[Account_AccountID] = @AccountID
+        ), 0) 
+    WHERE 
+        [AccountID] = @AccountID
 	
 END
 GO
