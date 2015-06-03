@@ -85,5 +85,14 @@ namespace MABMoney.Data.Concrete
                 To = to
             });
         }
+
+        public decimal GetTotalForAccountUpTo(int accountId, DateTime date)
+        {
+            return GetScalar<decimal>("mm_Transactions_GetTotalUpTo", new {
+                UserID = _userId,
+                AccountID = accountId,
+                Date = date
+            });
+        }
     }
 }

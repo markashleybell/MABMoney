@@ -18,5 +18,6 @@ namespace MABMoney.Data.Abstract
         IEnumerable<Transaction> GetForAccount(int accountId);
         IEnumerable<Transaction> GetForAccount(int accountId, DateTime from, DateTime to);
         IEnumerable<Transaction> GetForAccount(int accountId, int categoryId, DateTime from, DateTime to);
+        decimal GetTotalForAccountUpTo(int accountId, DateTime date);
     }
 }

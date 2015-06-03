@@ -946,6 +946,17 @@ namespace MABMoney.Test
 
         [Test]
         [Category("Transaction")]
+        public void Data_Sum_Transactions_By_Account_Up_To_Date()
+        {
+            var repository = new TransactionRepository(_dataConnectionString, 1);
+
+            var sum = repository.GetTotalForAccountUpTo(1, new DateTime(2015, 01, 03));
+
+            Assert.IsTrue(sum == 535.50M);
+        }
+
+        [Test]
+        [Category("Transaction")]
         public void Data_Read_Transaction()
         {
             var repository = new TransactionRepository(_dataConnectionString, 1);

@@ -1544,6 +1544,62 @@ AS
     COMMIT
 GO
 
+IF OBJECT_ID('[dbo].[mm_Transactions_GetTotalUpTo]') IS NOT NULL
+BEGIN 
+    DROP PROC [dbo].[mm_Transactions_GetTotalUpTo] 
+END 
+GO
+
+CREATE PROC [dbo].[mm_Transactions_GetTotalUpTo] 
+    @UserID int,
+    @AccountID int,
+    @Date datetime
+AS 
+    SET NOCOUNT ON 
+    SET XACT_ABORT ON  
+    
+    BEGIN TRAN
+    
+        IF EXISTS(
+            SELECT 
+                [AccountID] 
+            FROM 
+                [dbo].[vAccounts] [a] 
+            WHERE 
+                [a].[User_UserID] = @UserID 
+            AND 
+                [a].[AccountID] = @AccountID
+        )
+        BEGIN
+    
+            DECLARE @StartingBalance decimal(18, 2) = (
+                SELECT 
+                    [a].[StartingBalance]
+                FROM
+                    [dbo].[vAccounts] [a]
+                WHERE 
+                    [a].[AccountID] = @AccountID
+            )
+                
+            SELECT 
+                @StartingBalance + (
+                    SELECT
+                        SUM([t].[Amount])
+                    FROM   
+                        [dbo].[vTransactions] [t]
+                    INNER JOIN
+                        [dbo].[vAccounts] [a] ON [a].[AccountID] = [t].[Account_AccountID]
+                    WHERE  
+                        [a].[AccountID] = @AccountID
+                    AND
+                        [t].[Date] < @Date
+            )
+            
+        END
+           
+    COMMIT
+GO
+
 IF OBJECT_ID('[dbo].[mm_Transactions_Create]') IS NOT NULL
 BEGIN 
     DROP PROC [dbo].[mm_Transactions_Create] 

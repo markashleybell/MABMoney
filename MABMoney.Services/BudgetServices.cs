@@ -54,7 +54,7 @@ namespace MABMoney.Services
             if (budget == null)
                 return null;
 
-            var balanceAtStart = _transactions.GetForAccount(budget.Account_AccountID, new DateTime(2000, 1, 1), budget.Start).Sum(x => x.Amount);
+            var balanceAtBudgetStart = _transactions.GetTotalForAccountUpTo(budget.Account_AccountID, budget.Start);
 
             var budgetTransactions = _transactions.GetForAccount(budget.Account_AccountID, budget.Start, budget.End);
 
@@ -80,10 +80,7 @@ namespace MABMoney.Services
                 var allocated = budget.Category_Budgets.Sum(x => x.Amount);
 
                 // Work out how much money has been spent in budget categories
-                var account = _accountServices.Get(budget.Account_AccountID);
                 var allocatedSpent = budget.Category_Budgets.Sum(x => x.Total);
-
-                var balanceAtBudgetStart = balanceAtStart + account.StartingBalance;
 
                 var unallocatedAmount = ((balanceAtBudgetStart - allocated) - overspend) + budgetTransactions.Where(x => x.Amount > 0).Sum(x => x.Amount);
 
