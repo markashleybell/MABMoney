@@ -128,12 +128,16 @@ namespace MABMoney.Services
 
         public void SaveCategoryBudget(Category_BudgetDTO dto)
         {
-            _categoryServices.Save(new CategoryDTO { 
+            var category = new CategoryDTO { 
                 Account_AccountID = dto.Account_AccountID,
                 CategoryID = dto.Category_CategoryID,
                 Name = dto.CategoryName,
                 Type = CategoryTypeDTO.Expense // TODO: Is this always the case?
-            });
+            };
+
+            _categoryServices.Save(category);
+
+            dto.Category_CategoryID = category.CategoryID;
 
             var cb = _categories_budgets.Get(dto.Budget_BudgetID, dto.Category_CategoryID);
 
