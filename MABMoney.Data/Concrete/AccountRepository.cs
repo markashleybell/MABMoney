@@ -49,7 +49,8 @@ namespace MABMoney.Data.Concrete
                 StartingBalance = account.StartingBalance,
                 Default = account.Default,
                 Type = account.Type,
-                DisplayOrder = account.DisplayOrder
+                DisplayOrder = account.DisplayOrder,
+                TransactionDescriptionHistory = account.TransactionDescriptionHistory
             });
         }
 
