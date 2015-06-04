@@ -91,7 +91,7 @@ namespace MABMoney.Test
         #region Account
 
         [Test]
-        [Category("Account")]
+        [Category("DataLayer_Account")]
         public void Data_Create_Account()
         {
             var repository = new AccountRepository(_dataConnectionString, 1);
@@ -122,7 +122,7 @@ namespace MABMoney.Test
         }
 
         [Test]
-        [Category("Account")]
+        [Category("DataLayer_Account")]
         public void Data_Read_Accounts()
         {
             var repository = new AccountRepository(_dataConnectionString, 1);
@@ -140,7 +140,7 @@ namespace MABMoney.Test
         }
 
         [Test]
-        [Category("Account")]
+        [Category("DataLayer_Account")]
         public void Data_Read_Account()
         {
             var repository = new AccountRepository(_dataConnectionString, 1);
@@ -152,7 +152,7 @@ namespace MABMoney.Test
         }
 
         [Test]
-        [Category("Account")]
+        [Category("DataLayer_Account")]
         public void Data_Read_Deleted_Account()
         {
             var repository = new AccountRepository(_dataConnectionString, 1);
@@ -163,7 +163,7 @@ namespace MABMoney.Test
         }
 
         [Test]
-        [Category("Account")]
+        [Category("DataLayer_Account")]
         public void Data_Update_Account()
         {
             var repository = new AccountRepository(_dataConnectionString, 1);
@@ -190,7 +190,7 @@ namespace MABMoney.Test
         }
 
         [Test]
-        [Category("Account")]
+        [Category("DataLayer_Account")]
         public void Data_Delete_Account()
         {
             var repository = new AccountRepository(_dataConnectionString, 1);
@@ -210,7 +210,7 @@ namespace MABMoney.Test
         #region Budget
 
         [Test]
-        [Category("Budget")]
+        [Category("DataLayer_Budget")]
         public void Data_Create_Budget()
         {
             var repository = new BudgetRepository(_dataConnectionString, 1);
@@ -234,7 +234,7 @@ namespace MABMoney.Test
         }
 
         [Test]
-        [Category("Budget")]
+        [Category("DataLayer_Budget")]
         public void Data_Read_Budgets()
         {
             var repository = new BudgetRepository(_dataConnectionString, 1);
@@ -254,7 +254,7 @@ namespace MABMoney.Test
         }
 
         [Test]
-        [Category("Budget")]
+        [Category("DataLayer_Budget")]
         public void Data_Read_Budget()
         {
             var repository = new BudgetRepository(_dataConnectionString, 1);
@@ -268,7 +268,7 @@ namespace MABMoney.Test
         }
 
         [Test]
-        [Category("Budget")]
+        [Category("DataLayer_Budget")]
         public void Data_Read_Budget_Latest()
         {
             var repository = new BudgetRepository(_dataConnectionString, 1);
@@ -282,7 +282,7 @@ namespace MABMoney.Test
         }
 
         [Test]
-        [Category("Budget")]
+        [Category("DataLayer_Budget")]
         public void Data_Read_Budget_Count()
         {
             var repository = new BudgetRepository(_dataConnectionString, 1);
@@ -293,7 +293,7 @@ namespace MABMoney.Test
         }
 
         [Test]
-        [Category("Budget")]
+        [Category("DataLayer_Budget")]
         public void Data_Read_Deleted_Budget()
         {
             var repository = new BudgetRepository(_dataConnectionString, 1);
@@ -304,7 +304,7 @@ namespace MABMoney.Test
         }
 
         [Test]
-        [Category("Budget")]
+        [Category("DataLayer_Budget")]
         public void Data_Update_Budget()
         {
             var repository = new BudgetRepository(_dataConnectionString, 1);
@@ -326,7 +326,7 @@ namespace MABMoney.Test
         }
 
         [Test]
-        [Category("Budget")]
+        [Category("DataLayer_Budget")]
         public void Data_Delete_Budget()
         {
             var repository = new BudgetRepository(_dataConnectionString, 1);
@@ -346,7 +346,7 @@ namespace MABMoney.Test
         #region Category
 
         [Test]
-        [Category("Category")]
+        [Category("DataLayer_Category")]
         public void Data_Create_Category()
         {
             var repository = new CategoryRepository(_dataConnectionString, 1);
@@ -371,7 +371,7 @@ namespace MABMoney.Test
         }
 
         [Test]
-        [Category("Category")]
+        [Category("DataLayer_Category")]
         public void Data_Create_Existing_Deleted_Category()
         {
             var repository = new CategoryRepository(_dataConnectionString, 1);
@@ -397,7 +397,7 @@ namespace MABMoney.Test
         }
 
         [Test]
-        [Category("Category")]
+        [Category("DataLayer_Category")]
         public void Data_Read_Categories()
         {
             var repository = new CategoryRepository(_dataConnectionString, 1);
@@ -433,7 +433,7 @@ namespace MABMoney.Test
         }
 
         [Test]
-        [Category("Category")]
+        [Category("DataLayer_Category")]
         public void Data_Read_Categories_By_Account()
         {
             var repository = new CategoryRepository(_dataConnectionString, 1);
@@ -461,7 +461,7 @@ namespace MABMoney.Test
         }
 
         [Test]
-        [Category("Category")]
+        [Category("DataLayer_Category")]
         public void Data_Read_Category()
         {
             var repository = new CategoryRepository(_dataConnectionString, 1);
@@ -475,7 +475,7 @@ namespace MABMoney.Test
         }
 
         [Test]
-        [Category("Category")]
+        [Category("DataLayer_Category")]
         public void Data_Read_Deleted_Category()
         {
             var repository = new CategoryRepository(_dataConnectionString, 1);
@@ -486,7 +486,7 @@ namespace MABMoney.Test
         }
 
         [Test]
-        [Category("Category")]
+        [Category("DataLayer_Category")]
         public void Data_Update_Category()
         {
             var repository = new CategoryRepository(_dataConnectionString, 1);
@@ -508,7 +508,7 @@ namespace MABMoney.Test
         }
 
         [Test]
-        [Category("Category")]
+        [Category("DataLayer_Category")]
         public void Data_Delete_Category()
         {
             var repository = new CategoryRepository(_dataConnectionString, 1);
@@ -528,7 +528,7 @@ namespace MABMoney.Test
         #region Category_Budget
 
         [Test]
-        [Category("Category_Budget")]
+        [Category("DataLayer_Category_Budget")]
         public void Data_Create_Category_Budget()
         {
             var repository = new Category_BudgetRepository(_dataConnectionString, 1);
@@ -553,7 +553,7 @@ namespace MABMoney.Test
         }
 
         [Test]
-        [Category("Category_Budget")]
+        [Category("DataLayer_Category_Budget")]
         public void Data_Read_Category_Budgets()
         {
             var repository = new Category_BudgetRepository(_dataConnectionString, 1);
@@ -574,7 +574,7 @@ namespace MABMoney.Test
         }
 
         [Test]
-        [Category("Category_Budget")]
+        [Category("DataLayer_Category_Budget")]
         public void Data_Read_Category_Budget()
         {
             var repository = new Category_BudgetRepository(_dataConnectionString, 1);
@@ -589,7 +589,7 @@ namespace MABMoney.Test
         }
 
         [Test]
-        [Category("Category_Budget")]
+        [Category("DataLayer_Category_Budget")]
         public void Data_Read_Deleted_Category_Budget()
         {
             var repository = new Category_BudgetRepository(_dataConnectionString, 1);
@@ -600,7 +600,7 @@ namespace MABMoney.Test
         }
 
         [Test]
-        [Category("Category_Budget")]
+        [Category("DataLayer_Category_Budget")]
         public void Data_Update_Category_Budget()
         {
             var repository = new Category_BudgetRepository(_dataConnectionString, 1);
@@ -621,7 +621,7 @@ namespace MABMoney.Test
         }
 
         [Test]
-        [Category("Category_Budget")]
+        [Category("DataLayer_Category_Budget")]
         public void Data_Delete_Category_Budget()
         {
             var repository = new Category_BudgetRepository(_dataConnectionString, 1);
@@ -641,7 +641,7 @@ namespace MABMoney.Test
         #region Session
 
         [Test]
-        [Category("Session")]
+        [Category("DataLayer_Session")]
         public void Data_Create_Session()
         {
             var repository = new SessionRepository(_dataConnectionString, 1);
@@ -665,7 +665,7 @@ namespace MABMoney.Test
         }
 
         [Test]
-        [Category("Session")]
+        [Category("DataLayer_Session")]
         public void Data_Read_Sessions()
         {
             var repository = new SessionRepository(_dataConnectionString, 1);
@@ -679,7 +679,7 @@ namespace MABMoney.Test
         }
 
         [Test]
-        [Category("Session")]
+        [Category("DataLayer_Session")]
         public void Data_Read_Session()
         {
             var repository = new SessionRepository(_dataConnectionString, 1);
@@ -691,7 +691,7 @@ namespace MABMoney.Test
         }
 
         [Test]
-        [Category("Session")]
+        [Category("DataLayer_Session")]
         public void Data_Read_Session_By_Key()
         {
             var repository = new SessionRepository(_dataConnectionString, 1);
@@ -702,7 +702,7 @@ namespace MABMoney.Test
         }
 
         [Test]
-        [Category("Session")]
+        [Category("DataLayer_Session")]
         public void Data_Read_Deleted_Session()
         {
             var repository = new SessionRepository(_dataConnectionString, 1);
@@ -713,7 +713,7 @@ namespace MABMoney.Test
         }
 
         [Test]
-        [Category("Session")]
+        [Category("DataLayer_Session")]
         public void Data_Update_Session()
         {
             var repository = new SessionRepository(_dataConnectionString, 1);
@@ -732,7 +732,7 @@ namespace MABMoney.Test
         }
 
         [Test]
-        [Category("Session")]
+        [Category("DataLayer_Session")]
         public void Data_Update_Session_Expiry()
         {
             var repository = new SessionRepository(_dataConnectionString, 1);
@@ -746,7 +746,7 @@ namespace MABMoney.Test
         }
 
         [Test]
-        [Category("Session")]
+        [Category("DataLayer_Session")]
         public void Data_Delete_Session()
         {
             var repository = new SessionRepository(_dataConnectionString, 1);
@@ -762,7 +762,7 @@ namespace MABMoney.Test
         }
 
         [Test]
-        [Category("Session")]
+        [Category("DataLayer_Session")]
         public void Data_Delete_Session_By_Key()
         {
             var repository = new SessionRepository(_dataConnectionString, 1);
@@ -778,7 +778,7 @@ namespace MABMoney.Test
         }
 
         [Test]
-        [Category("Session")]
+        [Category("DataLayer_Session")]
         public void Data_Delete_Session_Expired()
         {
             var repository = new SessionRepository(_dataConnectionString, 1);
@@ -807,7 +807,7 @@ namespace MABMoney.Test
         #region Transaction
 
         [Test]
-        [Category("Transaction")]
+        [Category("DataLayer_Transaction")]
         public void Data_Create_Transaction()
         {
             var repository = new TransactionRepository(_dataConnectionString, 1);
@@ -841,7 +841,7 @@ namespace MABMoney.Test
         }
 
         [Test]
-        [Category("Transaction")]
+        [Category("DataLayer_Transaction")]
         public void Data_Read_Transactions()
         {
             var repository = new TransactionRepository(_dataConnectionString, 1);
@@ -872,7 +872,7 @@ namespace MABMoney.Test
         }
 
         [Test]
-        [Category("Transaction")]
+        [Category("DataLayer_Transaction")]
         public void Data_Read_Transactions_By_Account()
         {
             var repository = new TransactionRepository(_dataConnectionString, 1);
@@ -893,7 +893,7 @@ namespace MABMoney.Test
         }
 
         [Test]
-        [Category("Transaction")]
+        [Category("DataLayer_Transaction")]
         public void Data_Read_Transactions_By_Account_And_Date()
         {
             var repository = new TransactionRepository(_dataConnectionString, 1);
@@ -914,7 +914,7 @@ namespace MABMoney.Test
         }
 
         [Test]
-        [Category("Transaction")]
+        [Category("DataLayer_Transaction")]
         public void Data_Read_Transactions_By_Account_Date_And_Category()
         {
             var repository = new TransactionRepository(_dataConnectionString, 1);
@@ -945,7 +945,7 @@ namespace MABMoney.Test
         }
 
         [Test]
-        [Category("Transaction")]
+        [Category("DataLayer_Transaction")]
         public void Data_Sum_Transactions_By_Account_Up_To_Date()
         {
             var repository = new TransactionRepository(_dataConnectionString, 1);
@@ -956,7 +956,7 @@ namespace MABMoney.Test
         }
 
         [Test]
-        [Category("Transaction")]
+        [Category("DataLayer_Transaction")]
         public void Data_Read_Transaction()
         {
             var repository = new TransactionRepository(_dataConnectionString, 1);
@@ -970,7 +970,7 @@ namespace MABMoney.Test
         }
 
         [Test]
-        [Category("Transaction")]
+        [Category("DataLayer_Transaction")]
         public void Data_Read_Deleted_Transaction()
         {
             var repository = new TransactionRepository(_dataConnectionString, 1);
@@ -981,7 +981,7 @@ namespace MABMoney.Test
         }
 
         [Test]
-        [Category("Transaction")]
+        [Category("DataLayer_Transaction")]
         public void Data_Update_Transaction()
         {
             var repository = new TransactionRepository(_dataConnectionString, 1);
@@ -1013,7 +1013,7 @@ namespace MABMoney.Test
         }
 
         [Test]
-        [Category("Transaction")]
+        [Category("DataLayer_Transaction")]
         public void Data_Delete_Transaction()
         {
             var repository = new TransactionRepository(_dataConnectionString, 1);
@@ -1033,7 +1033,7 @@ namespace MABMoney.Test
         #region User
 
         [Test]
-        [Category("User")]
+        [Category("DataLayer_User")]
         public void Data_Create_User()
         {
             var repository = new UserRepository(_dataConnectionString, 1);
@@ -1059,7 +1059,7 @@ namespace MABMoney.Test
         }
 
         [Test]
-        [Category("User")]
+        [Category("DataLayer_User")]
         public void Data_Read_User()
         {
             var repository = new UserRepository(_dataConnectionString, 1);
@@ -1071,7 +1071,7 @@ namespace MABMoney.Test
         }
 
         [Test]
-        [Category("User")]
+        [Category("DataLayer_User")]
         public void Data_Read_User_By_Email()
         {
             var repository = new UserRepository(_dataConnectionString, 1);
@@ -1084,7 +1084,7 @@ namespace MABMoney.Test
         }
 
         [Test]
-        [Category("User")]
+        [Category("DataLayer_User")]
         public void Data_Read_Deleted_User_By_Email()
         {
             var repository = new UserRepository(_dataConnectionString, 1);
@@ -1095,7 +1095,7 @@ namespace MABMoney.Test
         }
 
         [Test]
-        [Category("User")]
+        [Category("DataLayer_User")]
         public void Data_Read_User_By_Password_Reset_GUID()
         {
             var repository = new UserRepository(_dataConnectionString, 1);
@@ -1107,7 +1107,7 @@ namespace MABMoney.Test
         }
 
         [Test]
-        [Category("User")]
+        [Category("DataLayer_User")]
         public void Data_Read_Deleted_User_By_Password_Reset_GUID()
         {
             var repository = new UserRepository(_dataConnectionString, 1);
@@ -1118,7 +1118,7 @@ namespace MABMoney.Test
         }
 
         [Test]
-        [Category("User")]
+        [Category("DataLayer_User")]
         public void Data_Update_User()
         {
             var repository = new UserRepository(_dataConnectionString, 1);
@@ -1147,7 +1147,7 @@ namespace MABMoney.Test
         }
 
         [Test]
-        [Category("User")]
+        [Category("DataLayer_User")]
         public void Data_Delete_User()
         {
             var repository = new UserRepository(_dataConnectionString, 1);

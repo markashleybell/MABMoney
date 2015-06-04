@@ -12,6 +12,9 @@ using System.Configuration;
 using MABMoney.Data.Concrete;
 using MABMoney.Data.Abstract;
 using System.IO;
+using MABMoney.Services;
+using MABMoney.Services.DTO;
+using System.Data;
 
 namespace MABMoney.Test
 {
@@ -46,6 +49,30 @@ namespace MABMoney.Test
                 {
                     server.KillDatabase("MABMoney_TEST");
                 }
+            }
+        }
+
+        private T GetSingle<T>(string sql)
+        {
+            using (var connection = new SqlConnection(_dataConnectionString))
+            {
+                return connection.Query<T>(sql).SingleOrDefault();
+            }
+        }
+
+        private T GetScalar<T>(string sql)
+        {
+            using (var connection = new SqlConnection(_dataConnectionString))
+            {
+                return connection.ExecuteScalar<T>(sql);
+            }
+        }
+
+        private IEnumerable<T> GetEnumerable<T>(string sql)
+        {
+            using (var connection = new SqlConnection(_dataConnectionString))
+            {
+                return connection.Query<T>(sql);
             }
         }
 
@@ -110,10 +137,33 @@ namespace MABMoney.Test
         #region Account
 
         [Test]
-        [Category("Account")]
+        [Category("ServiceLayer_Account")]
         public void Service_Create_Account()
         {
-            throw new NotImplementedException();
+            var accountServices = new AccountServices(_accountRepository, _transactionRepository, _userRepository);
+
+            var dto = new AccountDTO {
+                Name = "TEST ACCOUNT",
+                Type = AccountTypeDTO.Loan,
+                DisplayOrder = 203,
+                StartingBalance = 25.43M,
+                CurrentBalance = 1000M,
+                Default = true
+            };
+
+            accountServices.Save(dto);
+
+            Assert.IsTrue(dto.AccountID == 6);
+
+            var result = GetSingle<AccountDTO>("SELECT * FROM Accounts WHERE AccountID = 6");
+
+            Assert.IsTrue(result.AccountID == 6);
+            Assert.IsTrue(result.Name == "TEST ACCOUNT");
+            Assert.IsTrue(result.Type == AccountTypeDTO.Loan);
+            Assert.IsTrue(result.DisplayOrder == 203);
+            Assert.IsTrue(result.StartingBalance == 25.43M);
+            Assert.IsTrue(result.CurrentBalance == 25.43M);
+            Assert.IsTrue(result.Default == true);
         }
 
         #endregion Account
