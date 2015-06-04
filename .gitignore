@@ -106,3 +106,4 @@ UpgradeLog*.XML
 TestResult.xml
 
 MABMoney.Test/App.config
+db/import.sql
