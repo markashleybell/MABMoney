@@ -13,7 +13,7 @@ using MABMoney.Domain;
 namespace MABMoney.Test
 {
     [TestFixture]
-    public class IntegrationTests
+    public class DataLayerIntegrationTests
     {
         private string _setupConnectionString;
         private string _dataConnectionString;

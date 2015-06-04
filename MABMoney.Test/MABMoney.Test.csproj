@@ -73,8 +73,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IntegrationTests.cs" />
+    <Compile Include="DataLayerIntegrationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServiceLayerIntegrationTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -92,6 +93,10 @@
     <ProjectReference Include="..\MABMoney.Domain\MABMoney.Domain.csproj">
       <Project>{7d408ce3-980c-4bc3-986f-436b9b44f10c}</Project>
       <Name>MABMoney.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MABMoney.Services\MABMoney.Services.csproj">
+      <Project>{ed8b4eef-38a1-4847-93d9-4ffa83038e0e}</Project>
+      <Name>MABMoney.Services</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
