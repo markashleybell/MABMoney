@@ -107,3 +107,6 @@ TestResult.xml
 
 MABMoney.Test/App.config
 db/import.sql
+db/all.sql
+db/recreate-db-and-import.sql
+db/procedures.sql
