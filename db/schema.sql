@@ -103,36 +103,23 @@ FOR INSERT, UPDATE, DELETE
 AS
 BEGIN
 	
-	DECLARE @DeletedFromAccountID int, @InsertedIntoAccountID int, @AccountID int
+	DECLARE @DeletedFromAccountIDs TABLE (AccountID int)
+	DECLARE @InsertedIntoAccountIDs TABLE (AccountID int)
 
-	SELECT 
-	    @DeletedFromAccountID = [Account_AccountID] 
+    INSERT INTO
+        @DeletedFromAccountIDs        
+    SELECT 
+	    [Account_AccountID] 
     FROM 
         DELETED
         
-	SELECT 
-	    @InsertedIntoAccountID = [Account_AccountID] 
+    INSERT INTO
+	    @InsertedIntoAccountIDs
+    SELECT 
+	    [Account_AccountID]
     FROM 
         INSERTED
-	
-	IF @DeletedFromAccountID IS NOT NULL AND @InsertedIntoAccountID IS NULL
-	BEGIN
-		-- PRINT ''DELETED transaction from account '' + CAST(@DeletedFromAccountID AS nvarchar(10))
-		SET @AccountID = @DeletedFromAccountID
-	END
-	
-	IF @DeletedFromAccountID IS NOT NULL AND @InsertedIntoAccountID IS NOT NULL
-	BEGIN
-		-- PRINT ''UPDATED transaction in account '' + CAST(@DeletedFromAccountID AS nvarchar(10))
-		SET @AccountID = @InsertedIntoAccountID
-	END
-	
-	IF @DeletedFromAccountID IS NULL AND @InsertedIntoAccountID IS NOT NULL
-	BEGIN
-		-- PRINT ''INSERTED transaction into account '' + CAST(@InsertedIntoAccountID AS nvarchar(10))
-		SET @AccountID = @InsertedIntoAccountID
-	END
-		
+
 	UPDATE 
 	    [dbo].[Accounts]
 	SET 
@@ -142,10 +129,12 @@ BEGIN
             FROM 
                 [dbo].[vTransactions] [t] 
             WHERE 
-                [t].[Account_AccountID] = @AccountID
+                [t].[Account_AccountID] = [AccountID]
         ), 0) 
     WHERE 
-        [AccountID] = @AccountID
+        [AccountID] IN (SELECT [d].[AccountID] FROM @DeletedFromAccountIDs [d])
+    OR 
+        [AccountID] IN (SELECT [i].[AccountID] FROM @InsertedIntoAccountIDs [i])
 	
 END
 GO
@@ -189,30 +178,38 @@ FOR INSERT, UPDATE, DELETE
 AS
 BEGIN
 	
-	DECLARE @DeletedFromAccountID int, @InsertedIntoAccountID int, @AccountID int
+	DECLARE @DeletedFromAccountIDs TABLE (AccountID int)
+	DECLARE @InsertedIntoAccountIDs TABLE (AccountID int)
 
-	SELECT @DeletedFromAccountID = [AccountID] FROM DELETED
-	SELECT @InsertedIntoAccountID = [AccountID] FROM INSERTED
-	
-	IF @DeletedFromAccountID IS NOT NULL AND @InsertedIntoAccountID IS NULL
-	BEGIN
-		-- PRINT ''DELETED transaction from account '' + CAST(@DeletedFromAccountID AS nvarchar(10))
-		SET @AccountID = @DeletedFromAccountID
-	END
-	
-	IF @DeletedFromAccountID IS NOT NULL AND @InsertedIntoAccountID IS NOT NULL
-	BEGIN
-		-- PRINT ''UPDATED transaction in account '' + CAST(@DeletedFromAccountID AS nvarchar(10))
-		SET @AccountID = @InsertedIntoAccountID
-	END
-	
-	IF @DeletedFromAccountID IS NULL AND @InsertedIntoAccountID IS NOT NULL
-	BEGIN
-		-- PRINT ''INSERTED transaction into account '' + CAST(@InsertedIntoAccountID AS nvarchar(10))
-		SET @AccountID = @InsertedIntoAccountID
-	END
+    INSERT INTO
+        @DeletedFromAccountIDs        
+    SELECT 
+	    [AccountID] 
+    FROM 
+        DELETED
+        
+    INSERT INTO
+	    @InsertedIntoAccountIDs
+    SELECT 
+	    [AccountID]
+    FROM 
+        INSERTED
 		
-	UPDATE Accounts SET CurrentBalance = StartingBalance + ISNULL((SELECT SUM(Amount) FROM Transactions WHERE Deleted = 0 AND Account_AccountID = @AccountID), 0) WHERE AccountID = @AccountID
+	UPDATE 
+	    [Accounts] 
+    SET 
+        [CurrentBalance] = [StartingBalance] + ISNULL((
+            SELECT 
+                SUM([t].[Amount]) 
+            FROM 
+                [vTransactions] [t]
+            WHERE 
+                [t].[Account_AccountID] = [AccountID]
+        ), 0) 
+    WHERE 
+        [AccountID] IN (SELECT [d].[AccountID] FROM @DeletedFromAccountIDs [d])
+    OR 
+        [AccountID] IN (SELECT [i].[AccountID] FROM @InsertedIntoAccountIDs [i])
 	
 END
 GO
