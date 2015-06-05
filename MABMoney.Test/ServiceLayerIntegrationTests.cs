@@ -15,6 +15,7 @@ using System.IO;
 using MABMoney.Services;
 using MABMoney.Services.DTO;
 using System.Data;
+using MABMoney.Domain;
 
 namespace MABMoney.Test
 {
@@ -164,6 +165,89 @@ namespace MABMoney.Test
             Assert.IsTrue(result.StartingBalance == 25.43M);
             Assert.IsTrue(result.CurrentBalance == 25.43M);
             Assert.IsTrue(result.Default == true);
+        }
+
+        [Test]
+        [Category("ServiceLayer_Account")]
+        public void Service_Read_Account()
+        {
+            var accountServices = new AccountServices(_accountRepository, _transactionRepository, _userRepository);
+
+            var result = accountServices.Get(2);
+
+            Assert.IsTrue(result.AccountID == 2);
+            Assert.IsTrue(result.Name == "Savings");
+            Assert.IsTrue(result.Type == AccountTypeDTO.Savings);
+            Assert.IsTrue(result.DisplayOrder == 200);
+            Assert.IsTrue(result.StartingBalance == 500.00M);
+            Assert.IsTrue(result.CurrentBalance == 550.00M);
+            Assert.IsTrue(result.Default == false);
+        }
+
+        [Test]
+        [Category("ServiceLayer_Account")]
+        public void Service_Read_Accounts()
+        {
+            var accountServices = new AccountServices(_accountRepository, _transactionRepository, _userRepository);
+
+            var data = accountServices.All().ToList();
+
+            Assert.IsTrue(data.Count == 3);
+            Assert.IsTrue(data[0].AccountID == 1);
+            Assert.IsTrue(data[0].Name == "Current");
+            Assert.IsTrue(data[1].AccountID == 2);
+            Assert.IsTrue(data[1].Name == "Savings");
+            Assert.IsTrue(data[2].AccountID == 3);
+            Assert.IsTrue(data[2].Name == "Credit");
+        }
+
+        [Test]
+        [Category("ServiceLayer_Account")]
+        public void Service_Update_Account()
+        {
+            var accountServices = new AccountServices(_accountRepository, _transactionRepository, _userRepository);
+
+            var dto = new AccountDTO {
+                AccountID = 1,
+                Name = "UPDATED",
+                Type = AccountTypeDTO.CreditCard,
+                DisplayOrder = 156,
+                StartingBalance = 200.50M,
+                CurrentBalance = 2000M,
+                Default = false
+            };
+
+            accountServices.Save(dto);
+
+            Assert.IsTrue(dto.AccountID == 1);
+
+            var result = GetSingle<Account>("SELECT * FROM Accounts WHERE AccountID = 1");
+
+            Assert.IsTrue(result.AccountID == 1);
+            Assert.IsTrue(result.Name == "UPDATED");
+            Assert.IsTrue(result.Type == AccountType.CreditCard);
+            Assert.IsTrue(result.DisplayOrder == 156);
+            Assert.IsTrue(result.StartingBalance == 200.50M);
+            Assert.IsTrue(result.CurrentBalance == 450.50M);
+            Assert.IsTrue(result.Default == false);
+        }
+
+        [Test]
+        [Category("ServiceLayer_Account")]
+        public void Service_Delete_Account()
+        {
+            var accountServices = new AccountServices(_accountRepository, _transactionRepository, _userRepository);
+
+            accountServices.Delete(1);
+
+            var account = accountServices.Get(1);
+
+            var result = GetSingle<Account>("SELECT * FROM Accounts WHERE AccountID = 1");
+
+            Assert.IsTrue(account == null);
+            Assert.IsTrue(result.Deleted == true);
+            Assert.IsTrue(result.DeletedBy == 1);
+            Assert.IsTrue(result.DeletedDate.Value.Date == DateTime.Now.Date);
         }
 
         #endregion Account
