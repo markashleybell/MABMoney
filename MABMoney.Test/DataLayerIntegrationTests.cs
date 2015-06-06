@@ -164,6 +164,17 @@ namespace MABMoney.Test
 
         [Test]
         [Category("DataLayer_Account")]
+        public void Data_Read_Other_User_Account()
+        {
+            var repository = new AccountRepository(_dataConnectionString, 1);
+
+            var data = repository.Get(5);
+
+            Assert.IsTrue(data == null);
+        }
+
+        [Test]
+        [Category("DataLayer_Account")]
         public void Data_Update_Account()
         {
             var repository = new AccountRepository(_dataConnectionString, 1);
@@ -299,6 +310,17 @@ namespace MABMoney.Test
             var repository = new BudgetRepository(_dataConnectionString, 1);
 
             var data = repository.Get(3);
+
+            Assert.IsTrue(data == null);
+        }
+
+        [Test]
+        [Category("DataLayer_Budget")]
+        public void Data_Read_Other_User_Budget()
+        {
+            var repository = new BudgetRepository(_dataConnectionString, 1);
+
+            var data = repository.Get(4);
 
             Assert.IsTrue(data == null);
         }
@@ -487,6 +509,17 @@ namespace MABMoney.Test
 
         [Test]
         [Category("DataLayer_Category")]
+        public void Data_Read_Other_User_Category()
+        {
+            var repository = new CategoryRepository(_dataConnectionString, 1);
+
+            var data = repository.Get(9);
+
+            Assert.IsTrue(data == null);
+        }
+
+        [Test]
+        [Category("DataLayer_Category")]
         public void Data_Update_Category()
         {
             var repository = new CategoryRepository(_dataConnectionString, 1);
@@ -601,6 +634,17 @@ namespace MABMoney.Test
 
         [Test]
         [Category("DataLayer_Category_Budget")]
+        public void Data_Read_Other_User_Category_Budget()
+        {
+            var repository = new Category_BudgetRepository(_dataConnectionString, 1);
+
+            var data = repository.Get(4, 9);
+
+            Assert.IsTrue(data == null);
+        }
+
+        [Test]
+        [Category("DataLayer_Category_Budget")]
         public void Data_Update_Category_Budget()
         {
             var repository = new Category_BudgetRepository(_dataConnectionString, 1);
@@ -708,6 +752,28 @@ namespace MABMoney.Test
             var repository = new SessionRepository(_dataConnectionString, 1);
 
             var data = repository.Get(2);
+
+            Assert.IsTrue(data == null);
+        }
+
+        [Test]
+        [Category("DataLayer_Session")]
+        public void Data_Read_Other_User_Session()
+        {
+            var repository = new SessionRepository(_dataConnectionString, 1);
+
+            var data = repository.Get(4);
+
+            Assert.IsTrue(data == null);
+        }
+
+        [Test]
+        [Category("DataLayer_Session")]
+        public void Data_Read_Other_User_Session_By_Key()
+        {
+            var repository = new SessionRepository(_dataConnectionString, 1);
+
+            var data = repository.GetByKey("USER2SESSION");
 
             Assert.IsTrue(data == null);
         }
@@ -957,6 +1023,17 @@ namespace MABMoney.Test
 
         [Test]
         [Category("DataLayer_Transaction")]
+        public void Data_Read_Other_User_Transactions_By_Account()
+        {
+            var repository = new TransactionRepository(_dataConnectionString, 1);
+
+            var data = repository.GetForAccount(5).ToList();
+
+            Assert.IsTrue(data.Count == 0);
+        }
+
+        [Test]
+        [Category("DataLayer_Transaction")]
         public void Data_Read_Transaction()
         {
             var repository = new TransactionRepository(_dataConnectionString, 1);
@@ -976,6 +1053,17 @@ namespace MABMoney.Test
             var repository = new TransactionRepository(_dataConnectionString, 1);
 
             var data = repository.Get(15);
+
+            Assert.IsTrue(data == null);
+        }
+
+        [Test]
+        [Category("DataLayer_Transaction")]
+        public void Data_Read_Other_User_Transaction()
+        {
+            var repository = new TransactionRepository(_dataConnectionString, 1);
+
+            var data = repository.Get(21);
 
             Assert.IsTrue(data == null);
         }
