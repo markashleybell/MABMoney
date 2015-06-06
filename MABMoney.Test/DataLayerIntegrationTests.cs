@@ -86,8 +86,6 @@ namespace MABMoney.Test
 
         #endregion SetUp
 
-        #region Data Layer Tests
-
         #region Account
 
         [Test]
@@ -1251,8 +1249,6 @@ namespace MABMoney.Test
         }
 
         #endregion User
-
-        #endregion Data Layer Tests
 
         #region TearDown
 
