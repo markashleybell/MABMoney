@@ -41,9 +41,8 @@ namespace MABMoney.Services
             return MapBudget(_budgets.Get(id).MapTo<BudgetDTO>());
         }
 
-        public BudgetDTO GetLatest(int accountId)
+        public BudgetDTO GetLatest(DateTime now, int accountId)
         {
-            var now = DateTime.Now;
             var endOfToday = new DateTime(now.Year, now.Month, now.Day, 23, 59, 59);
 
             return MapBudget(_budgets.GetLatest(accountId, endOfToday).MapTo<BudgetDTO>());

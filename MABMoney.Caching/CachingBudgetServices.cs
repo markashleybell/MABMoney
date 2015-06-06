@@ -28,12 +28,12 @@ namespace MABMoney.Caching
             return _budgetServices.Get(id);
         }
 
-        public BudgetDTO GetLatest(int accountId)
+        public BudgetDTO GetLatest(DateTime now, int accountId)
         {
             return CacheAndGetValue<BudgetDTO>(
                 "latest-budget-" + accountId,
                 CacheExpiry.OneHour, 
-                () => _budgetServices.GetLatest(accountId),
+                () => _budgetServices.GetLatest(now, accountId),
                 "budget", "transaction", "category", "all"
             );
         }

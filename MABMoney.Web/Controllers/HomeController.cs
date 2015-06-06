@@ -125,7 +125,7 @@ namespace MABMoney.Web.Controllers
             model.To = new DateTime(now.Year, now.Month, DateTime.DaysInMonth(now.Year, now.Month));
 
             // Get latest budget, if there is one
-            var latestBudget = _budgetServices.GetLatest(account.AccountID);
+            var latestBudget = _budgetServices.GetLatest(now, account.AccountID);
 
             if (latestBudget != null)
             {

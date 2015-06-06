@@ -10,7 +10,7 @@ namespace MABMoney.Services
     {
         IEnumerable<BudgetDTO> All();
         BudgetDTO Get(int id);
-        BudgetDTO GetLatest(int accountId);
+        BudgetDTO GetLatest(DateTime now, int accountId);
         void Save(BudgetDTO dto);
         void Delete(int id);
 
