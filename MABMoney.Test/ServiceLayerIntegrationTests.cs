@@ -133,8 +133,6 @@ namespace MABMoney.Test
 
         #endregion SetUp
 
-        #region Service Layer Tests
-
         #region Account
 
         [Test]
@@ -252,7 +250,6 @@ namespace MABMoney.Test
 
         #endregion Account
 
-        #endregion Service Layer Tests
 
         #region TearDown
 
