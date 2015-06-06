@@ -167,6 +167,23 @@ namespace MABMoney.Test
 
         [Test]
         [Category("ServiceLayer_Account")]
+        public void Service_Read_Accounts()
+        {
+            var accountServices = new AccountServices(_accountRepository, _transactionRepository, _userRepository);
+
+            var data = accountServices.All().ToList();
+
+            Assert.IsTrue(data.Count == 3);
+            Assert.IsTrue(data[0].AccountID == 1);
+            Assert.IsTrue(data[0].Name == "Current");
+            Assert.IsTrue(data[1].AccountID == 2);
+            Assert.IsTrue(data[1].Name == "Savings");
+            Assert.IsTrue(data[2].AccountID == 3);
+            Assert.IsTrue(data[2].Name == "Credit");
+        }
+
+        [Test]
+        [Category("ServiceLayer_Account")]
         public void Service_Read_Account()
         {
             var accountServices = new AccountServices(_accountRepository, _transactionRepository, _userRepository);
@@ -184,19 +201,24 @@ namespace MABMoney.Test
 
         [Test]
         [Category("ServiceLayer_Account")]
-        public void Service_Read_Accounts()
+        public void Service_Read_Deleted_Account()
         {
             var accountServices = new AccountServices(_accountRepository, _transactionRepository, _userRepository);
 
-            var data = accountServices.All().ToList();
+            var result = accountServices.Get(4);
 
-            Assert.IsTrue(data.Count == 3);
-            Assert.IsTrue(data[0].AccountID == 1);
-            Assert.IsTrue(data[0].Name == "Current");
-            Assert.IsTrue(data[1].AccountID == 2);
-            Assert.IsTrue(data[1].Name == "Savings");
-            Assert.IsTrue(data[2].AccountID == 3);
-            Assert.IsTrue(data[2].Name == "Credit");
+            Assert.IsTrue(result == null);
+        }
+
+        [Test]
+        [Category("ServiceLayer_Account")]
+        public void Service_Read_Other_User_Account()
+        {
+            var accountServices = new AccountServices(_accountRepository, _transactionRepository, _userRepository);
+
+            var result = accountServices.Get(5);
+
+            Assert.IsTrue(result == null);
         }
 
         [Test]
