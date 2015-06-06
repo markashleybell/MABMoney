@@ -248,7 +248,7 @@ namespace MABMoney.Test
             Assert.IsTrue(result.Type == AccountType.CreditCard);
             Assert.IsTrue(result.DisplayOrder == 156);
             Assert.IsTrue(result.StartingBalance == 200.50M);
-            Assert.IsTrue(result.CurrentBalance == 450.50M);
+            Assert.IsTrue(result.CurrentBalance == 445.50M);
             Assert.IsTrue(result.Default == false);
         }
 
@@ -272,6 +272,173 @@ namespace MABMoney.Test
 
         #endregion Account
 
+        #region Budget
+
+        [Test]
+        [Category("ServiceLayer_Budget")]
+        public void Service_Create_Budget()
+        {
+            var accountServices = new AccountServices(_accountRepository, _transactionRepository, _userRepository);
+            var categoryServices = new CategoryServices(_categoryRepository, _accountRepository);
+            var budgetServices = new BudgetServices(_budgetRepository, _accountRepository, _categoryRepository, _category_budgetRepository, _transactionRepository, accountServices, categoryServices);
+
+            var dto = new BudgetDTO {
+                Account_AccountID = 1,
+                Start = DateTime.Now.Date,
+                End = DateTime.Now.AddMonths(1).Date
+            };
+
+            budgetServices.Save(dto);
+
+            Assert.IsTrue(dto.BudgetID == 5);
+
+            var result = GetSingle<BudgetDTO>("SELECT * FROM Budgets WHERE BudgetID = 5");
+
+            Assert.IsTrue(result.BudgetID == 5);
+            Assert.IsTrue(result.Account_AccountID == 1);
+            Assert.IsTrue(result.Start == DateTime.Now.Date);
+            Assert.IsTrue(result.End == DateTime.Now.AddMonths(1).Date);
+        }
+
+        [Test]
+        [Category("ServiceLayer_Budget")]
+        public void Service_Read_Budgets()
+        {
+            var accountServices = new AccountServices(_accountRepository, _transactionRepository, _userRepository);
+            var categoryServices = new CategoryServices(_categoryRepository, _accountRepository);
+            var budgetServices = new BudgetServices(_budgetRepository, _accountRepository, _categoryRepository, _category_budgetRepository, _transactionRepository, accountServices, categoryServices);
+
+            var data = budgetServices.All().ToList();
+
+            Assert.IsTrue(data.Count == 2);
+            Assert.IsTrue(data[0].BudgetID == 2);
+            Assert.IsTrue(data[0].Account_AccountID == 1);
+            Assert.IsTrue(data[0].Start == new DateTime(2015, 2, 1));
+            Assert.IsTrue(data[0].End == new DateTime(2015, 2, 28));
+            Assert.IsTrue(data[1].BudgetID == 1);
+            Assert.IsTrue(data[1].Account_AccountID == 1);
+            Assert.IsTrue(data[1].Start == new DateTime(2015, 1, 1));
+            Assert.IsTrue(data[1].End == new DateTime(2015, 1, 31));
+        }
+
+        [Test]
+        [Category("ServiceLayer_Budget")]
+        public void Service_Read_Budget()
+        {
+            var accountServices = new AccountServices(_accountRepository, _transactionRepository, _userRepository);
+            var categoryServices = new CategoryServices(_categoryRepository, _accountRepository);
+            var budgetServices = new BudgetServices(_budgetRepository, _accountRepository, _categoryRepository, _category_budgetRepository, _transactionRepository, accountServices, categoryServices);
+
+            var result = budgetServices.Get(1);
+
+            Assert.IsTrue(result.BudgetID == 1);
+            Assert.IsTrue(result.Account_AccountID == 1);
+            Assert.IsTrue(result.Start == new DateTime(2015, 01, 01, 0, 0, 0));
+            Assert.IsTrue(result.End == new DateTime(2015, 01, 31, 0, 0, 0));
+            // There should be two categories (3 in DB but one deleted) and one uncategorised
+            Assert.IsTrue(result.Category_Budgets.Count == 3);
+            Assert.IsTrue(result.Category_Budgets[0].CategoryName == "Rent");
+            Assert.IsTrue(result.Category_Budgets[0].Amount == 500.00M);
+            Assert.IsTrue(result.Category_Budgets[0].Total == 500.00M);
+            Assert.IsTrue(result.Category_Budgets[1].CategoryName == "Food");
+            Assert.IsTrue(result.Category_Budgets[1].Amount == 250.00M);
+            Assert.IsTrue(result.Category_Budgets[1].Total == 145.50M);
+            Assert.IsTrue(result.Category_Budgets[2].CategoryName == "Unallocated");
+            Assert.IsTrue(result.Category_Budgets[2].Amount == 250.00M);
+            Assert.IsTrue(result.Category_Budgets[2].Total == 5.00M);
+        }
+
+        [Test]
+        [Category("ServiceLayer_Budget")]
+        public void Service_Read_Latest_Budget()
+        {
+            var accountServices = new AccountServices(_accountRepository, _transactionRepository, _userRepository);
+            var categoryServices = new CategoryServices(_categoryRepository, _accountRepository);
+            var budgetServices = new BudgetServices(_budgetRepository, _accountRepository, _categoryRepository, _category_budgetRepository, _transactionRepository, accountServices, categoryServices);
+
+            var result = budgetServices.GetLatest(new DateTime(2015, 02, 01), 1);
+
+            Assert.IsTrue(result.BudgetID == 2);
+            Assert.IsTrue(result.Account_AccountID == 1);
+            Assert.IsTrue(result.Start == new DateTime(2015, 02, 01, 0, 0, 0));
+            Assert.IsTrue(result.End == new DateTime(2015, 02, 28, 0, 0, 0));
+            Assert.IsTrue(result.Category_Budgets == null);
+        }
+
+        [Test]
+        [Category("ServiceLayer_Budget")]
+        public void Service_Read_Deleted_Budget()
+        {
+            var accountServices = new AccountServices(_accountRepository, _transactionRepository, _userRepository);
+            var categoryServices = new CategoryServices(_categoryRepository, _accountRepository);
+            var budgetServices = new BudgetServices(_budgetRepository, _accountRepository, _categoryRepository, _category_budgetRepository, _transactionRepository, accountServices, categoryServices);
+
+            var result = budgetServices.Get(3);
+
+            Assert.IsTrue(result == null);
+        }
+
+        [Test]
+        [Category("ServiceLayer_Budget")]
+        public void Service_Read_Other_User_Budget()
+        {
+            var accountServices = new AccountServices(_accountRepository, _transactionRepository, _userRepository);
+            var categoryServices = new CategoryServices(_categoryRepository, _accountRepository);
+            var budgetServices = new BudgetServices(_budgetRepository, _accountRepository, _categoryRepository, _category_budgetRepository, _transactionRepository, accountServices, categoryServices);
+
+            var result = budgetServices.Get(4);
+
+            Assert.IsTrue(result == null);
+        }
+
+        [Test]
+        [Category("ServiceLayer_Budget")]
+        public void Service_Update_Budget()
+        {
+            var accountServices = new AccountServices(_accountRepository, _transactionRepository, _userRepository);
+            var categoryServices = new CategoryServices(_categoryRepository, _accountRepository);
+            var budgetServices = new BudgetServices(_budgetRepository, _accountRepository, _categoryRepository, _category_budgetRepository, _transactionRepository, accountServices, categoryServices);
+
+            var dto = new BudgetDTO {
+                BudgetID = 1,
+                Account_AccountID = 2,
+                Start = DateTime.Now.Date,
+                End = DateTime.Now.AddMonths(1).Date
+            };
+
+            budgetServices.Save(dto);
+
+            Assert.IsTrue(dto.BudgetID == 1);
+
+            var result = GetSingle<BudgetDTO>("SELECT * FROM Budgets WHERE BudgetID = 1");
+
+            Assert.IsTrue(result.BudgetID == 1);
+            Assert.IsTrue(result.Account_AccountID == 2);
+            Assert.IsTrue(result.Start == DateTime.Now.Date);
+            Assert.IsTrue(result.End == DateTime.Now.AddMonths(1).Date);
+        }
+
+        [Test]
+        [Category("ServiceLayer_Budget")]
+        public void Service_Delete_Budget()
+        {
+            var accountServices = new AccountServices(_accountRepository, _transactionRepository, _userRepository);
+            var categoryServices = new CategoryServices(_categoryRepository, _accountRepository);
+            var budgetServices = new BudgetServices(_budgetRepository, _accountRepository, _categoryRepository, _category_budgetRepository, _transactionRepository, accountServices, categoryServices);
+
+            budgetServices.Delete(1);
+
+            var budget = budgetServices.Get(1);
+
+            var result = GetSingle<Budget>("SELECT * FROM Budgets WHERE BudgetID = 1");
+
+            Assert.IsTrue(budget == null);
+            Assert.IsTrue(result.Deleted == true);
+            Assert.IsTrue(result.DeletedBy == 1);
+            Assert.IsTrue(result.DeletedDate.Value.Date == DateTime.Now.Date);
+        }
+
+        #endregion Budget
 
         #region TearDown
 
