@@ -193,7 +193,7 @@ namespace MABMoney.Test
             Assert.IsTrue(result.Type == AccountType.CreditCard);
             Assert.IsTrue(result.DisplayOrder == 126);
             // This will have been updated by the total calc trigger when the test transactions are inserted
-            Assert.IsTrue(result.CurrentBalance == 506.12M); 
+            Assert.IsTrue(result.CurrentBalance == 501.12M); 
             Assert.IsTrue(result.LastModifiedBy == 1);
             Assert.IsTrue(result.LastModifiedDate.Date == DateTime.Now.Date);
         }
@@ -888,7 +888,7 @@ namespace MABMoney.Test
 
             var result = repository.Add(transaction);
 
-            Assert.IsTrue(result.TransactionID == 31);
+            Assert.IsTrue(result.TransactionID == 32);
             Assert.IsTrue(result.Account_AccountID == 1);
             Assert.IsTrue(result.AccountName == "Current");
             Assert.IsTrue(result.Category_CategoryID == 3);
@@ -912,27 +912,37 @@ namespace MABMoney.Test
 
             var data = repository.All().ToList();
 
-            // There are 18 test transactions for this user (and one deleted) in date descending order
-            Assert.IsTrue(data.Count == 18);
+            // There are 19 test transactions for this user (and one deleted) in date descending order
+            Assert.IsTrue(data.Count == 19);
             Assert.IsTrue(data[0].Account_AccountID == 1);
             Assert.IsTrue(data[0].AccountName == "Current");
-            Assert.IsTrue(data[0].TransactionID == 14);
-            Assert.IsTrue(data[0].Category_CategoryID == 4);
-            Assert.IsTrue(data[0].CategoryName == "Bills");
-            Assert.IsTrue(data[0].Description == "USER1CURRENT14");
-            Assert.IsTrue(data[0].Note == "Water");
-            Assert.IsTrue(data[5].Account_AccountID == 2);
-            Assert.IsTrue(data[5].AccountName == "Savings");
-            Assert.IsTrue(data[5].TransactionID == 19);
-            Assert.IsTrue(data[5].Category_CategoryID == null);
-            Assert.IsTrue(data[5].CategoryName == null);
-            Assert.IsTrue(data[5].Description == "USER1SAVINGS19");
-            Assert.IsTrue(data[17].Account_AccountID == 1);
-            Assert.IsTrue(data[17].AccountName == "Current");
-            Assert.IsTrue(data[17].TransactionID == 1);
-            Assert.IsTrue(data[17].Category_CategoryID == 1);
-            Assert.IsTrue(data[17].CategoryName == "Salary");
-            Assert.IsTrue(data[17].Description == "USER1CURRENT1");
+            Assert.IsTrue(data[0].TransactionID == 31);
+            Assert.IsTrue(data[0].Category_CategoryID == null);
+            Assert.IsTrue(data[0].CategoryName == null);
+            Assert.IsTrue(data[0].Description == "USER1CURRENT15");
+            Assert.IsTrue(data[0].Amount == -5.00M);
+            Assert.IsTrue(data[1].Account_AccountID == 1);
+            Assert.IsTrue(data[1].AccountName == "Current");
+            Assert.IsTrue(data[1].TransactionID == 14);
+            Assert.IsTrue(data[1].Category_CategoryID == 4);
+            Assert.IsTrue(data[1].CategoryName == "Bills");
+            Assert.IsTrue(data[1].Description == "USER1CURRENT14");
+            Assert.IsTrue(data[1].Note == "Water");
+            Assert.IsTrue(data[1].Amount == -25.00M);
+            Assert.IsTrue(data[6].Account_AccountID == 2);
+            Assert.IsTrue(data[6].AccountName == "Savings");
+            Assert.IsTrue(data[6].TransactionID == 19);
+            Assert.IsTrue(data[6].Category_CategoryID == null);
+            Assert.IsTrue(data[6].CategoryName == null);
+            Assert.IsTrue(data[6].Description == "USER1SAVINGS19");
+            Assert.IsTrue(data[6].Amount == 9.50M);
+            Assert.IsTrue(data[18].Account_AccountID == 1);
+            Assert.IsTrue(data[18].AccountName == "Current");
+            Assert.IsTrue(data[18].TransactionID == 1);
+            Assert.IsTrue(data[18].Category_CategoryID == 1);
+            Assert.IsTrue(data[18].CategoryName == "Salary");
+            Assert.IsTrue(data[18].Description == "USER1CURRENT1");
+            Assert.IsTrue(data[18].Amount == 1000.00M);
         }
 
         [Test]
@@ -943,17 +953,18 @@ namespace MABMoney.Test
 
             var data = repository.GetForAccount(1).ToList();
 
-            // There are 14 test transactions for this user (and one deleted) in date descending order
-            Assert.IsTrue(data.Count == 14);
-            Assert.IsTrue(data[0].TransactionID == 14);
-            Assert.IsTrue(data[0].Category_CategoryID == 4);
-            Assert.IsTrue(data[0].CategoryName == "Bills");
-            Assert.IsTrue(data[0].Description == "USER1CURRENT14");
-            Assert.IsTrue(data[0].Note == "Water");
-            Assert.IsTrue(data[13].TransactionID == 1);
-            Assert.IsTrue(data[13].Category_CategoryID == 1);
-            Assert.IsTrue(data[13].CategoryName == "Salary");
-            Assert.IsTrue(data[13].Description == "USER1CURRENT1");
+            // There are 15 test transactions for this user (and one deleted) in date descending order
+            Assert.IsTrue(data.Count == 15);
+            Assert.IsTrue(data[0].TransactionID == 31);
+            Assert.IsTrue(data[0].Category_CategoryID == null);
+            Assert.IsTrue(data[0].CategoryName == null);
+            Assert.IsTrue(data[0].Description == "USER1CURRENT15");
+            Assert.IsTrue(data[0].Amount == -5.00M);
+            Assert.IsTrue(data[14].TransactionID == 1);
+            Assert.IsTrue(data[14].Category_CategoryID == 1);
+            Assert.IsTrue(data[14].CategoryName == "Salary");
+            Assert.IsTrue(data[14].Description == "USER1CURRENT1");
+            Assert.IsTrue(data[14].Amount == 1000.00M);
         }
 
         [Test]
