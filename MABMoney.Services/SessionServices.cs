@@ -21,12 +21,12 @@ namespace MABMoney.Services
 
         public IEnumerable<SessionDTO> All()
         {
-            throw new NotImplementedException();
+            return _sessions.All().MapToList<SessionDTO>();
         }
 
         public SessionDTO Get(int id)
         {
-            throw new NotImplementedException();
+            return _sessions.Get(id).MapTo<SessionDTO>();
         }
 
         public SessionDTO GetByKey(string key)
