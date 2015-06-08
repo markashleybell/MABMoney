@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Net;
 using System.Web.Mvc;
 using RequireHttpsAttributeBase = System.Web.Mvc.RequireHttpsAttribute;
@@ -23,8 +24,8 @@ namespace MABMoney.Web.Infrastructure
             if (string.Equals(request.Headers["X-Forwarded-Proto"], "https", StringComparison.InvariantCultureIgnoreCase))
                 return;
 
-            // Ignore this if we're working locally
-            if (request.IsLocal)
+            // Respect the override setting in Web.config
+            if (Convert.ToBoolean(ConfigurationManager.AppSettings["RequireHttps"]) == false)
                 return;
 
             // Reject all non https requests
