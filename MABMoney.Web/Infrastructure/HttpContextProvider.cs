@@ -27,7 +27,7 @@ namespace MABMoney.Web.Infrastructure
         {
             var cookie = new HttpCookie(key, value);
             cookie.HttpOnly = true;
-            cookie.Secure = true;
+            cookie.Secure = _config.Get<bool>("RequireHttps");
             cookie.Domain = _config.Get<string>("CookieDomain");
 
             _context.Response.Cookies.Add(cookie);
@@ -38,7 +38,7 @@ namespace MABMoney.Web.Infrastructure
             var cookie = new HttpCookie(key, value);
             cookie.Expires = expires;
             cookie.HttpOnly = true;
-            cookie.Secure = true;
+            cookie.Secure = _config.Get<bool>("RequireHttps");
             cookie.Domain = _config.Get<string>("CookieDomain");
 
             _context.Response.Cookies.Add(cookie);
@@ -49,7 +49,7 @@ namespace MABMoney.Web.Infrastructure
             var cookie = new HttpCookie(key, value);
             cookie.Expires = expires;
             cookie.HttpOnly = httpOnly;
-            cookie.Secure = true;
+            cookie.Secure = _config.Get<bool>("RequireHttps");
             cookie.Domain = _config.Get<string>("CookieDomain");
 
             _context.Response.Cookies.Add(cookie);
