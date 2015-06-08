@@ -85,6 +85,7 @@ var MABMoney = (function ($, window, undefined) {
 
             var model: MABMoneyPaymentCalculatorRowModel = {
                 month: months[d.getMonth()],
+                year: d.getFullYear(),
                 monthStart: balance.toFixed(2).toString(),
                 minPayment: ((minPaymentPercentage / 100) * balance).toFixed(2).toString(),
                 payment: ((paymentAmount > balance) ? balance : paymentAmount).toFixed(2).toString(),
