@@ -440,6 +440,136 @@ namespace MABMoney.Test
 
         #endregion Budget
 
+        #region Category
+
+        [Test]
+        [Category("ServiceLayer_Category")]
+        public void Service_Create_Category()
+        {
+            var categoryServices = new CategoryServices(_categoryRepository, _accountRepository);
+
+            var dto = new CategoryDTO {
+                Account_AccountID = 1,
+                Name = "TEST CATEGORY",
+                Type = CategoryTypeDTO.Income,
+            };
+
+            categoryServices.Save(dto);
+
+            Assert.IsTrue(dto.CategoryID == 11);
+
+            var result = GetSingle<CategoryDTO>("SELECT * FROM Categories WHERE CategoryID = 11");
+
+            Assert.IsTrue(result.CategoryID == 11);
+            Assert.IsTrue(result.Account_AccountID == 1);
+            Assert.IsTrue(result.Name == "TEST CATEGORY");
+            Assert.IsTrue(result.Type == CategoryTypeDTO.Income);
+        }
+
+        [Test]
+        [Category("ServiceLayer_Category")]
+        public void Service_Read_Categories()
+        {
+            var categoryServices = new CategoryServices(_categoryRepository, _accountRepository);
+
+            var data = categoryServices.All().ToList();
+
+            Assert.IsTrue(data.Count == 6);
+            Assert.IsTrue(data[0].CategoryID == 1);
+            Assert.IsTrue(data[0].Name == "Salary");
+            Assert.IsTrue(data[0].Type == CategoryTypeDTO.Income);
+            Assert.IsTrue(data[1].CategoryID == 2);
+            Assert.IsTrue(data[1].Name == "Rent");
+            Assert.IsTrue(data[1].Type == CategoryTypeDTO.Expense);
+            Assert.IsTrue(data[2].CategoryID == 3);
+            Assert.IsTrue(data[2].Name == "Food");
+            Assert.IsTrue(data[2].Type == CategoryTypeDTO.Expense);
+            Assert.IsTrue(data[5].CategoryID == 7);
+            Assert.IsTrue(data[5].Name == "Bills");
+            Assert.IsTrue(data[5].Type == CategoryTypeDTO.Expense);
+        }
+
+        [Test]
+        [Category("ServiceLayer_Category")]
+        public void Service_Read_Category()
+        {
+            var categoryServices = new CategoryServices(_categoryRepository, _accountRepository);
+
+            var result = categoryServices.Get(2);
+
+            Assert.IsTrue(result.CategoryID == 2);
+            Assert.IsTrue(result.Account_AccountID == 1);
+            Assert.IsTrue(result.Name == "Rent");
+            Assert.IsTrue(result.Type == CategoryTypeDTO.Expense);
+        }
+
+        [Test]
+        [Category("ServiceLayer_Category")]
+        public void Service_Read_Deleted_Category()
+        {
+            var categoryServices = new CategoryServices(_categoryRepository, _accountRepository);
+
+            var result = categoryServices.Get(5);
+
+            Assert.IsTrue(result == null);
+        }
+
+        [Test]
+        [Category("ServiceLayer_Category")]
+        public void Service_Read_Other_User_Category()
+        {
+            var categoryServices = new CategoryServices(_categoryRepository, _accountRepository);
+
+            var result = categoryServices.Get(5);
+
+            Assert.IsTrue(result == null);
+        }
+
+        [Test]
+        [Category("ServiceLayer_Category")]
+        public void Service_Update_Category()
+        {
+            var categoryServices = new CategoryServices(_categoryRepository, _accountRepository);
+
+            var dto = new CategoryDTO {
+                CategoryID = 1,
+                Account_AccountID = 2,
+                Name = "UPDATED",
+                Type = CategoryTypeDTO.Expense
+            };
+
+            categoryServices.Save(dto);
+
+            Assert.IsTrue(dto.CategoryID == 1);
+
+            var result = GetSingle<Category>("SELECT * FROM Categories WHERE CategoryID = 1");
+
+            Assert.IsTrue(result.CategoryID == 1);
+            Assert.IsTrue(result.Account_AccountID == 2);
+            Assert.IsTrue(result.Name == "UPDATED");
+            Assert.IsTrue(result.Type == CategoryType.Expense);
+        }
+
+        [Test]
+        [Category("ServiceLayer_Category")]
+        public void Service_Delete_Category()
+        {
+            var categoryServices = new CategoryServices(_categoryRepository, _accountRepository);
+
+            categoryServices.Delete(1);
+
+            var category = categoryServices.Get(1);
+
+            var result = GetSingle<Category>("SELECT * FROM Categories WHERE CategoryID = 1");
+
+            Assert.IsTrue(category == null);
+            Assert.IsTrue(result.Deleted == true);
+            Assert.IsTrue(result.DeletedBy == 1);
+            Assert.IsTrue(result.DeletedDate.Value.Date == DateTime.Now.Date);
+        }
+
+        #endregion Category
+
         #region TearDown
 
         [TearDown]
