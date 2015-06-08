@@ -570,6 +570,154 @@ namespace MABMoney.Test
 
         #endregion Category
 
+        #region Session
+
+        [Test]
+        [Category("ServiceLayer_Session")]
+        public void Service_Create_Session()
+        {
+            var sessionServices = new SessionServices(_sessionRepository);
+
+            var dto = new SessionDTO {
+                User_UserID = 1,
+                Key = "TESTKEY",
+                Expiry = DateTime.Now.AddMonths(1).Date
+            };
+
+            sessionServices.Save(dto);
+
+            Assert.IsTrue(dto.SessionID == 5);
+
+            var result = GetSingle<SessionDTO>("SELECT * FROM Sessions WHERE SessionID = 5");
+
+            Assert.IsTrue(result.SessionID == 5);
+            Assert.IsTrue(result.User_UserID == 1);
+            Assert.IsTrue(result.Key == "TESTKEY");
+            Assert.IsTrue(result.Expiry == DateTime.Now.AddMonths(1).Date);
+        }
+
+        [Test]
+        [Category("ServiceLayer_Session")]
+        public void Service_Read_Sessions()
+        {
+            var sessionServices = new SessionServices(_sessionRepository);
+
+            var data = sessionServices.All().ToList();
+
+            Assert.IsTrue(data.Count == 1);
+            Assert.IsTrue(data[0].SessionID == 1);
+            Assert.IsTrue(data[0].User_UserID == 1);
+            Assert.IsTrue(data[0].Key == "USER1SESSION");
+            Assert.IsTrue(data[0].Expiry == new DateTime(2016, 1, 1, 0, 0, 0));
+        }
+
+        [Test]
+        [Category("ServiceLayer_Session")]
+        public void Service_Read_Session()
+        {
+            var sessionServices = new SessionServices(_sessionRepository);
+
+            var result = sessionServices.Get(1);
+
+            Assert.IsTrue(result.SessionID == 1);
+            Assert.IsTrue(result.User_UserID == 1);
+            Assert.IsTrue(result.Key == "USER1SESSION");
+            Assert.IsTrue(result.Expiry == new DateTime(2016, 1, 1, 0, 0, 0));
+        }
+
+        [Test]
+        [Category("ServiceLayer_Session")]
+        public void Service_Read_Session_By_Key()
+        {
+            var sessionServices = new SessionServices(_sessionRepository);
+
+            var result = sessionServices.GetByKey("USER1SESSION");
+
+            Assert.IsTrue(result.SessionID == 1);
+            Assert.IsTrue(result.User_UserID == 1);
+            Assert.IsTrue(result.Key == "USER1SESSION");
+            Assert.IsTrue(result.Expiry == new DateTime(2016, 1, 1, 0, 0, 0));
+        }
+
+        [Test]
+        [Category("ServiceLayer_Session")]
+        public void Service_Read_Deleted_Session()
+        {
+            var sessionServices = new SessionServices(_sessionRepository);
+
+            var result = sessionServices.Get(2);
+
+            Assert.IsTrue(result == null);
+        }
+
+        [Test]
+        [Category("ServiceLayer_Session")]
+        public void Service_Read_Expired_Session()
+        {
+            var sessionServices = new SessionServices(_sessionRepository);
+
+            var result = sessionServices.Get(3);
+
+            Assert.IsTrue(result == null);
+        }
+
+        [Test]
+        [Category("ServiceLayer_Session")]
+        public void Service_Read_Other_User_Session()
+        {
+            var sessionServices = new SessionServices(_sessionRepository);
+
+            var result = sessionServices.Get(4);
+
+            Assert.IsTrue(result == null);
+        }
+
+        [Test]
+        [Category("ServiceLayer_Session")]
+        public void Service_Update_Session()
+        {
+            var sessionServices = new SessionServices(_sessionRepository);
+
+            var dto = new SessionDTO {
+                SessionID = 1,
+                User_UserID = 2,
+                Key = "UPDATED",
+                Expiry = DateTime.Now.AddMonths(1).Date
+            };
+
+            sessionServices.Save(dto);
+
+            // ID should be new, because you shouldn't be able to update session records
+            Assert.IsTrue(dto.SessionID == 5);
+
+            var result = GetSingle<Session>("SELECT * FROM Sessions WHERE SessionID = 5");
+
+            Assert.IsTrue(result.SessionID == 5);
+            Assert.IsTrue(result.User_UserID == 2);
+            Assert.IsTrue(result.Key == "UPDATED");
+            Assert.IsTrue(result.Expiry == DateTime.Now.AddMonths(1).Date);
+        }
+
+        [Test]
+        [Category("ServiceLayer_Session")]
+        public void Service_Delete_Session()
+        {
+            var sessionServices = new SessionServices(_sessionRepository);
+
+            sessionServices.Delete(1);
+
+            var session = sessionServices.Get(1);
+
+            var result = GetSingle<Session>("SELECT * FROM Sessions WHERE SessionID = 1");
+
+            Assert.IsTrue(session == null);
+            Assert.IsTrue(result.Deleted == true);
+            Assert.IsTrue(result.DeletedBy == 1);
+            Assert.IsTrue(result.DeletedDate.Value.Date == DateTime.Now.Date);
+        }
+
+        #endregion Session
+
         #region TearDown
 
         [TearDown]
