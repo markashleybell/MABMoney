@@ -106,6 +106,7 @@ UpgradeLog*.XML
 TestResult.xml
 
 MABMoney.Test/App.config
+MABMoney.Web/Web.config
 db/import.sql
 db/all.sql
 db/recreate-db-and-import.sql

@@ -307,12 +307,6 @@
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
-    <Content Include="Web.Release.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
     <Content Include="Views\Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -457,6 +451,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Img\manifest.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Web.config.example" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
