@@ -718,6 +718,152 @@ namespace MABMoney.Test
 
         #endregion Session
 
+        #region Transaction
+
+        [Test]
+        [Category("ServiceLayer_Transaction")]
+        public void Service_Create_Transaction()
+        {
+            var transactionServices = new TransactionServices(_transactionRepository, _accountRepository);
+
+            var dto = new TransactionDTO {
+                Account_AccountID = 1,
+                Category_CategoryID = 3,
+                Date = new DateTime(2015, 1, 2, 10, 15, 30),
+                Description = "Off Licence",
+                Note = "Beer",
+                Amount = 5.00M
+            };
+
+            transactionServices.Save(dto);
+
+            Assert.IsTrue(dto.TransactionID == 32);
+
+            var result = GetSingle<TransactionDTO>("SELECT * FROM Transactions WHERE TransactionID = 32");
+
+            Assert.IsTrue(result.TransactionID == 32);
+            Assert.IsTrue(result.Account_AccountID == 1);
+            Assert.IsTrue(result.Category_CategoryID == 3);
+            Assert.IsTrue(result.Date == new DateTime(2015, 1, 2, 10, 15, 30));
+            Assert.IsTrue(result.Description == "Off Licence");
+            Assert.IsTrue(result.Note == "Beer");
+            Assert.IsTrue(result.Amount == 5.00M);
+        }
+
+        [Test]
+        [Category("ServiceLayer_Transaction")]
+        public void Service_Read_Transactions()
+        {
+            var transactionServices = new TransactionServices(_transactionRepository, _accountRepository);
+
+            var data = transactionServices.All().ToList();
+
+            Assert.IsTrue(data.Count == 19);
+            Assert.IsTrue(data[0].TransactionID == 31);
+            Assert.IsTrue(data[0].Description == "USER1CURRENT15");
+            Assert.IsTrue(data[0].Amount == -5.00M);
+            Assert.IsTrue(data[1].TransactionID == 14);
+            Assert.IsTrue(data[1].Description == "USER1CURRENT14");
+            Assert.IsTrue(data[1].Amount == -25.00M);
+            Assert.IsTrue(data[2].TransactionID == 13);
+            Assert.IsTrue(data[2].Description == "USER1CURRENT13");
+            Assert.IsTrue(data[2].Amount == -10.00M);
+            Assert.IsTrue(data[18].TransactionID == 1);
+            Assert.IsTrue(data[18].Description == "USER1CURRENT1");
+            Assert.IsTrue(data[18].Note == "Salary");
+            Assert.IsTrue(data[18].Amount == 1000.00M);
+        }
+
+        [Test]
+        [Category("ServiceLayer_Transaction")]
+        public void Service_Read_Transaction()
+        {
+            var transactionServices = new TransactionServices(_transactionRepository, _accountRepository);
+
+            var result = transactionServices.Get(4);
+
+            Assert.IsTrue(result.TransactionID == 4);
+            Assert.IsTrue(result.Account_AccountID == 1);
+            Assert.IsTrue(result.Category_CategoryID == 4);
+            Assert.IsTrue(result.Date == new DateTime(2015, 1, 2, 0, 0, 0));
+            Assert.IsTrue(result.Description == "USER1CURRENT4");
+            Assert.IsTrue(result.Note == "Gas");
+            Assert.IsTrue(result.Amount == -44.50M);
+        }
+
+        [Test]
+        [Category("ServiceLayer_Transaction")]
+        public void Service_Read_Deleted_Transaction()
+        {
+            var transactionServices = new TransactionServices(_transactionRepository, _accountRepository);
+
+            var result = transactionServices.Get(15);
+
+            Assert.IsTrue(result == null);
+        }
+
+        [Test]
+        [Category("ServiceLayer_Transaction")]
+        public void Service_Read_Other_User_Transaction()
+        {
+            var transactionServices = new TransactionServices(_transactionRepository, _accountRepository);
+
+            var result = transactionServices.Get(21);
+
+            Assert.IsTrue(result == null);
+        }
+
+        [Test]
+        [Category("ServiceLayer_Transaction")]
+        public void Service_Update_Transaction()
+        {
+            var transactionServices = new TransactionServices(_transactionRepository, _accountRepository);
+
+            var dto = new TransactionDTO {
+                TransactionID = 1,
+                Account_AccountID = 2,
+                Category_CategoryID = 4,
+                Date = new DateTime(2015, 1, 3, 10, 15, 30),
+                Description = "UPDATED DESC",
+                Note = "UPDATED NOTE",
+                Amount = 15.50M
+            };
+
+            transactionServices.Save(dto);
+
+            Assert.IsTrue(dto.TransactionID == 1);
+
+            var result = GetSingle<Transaction>("SELECT * FROM Transactions WHERE TransactionID = 1");
+
+            Assert.IsTrue(result.TransactionID == 1);
+            Assert.IsTrue(result.Account_AccountID == 2);
+            Assert.IsTrue(result.Category_CategoryID == 4);
+            Assert.IsTrue(result.Date == new DateTime(2015, 1, 3, 10, 15, 30));
+            Assert.IsTrue(result.Description == "UPDATED DESC");
+            Assert.IsTrue(result.Note == "UPDATED NOTE");
+            Assert.IsTrue(result.Amount == 15.50M);
+        }
+
+        [Test]
+        [Category("ServiceLayer_Transaction")]
+        public void Service_Delete_Transaction()
+        {
+            var transactionServices = new TransactionServices(_transactionRepository, _accountRepository);
+
+            transactionServices.Delete(1);
+
+            var transaction = transactionServices.Get(1);
+
+            var result = GetSingle<Transaction>("SELECT * FROM Transactions WHERE TransactionID = 1");
+
+            Assert.IsTrue(transaction == null);
+            Assert.IsTrue(result.Deleted == true);
+            Assert.IsTrue(result.DeletedBy == 1);
+            Assert.IsTrue(result.DeletedDate.Value.Date == DateTime.Now.Date);
+        }
+
+        #endregion Transaction
+
         #region TearDown
 
         [TearDown]
