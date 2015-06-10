@@ -61,18 +61,18 @@ namespace MABMoney.Services
             }
             else
             {
-                throw new NotImplementedException();
+                var user = _users.GetByEmailAddress(dto.Email);
 
-                //var user = _users.Get(dto.UserID);
+                // Store the existing password
+                var oldPassword = user.Password;
 
-                //// Store the existing password
-                //var oldPassword = user.Password;
+                dto.MapTo(user);
 
-                //dto.MapTo(entity);
+                // If a new password hasn't been supplied, keep the old one
+                if (user.Password == null)
+                    user.Password = oldPassword;
 
-                //// If a new password hasn't been supplied, keep the old one
-                //if (entity.Password == null)
-                //    entity.Password = oldPassword;
+                _users.Update(user);
             }
         }
 

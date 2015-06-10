@@ -27,7 +27,7 @@ namespace MABMoney.Data.Concrete
         public User Update(User user)
         {
             return AddOrUpdate<User>("mm_Users_Update", new {
-                UserID = _userId,
+                UserID = (_userId == -1) ? user.UserID : _userId,
                 Forename = user.Forename,
                 Surname = user.Surname,
                 Email = user.Email,
