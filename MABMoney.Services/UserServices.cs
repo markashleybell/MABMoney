@@ -21,7 +21,7 @@ namespace MABMoney.Services
 
         public UserDTO Get(int id)
         {
-            return _users.Get().MapTo<UserDTO>();
+            return _users.Get(id).MapTo<UserDTO>();
         }
 
         public UserDTO GetByEmailAddress(string email)
@@ -31,23 +31,17 @@ namespace MABMoney.Services
 
         public void Save(UserDTO dto)
         {
-            var user = _users.Get();
+            var user = _users.Get(dto.UserID);
 
-            if (dto.UserID == 0)
+            if (user != null)
             {
-                var user = _users.Add(dto.MapTo<User>());
-                dto.UserID = user.UserID;
+                dto.MapTo(user);
+                _users.Update(user);
             }
             else
             {
-                var user = _users.GetByEmailAddress(dto.Email);
-
-                // Store the existing password
-                var oldPassword = user.Password;
-
-                dto.MapTo(user);
-
-                _users.Update(user);
+                user = _users.Add(dto.MapTo<User>());
+                dto.UserID = user.UserID;
             }
         }
 
@@ -65,9 +59,9 @@ namespace MABMoney.Services
             }
         }
 
-        public void Delete()
+        public void Delete(int id)
         {
-            _users.Delete();
+            _users.Delete(id);
         }
 
         public UserDTO GetByPasswordResetGUID(string guid)

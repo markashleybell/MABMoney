@@ -18,12 +18,12 @@ namespace MABMoney.Caching
             _userServices = nonCachingUserServices;
         }
 
-        public UserDTO Get()
+        public UserDTO Get(int id)
         {
             return CacheAndGetValue<UserDTO>(
                 "user-full",
                 CacheExpiry.OneHour,
-                () => _userServices.Get(),
+                () => _userServices.Get(id),
                 "user", "account", "category", "all"
             );
         }
@@ -43,9 +43,14 @@ namespace MABMoney.Caching
             _userServices.Save(dto);
         }
 
-        public void Delete()
+        public void ResetPassword(string guid, string newPassword)
         {
-            _userServices.Delete();
+            _userServices.ResetPassword(guid, newPassword);
+        }
+
+        public void Delete(int id)
+        {
+            _userServices.Delete(id);
         }
     }
 }

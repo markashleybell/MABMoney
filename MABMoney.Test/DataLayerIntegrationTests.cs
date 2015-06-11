@@ -1140,8 +1140,7 @@ namespace MABMoney.Test
                 Forename = "ADDEDFORENAME",
                 Surname = "ADDEDSURNAME",
                 Email = "added@test.com",
-                Password = "AEVg+8Chm8T0NSff0k0qegArPYXetlQfvKEoaDXwnT0N9fj0TVAjorveDX9vfbcVwA==", // "password"
-                IsAdmin = false
+                Password = "AEVg+8Chm8T0NSff0k0qegArPYXetlQfvKEoaDXwnT0N9fj0TVAjorveDX9vfbcVwA==" // "password"
             };
 
             var result = repository.Add(user);
@@ -1151,7 +1150,6 @@ namespace MABMoney.Test
             Assert.IsTrue(result.Surname == "ADDEDSURNAME");
             Assert.IsTrue(result.Email == "added@test.com");
             Assert.IsTrue(result.Password == "AEVg+8Chm8T0NSff0k0qegArPYXetlQfvKEoaDXwnT0N9fj0TVAjorveDX9vfbcVwA==");
-            Assert.IsTrue(result.IsAdmin == false);
             Assert.IsTrue(result.CreatedDate.Date == DateTime.Now.Date);
         }
 
@@ -1161,7 +1159,7 @@ namespace MABMoney.Test
         {
             var repository = new UserRepository(_dataConnectionString, 1);
 
-            var data = repository.Get();
+            var data = repository.Get(1);
 
             Assert.IsTrue(data.UserID == 1);
             Assert.IsTrue(data.Email == "user@test.com");
@@ -1220,7 +1218,7 @@ namespace MABMoney.Test
         {
             var repository = new UserRepository(_dataConnectionString, 1);
 
-            var user = repository.Get();
+            var user = repository.Get(1);
 
             user.Forename = "UPDATEDFORENAME";
             user.Surname = "UPDATEDSURNAME";
@@ -1228,7 +1226,6 @@ namespace MABMoney.Test
             user.Password = "AEVg+8Chm8T0NSff0k0qegArPYXetlQfvKEoaDXwnT0N9fj0TVAjorveDX9vfbcVwA=="; // "password"
             user.PasswordResetGUID = "0c4ffa03-e3d7-48b6-b657-bdae23f5d14d";
             user.PasswordResetExpiry = new DateTime(2015, 1, 1);
-            user.IsAdmin = false;
 
             var result = repository.Update(user);
 
@@ -1238,7 +1235,6 @@ namespace MABMoney.Test
             Assert.IsTrue(result.Password == "AEVg+8Chm8T0NSff0k0qegArPYXetlQfvKEoaDXwnT0N9fj0TVAjorveDX9vfbcVwA==");
             Assert.IsTrue(result.PasswordResetGUID == "0c4ffa03-e3d7-48b6-b657-bdae23f5d14d");
             Assert.IsTrue(result.PasswordResetExpiry == new DateTime(2015, 1, 1));
-            Assert.IsTrue(result.IsAdmin == false);
             Assert.IsTrue(result.LastModifiedBy == 1);
             Assert.IsTrue(result.LastModifiedDate.Date == DateTime.Now.Date);
         }
@@ -1249,9 +1245,9 @@ namespace MABMoney.Test
         {
             var repository = new UserRepository(_dataConnectionString, 1);
 
-            var result = repository.Delete();
+            var result = repository.Delete(1);
 
-            var user = repository.Get();
+            var user = repository.Get(1);
 
             Assert.IsTrue(user == null);
             Assert.IsTrue(result.Deleted == true);

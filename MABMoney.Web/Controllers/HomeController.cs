@@ -276,8 +276,7 @@ namespace MABMoney.Web.Controllers
                 Note = model.Note
             };
 
-            var destinationTransaction = new TransactionDTO
-            {
+            var destinationTransaction = new TransactionDTO {
                 TransferGUID = guid,
                 Account_AccountID = model.DestinationAccountID,
                 Date = model.Date,
@@ -305,14 +304,11 @@ namespace MABMoney.Web.Controllers
         {
             string debug = null;
 
-            var user = _userServices.Get();
-
             var accounts = _accountServices.All().ToList();
 
             return View(new MainNavigationViewModel { 
-                UserID = (user != null) ? user.UserID : 0,
-                UserEmail = (user != null) ? user.Email : null,
-                IsAdmin = (user != null) ? user.IsAdmin : false,
+                UserID = (profile != null) ? profile.UserID : 0,
+                UserEmail = (profile != null) ? profile.Email : null,
                 Accounts = accounts,
                 NetWorth = accounts.Sum(x => x.CurrentBalance),
                 Debug = debug

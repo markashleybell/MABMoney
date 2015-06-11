@@ -25,7 +25,6 @@ AS
             [Deleted], 
             [DeletedBy], 
             [DeletedDate], 
-            [IsAdmin], 
             [PasswordResetGUID], 
             [PasswordResetExpiry] 
         FROM   
@@ -46,8 +45,7 @@ CREATE PROC [dbo].[mm_Users_Create]
     @Forename nvarchar(MAX) = NULL,
     @Surname nvarchar(MAX) = NULL,
     @Email nvarchar(MAX),
-    @Password nvarchar(MAX),
-    @IsAdmin bit
+    @Password nvarchar(MAX)
 AS 
     SET NOCOUNT ON 
     SET XACT_ABORT ON  
@@ -65,8 +63,7 @@ AS
                 [CreatedBy], 
                 [CreatedDate], 
                 [LastModifiedBy], 
-                [LastModifiedDate], 
-                [IsAdmin]
+                [LastModifiedDate]
             )
         SELECT 
             @Forename, 
@@ -76,8 +73,7 @@ AS
             -1, 
             @Now, 
             -1, 
-            @Now, 
-            @IsAdmin
+            @Now
         
         SELECT 
             [UserID], 
@@ -92,7 +88,6 @@ AS
             [Deleted], 
             [DeletedBy], 
             [DeletedDate], 
-            [IsAdmin], 
             [PasswordResetGUID], 
             [PasswordResetExpiry]
         FROM   
@@ -116,8 +111,7 @@ CREATE PROC [dbo].[mm_Users_Update]
     @Email nvarchar(MAX),
     @Password nvarchar(MAX),
     @PasswordResetGUID nvarchar(512) = NULL,
-    @PasswordResetExpiry datetime = NULL,
-    @IsAdmin bit
+    @PasswordResetExpiry datetime = NULL
 AS 
     SET NOCOUNT ON 
     SET XACT_ABORT ON  
@@ -135,7 +129,6 @@ AS
             [Password] = @Password, 
             [LastModifiedBy] = @UserID, 
             [LastModifiedDate] = @Now, 
-            [IsAdmin] = @IsAdmin, 
             [PasswordResetGUID] = @PasswordResetGUID, 
             [PasswordResetExpiry] = @PasswordResetExpiry
         WHERE  
@@ -154,7 +147,6 @@ AS
             [Deleted], 
             [DeletedBy], 
             [DeletedDate], 
-            [IsAdmin], 
             [PasswordResetGUID], 
             [PasswordResetExpiry]
         FROM   
@@ -201,7 +193,6 @@ AS
             [Deleted], 
             [DeletedBy], 
             [DeletedDate], 
-            [IsAdmin], 
             [PasswordResetGUID], 
             [PasswordResetExpiry] 
         FROM   
@@ -239,7 +230,6 @@ AS
             [Deleted], 
             [DeletedBy], 
             [DeletedDate], 
-            [IsAdmin], 
             [PasswordResetGUID], 
             [PasswordResetExpiry] 
         FROM   
@@ -277,7 +267,6 @@ AS
             [Deleted], 
             [DeletedBy], 
             [DeletedDate], 
-            [IsAdmin], 
             [PasswordResetGUID], 
             [PasswordResetExpiry] 
         FROM   

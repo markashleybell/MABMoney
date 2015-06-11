@@ -13,7 +13,6 @@ BEGIN
 		[Deleted] [bit] NOT NULL CONSTRAINT [DF_dbo.Users_Deleted] DEFAULT 0,
 		[DeletedBy] [int] NULL,
 		[DeletedDate] [datetime] NULL,
-		[IsAdmin] [bit] NOT NULL CONSTRAINT [DF_dbo.Users_IsAdmin] DEFAULT 0,
 		[PasswordResetGUID] [nvarchar](512) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
 		[PasswordResetExpiry] [datetime] NULL,
 		CONSTRAINT [PK_dbo.Users] PRIMARY KEY CLUSTERED (

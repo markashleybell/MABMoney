@@ -89,7 +89,7 @@ namespace MABMoney.Web.Controllers
         [Authenticate]
         public ActionResult Edit(int id)
         {
-            var model = _userServices.Get().MapTo<EditViewModel>();
+            var model = _userServices.Get(id).MapTo<EditViewModel>();
             model.RedirectAfterSubmitUrl = _url.Action("Index");
             return View(model);
         }
@@ -115,7 +115,7 @@ namespace MABMoney.Web.Controllers
         [HttpPost]
         public ActionResult Delete(int id, string redirectAfterSubmitUrl)
         {
-            _userServices.Delete();
+            _userServices.Delete(id);
 
             return Redirect(redirectAfterSubmitUrl);
         }
@@ -174,7 +174,7 @@ namespace MABMoney.Web.Controllers
 
             // Create a session record
             var uniqueKey = System.Web.Security.Membership.GeneratePassword(16, 8);
-            var sessionKey = Convert.ToBase64String(Encoding.UTF8.GetBytes(user.UserID + "-" + uniqueKey + "-" + _config.Get<string>("SharedSecret")));
+            var sessionKey = Convert.ToBase64String(Encoding.UTF8.GetBytes(user.UserID + "-" + user.Email + "-" + uniqueKey + "-" + _config.Get<string>("SharedSecret")));
             var sessionExpiry = DateTime.Now.AddDays(7);
 
             // The record in the database expires in 7 days regardless

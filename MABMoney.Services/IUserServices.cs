@@ -13,6 +13,6 @@ namespace MABMoney.Services
         UserDTO GetByPasswordResetGUID(string guid);
         void Save(UserDTO dto);
         void ResetPassword(string guid, string newPassword);
-        void Delete();
+        void Delete(int id);
     }
 }

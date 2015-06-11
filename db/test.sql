@@ -3,9 +3,9 @@ GO
 
 -- Test user password 'test123'
 INSERT INTO [dbo].[Users]
-([UserID], [Forename], [Surname], [Email], [Password], [CreatedBy], [CreatedDate], [LastModifiedBy], [LastModifiedDate], [Deleted], [DeletedBy], [DeletedDate], [IsAdmin], [PasswordResetGUID], [PasswordResetExpiry])
-SELECT 1, N'Test', N'User', N'user@test.com', N'AJNzdwx56R+U3ls50NZbLTYQBm8j5Txr+F9mz3jQwzNjjIYjIjFuwBr/2l5VnjhQnw==', -1, '20150101 00:00:00.000', -1, '20150101 00:00:00.000', 0, NULL, NULL, 0, N'7cc68dbb-3d12-487b-8295-e9b226cda017', '20160101 00:00:00.000' UNION ALL
-SELECT 2, N'Deleted', N'User', N'deleted@test.com', N'AGhkTBPbmkYCxuLt5A0SXO35COIYPF6doq7dALqmR9A3t1y6tr4h58ZjjtLNizQGUw==', -1, '20150101 00:00:00.000', -1, '20150101 00:00:00.000', 1, -1, '20150101 00:00:00.000', 0, N'5b977b67-e7e6-4399-9866-6c011750249f', '20160101 00:00:00.000'
+([UserID], [Forename], [Surname], [Email], [Password], [CreatedBy], [CreatedDate], [LastModifiedBy], [LastModifiedDate], [Deleted], [DeletedBy], [DeletedDate], [PasswordResetGUID], [PasswordResetExpiry])
+SELECT 1, N'Test', N'User', N'user@test.com', N'AJNzdwx56R+U3ls50NZbLTYQBm8j5Txr+F9mz3jQwzNjjIYjIjFuwBr/2l5VnjhQnw==', -1, '20150101 00:00:00.000', -1, '20150101 00:00:00.000', 0, NULL, NULL, N'7cc68dbb-3d12-487b-8295-e9b226cda017', '20160101 00:00:00.000' UNION ALL
+SELECT 2, N'Deleted', N'User', N'deleted@test.com', N'AGhkTBPbmkYCxuLt5A0SXO35COIYPF6doq7dALqmR9A3t1y6tr4h58ZjjtLNizQGUw==', -1, '20150101 00:00:00.000', -1, '20150101 00:00:00.000', 1, -1, '20150101 00:00:00.000', N'5b977b67-e7e6-4399-9866-6c011750249f', '20160101 00:00:00.000'
 GO
 
 SET IDENTITY_INSERT [dbo].[Users] OFF

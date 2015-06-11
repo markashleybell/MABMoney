@@ -28,7 +28,10 @@ namespace MABMoney.Web.Infrastructure
 
             var cookieValue = context.Request.Cookies[ConfigurationManager.AppSettings["CookieKey"]].Value;
 
-            var userId = Convert.ToInt32(Encoding.UTF8.GetString(Convert.FromBase64String(cookieValue)).Split('-')[0]);
+            var data = Encoding.UTF8.GetString(Convert.FromBase64String(cookieValue)).Split('-');
+
+            var userId = Convert.ToInt32(data[0]);
+            var userEmail = data[1];
 
             var enableProfiling = Convert.ToBoolean(ConfigurationManager.AppSettings["EnableProfiling"]);
 
@@ -74,6 +77,7 @@ namespace MABMoney.Web.Infrastructure
             }
 
             context.Items.Add("UserID", userId);
+            context.Items.Add("Email", userEmail);
 
             return true;
         }

@@ -4,10 +4,10 @@ namespace MABMoney.Data.Abstract
 {
     public interface IUserRepository
     {
-        User Get();
+        User Get(int id);
         User Add(User user);
         User Update(User user);
-        User Delete();
+        User Delete(int id);
 
         User GetByEmailAddress(string email);
         User GetByPasswordResetGUID(string guid);

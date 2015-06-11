@@ -10,7 +10,6 @@ namespace MABMoney.Web.Models.Home
     {
         public int UserID { get; set; }
         public string UserEmail { get; set; }
-        public bool IsAdmin { get; set; }
         public List<AccountDTO> Accounts { get; set; }
         public decimal NetWorth { get; set; }
         public string Debug { get; set; }

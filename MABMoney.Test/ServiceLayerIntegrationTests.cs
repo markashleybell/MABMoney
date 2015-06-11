@@ -877,7 +877,6 @@ namespace MABMoney.Test
                 Password = "password",
                 Forename = "NEW",
                 Surname = "USER",
-                IsAdmin = true,
                 PasswordResetGUID = Guid.NewGuid().ToString(),
                 PasswordResetExpiry = DateTime.Now.AddMonths(1).Date
             };
@@ -893,7 +892,6 @@ namespace MABMoney.Test
             Assert.IsTrue(result.Password == "password");
             Assert.IsTrue(result.Forename == "NEW");
             Assert.IsTrue(result.Surname == "USER");
-            Assert.IsTrue(result.IsAdmin == true);
             Assert.IsTrue(result.PasswordResetGUID == null);
             Assert.IsTrue(result.PasswordResetExpiry == null);
         }
@@ -904,14 +902,13 @@ namespace MABMoney.Test
         {
             var userServices = new UserServices(_userRepository);
 
-            var result = userServices.Get();
+            var result = userServices.Get(1);
 
             Assert.IsTrue(result.UserID == 1);
             Assert.IsTrue(result.Email == "user@test.com");
             Assert.IsTrue(result.Password == "AJNzdwx56R+U3ls50NZbLTYQBm8j5Txr+F9mz3jQwzNjjIYjIjFuwBr/2l5VnjhQnw==");
             Assert.IsTrue(result.Forename == "Test");
             Assert.IsTrue(result.Surname == "User");
-            Assert.IsTrue(result.IsAdmin == false);
             Assert.IsTrue(result.PasswordResetGUID == "7cc68dbb-3d12-487b-8295-e9b226cda017");
             Assert.IsTrue(result.PasswordResetExpiry == new DateTime(2016, 1, 1));
         }
@@ -929,7 +926,6 @@ namespace MABMoney.Test
             Assert.IsTrue(result.Password == "AJNzdwx56R+U3ls50NZbLTYQBm8j5Txr+F9mz3jQwzNjjIYjIjFuwBr/2l5VnjhQnw==");
             Assert.IsTrue(result.Forename == "Test");
             Assert.IsTrue(result.Surname == "User");
-            Assert.IsTrue(result.IsAdmin == false);
             Assert.IsTrue(result.PasswordResetGUID == "7cc68dbb-3d12-487b-8295-e9b226cda017");
             Assert.IsTrue(result.PasswordResetExpiry == new DateTime(2016, 1, 1));
         }
@@ -940,9 +936,9 @@ namespace MABMoney.Test
         {
             var userServices = new UserServices(_userRepository);
 
-            userServices.Delete();
+            userServices.Delete(1);
 
-            var result = userServices.Get();
+            var result = userServices.Get(1);
 
             Assert.IsTrue(result == null);
         }
@@ -964,31 +960,28 @@ namespace MABMoney.Test
         {
             var userServices = new UserServices(_userRepository);
 
+            var guid = Guid.NewGuid().ToString();
+
             var dto = new UserDTO {
                 UserID = 1,
                 Email = "new@test.com",
                 Password = "password",
                 Forename = "UPDATED",
                 Surname = "USER",
-                IsAdmin = true,
-                PasswordResetGUID = Guid.NewGuid().ToString(),
+                PasswordResetGUID = guid,
                 PasswordResetExpiry = DateTime.Now.AddMonths(1).Date
             };
 
             userServices.Save(dto);
 
-            Assert.IsTrue(dto.UserID == 1);
-
             var result = GetSingle<UserDTO>("SELECT * FROM Users WHERE UserID = 1");
 
-            Assert.IsTrue(result.UserID == 3);
             Assert.IsTrue(result.Email == "new@test.com");
             Assert.IsTrue(result.Password == "password");
             Assert.IsTrue(result.Forename == "UPDATED");
             Assert.IsTrue(result.Surname == "USER");
-            Assert.IsTrue(result.IsAdmin == true);
-            Assert.IsTrue(result.PasswordResetGUID == null);
-            Assert.IsTrue(result.PasswordResetExpiry == null);
+            Assert.IsTrue(result.PasswordResetGUID == guid);
+            Assert.IsTrue(result.PasswordResetExpiry == DateTime.Now.AddMonths(1).Date);
         }
 
         [Test]
@@ -999,14 +992,16 @@ namespace MABMoney.Test
 
             var dto = new UserDTO {
                 UserID = 2,
-                Email = "new@test.com"
+                Email = "new@test.com",
+                Password = "WONTWORK"
             };
 
-            userServices.Save(dto);
+            var e = Assert.Throws<Exception>(() => userServices.Save(dto));
+            Assert.IsTrue(e.Message == "Unauthorised");
 
             var result = GetSingle<UserDTO>("SELECT * FROM Users WHERE UserID = 1");
 
-            Assert.IsTrue(result.Email == "new@test.com");
+            Assert.IsTrue(result.Email == "user@test.com");
 
             var result2 = GetSingle<UserDTO>("SELECT * FROM Users WHERE UserID = 2");
 
@@ -1020,9 +1015,9 @@ namespace MABMoney.Test
         {
             var userServices = new UserServices(_userRepository);
 
-            userServices.Delete();
+            userServices.Delete(1);
 
-            var user = userServices.Get();
+            var user = userServices.Get(1);
 
             var result = GetSingle<MABMoney.Domain.User>("SELECT * FROM Users WHERE UserID = 1");
 

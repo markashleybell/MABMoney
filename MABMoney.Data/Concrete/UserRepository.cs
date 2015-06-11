@@ -1,4 +1,5 @@
-﻿using mab.lib.SimpleMapper;
+﻿using System;
+using mab.lib.SimpleMapper;
 using MABMoney.Data.Abstract;
 using MABMoney.Domain;
 
@@ -10,7 +11,10 @@ namespace MABMoney.Data.Concrete
 
         public User Get(int id)
         {
-            return GetSingle<User>("mm_Users_Read", new { UserID = _userId });
+            if (id != _userId)
+                throw new Exception("Unauthorised");
+
+            return GetSingle<User>("mm_Users_Read", new { UserID = id });
         }
 
         public User Add(User user)
@@ -19,28 +23,32 @@ namespace MABMoney.Data.Concrete
                 Forename = user.Forename,
                 Surname = user.Surname,
                 Email = user.Email,
-                Password = user.Password,
-                IsAdmin = user.IsAdmin
+                Password = user.Password
             });
         }
 
         public User Update(User user)
         {
+            if (user.UserID != _userId)
+                throw new Exception("Unauthorised");
+
             return AddOrUpdate<User>("mm_Users_Update", new {
-                UserID = (_userId == -1) ? user.UserID : _userId,
+                UserID = user.UserID,
                 Forename = user.Forename,
                 Surname = user.Surname,
                 Email = user.Email,
                 Password = user.Password,
                 PasswordResetGUID = user.PasswordResetGUID,
-                PasswordResetExpiry = user.PasswordResetExpiry,
-                IsAdmin = user.IsAdmin
+                PasswordResetExpiry = user.PasswordResetExpiry
             });
         }
 
-        public User Delete()
+        public User Delete(int id)
         {
-            return AddOrUpdate<User>("mm_Users_Delete", new { UserID = _userId });
+            if (id != _userId)
+                throw new Exception("Unauthorised");
+
+            return AddOrUpdate<User>("mm_Users_Delete", new { UserID = id });
         }
 
         public User GetByEmailAddress(string email)
