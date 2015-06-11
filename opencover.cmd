@@ -1,2 +1,2 @@
-D:\Web\MABMoney\packages\OpenCover.4.5.1923\OpenCover.Console.exe -target:"D:\Web\MABMoney\packages\NUnit.Runners.2.6.3\tools\nunit-console.exe" -targetargs:"/nologo /noshadow /out:\"D:\Web\MABMoney\reports\testresults.xml\" D:\Web\MABMoney\MABMoney.Tests\bin\Debug\MABMoney.Tests.dll" - filter:"+[*]* -[MABMoney.Tests*]*" -register:user -output:"D:\Web\MABMoney\reports\results.xml"
-D:\Web\MABMoney\packages\ReportGenerator.1.9.1.0\ReportGenerator.exe -reports:"D:\Web\MABMoney\reports\results.xml" -targetdir:"D:\Web\MABMoney\reports"
+packages\OpenCover.4.5.3723\OpenCover.Console.exe -target:"packages\NUnit.Runners.2.6.4\tools\nunit-console.exe" -targetargs:"/nologo /noshadow /out:\"reports\testresults.xml\" MABMoney.Test\bin\Debug\MABMoney.Test.dll" -filter:"+[*]* -[MABMoney.Test*]* -[Dapper*]* -[MiniProfiler*]*" -register:user -output:"reports\results.xml"
+packages\ReportGenerator.2.1.5.0\ReportGenerator.exe -reports:"reports\results.xml" -targetdir:"reports"
