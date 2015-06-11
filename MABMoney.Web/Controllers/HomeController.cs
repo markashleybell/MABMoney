@@ -305,7 +305,7 @@ namespace MABMoney.Web.Controllers
         {
             string debug = null;
 
-            var user = _userServices.Get(profile.UserID);
+            var user = _userServices.Get();
 
             var accounts = _accountServices.All().ToList();
 
@@ -317,13 +317,6 @@ namespace MABMoney.Web.Controllers
                 NetWorth = accounts.Sum(x => x.CurrentBalance),
                 Debug = debug
             });
-        }
-
-        public ActionResult PingTarget()
-        {
-            var user = _userServices.Get(1);
-
-            return View();
         }
 
         #region Caching

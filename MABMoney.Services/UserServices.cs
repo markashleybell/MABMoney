@@ -21,39 +21,18 @@ namespace MABMoney.Services
 
         public UserDTO Get(int id)
         {
-            return MapUser(_users.Get());
+            return _users.Get().MapTo<UserDTO>();
         }
 
         public UserDTO GetByEmailAddress(string email)
         {
-            return MapUser(_users.GetByEmailAddress(email));
-        }
-
-        private UserDTO MapUser(User user)
-        {
-            if (user == null)
-                return null;
-
-            var dto = user.MapTo<UserDTO>();
-
-            //if (user.Accounts != null)
-            //{
-            //    dto.Accounts = new List<AccountDTO>();
-
-            //    foreach (var account in user.Accounts)
-            //    {
-            //        var accountModel = account.MapTo<AccountDTO>();
-            //        accountModel.Categories = account.Categories.ToList().MapToList<CategoryDTO>();
-
-            //        dto.Accounts.Add(accountModel);
-            //    }
-            //}
-
-            return dto;
+            return _users.GetByEmailAddress(email).MapTo<UserDTO>();
         }
 
         public void Save(UserDTO dto)
         {
+            var user = _users.Get();
+
             if (dto.UserID == 0)
             {
                 var user = _users.Add(dto.MapTo<User>());
@@ -68,9 +47,19 @@ namespace MABMoney.Services
 
                 dto.MapTo(user);
 
-                // If a new password hasn't been supplied, keep the old one
-                if (user.Password == null)
-                    user.Password = oldPassword;
+                _users.Update(user);
+            }
+        }
+
+        public void ResetPassword(string guid, string newPassword)
+        {
+            var user = _users.GetByPasswordResetGUID(guid);
+
+            if(user != null)
+            {
+                user.Password = newPassword;
+                user.PasswordResetGUID = null;
+                user.PasswordResetExpiry = null;
 
                 _users.Update(user);
             }
@@ -83,7 +72,7 @@ namespace MABMoney.Services
 
         public UserDTO GetByPasswordResetGUID(string guid)
         {
-            return MapUser(_users.GetByPasswordResetGUID(guid));
+            return _users.GetByPasswordResetGUID(guid).MapTo<UserDTO>();
         }
     }
 }

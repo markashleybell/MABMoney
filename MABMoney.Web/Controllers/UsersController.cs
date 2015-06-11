@@ -89,7 +89,7 @@ namespace MABMoney.Web.Controllers
         [Authenticate]
         public ActionResult Edit(int id)
         {
-            var model = _userServices.Get(id).MapTo<EditViewModel>();
+            var model = _userServices.Get().MapTo<EditViewModel>();
             model.RedirectAfterSubmitUrl = _url.Action("Index");
             return View(model);
         }
@@ -289,13 +289,7 @@ namespace MABMoney.Web.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            var user = _userServices.GetByPasswordResetGUID(model.GUID);
-
-            user.Password = _crypto.HashPassword(model.Password);
-            user.PasswordResetExpiry = null;
-            user.PasswordResetGUID = null;
-
-            _userServices.Save(user);
+            _userServices.ResetPassword(model.GUID, _crypto.HashPassword(model.Password));
 
             return Redirect(model.RedirectAfterSubmitUrl);
         }

@@ -8,7 +8,7 @@ namespace MABMoney.Data.Concrete
     {
         public UserRepository(string connectionString, int userId) : base(connectionString, userId) { }
 
-        public User Get()
+        public User Get(int id)
         {
             return GetSingle<User>("mm_Users_Read", new { UserID = _userId });
         }

@@ -864,6 +864,176 @@ namespace MABMoney.Test
 
         #endregion Transaction
 
+        #region User
+
+        [Test]
+        [Category("ServiceLayer_User")]
+        public void Service_Create_User()
+        {
+            var userServices = new UserServices(_userRepository);
+
+            var dto = new UserDTO {
+                Email = "new@test.com",
+                Password = "password",
+                Forename = "NEW",
+                Surname = "USER",
+                IsAdmin = true,
+                PasswordResetGUID = Guid.NewGuid().ToString(),
+                PasswordResetExpiry = DateTime.Now.AddMonths(1).Date
+            };
+
+            userServices.Save(dto);
+
+            Assert.IsTrue(dto.UserID == 3);
+
+            var result = GetSingle<UserDTO>("SELECT * FROM Users WHERE UserID = 3");
+
+            Assert.IsTrue(result.UserID == 3);
+            Assert.IsTrue(result.Email == "new@test.com");
+            Assert.IsTrue(result.Password == "password");
+            Assert.IsTrue(result.Forename == "NEW");
+            Assert.IsTrue(result.Surname == "USER");
+            Assert.IsTrue(result.IsAdmin == true);
+            Assert.IsTrue(result.PasswordResetGUID == null);
+            Assert.IsTrue(result.PasswordResetExpiry == null);
+        }
+
+        [Test]
+        [Category("ServiceLayer_User")]
+        public void Service_Read_User()
+        {
+            var userServices = new UserServices(_userRepository);
+
+            var result = userServices.Get();
+
+            Assert.IsTrue(result.UserID == 1);
+            Assert.IsTrue(result.Email == "user@test.com");
+            Assert.IsTrue(result.Password == "AJNzdwx56R+U3ls50NZbLTYQBm8j5Txr+F9mz3jQwzNjjIYjIjFuwBr/2l5VnjhQnw==");
+            Assert.IsTrue(result.Forename == "Test");
+            Assert.IsTrue(result.Surname == "User");
+            Assert.IsTrue(result.IsAdmin == false);
+            Assert.IsTrue(result.PasswordResetGUID == "7cc68dbb-3d12-487b-8295-e9b226cda017");
+            Assert.IsTrue(result.PasswordResetExpiry == new DateTime(2016, 1, 1));
+        }
+
+        [Test]
+        [Category("ServiceLayer_User")]
+        public void Service_Read_User_By_Email()
+        {
+            var userServices = new UserServices(_userRepository);
+
+            var result = userServices.GetByEmailAddress("user@test.com");
+
+            Assert.IsTrue(result.UserID == 1);
+            Assert.IsTrue(result.Email == "user@test.com");
+            Assert.IsTrue(result.Password == "AJNzdwx56R+U3ls50NZbLTYQBm8j5Txr+F9mz3jQwzNjjIYjIjFuwBr/2l5VnjhQnw==");
+            Assert.IsTrue(result.Forename == "Test");
+            Assert.IsTrue(result.Surname == "User");
+            Assert.IsTrue(result.IsAdmin == false);
+            Assert.IsTrue(result.PasswordResetGUID == "7cc68dbb-3d12-487b-8295-e9b226cda017");
+            Assert.IsTrue(result.PasswordResetExpiry == new DateTime(2016, 1, 1));
+        }
+
+        [Test]
+        [Category("ServiceLayer_User")]
+        public void Service_Read_Deleted_User()
+        {
+            var userServices = new UserServices(_userRepository);
+
+            userServices.Delete();
+
+            var result = userServices.Get();
+
+            Assert.IsTrue(result == null);
+        }
+
+        [Test]
+        [Category("ServiceLayer_User")]
+        public void Service_Read_Deleted_User_By_Email()
+        {
+            var userServices = new UserServices(_userRepository);
+
+            var result = userServices.GetByEmailAddress("deleted@test.com");
+
+            Assert.IsTrue(result == null);
+        }
+
+        [Test]
+        [Category("ServiceLayer_User")]
+        public void Service_Update_User()
+        {
+            var userServices = new UserServices(_userRepository);
+
+            var dto = new UserDTO {
+                UserID = 1,
+                Email = "new@test.com",
+                Password = "password",
+                Forename = "UPDATED",
+                Surname = "USER",
+                IsAdmin = true,
+                PasswordResetGUID = Guid.NewGuid().ToString(),
+                PasswordResetExpiry = DateTime.Now.AddMonths(1).Date
+            };
+
+            userServices.Save(dto);
+
+            Assert.IsTrue(dto.UserID == 1);
+
+            var result = GetSingle<UserDTO>("SELECT * FROM Users WHERE UserID = 1");
+
+            Assert.IsTrue(result.UserID == 3);
+            Assert.IsTrue(result.Email == "new@test.com");
+            Assert.IsTrue(result.Password == "password");
+            Assert.IsTrue(result.Forename == "UPDATED");
+            Assert.IsTrue(result.Surname == "USER");
+            Assert.IsTrue(result.IsAdmin == true);
+            Assert.IsTrue(result.PasswordResetGUID == null);
+            Assert.IsTrue(result.PasswordResetExpiry == null);
+        }
+
+        [Test]
+        [Category("ServiceLayer_User")]
+        public void Service_Update_Other_User()
+        {
+            var userServices = new UserServices(_userRepository);
+
+            var dto = new UserDTO {
+                UserID = 2,
+                Email = "new@test.com"
+            };
+
+            userServices.Save(dto);
+
+            var result = GetSingle<UserDTO>("SELECT * FROM Users WHERE UserID = 1");
+
+            Assert.IsTrue(result.Email == "new@test.com");
+
+            var result2 = GetSingle<UserDTO>("SELECT * FROM Users WHERE UserID = 2");
+
+            Assert.IsTrue(result2.Email == "deleted@test.com");
+        }
+
+
+        [Test]
+        [Category("ServiceLayer_User")]
+        public void Service_Delete_User()
+        {
+            var userServices = new UserServices(_userRepository);
+
+            userServices.Delete();
+
+            var user = userServices.Get();
+
+            var result = GetSingle<MABMoney.Domain.User>("SELECT * FROM Users WHERE UserID = 1");
+
+            Assert.IsTrue(user == null);
+            Assert.IsTrue(result.Deleted == true);
+            Assert.IsTrue(result.DeletedBy == 1);
+            Assert.IsTrue(result.DeletedDate.Value.Date == DateTime.Now.Date);
+        }
+
+        #endregion User
+
         #region TearDown
 
         [TearDown]

@@ -12,6 +12,7 @@ namespace MABMoney.Services
         UserDTO GetByEmailAddress(string email);
         UserDTO GetByPasswordResetGUID(string guid);
         void Save(UserDTO dto);
+        void ResetPassword(string guid, string newPassword);
         void Delete();
     }
 }

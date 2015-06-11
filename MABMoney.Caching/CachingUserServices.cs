@@ -18,12 +18,12 @@ namespace MABMoney.Caching
             _userServices = nonCachingUserServices;
         }
 
-        public UserDTO Get(int id)
+        public UserDTO Get()
         {
             return CacheAndGetValue<UserDTO>(
                 "user-full",
                 CacheExpiry.OneHour,
-                () => _userServices.Get(id),
+                () => _userServices.Get(),
                 "user", "account", "category", "all"
             );
         }
