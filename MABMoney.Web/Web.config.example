@@ -16,7 +16,7 @@
     <add key="Staging" value="true" />
     <add key="NoReplyEmailAddress" value="noreply@mabmoney.com" />
     <add key="NoReplyEmailDisplayName" value="MABMoney" />
-    <add key="SiteUrl" value="https://localhost:44301" />
+    <add key="SiteUrl" value="https://localhost:44300" />
     <add key="EnableProfiling" value="true" />
     <add key="EnableCaching" value="false" />
     <add key="DefaultCardPaymentAmount" value="200" />
