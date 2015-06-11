@@ -180,12 +180,12 @@ var MABMoney = (function ($, window, undefined) {
         // and replace it on blur if field is empty
         $('input[name$="Amount"]').on('focus', function (e) {
             var field = $(this);
-            if (parseInt(field.val(), 10) === 0) {
+            if (parseFloat(field.val()) === 0) {
                 field.val('');
             }
         }).on('blur', function (e) {
             var field = $(this);
-            if ($.trim(field.val()) === '' || parseInt(field.val(), 10) === 0) {
+            if ($.trim(field.val()) === '' || parseFloat(field.val()) === 0) {
                 field.val('0');
             }
         });
