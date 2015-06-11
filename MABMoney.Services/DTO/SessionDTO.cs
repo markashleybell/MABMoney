@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MABMoney.Services
+namespace MABMoney.Services.DTO
 {
     public class SessionDTO
     {
