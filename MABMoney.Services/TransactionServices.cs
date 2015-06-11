@@ -15,8 +15,6 @@ namespace MABMoney.Services
         private ITransactionRepository _transactions;
         private IAccountRepository _accounts;
 
-        private int _userId;
-
         public TransactionServices(ITransactionRepository transactions, IAccountRepository accounts)
         {
             _transactions = transactions;
