@@ -74,7 +74,10 @@ var MABMoney = (function ($, window, undefined) {
         var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
         var balance = currentBalance, html = [];
 
-        while (balance > 0) {
+        var maxRows = 100;
+        var row = 0;
+
+        while (balance > 0 && row < maxRows) {
             // Work out how much interest will be paid
             var interestAmount: number = (_aprCalc(interestRate) / 100) * balance;
             // Work out what the balance will be at the end of the month
@@ -99,6 +102,8 @@ var MABMoney = (function ($, window, undefined) {
             html.push(Mustache.render(_templates.paymentCalcRow, model));
             // Increment the month
             d.setMonth(d.getMonth() + 1);
+            // Increment the row counter
+            row++;
         }
 
         _ui.tableBody.empty().append(html.join(''));
