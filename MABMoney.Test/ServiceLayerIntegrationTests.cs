@@ -1007,6 +1007,22 @@ namespace MABMoney.Test
             Assert.IsTrue(result2.Email == "deleted@test.com");
         }
 
+        [Test]
+        [Category("ServiceLayer_User")]
+        public void Service_Reset_User_Password()
+        {
+            var userServices = new UserServices(_userRepository);
+
+            // Plain text password here for ease of comparison
+            // Hashing is is usually done in the controller
+            userServices.ResetPassword("7cc68dbb-3d12-487b-8295-e9b226cda017", "test123");
+
+            var result = GetSingle<UserDTO>("SELECT * FROM Users WHERE UserID = 1");
+
+            Assert.IsTrue(result.Password == "test123");
+            Assert.IsTrue(result.PasswordResetGUID == null);
+            Assert.IsTrue(result.PasswordResetExpiry == null);
+        }
 
         [Test]
         [Category("ServiceLayer_User")]
