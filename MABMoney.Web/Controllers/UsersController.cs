@@ -138,7 +138,7 @@ namespace MABMoney.Web.Controllers
 
             // Create a session record
             var uniqueKey = System.Web.Security.Membership.GeneratePassword(16, 8);
-            var sessionKey = Convert.ToBase64String(Encoding.UTF8.GetBytes(dto.UserID + "-" + uniqueKey + "-" + _config.Get<string>("SharedSecret")));
+            var sessionKey = Convert.ToBase64String(Encoding.UTF8.GetBytes(dto.UserID + "-" + dto.Email + "-" +  uniqueKey + "-" + _config.Get<string>("SharedSecret")));
             var sessionExpiry = DateTime.Now.AddDays(7);
 
             _sessionServices.Save(new SessionDTO {
