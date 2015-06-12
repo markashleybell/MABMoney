@@ -31,17 +31,28 @@ namespace MABMoney.Services
 
         public void Save(UserDTO dto)
         {
-            var user = _users.Get(dto.UserID);
-
-            if (user != null)
+            // If user ID is 0, someone's explicitly trying to create a 
+            // new user record, which is fine, so let them do it
+            if (dto.UserID == 0)
             {
-                dto.MapTo(user);
-                _users.Update(user);
+                var user = _users.Add(dto.MapTo<User>());
+                dto.UserID = user.UserID;
             }
             else
             {
-                user = _users.Add(dto.MapTo<User>());
-                dto.UserID = user.UserID;
+                // If an ID has been passed in, but it's *not* the same ID
+                // which was retrieved from the user cookie and passed to 
+                // the repository constructor, someone other than that user
+                // is attempting to update the user record...
+                // If that is the case, the repository Get method will return 
+                // null and we don't perform the update
+                var user = _users.Get(dto.UserID);
+
+                if (user != null)
+                {
+                    dto.MapTo(user);
+                    _users.Update(user);
+                }
             }
         }
 

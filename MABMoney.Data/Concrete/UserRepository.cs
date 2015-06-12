@@ -12,7 +12,7 @@ namespace MABMoney.Data.Concrete
         public User Get(int id)
         {
             if (id != _userId)
-                throw new Exception("Unauthorised");
+                return null;
 
             return GetSingle<User>("mm_Users_Read", new { UserID = id });
         }
@@ -30,7 +30,7 @@ namespace MABMoney.Data.Concrete
         public User Update(User user)
         {
             if (user.UserID != _userId)
-                throw new Exception("Unauthorised");
+                return null;
 
             return AddOrUpdate<User>("mm_Users_Update", new {
                 UserID = user.UserID,
@@ -46,7 +46,7 @@ namespace MABMoney.Data.Concrete
         public User Delete(int id)
         {
             if (id != _userId)
-                throw new Exception("Unauthorised");
+                return null;
 
             return AddOrUpdate<User>("mm_Users_Delete", new { UserID = id });
         }

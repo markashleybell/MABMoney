@@ -996,8 +996,7 @@ namespace MABMoney.Test
                 Password = "WONTWORK"
             };
 
-            var e = Assert.Throws<Exception>(() => userServices.Save(dto));
-            Assert.IsTrue(e.Message == "Unauthorised");
+            userServices.Save(dto);
 
             var result = GetSingle<UserDTO>("SELECT * FROM Users WHERE UserID = 1");
 
