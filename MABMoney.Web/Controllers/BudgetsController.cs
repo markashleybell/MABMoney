@@ -245,6 +245,7 @@ namespace MABMoney.Web.Controllers
             {
                 if (category.Delete)
                 {
+                    // TODO: Should this not be deleting the *join*, rather than the actual category?
                     _categoryServices.Delete(category.Category_CategoryID);
                 }
                 else
