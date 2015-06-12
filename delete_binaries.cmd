@@ -6,7 +6,7 @@ rmdir /s /q MABMoney.Domain\bin
 rmdir /s /q MABMoney.Domain\obj
 rmdir /s /q MABMoney.Services\bin
 rmdir /s /q MABMoney.Services\obj
-rmdir /s /q MABMoney.Tests\bin
-rmdir /s /q MABMoney.Tests\obj
+rmdir /s /q MABMoney.Test\bin
+rmdir /s /q MABMoney.Test\obj
 rmdir /s /q MABMoney.Web\bin
 rmdir /s /q MABMoney.Web\obj
