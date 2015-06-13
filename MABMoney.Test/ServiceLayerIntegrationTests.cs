@@ -440,7 +440,7 @@ namespace MABMoney.Test
 
         #endregion Budget
 
-        #region Budget
+        #region Category_Budget
 
         [Test]
         [Category("ServiceLayer_Category_Budget")]
@@ -450,108 +450,33 @@ namespace MABMoney.Test
             var categoryServices = new CategoryServices(_categoryRepository, _accountRepository);
             var budgetServices = new BudgetServices(_budgetRepository, _accountRepository, _categoryRepository, _category_budgetRepository, _transactionRepository, accountServices, categoryServices);
 
-            throw new NotImplementedException();
+            var dto = new Category_BudgetDTO {
+                Budget_BudgetID = 1,
+                Account_AccountID = 1,
+                Amount = 50.55M,
+                CategoryName = "NEWCATEGORY"
+            };
 
-            //var dto = new Category_BudgetDTO {
-            //    Budget_BudgetID = 1,
-            //    Account_AccountID = 1,
-            //    Category_CategoryID = 1,
-            //    CategoryName = "Salary",
-            //    Amount = "1000"
-            //};
+            budgetServices.SaveCategoryBudget(dto);
 
-            //budgetServices.SaveCategoryBudget(dto);
+            var result = GetEnumerable<Category_BudgetDTO>("SELECT * FROM Categories_Budgets WHERE Deleted = 0 AND Budget_BudgetID = 1 ORDER BY Category_CategoryID").ToList();
 
-            //Assert.IsTrue(dto.BudgetID == 5);
+            Assert.IsTrue(result.Count == 3);
+            Assert.IsTrue(result[0].Category_CategoryID == 2);
+            Assert.IsTrue(result[0].Budget_BudgetID == 1);
+            Assert.IsTrue(result[0].Amount == 500.00M);
+            Assert.IsTrue(result[1].Category_CategoryID == 3);
+            Assert.IsTrue(result[1].Budget_BudgetID == 1);
+            Assert.IsTrue(result[1].Amount == 250.00M);
+            Assert.IsTrue(result[2].Category_CategoryID == 11);
+            Assert.IsTrue(result[2].Budget_BudgetID == 1);
+            Assert.IsTrue(result[2].Amount == 50.55M);
 
-            //var result = GetSingle<BudgetDTO>("SELECT * FROM Budgets WHERE BudgetID = 5");
+            var result2 = GetSingle<CategoryDTO>("SELECT * FROM Categories WHERE CategoryID = 11");
 
-            //Assert.IsTrue(result.BudgetID == 5);
-            //Assert.IsTrue(result.Account_AccountID == 1);
-            //Assert.IsTrue(result.Start == DateTime.Now.Date);
-            //Assert.IsTrue(result.End == DateTime.Now.AddMonths(1).Date);
-        }
-
-        [Test]
-        [Category("ServiceLayer_Category_Budget")]
-        public void Service_Read_Category_Budgets()
-        {
-            var accountServices = new AccountServices(_accountRepository, _transactionRepository, _userRepository);
-            var categoryServices = new CategoryServices(_categoryRepository, _accountRepository);
-            var budgetServices = new BudgetServices(_budgetRepository, _accountRepository, _categoryRepository, _category_budgetRepository, _transactionRepository, accountServices, categoryServices);
-
-            throw new NotImplementedException();
-
-            var data = budgetServices.All().ToList();
-
-            Assert.IsTrue(data.Count == 2);
-            Assert.IsTrue(data[0].BudgetID == 2);
-            Assert.IsTrue(data[0].Account_AccountID == 1);
-            Assert.IsTrue(data[0].Start == new DateTime(2015, 2, 1));
-            Assert.IsTrue(data[0].End == new DateTime(2015, 2, 28));
-            Assert.IsTrue(data[1].BudgetID == 1);
-            Assert.IsTrue(data[1].Account_AccountID == 1);
-            Assert.IsTrue(data[1].Start == new DateTime(2015, 1, 1));
-            Assert.IsTrue(data[1].End == new DateTime(2015, 1, 31));
-        }
-
-        [Test]
-        [Category("ServiceLayer_Category_Budget")]
-        public void Service_Read_Category_Budget()
-        {
-            var accountServices = new AccountServices(_accountRepository, _transactionRepository, _userRepository);
-            var categoryServices = new CategoryServices(_categoryRepository, _accountRepository);
-            var budgetServices = new BudgetServices(_budgetRepository, _accountRepository, _categoryRepository, _category_budgetRepository, _transactionRepository, accountServices, categoryServices);
-
-            throw new NotImplementedException();
-
-            var result = budgetServices.Get(1);
-
-            Assert.IsTrue(result.BudgetID == 1);
-            Assert.IsTrue(result.Account_AccountID == 1);
-            Assert.IsTrue(result.Start == new DateTime(2015, 01, 01, 0, 0, 0));
-            Assert.IsTrue(result.End == new DateTime(2015, 01, 31, 0, 0, 0));
-            // There should be two categories (3 in DB but one deleted) and one uncategorised
-            Assert.IsTrue(result.Category_Budgets.Count == 3);
-            Assert.IsTrue(result.Category_Budgets[0].CategoryName == "Rent");
-            Assert.IsTrue(result.Category_Budgets[0].Amount == 500.00M);
-            Assert.IsTrue(result.Category_Budgets[0].Total == 500.00M);
-            Assert.IsTrue(result.Category_Budgets[1].CategoryName == "Food");
-            Assert.IsTrue(result.Category_Budgets[1].Amount == 250.00M);
-            Assert.IsTrue(result.Category_Budgets[1].Total == 145.50M);
-            Assert.IsTrue(result.Category_Budgets[2].CategoryName == "Unallocated");
-            Assert.IsTrue(result.Category_Budgets[2].Amount == 250.00M);
-            Assert.IsTrue(result.Category_Budgets[2].Total == 5.00M);
-        }
-
-        [Test]
-        [Category("ServiceLayer_Category_Budget")]
-        public void Service_Read_Deleted_Category_Budget()
-        {
-            var accountServices = new AccountServices(_accountRepository, _transactionRepository, _userRepository);
-            var categoryServices = new CategoryServices(_categoryRepository, _accountRepository);
-            var budgetServices = new BudgetServices(_budgetRepository, _accountRepository, _categoryRepository, _category_budgetRepository, _transactionRepository, accountServices, categoryServices);
-
-            throw new NotImplementedException();
-
-            var result = budgetServices.Get(3);
-
-            Assert.IsTrue(result == null);
-        }
-
-        [Test]
-        [Category("ServiceLayer_Category_Budget")]
-        public void Service_Read_Other_User_Category_Budget()
-        {
-            var accountServices = new AccountServices(_accountRepository, _transactionRepository, _userRepository);
-            var categoryServices = new CategoryServices(_categoryRepository, _accountRepository);
-            var budgetServices = new BudgetServices(_budgetRepository, _accountRepository, _categoryRepository, _category_budgetRepository, _transactionRepository, accountServices, categoryServices);
-
-            throw new NotImplementedException();
-
-            var result = budgetServices.Get(4);
-
-            Assert.IsTrue(result == null);
+            Assert.IsTrue(result2.Account_AccountID == 1);
+            Assert.IsTrue(result2.Name == "NEWCATEGORY");
+            Assert.IsTrue(result2.Type == CategoryTypeDTO.Expense);
         }
 
         [Test]
@@ -562,50 +487,47 @@ namespace MABMoney.Test
             var categoryServices = new CategoryServices(_categoryRepository, _accountRepository);
             var budgetServices = new BudgetServices(_budgetRepository, _accountRepository, _categoryRepository, _category_budgetRepository, _transactionRepository, accountServices, categoryServices);
 
-            throw new NotImplementedException();
-
-            var dto = new BudgetDTO {
-                BudgetID = 1,
-                Account_AccountID = 2,
-                Start = DateTime.Now.Date,
-                End = DateTime.Now.AddMonths(1).Date
+            var dto = new Category_BudgetDTO {
+                Budget_BudgetID = 1,
+                Account_AccountID = 1,
+                Amount = 22.91M,
+                Category_CategoryID = 2,
+                CategoryName = "UPDATEDCATEGORY"
             };
 
-            budgetServices.Save(dto);
+            budgetServices.SaveCategoryBudget(dto);
 
-            Assert.IsTrue(dto.BudgetID == 1);
+            var result = GetEnumerable<Category_BudgetDTO>("SELECT * FROM Categories_Budgets WHERE Deleted = 0 AND Budget_BudgetID = 1 ORDER BY Category_CategoryID").ToList();
 
-            var result = GetSingle<BudgetDTO>("SELECT * FROM Budgets WHERE BudgetID = 1");
+            Assert.IsTrue(result.Count == 2);
+            Assert.IsTrue(result[0].Category_CategoryID == 2);
+            Assert.IsTrue(result[0].Budget_BudgetID == 1);
+            Assert.IsTrue(result[0].Amount == 22.91M);
+            Assert.IsTrue(result[1].Category_CategoryID == 3);
+            Assert.IsTrue(result[1].Budget_BudgetID == 1);
+            Assert.IsTrue(result[1].Amount == 250.00M);
 
-            Assert.IsTrue(result.BudgetID == 1);
-            Assert.IsTrue(result.Account_AccountID == 2);
-            Assert.IsTrue(result.Start == DateTime.Now.Date);
-            Assert.IsTrue(result.End == DateTime.Now.AddMonths(1).Date);
+            var result2 = GetSingle<CategoryDTO>("SELECT * FROM Categories WHERE CategoryID = 2");
+
+            Assert.IsTrue(result2.Account_AccountID == 1);
+            Assert.IsTrue(result2.Name == "UPDATEDCATEGORY");
+            Assert.IsTrue(result2.Type == CategoryTypeDTO.Expense);
         }
 
         [Test]
         [Category("ServiceLayer_Category_Budget")]
-        public void Service_Delete_Category_Budget()
+        public void Service_Get_Budget_Count()
         {
             var accountServices = new AccountServices(_accountRepository, _transactionRepository, _userRepository);
             var categoryServices = new CategoryServices(_categoryRepository, _accountRepository);
             var budgetServices = new BudgetServices(_budgetRepository, _accountRepository, _categoryRepository, _category_budgetRepository, _transactionRepository, accountServices, categoryServices);
 
-            throw new NotImplementedException();
+            var count = budgetServices.GetBudgetCount(1);
 
-            budgetServices.Delete(1);
-
-            var budget = budgetServices.Get(1);
-
-            var result = GetSingle<Budget>("SELECT * FROM Budgets WHERE BudgetID = 1");
-
-            Assert.IsTrue(budget == null);
-            Assert.IsTrue(result.Deleted == true);
-            Assert.IsTrue(result.DeletedBy == 1);
-            Assert.IsTrue(result.DeletedDate.Value.Date == DateTime.Now.Date);
+            Assert.IsTrue(count == 2);
         }
 
-        #endregion Budget
+        #endregion Category_Budget
 
         #region Category
 
@@ -867,6 +789,21 @@ namespace MABMoney.Test
 
         [Test]
         [Category("ServiceLayer_Session")]
+        public void Service_Update_Session_Expiry()
+        {
+            var sessionServices = new SessionServices(_sessionRepository);
+
+            sessionServices.UpdateSessionExpiry("USER1SESSION", DateTime.Now.AddMonths(2).Date);
+
+            var result = GetSingle<Session>("SELECT * FROM Sessions WHERE SessionID = 1");
+
+            Assert.IsTrue(result.User_UserID == 1);
+            Assert.IsTrue(result.Key == "USER1SESSION");
+            Assert.IsTrue(result.Expiry == DateTime.Now.AddMonths(2).Date);
+        }
+
+        [Test]
+        [Category("ServiceLayer_Session")]
         public void Service_Delete_Session()
         {
             var sessionServices = new SessionServices(_sessionRepository);
@@ -876,6 +813,42 @@ namespace MABMoney.Test
             var session = sessionServices.Get(1);
 
             var result = GetSingle<Session>("SELECT * FROM Sessions WHERE SessionID = 1");
+
+            Assert.IsTrue(session == null);
+            Assert.IsTrue(result.Deleted == true);
+            Assert.IsTrue(result.DeletedBy == 1);
+            Assert.IsTrue(result.DeletedDate.Value.Date == DateTime.Now.Date);
+        }
+
+        [Test]
+        [Category("ServiceLayer_Session")]
+        public void Service_Delete_Session_By_Key()
+        {
+            var sessionServices = new SessionServices(_sessionRepository);
+
+            sessionServices.DeleteByKey("USER1SESSION");
+
+            var session = sessionServices.Get(1);
+
+            var result = GetSingle<Session>("SELECT * FROM Sessions WHERE SessionID = 1");
+
+            Assert.IsTrue(session == null);
+            Assert.IsTrue(result.Deleted == true);
+            Assert.IsTrue(result.DeletedBy == 1);
+            Assert.IsTrue(result.DeletedDate.Value.Date == DateTime.Now.Date);
+        }
+
+        [Test]
+        [Category("ServiceLayer_Session")]
+        public void Service_Delete_Expired_Sessions()
+        {
+            var sessionServices = new SessionServices(_sessionRepository);
+
+            sessionServices.DeleteExpired();
+
+            var session = sessionServices.Get(2);
+
+            var result = GetSingle<Session>("SELECT * FROM Sessions WHERE SessionID = 2");
 
             Assert.IsTrue(session == null);
             Assert.IsTrue(result.Deleted == true);
@@ -939,6 +912,79 @@ namespace MABMoney.Test
             Assert.IsTrue(data[18].Description == "USER1CURRENT1");
             Assert.IsTrue(data[18].Note == "Salary");
             Assert.IsTrue(data[18].Amount == 1000.00M);
+        }
+
+        [Test]
+        [Category("ServiceLayer_Transaction")]
+        public void Service_Read_Transactions_By_Account()
+        {
+            var transactionServices = new TransactionServices(_transactionRepository, _accountRepository);
+
+            var data = transactionServices.GetForAccount(1).ToList();
+
+            Assert.IsTrue(data.Count == 15);
+            Assert.IsTrue(data[0].TransactionID == 31);
+            Assert.IsTrue(data[0].Category_CategoryID == null);
+            Assert.IsTrue(data[0].CategoryName == null);
+            Assert.IsTrue(data[0].Description == "USER1CURRENT15");
+            Assert.IsTrue(data[0].Amount == -5.00M);
+            Assert.IsTrue(data[14].TransactionID == 1);
+            Assert.IsTrue(data[14].Category_CategoryID == 1);
+            Assert.IsTrue(data[14].CategoryName == "Salary");
+            Assert.IsTrue(data[14].Description == "USER1CURRENT1");
+            Assert.IsTrue(data[14].Amount == 1000.00M);
+        }
+
+        [Test]
+        [Category("ServiceLayer_Transaction")]
+        public void Service_Read_Transactions_By_Account_And_Date()
+        {
+            var transactionServices = new TransactionServices(_transactionRepository, _accountRepository);
+
+            var data = transactionServices.GetForAccount(1, new DateTime(2015, 01, 02), new DateTime(2015, 01, 04)).ToList();
+
+            Assert.IsTrue(data.Count == 7);
+            Assert.IsTrue(data[0].TransactionID == 10);
+            Assert.IsTrue(data[0].Category_CategoryID == 3);
+            Assert.IsTrue(data[0].CategoryName == "Food");
+            Assert.IsTrue(data[0].Description == "USER1CURRENT10");
+            Assert.IsTrue(data[0].Note == null);
+            Assert.IsTrue(data[6].TransactionID == 4);
+            Assert.IsTrue(data[6].Category_CategoryID == 4);
+            Assert.IsTrue(data[6].CategoryName == "Bills");
+            Assert.IsTrue(data[6].Description == "USER1CURRENT4");
+            Assert.IsTrue(data[6].Note == "Gas");
+        }
+
+        [Test]
+        [Category("ServiceLayer_Transaction")]
+        public void Service_Read_Transactions_By_Account_Date_And_Category()
+        {
+            var transactionServices = new TransactionServices(_transactionRepository, _accountRepository);
+
+            var data = transactionServices.GetForAccount(1, 4, new DateTime(2015, 01, 02), new DateTime(2015, 01, 06)).ToList();
+
+            Assert.IsTrue(data.Count == 4);
+            Assert.IsTrue(data[0].TransactionID == 14);
+            Assert.IsTrue(data[0].Category_CategoryID == 4);
+            Assert.IsTrue(data[0].CategoryName == "Bills");
+            Assert.IsTrue(data[0].Description == "USER1CURRENT14");
+            Assert.IsTrue(data[0].Note == "Water");
+            Assert.IsTrue(data[1].TransactionID == 11);
+            Assert.IsTrue(data[1].Category_CategoryID == 4);
+            Assert.IsTrue(data[1].CategoryName == "Bills");
+            Assert.IsTrue(data[1].Description == "USER1CURRENT11");
+            Assert.IsTrue(data[1].Note == "Electricity");
+            Assert.IsTrue(data[2].TransactionID == 7);
+            Assert.IsTrue(data[2].Category_CategoryID == 4);
+            Assert.IsTrue(data[2].CategoryName == "Bills");
+            Assert.IsTrue(data[2].Description == "USER1CURRENT7");
+            Assert.IsTrue(data[2].Note == "Mobile");
+            Assert.IsTrue(data[3].TransactionID == 4);
+            Assert.IsTrue(data[3].Category_CategoryID == 4);
+            Assert.IsTrue(data[3].CategoryName == "Bills");
+            Assert.IsTrue(data[3].Description == "USER1CURRENT4");
+            Assert.IsTrue(data[3].Note == "Gas");
         }
 
         [Test]
@@ -1099,6 +1145,23 @@ namespace MABMoney.Test
 
         [Test]
         [Category("ServiceLayer_User")]
+        public void Service_Read_User_By_PasswordResetGUID()
+        {
+            var userServices = new UserServices(_userRepository);
+
+            var result = userServices.GetByPasswordResetGUID("7cc68dbb-3d12-487b-8295-e9b226cda017");
+
+            Assert.IsTrue(result.UserID == 1);
+            Assert.IsTrue(result.Email == "user@test.com");
+            Assert.IsTrue(result.Password == "AJNzdwx56R+U3ls50NZbLTYQBm8j5Txr+F9mz3jQwzNjjIYjIjFuwBr/2l5VnjhQnw==");
+            Assert.IsTrue(result.Forename == "Test");
+            Assert.IsTrue(result.Surname == "User");
+            Assert.IsTrue(result.PasswordResetGUID == "7cc68dbb-3d12-487b-8295-e9b226cda017");
+            Assert.IsTrue(result.PasswordResetExpiry == new DateTime(2016, 1, 1));
+        }
+
+        [Test]
+        [Category("ServiceLayer_User")]
         public void Service_Read_Deleted_User()
         {
             var userServices = new UserServices(_userRepository);
@@ -1117,6 +1180,17 @@ namespace MABMoney.Test
             var userServices = new UserServices(_userRepository);
 
             var result = userServices.GetByEmailAddress("deleted@test.com");
+
+            Assert.IsTrue(result == null);
+        }
+
+        [Test]
+        [Category("ServiceLayer_User")]
+        public void Service_Read_Deleted_User_By_PasswordResetGUID()
+        {
+            var userServices = new UserServices(_userRepository);
+
+            var result = userServices.GetByPasswordResetGUID("5b977b67-e7e6-4399-9866-6c011750249f");
 
             Assert.IsTrue(result == null);
         }
