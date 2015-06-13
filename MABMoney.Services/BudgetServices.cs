@@ -151,11 +151,6 @@ namespace MABMoney.Services
             }
         }
 
-        public void DeleteCategoryBudget(int id)
-        {
-            throw new NotImplementedException();
-        }
-
         public int GetBudgetCount(int accountId)
         {
             return _budgets.GetBudgetCount(accountId);

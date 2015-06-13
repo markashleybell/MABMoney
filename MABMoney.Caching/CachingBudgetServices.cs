@@ -53,11 +53,6 @@ namespace MABMoney.Caching
             _budgetServices.SaveCategoryBudget(dto);
         }
 
-        public void DeleteCategoryBudget(int id)
-        {
-            _budgetServices.DeleteCategoryBudget(id);
-        }
-
         public int GetBudgetCount(int accountId)
         {
             return CacheAndGetValue<int>(
