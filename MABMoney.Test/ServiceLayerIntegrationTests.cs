@@ -362,7 +362,7 @@ namespace MABMoney.Test
             Assert.IsTrue(result.Account_AccountID == 1);
             Assert.IsTrue(result.Start == new DateTime(2015, 02, 01, 0, 0, 0));
             Assert.IsTrue(result.End == new DateTime(2015, 02, 28, 0, 0, 0));
-            Assert.IsTrue(result.Category_Budgets == null);
+            Assert.IsTrue(result.Category_Budgets.Count == 0);
         }
 
         [Test]
