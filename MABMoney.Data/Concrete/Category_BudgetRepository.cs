@@ -24,6 +24,14 @@ namespace MABMoney.Data.Concrete
             });
         }
 
+        public IEnumerable<Category_Budget> AllIncludingDeleted(int budgetId)
+        {
+            return GetEnumerable<Category_Budget>("mm_Categories_Budgets_Read_Including_Deleted", new {
+                UserID = _userId,
+                Budget_BudgetID = budgetId
+            });
+        }
+
         public Category_Budget Get(int budgetId, int categoryId)
         {
             return GetSingle<Category_Budget>("mm_Categories_Budgets_Read", new { 

@@ -57,7 +57,8 @@ namespace MABMoney.Services
 
             var budgetTransactions = _transactions.GetForAccount(budget.Account_AccountID, budget.Start, budget.End);
 
-            var category_budgets = _categories_budgets.All(budget.BudgetID).Select(x => new Category_BudgetDTO {
+            // Get any categories which aren't deleted, or which were deleted *after* this budget period ended
+            var category_budgets = _categories_budgets.AllIncludingDeleted(budget.BudgetID).Select(x => new Category_BudgetDTO {
                                                           Budget_BudgetID = x.Budget_BudgetID,
                                                           Category_CategoryID = x.Category_CategoryID,
                                                           CategoryName = x.CategoryName,
@@ -99,6 +100,10 @@ namespace MABMoney.Services
                         Total = unallocatedSpent
                     });
                 }
+            }
+            else
+            {
+                budget.Category_Budgets = new List<Category_BudgetDTO>();
             }
 
             return budget;

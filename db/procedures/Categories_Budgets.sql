@@ -45,6 +45,56 @@ AS
     COMMIT
 GO
 
+IF OBJECT_ID('[dbo].[mm_Categories_Budgets_Read_Including_Deleted]') IS NOT NULL
+BEGIN 
+    DROP PROC [dbo].[mm_Categories_Budgets_Read_Including_Deleted] 
+END 
+GO
+
+CREATE PROC [dbo].[mm_Categories_Budgets_Read_Including_Deleted] 
+    @UserID int,
+    @Budget_BudgetID int
+AS 
+    SET NOCOUNT ON 
+    SET XACT_ABORT ON  
+
+    BEGIN TRAN
+
+        SELECT 
+            [cb].[Budget_BudgetID], 
+            [cb].[Category_CategoryID], 
+            [cb].[Amount], 
+            [cb].[CreatedBy], 
+            [cb].[CreatedDate], 
+            [cb].[LastModifiedBy], 
+            [cb].[LastModifiedDate], 
+            [cb].[Deleted], 
+            [cb].[DeletedBy], 
+            [cb].[DeletedDate],
+            [c].[Name] AS CategoryName,
+            [c].[Type] AS CategoryType
+        FROM   
+            [dbo].[Categories_Budgets] [cb]
+        INNER JOIN
+            [dbo].[Categories] [c] ON [c].[CategoryID] = [cb].[Category_CategoryID]
+        INNER JOIN
+            [dbo].[vBudgets] [b] ON [b].[BudgetID] = [cb].[Budget_BudgetID]
+        INNER JOIN
+            [dbo].[vAccounts] [a] ON [a].[AccountID] = [c].[Account_AccountID] AND [a].[AccountID] = [b].[Account_AccountID]
+        WHERE 
+            [a].[User_UserID] = @UserID
+        AND
+            [cb].[Budget_BudgetID] = @Budget_BudgetID
+        AND (
+            [cb].[Deleted] = 0 OR [cb].[DeletedDate] > [b].[End]
+        )
+        AND (
+            [c].[Deleted] = 0 OR [c].[DeletedDate] > [b].[End]
+        )   
+
+    COMMIT
+GO
+
 IF OBJECT_ID('[dbo].[mm_Categories_Budgets_Create]') IS NOT NULL
 BEGIN 
     DROP PROC [dbo].[mm_Categories_Budgets_Create] 
