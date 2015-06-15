@@ -76,19 +76,24 @@ namespace MABMoney.Web.Controllers
                     Value = x.BudgetID.ToString(),
                     Text = x.Start.ToString("dd/MM/yyyy") + " - " + x.End.ToString("dd/MM/yyyy")
                 }).AsQueryable();
-
             }
+
             var now = DateTime.Now;
             
+            var categoryItems = categories.ToList().Select(x => new Category_BudgetViewModel { 
+                Category_CategoryID = x.CategoryID,
+                Name = x.Name
+            }).ToList();
+
+            if (categoryItems == null || categoryItems.Count == 0)
+                categoryItems.Add(new Category_BudgetViewModel { Name = "NEW CATEGORY" });
+
             return View(new CreateViewModel {
                 Start = new DateTime(now.Year, now.Month, 1),
                 End = new DateTime(now.Year, now.Month, DateTime.DaysInMonth(now.Year, now.Month)),
                 Account_AccountID = (id.HasValue) ? id.Value : 0,
                 Accounts = DataHelpers.GetAccountSelectOptions(_accountServices),
-                Categories = categories.ToList().Select(x => new Category_BudgetViewModel { 
-                    Category_CategoryID = x.CategoryID,
-                    Name = x.Name
-                }).ToList(),
+                Categories = categoryItems,
                 Budgets = budgets,
                 RedirectAfterSubmitUrl = _url.Action("Index")
             });
