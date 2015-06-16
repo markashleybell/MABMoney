@@ -32,17 +32,17 @@
                 padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
             }
         </style>
-        @Styles.Render("~/Content/Css/bootstrap")
-        @Styles.Render("~/Content/Css/base")
+        @Styles.Render("~/Content/bootstrap")
+        @Styles.Render("~/Content/base")
     </head>
     <body @(Html.Raw((Convert.ToBoolean(ConfigurationManager.AppSettings["Staging"])) ? "id=\"staging\"" : ""))>
         <div class="container">
             @{ Html.RenderAction("MainNavigation", "Home"); }
             @RenderBody()
         </div>
-        @Scripts.Render("~/Content/Js/jquery")
-        @Scripts.Render("~/Content/Js/bootstrap")
-        @Scripts.Render("~/Content/Js/base")
+        @Scripts.Render("~/Scripts/jquery")
+        @Scripts.Render("~/Scripts/bootstrap")
+        @Scripts.Render("~/Scripts/base")
         <script type="text/javascript">MABMoney.setOptions({ cookieKey: '@ConfigurationManager.AppSettings["CookieKey"]' });</script>
         <script id="tmpl-payment-calc-row" type="x-tmpl-mustache">
             <tr>
