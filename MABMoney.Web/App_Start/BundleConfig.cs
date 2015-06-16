@@ -25,7 +25,7 @@ namespace MABMoney.Web
             );
 
             bundles.Add(new ScriptBundle("~/Scripts/base").Include(
-                "~/Scripts/typeahead-bundle.js",
+                "~/Scripts/bootstrap3-typeahead.js",
                 "~/Scripts/bootstrap-datepicker.js",
                 "~/Scripts/jquery.cookie.js",
                 "~/Scripts/mustache.js",
