@@ -12,15 +12,15 @@ namespace MABMoney.Web
         {
             bundles.UseCdn = true;
 
-            var jqueryCdnUrl = "//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js";
-            var bootstrapCssCdnUrl = "//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css";
-            var bootstrapJsCdnUrl = "//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js";
+            var jqueryCdnUrl = "//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js";
+            var bootstrapJsCdnUrl = "//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js";
+            var bootstrapCssCdnUrl = "//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css";
 
-            bundles.Add(new ScriptBundle("~/Scripts/jquery").Include(
+            bundles.Add(new ScriptBundle("~/Scripts/jquery", jqueryCdnUrl).Include(
                 "~/Scripts/jquery-{version}.js")
             );
 
-            bundles.Add(new ScriptBundle("~/Scripts/bootstrap").Include(
+            bundles.Add(new ScriptBundle("~/Scripts/bootstrap", bootstrapJsCdnUrl).Include(
                 "~/Scripts/bootstrap.js")
             );
 
@@ -32,7 +32,7 @@ namespace MABMoney.Web
                 "~/Scripts/main.js")
             );
 
-            bundles.Add(new StyleBundle("~/Content/bootstrap").Include(
+            bundles.Add(new StyleBundle("~/Content/bootstrap", bootstrapCssCdnUrl).Include(
                 "~/Content/bootstrap.css")
             );
 
