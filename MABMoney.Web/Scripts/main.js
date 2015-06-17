@@ -1,9 +1,9 @@
-﻿var MABMoney = (function ($, window, undefined) {
+﻿var MABMoney = (function ($, Mustache, window, undefined) {
     // Name of the cookie to use to store payment calc data
-    var _cookieKey = null;
+    var _cookieKey = null,
 
     // Container for cached UI element selectors
-    var _ui = {
+    _ui = {
         globalAccountSelector: null,
         accountSelector: null,
         mobileTabSelect: null,
@@ -13,47 +13,50 @@
         paymentAmount: null,
         interestRate: null,
         minPaymentPercentage: null
-    };
+    },
 
     // Container for cached template HTML
-    var _templates = {
+    _templates = {
         paymentCalcRow: null,
         budgetCategoryEditForm: null,
         budgetCategoryDeleteForm: null
-    };
+    },
 
     // Allow setup of options before init() is called
-    var _setOptions = function (options) {
+     _setOptions = function (options) {
         _cookieKey = options.cookieKey;
-    };
+    },
 
     // Calculate APR
-    var _aprCalc = function (apr) {
+    _aprCalc = function (apr) {
         apr = apr * 1 / 100;
         return (Math.pow((1 + apr), (1 / 12)) - 1) * 100;
-    };
+    },
 
     // Build repayments table for card/loan repayment calculator
-    var _buildPaymentCalculatorTable = function (currentBalance, paymentAmount, interestRate, minPaymentPercentage) {
+    _buildPaymentCalculatorTable = function (currentBalance, paymentAmount, interestRate, minPaymentPercentage) {
+        // Set up variables
+        var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+            balance = currentBalance, 
+            html = [],
+            maxRows = 100,
+            row = 0,
+            d = new Date();
+
         // Set date to the first of next month
-        var d = new Date();
         d.setDate(1);
         d.setMonth(d.getMonth() + 1);
 
-        var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-        var balance = currentBalance, html = [];
-
-        var maxRows = 100;
-        var row = 0;
-
         while (balance > 0 && row < maxRows) {
             // Work out how much interest will be paid
-            var interestAmount = (_aprCalc(interestRate) / 100) * balance;
-            // Work out what the balance will be at the end of the month
-            var balanceAtMonthEnd = (balance - paymentAmount) + interestAmount;
+            var interestAmount = ((_aprCalc(interestRate) / 100) * balance),
+                // Work out what the balance will be at the end of the month
+                balanceAtMonthEnd = (balance - paymentAmount) + interestAmount;
 
             // If the balance is now negative, just set it to zero
-            if (balanceAtMonthEnd < 0) { balanceAtMonthEnd = 0; }
+            if (balanceAtMonthEnd < 0) {
+                balanceAtMonthEnd = 0;
+            }
 
             var model = {
                 month: months[d.getMonth()],
@@ -76,9 +79,9 @@
         }
 
         _ui.tableBody.empty().append(html.join(''));
-    }
+    },
 
-    var _init = function () {
+    _init = function () {
         // Cache selectors
         _ui.globalAccountSelector = $('.account-selector');
         _ui.accountSelector = $('.account-dropdown');
@@ -108,8 +111,8 @@
         });
 
         // Set up net worth table popover
-        $('#net-worth').on('click', function (evt) {
-            evt.preventDefault();
+        $('#net-worth').on('click', function (e) {
+            e.preventDefault();
         }).popover({
             title: 'Accounts',
             placement: 'bottom',
@@ -119,17 +122,17 @@
         });
 
         // Auto-submit global account selector form when dropdown option is changed
-        _ui.globalAccountSelector.on('change', function (evt) {
+        _ui.globalAccountSelector.on('change', function () {
             this.form.submit();
         });
 
         // Reload transaction index when account is changed
-        $('#Transactions_AccountID').on('change', function (evt) {
+        $('#Transactions_AccountID').on('change', function () {
             window.location = '/Transactions/Index/' + $(this).val();
         });
 
         // Wire in mobile tab replacement dropdown
-        _ui.mobileTabSelect.on('change', function (evt) {
+        _ui.mobileTabSelect.on('change', function () {
             _ui.allTabs.removeClass('active');
             $(_ui.mobileTabSelect.val()).addClass('active');
         });
@@ -149,7 +152,7 @@
         });
 
         // Add a confirmation to any delete forms
-        $('form.delete-form').on('submit', function (evt) {
+        $('form.delete-form').on('submit', function () {
             return confirm('Are you sure?');
         });
 
@@ -184,12 +187,12 @@
         });
 
         // Hide any popovers when the window is resized
-        $(window).on('resize', function (e) {
+        $(window).on('resize', function () {
             $('input.help, select.help, textarea.help, #net-worth').popover('hide');
         });
 
         // Add a new budget category form row
-        $('#add-category-button').on('click', function (evt) {
+        $('#add-category-button').on('click', function () {
             // Grab the last category input that currently exists in the page
             var lastInput = $('input[id^=Categories_]:last');
             // Get the current index from the input's name attribute
@@ -201,8 +204,8 @@
         });
 
         // Remove a budget category form row and replace it with the deletion data
-        $('form').on('click', '.cat-delete', function (evt) {
-            evt.preventDefault();
+        $('form').on('click', '.cat-delete', function (e) {
+            e.preventDefault();
             var control = $(this).parent().parent();
             var categoryId = this.hash.substring(4);
             var index = this.id.substring(3);
@@ -211,12 +214,12 @@
 
         // Remove zero placeholder in amount fields on input focus
         // and replace it on blur if field is empty
-        $('input[name$="Amount"]').on('focus', function (e) {
+        $('input[name$="Amount"]').on('focus', function () {
             var field = $(this);
             if (parseFloat(field.val()) === 0) {
                 field.val('');
             }
-        }).on('blur', function (e) {
+        }).on('blur', function () {
             var field = $(this);
             if ($.trim(field.val()) === '' || parseFloat(field.val()) === 0) {
                 field.val('0');
@@ -229,7 +232,7 @@
         init: _init
     };
 
-})(jQuery, window, undefined);
+})(jQuery, Mustache, window, undefined);
 
 $(function () {
 
