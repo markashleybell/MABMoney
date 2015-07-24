@@ -31,7 +31,7 @@ namespace MABMoney.Web
         private string externalDbConnectionString = ConfigurationManager.AppSettings["ExternalDbConnectionString"];
         private string profilerConnectionString = ConfigurationManager.AppSettings["ProfilerDbConnectionString"];
 
-        private string[] profileExcludes = new string[] { "/home/showcachecontents", "/home/invalidatecache" };
+        private string[] profileExcludes = new string[] { "/showcachecontents", "/invalidatecache" };
 
         protected void Application_Start()
         {
@@ -99,13 +99,13 @@ namespace MABMoney.Web
 
         protected void Application_BeginRequest(object sender, EventArgs e)
         {
-            if (enableProfiling && !profileExcludes.Contains(Request.Url.AbsolutePath.ToLower()))
+            if (enableProfiling && !profileExcludes.Any(u => Request.Url.AbsolutePath.ToLower().EndsWith(u)))
                 MiniProfiler.Start();
         }
 
         protected void Application_EndRequest(object sender, EventArgs e)
         {
-            if (enableProfiling && !profileExcludes.Contains(Request.Url.AbsolutePath.ToLower()))
+            if (enableProfiling && !profileExcludes.Any(u => Request.Url.AbsolutePath.ToLower().EndsWith(u)))
                 MiniProfiler.Stop();
         }
     }

@@ -84,8 +84,11 @@ namespace MABMoney.Web.Infrastructure
 
         protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
         {
+            var urlHelper = new UrlHelper(filterContext.RequestContext);
+            var url = urlHelper.Action("Login", "Users");
+
             // auth failed, redirect to login page
-            filterContext.Result = new RedirectResult("/Users/Login");
+            filterContext.Result = new RedirectResult(url);
         }
     }
 }
