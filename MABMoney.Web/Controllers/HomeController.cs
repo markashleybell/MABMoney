@@ -201,7 +201,7 @@ namespace MABMoney.Web.Controllers
         public ActionResult Index(ProfileViewModel profile, int account_accountId)
         {
             var encodedPageState = EncryptionHelpers.EncodeReturnParameters(account_accountId, TransactionType.Expense, DashboardTab.BudgetOrPaymentCalc);
-            return RedirectToRoute("Home", new { state = encodedPageState });
+            return RedirectToRoute("Home-State", new { state = encodedPageState });
         }
 
         [Authenticate]

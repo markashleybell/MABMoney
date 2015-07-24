@@ -15,8 +15,14 @@ namespace MABMoney.Web
 
             routes.MapRoute(
                 name: "Home",
-                url: "s/{state}",
+                url: "",
                 defaults: new { controller = "Home", action = "Index" }
+            );
+
+            routes.MapRoute(
+                name: "Home-State",
+                url: "s/{state}",
+                defaults: new { controller = "Home", action = "Index", state = UrlParameter.Optional }
             );
 
             routes.MapRoute(
