@@ -1,8 +1,17 @@
 ﻿@model MABMoney.Web.Models.Home.MainNavigationViewModel
 
+@{
+    var homeUrl = Url.Action("Index", "Home", null);
+    
+    if(homeUrl.Length > 1 && homeUrl.EndsWith("/"))
+    {
+        homeUrl = homeUrl.TrimEnd('/');
+    }
+}
+
 <div class="row" id="header">
     <div class="col-md-6" id="brand">
-        <a href="@Url.Action("Index", "Home", null)">MABMoney <span class="staging">STAGING</span></a>
+        <a href="@homeUrl">MABMoney <span class="staging">STAGING</span></a>
     </div>
     @if(Model.UserID != 0) {
     <div class="col-md-3" id="net-worth-display">
