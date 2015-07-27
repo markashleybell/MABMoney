@@ -2,6 +2,9 @@
     // Name of the cookie to use to store payment calc data
     var _cookieKey = null,
 
+    // Application base path
+    _basePath = null,
+
     // Container for cached UI element selectors
     _ui = {
         globalAccountSelector: null,
@@ -23,8 +26,9 @@
     },
 
     // Allow setup of options before init() is called
-     _setOptions = function (options) {
+    _setOptions = function (options) {
         _cookieKey = options.cookieKey;
+        _basePath = options.basePath;
     },
 
     // Calculate APR
@@ -128,7 +132,7 @@
 
         // Reload transaction index when account is changed
         $('#Transactions_AccountID').on('change', function () {
-            window.location = '/Transactions/Index/' + $(this).val();
+            window.location = _basePath + 'Transactions/Index/' + $(this).val();
         });
 
         // Wire in mobile tab replacement dropdown
@@ -142,7 +146,7 @@
             minlength: 1,
             source: function (query, process) {
                 $.ajax({
-                    url: '/Accounts/GetTransactionDescriptionHistory',
+                    url: _basePath + 'Accounts/GetTransactionDescriptionHistory',
                     data: { query: query, id: (_ui.globalAccountSelector.length) ? _ui.globalAccountSelector.val() : _ui.accountSelector.val() },
                     type: 'POST'
                 }).done(function (data) {

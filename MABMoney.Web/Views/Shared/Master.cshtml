@@ -43,7 +43,7 @@
         @Scripts.Render("~/Scripts/jquery")
         @Scripts.Render("~/Scripts/bootstrap")
         @Scripts.Render("~/Scripts/base")
-        <script type="text/javascript">MABMoney.setOptions({ cookieKey: '@ConfigurationManager.AppSettings["CookieKey"]' });</script>
+        <script type="text/javascript">MABMoney.setOptions({ cookieKey: '@ConfigurationManager.AppSettings["CookieKey"]', basePath: '@Url.Action("Index", "Home", null)' });</script>
         <script id="tmpl-payment-calc-row" type="x-tmpl-mustache">
             <tr>
                 <td>{{month}} {{year}}</td>
