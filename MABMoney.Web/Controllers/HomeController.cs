@@ -241,7 +241,7 @@ namespace MABMoney.Web.Controllers
 
             var encodedPageState = EncryptionHelpers.EncodeReturnParameters(model.Account_AccountID, model.Type, model.Tab);
 
-            return RedirectToRoute("Home", new { state = encodedPageState });
+            return RedirectToRoute("Home-State", new { state = encodedPageState });
         }
 
         [Authenticate]
@@ -297,7 +297,7 @@ namespace MABMoney.Web.Controllers
 
             var encodedPageState = EncryptionHelpers.EncodeReturnParameters(model.Account_AccountID, model.Type, model.Tab);
 
-            return RedirectToRoute("Home", new { state = encodedPageState });
+            return RedirectToRoute("Home-State", new { state = encodedPageState });
         }
 
         public ActionResult MainNavigation(ProfileViewModel profile)

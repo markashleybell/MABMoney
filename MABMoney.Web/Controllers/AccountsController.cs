@@ -90,7 +90,7 @@ namespace MABMoney.Web.Controllers
             _cache.InvalidateAllWithDependency(_cachingHelpers.GetDependencyKey(CachingDependency.Account));
 
             // TODO: This doesn't respect RedirectAfterSubmitUrl, should it?
-            return RedirectToRoute("Home", new { state = encodedPageState });
+            return RedirectToRoute("Home-State", new { state = encodedPageState });
         }
 
         //
