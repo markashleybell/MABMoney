@@ -18,42 +18,42 @@ namespace MABMoney.Web.Infrastructure
 
         public string Action(string actionName)
         {
-            return _helper.Action(actionName);
+            return _helper.Action(actionName).TrimEnd('/');
         }
 
         public string Action(string actionName, object routeValues)
         {
-            return _helper.Action(actionName, routeValues);
+            return _helper.Action(actionName, routeValues).TrimEnd('/');
         }
 
         public string Action(string actionName, RouteValueDictionary routeValues)
         {
-            return _helper.Action(actionName, routeValues);
+            return _helper.Action(actionName, routeValues).TrimEnd('/');
         }
 
         public string Action(string actionName, string controllerName)
         {
-            return _helper.Action(actionName, controllerName);
+            return _helper.Action(actionName, controllerName).TrimEnd('/');
         }
 
         public string Action(string actionName, string controllerName, object routeValues)
         {
-            return _helper.Action(actionName, controllerName, routeValues);
+            return _helper.Action(actionName, controllerName, routeValues).TrimEnd('/');
         }
 
         public string Action(string actionName, string controllerName, RouteValueDictionary routeValues)
         {
-            return _helper.Action(actionName, controllerName, routeValues);
+            return _helper.Action(actionName, controllerName, routeValues).TrimEnd('/');
         }
 
         public string Action(string actionName, string controllerName, object routeValues, string protocol)
         {
-            return _helper.Action(actionName, controllerName, routeValues, protocol);
+            return _helper.Action(actionName, controllerName, routeValues, protocol).TrimEnd('/');
         }
 
         public string Action(string actionName, string controllerName, RouteValueDictionary routeValues, string protocol, string hostName)
         {
-            return _helper.Action(actionName, controllerName, routeValues, protocol, hostName);
+            return _helper.Action(actionName, controllerName, routeValues, protocol, hostName).TrimEnd('/');
         }
     }
 }
