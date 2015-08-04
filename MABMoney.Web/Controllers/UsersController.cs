@@ -201,7 +201,7 @@ namespace MABMoney.Web.Controllers
 
             _sessionServices.DeleteExpired();
 
-            return Redirect(model.RedirectAfterSubmitUrl);
+            return Redirect(string.IsNullOrWhiteSpace(model.RedirectAfterSubmitUrl) ? "/" : model.RedirectAfterSubmitUrl);
         }
 
         [HttpGet]
