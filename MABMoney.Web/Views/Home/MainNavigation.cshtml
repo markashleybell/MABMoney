@@ -18,12 +18,33 @@
         <button id="net-worth" type="button" class="btn btn-default btn-info btn-block" data-toggle="dropdown">Net Worth: @Model.NetWorth.ToString("c")</button>
         <div id="net-worth-content">
             <table id="net-worth-content-table">
-                @foreach (var account in Model.Accounts)
+                @if (Model.NetWorthAccounts != null && Model.NetWorthAccounts.Count > 0)
                 {
                     <tr>
-                        <th>@account.Name</th>
-                        <td class="r">@account.CurrentBalance.ToString("#0.00")</td>
+                        <th class="net-worth-table-header" colspan="2">Included In Net Worth</th>
                     </tr>
+                    
+                    foreach (var account in Model.NetWorthAccounts)
+                    {
+                        <tr>
+                            <th>@account.Name</th>
+                            <td class="r">@account.CurrentBalance.ToString("#0.00")</td>
+                        </tr>
+                    }
+                }
+                @if (Model.NonNetWorthAccounts != null && Model.NonNetWorthAccounts.Count > 0)
+                {
+                    <tr>
+                        <th class="net-worth-table-header" colspan="2">Not Included In Net Worth</th>
+                    </tr>
+
+                    foreach (var account in Model.NonNetWorthAccounts)
+                    {
+                        <tr>
+                            <th>@account.Name</th>
+                            <td class="r">@account.CurrentBalance.ToString("#0.00")</td>
+                        </tr>
+                    }
                 }
             </table>
             @Model.Debug

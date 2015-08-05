@@ -19,5 +19,6 @@ namespace MABMoney.Domain
         public AccountType Type { get; set; }
         public string TransactionDescriptionHistory { get; set; }
         public int DisplayOrder { get; set; }
+        public bool IncludeInNetWorth { get; set; }
     }
 }

@@ -36,6 +36,17 @@ form {
   text-align: left;
 }
 
+#net-worth-content-table th.net-worth-table-header {
+  font-size: 11px;
+  color: #969696;
+  text-transform: uppercase;
+  padding: 10px 0 2px 0;
+}
+
+#net-worth-content-table tr:first-child .net-worth-table-header {
+  padding-top: 0;
+}
+
 #net-worth-content-table td {
   text-align: right;
 }

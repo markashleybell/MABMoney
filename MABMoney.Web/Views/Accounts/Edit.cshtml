@@ -23,6 +23,8 @@
     
     @Html.TextControlGroupFor(x => x.DisplayOrder, new { type = "number", pattern = @"\d*" })
 
+    @Html.CheckboxControlGroupFor(x => x.IncludeInNetWorth)
+
     @Html.HiddenFor(x => x.AccountID)
 
     @Html.HiddenFor(x => x.RedirectAfterSubmitUrl)

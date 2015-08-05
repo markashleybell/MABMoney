@@ -99,7 +99,8 @@ namespace MABMoney.Test
                 StartingBalance = 123.45M,
                 Default = true,
                 Type = AccountType.Savings,
-                DisplayOrder = 50
+                DisplayOrder = 50,
+                IncludeInNetWorth = false
             };
 
             var result = repository.Add(account);
@@ -115,8 +116,8 @@ namespace MABMoney.Test
             Assert.IsTrue(result.CreatedDate.Date == DateTime.Now.Date);
             Assert.IsTrue(result.LastModifiedBy == 1);
             Assert.IsTrue(result.LastModifiedDate.Date == DateTime.Now.Date);
-            Assert.IsTrue(result.Type == AccountType.Savings);
             Assert.IsTrue(result.CurrentBalance == 123.45M);
+            Assert.IsTrue(result.IncludeInNetWorth == false);
         }
 
         [Test]
@@ -147,6 +148,17 @@ namespace MABMoney.Test
 
             Assert.IsTrue(data.AccountID == 1);
             Assert.IsTrue(data.Name == "Current");
+            Assert.IsTrue(data.StartingBalance == 100.00M);
+            Assert.IsTrue(data.Default == true);
+            Assert.IsTrue(data.Type == AccountType.Current);
+            Assert.IsTrue(data.DisplayOrder == 100);
+            Assert.IsTrue(data.User_UserID == 1);
+            Assert.IsTrue(data.CreatedBy == 1);
+            Assert.IsTrue(data.CreatedDate.Date == new DateTime(2015, 1, 1));
+            Assert.IsTrue(data.LastModifiedBy == 1);
+            Assert.IsTrue(data.LastModifiedDate.Date == new DateTime(2015, 1, 1));
+            Assert.IsTrue(data.CurrentBalance == 345.00M);
+            Assert.IsTrue(data.IncludeInNetWorth == true);
         }
 
         [Test]
@@ -184,6 +196,7 @@ namespace MABMoney.Test
             account.Default = false;
             account.Type = AccountType.CreditCard;
             account.DisplayOrder = 126;
+            account.IncludeInNetWorth = false;
 
             var result = repository.Update(account);
 

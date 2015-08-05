@@ -36,7 +36,8 @@ namespace MABMoney.Data.Concrete
                 StartingBalance = account.StartingBalance,
                 Default = account.Default,
                 Type = account.Type,
-                DisplayOrder = account.DisplayOrder
+                DisplayOrder = account.DisplayOrder,
+                IncludeInNetWorth = account.IncludeInNetWorth
             });
         }
 
@@ -50,6 +51,7 @@ namespace MABMoney.Data.Concrete
                 Default = account.Default,
                 Type = account.Type,
                 DisplayOrder = account.DisplayOrder,
+                IncludeInNetWorth = account.IncludeInNetWorth,
                 TransactionDescriptionHistory = account.TransactionDescriptionHistory
             });
         }

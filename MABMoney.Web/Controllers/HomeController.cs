@@ -306,11 +306,16 @@ namespace MABMoney.Web.Controllers
 
             var accounts = _accountServices.All().ToList();
 
+            var netWorthAccounts = accounts.Where(x => x.IncludeInNetWorth).ToList();
+            var nonNetWorthAccounts = accounts.Where(x => !x.IncludeInNetWorth).ToList();
+
             return View(new MainNavigationViewModel { 
                 UserID = (profile != null) ? profile.UserID : 0,
                 UserEmail = (profile != null) ? profile.Email : null,
                 Accounts = accounts,
-                NetWorth = accounts.Sum(x => x.CurrentBalance),
+                NetWorthAccounts = netWorthAccounts,
+                NonNetWorthAccounts = nonNetWorthAccounts,
+                NetWorth = netWorthAccounts.Sum(x => x.CurrentBalance),
                 Debug = debug
             });
         }

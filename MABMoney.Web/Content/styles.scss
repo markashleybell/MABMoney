@@ -34,7 +34,17 @@ form {
     width: 240px;
     th {
         text-align: left;
+        &.net-worth-table-header {
+            font-size: 11px;
+            color: #969696;
+            text-transform: uppercase;
+            padding: 10px 0 2px 0;
+        }
     }
+    tr:first-child .net-worth-table-header {
+        padding-top: 0;
+    }
+
     td {
         text-align: right;
     }

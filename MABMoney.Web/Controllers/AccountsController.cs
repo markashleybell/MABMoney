@@ -58,6 +58,7 @@ namespace MABMoney.Web.Controllers
             var model = new CreateViewModel {
                 AccountTypes = DataHelpers.GetAccountTypeSelectOptions(),
                 Default = (accounts.Count() == 0) ? true : false,
+                IncludeInNetWorth = true,
                 RedirectAfterSubmitUrl = _url.Action("Index")
             };
 

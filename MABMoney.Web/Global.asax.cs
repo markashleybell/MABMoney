@@ -61,6 +61,7 @@ namespace MABMoney.Web
                 dest.Type = (AccountTypeDTO)src.Type;
                 dest.TransactionDescriptionHistoryAsString = src.TransactionDescriptionHistory;
                 dest.DisplayOrder = src.DisplayOrder;
+                dest.IncludeInNetWorth = src.IncludeInNetWorth;
             });
 
             Mapper.AddMapping<MABMoney.Web.Models.Users.SignupViewModel, MABMoney.Services.DTO.UserDTO>((s, d) =>

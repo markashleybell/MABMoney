@@ -157,6 +157,7 @@ BEGIN
 		[TransactionDescriptionHistory] [nvarchar](max) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
 		[CurrentBalance] [decimal](18, 2) NOT NULL CONSTRAINT [DF_dbo.Transactions_CurrentBalance] DEFAULT 0,
 		[DisplayOrder] [int] NOT NULL CONSTRAINT [DF_dbo.Transactions_DisplayOrder] DEFAULT 0,
+		[IncludeInNetWorth] [bit] NOT NULL CONSTRAINT [DF_dbo.Transactions_IncludeInNetWorth] DEFAULT 1,
 		CONSTRAINT [PK_dbo.Accounts] PRIMARY KEY CLUSTERED (
 			[AccountID] ASC
 		) WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)

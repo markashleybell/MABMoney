@@ -31,5 +31,7 @@ namespace MABMoney.Services.DTO
 
         [Required]
         public int DisplayOrder { get; set; }
+
+        public bool IncludeInNetWorth { get; set; }
     }
 }

@@ -27,5 +27,7 @@ namespace MABMoney.Web.Models.Accounts
         public int DisplayOrder { get; set; }
         [DisplayName("Default Account")]
         public bool Default { get; set; }
+        [DisplayName("Include Balance In Net Worth")]
+        public bool IncludeInNetWorth { get; set; }
     }
 }

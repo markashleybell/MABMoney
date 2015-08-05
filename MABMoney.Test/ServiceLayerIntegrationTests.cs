@@ -147,7 +147,8 @@ namespace MABMoney.Test
                 DisplayOrder = 203,
                 StartingBalance = 25.43M,
                 CurrentBalance = 1000M,
-                Default = true
+                Default = true,
+                IncludeInNetWorth = false
             };
 
             accountServices.Save(dto);
@@ -163,6 +164,7 @@ namespace MABMoney.Test
             Assert.IsTrue(result.StartingBalance == 25.43M);
             Assert.IsTrue(result.CurrentBalance == 25.43M);
             Assert.IsTrue(result.Default == true);
+            Assert.IsTrue(result.IncludeInNetWorth == false);
         }
 
         [Test]
@@ -197,6 +199,7 @@ namespace MABMoney.Test
             Assert.IsTrue(result.StartingBalance == 500.00M);
             Assert.IsTrue(result.CurrentBalance == 550.00M);
             Assert.IsTrue(result.Default == false);
+            Assert.IsTrue(result.IncludeInNetWorth == true);
         }
 
         [Test]
@@ -234,7 +237,8 @@ namespace MABMoney.Test
                 DisplayOrder = 156,
                 StartingBalance = 200.50M,
                 CurrentBalance = 2000M,
-                Default = false
+                Default = false,
+                IncludeInNetWorth = false
             };
 
             accountServices.Save(dto);
@@ -250,6 +254,7 @@ namespace MABMoney.Test
             Assert.IsTrue(result.StartingBalance == 200.50M);
             Assert.IsTrue(result.CurrentBalance == 445.50M);
             Assert.IsTrue(result.Default == false);
+            Assert.IsTrue(result.IncludeInNetWorth == false);
         }
 
         [Test]

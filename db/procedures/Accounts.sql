@@ -29,7 +29,8 @@ AS
             [Type], 
             [TransactionDescriptionHistory], 
             [CurrentBalance], 
-            [DisplayOrder] 
+            [DisplayOrder],
+            [IncludeInNetWorth]
         FROM   
             [dbo].[vAccounts] 
         WHERE  
@@ -54,7 +55,8 @@ CREATE PROC [dbo].[mm_Accounts_Create]
     @StartingBalance decimal(18, 2),
     @Default bit,
     @Type int,
-    @DisplayOrder int
+    @DisplayOrder int,
+    @IncludeInNetWorth bit
 AS 
     SET NOCOUNT ON 
     SET XACT_ABORT ON  
@@ -74,7 +76,8 @@ AS
 				[LastModifiedDate], 
 				[Default], 
 				[Type], 
-				[DisplayOrder]
+				[DisplayOrder],
+				[IncludeInNetWorth]
 			)
         SELECT 
             @Name, 
@@ -86,7 +89,8 @@ AS
             @Now, 
             @Default, 
             @Type, 
-            @DisplayOrder
+            @DisplayOrder,
+            @IncludeInNetWorth
         
         SELECT 
             [AccountID], 
@@ -104,7 +108,8 @@ AS
             [Type], 
             [TransactionDescriptionHistory], 
             [CurrentBalance], 
-            [DisplayOrder]
+            [DisplayOrder],
+            [IncludeInNetWorth]
         FROM   
             [dbo].[vAccounts]
         WHERE  
@@ -129,7 +134,8 @@ CREATE PROC [dbo].[mm_Accounts_Update]
     @Default bit,
     @Type int,
     @TransactionDescriptionHistory nvarchar(MAX) = NULL,
-    @DisplayOrder int
+    @DisplayOrder int,
+    @IncludeInNetWorth bit
 AS 
     SET NOCOUNT ON 
     SET XACT_ABORT ON  
@@ -148,7 +154,8 @@ AS
             [Default] = @Default, 
             [Type] = @Type, 
             [TransactionDescriptionHistory] = @TransactionDescriptionHistory, 
-            [DisplayOrder] = @DisplayOrder
+            [DisplayOrder] = @DisplayOrder,
+            [IncludeInNetWorth] = @IncludeInNetWorth
         WHERE  
             [User_UserID] = @UserID
         AND
@@ -170,7 +177,8 @@ AS
             [Type], 
             [TransactionDescriptionHistory], 
             [CurrentBalance], 
-            [DisplayOrder]
+            [DisplayOrder],
+            [IncludeInNetWorth]
         FROM   
             [dbo].[vAccounts]
         WHERE  
@@ -223,7 +231,8 @@ AS
             [Type], 
             [TransactionDescriptionHistory], 
             [CurrentBalance], 
-            [DisplayOrder]
+            [DisplayOrder],
+            [IncludeInNetWorth]
         FROM   
             [dbo].[Accounts]
         WHERE  
