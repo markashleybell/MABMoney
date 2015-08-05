@@ -19,6 +19,7 @@
                     <th>Name</th>
                     <th>Type</th>
                     <th>Current Balance</th>
+                    <th>Include Balance In Net Worth</th>
                     <th>Edit</th>
                 </tr>
             </thead>
@@ -29,6 +30,7 @@
                     <td>@account.Name @((account.Default) ? "(Default)" : "")</td>
                     <td>@account.Type.GetDescription()</td>
                     <td>@account.CurrentBalance</td>
+                    <td>@(account.IncludeInNetWorth ? "Yes" : "No")</td>
                     <td>@Html.ActionLink("Edit", "Edit", new { id = account.AccountID })</td>
                 </tr>
                 }
