@@ -26,6 +26,8 @@
     @Html.SelectControlGroupFor(x => x.Account_AccountID, Model.Accounts, "Please select...", new { @class = "account-dropdown" })
 
     @Html.HiddenFor(x => x.TransactionID)
+    
+    @Html.HiddenFor(x => x.TransferGUID)
 
     @Html.HiddenFor(x => x.RedirectAfterSubmitUrl)
 

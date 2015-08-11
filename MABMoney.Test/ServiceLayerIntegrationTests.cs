@@ -1044,7 +1044,8 @@ namespace MABMoney.Test
                 Date = new DateTime(2015, 1, 3, 10, 15, 30),
                 Description = "UPDATED DESC",
                 Note = "UPDATED NOTE",
-                Amount = 15.50M
+                Amount = 15.50M,
+                TransferGUID = "GUIDUPDATED"
             };
 
             transactionServices.Save(dto);
@@ -1060,6 +1061,7 @@ namespace MABMoney.Test
             Assert.IsTrue(result.Description == "UPDATED DESC");
             Assert.IsTrue(result.Note == "UPDATED NOTE");
             Assert.IsTrue(result.Amount == 15.50M);
+            Assert.IsTrue(result.TransferGUID == "GUIDUPDATED");
         }
 
         [Test]
