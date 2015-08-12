@@ -122,6 +122,8 @@ namespace MABMoney.Web.Controllers
 
             // Clear the user because current balance comes from User.Accounts property
             _cache.InvalidateAllWithDependency(_cachingHelpers.GetDependencyKey(CachingDependency.User));
+            // Clear the account cache
+            _cache.InvalidateAllWithDependency(_cachingHelpers.GetDependencyKey(CachingDependency.Account));
 
             return Redirect(model.RedirectAfterSubmitUrl);
         }
