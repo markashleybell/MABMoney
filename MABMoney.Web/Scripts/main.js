@@ -141,9 +141,10 @@
             $(_ui.mobileTabSelect.val()).addClass('active');
         });
 
-        // Set up typeahead inputs (using Bootstrap 2.3.2 typeahead)
+        // Set up typeahead inputs (using Bootstrap 2.3.2 typeahead wrapped for BS3)
         $('.typeahead').typeahead({
             minlength: 1,
+            items: 15,
             source: function (query, process) {
                 $.ajax({
                     url: _basePath + 'Accounts/GetTransactionDescriptionHistory',
