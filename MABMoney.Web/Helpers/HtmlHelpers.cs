@@ -18,6 +18,11 @@ namespace MABMoney.Web.Helpers
             return TextControlGroupFor<TModel, TProperty>(htmlHelper, expression, null);
         }
 
+        public static MvcHtmlString TextAreaControlGroupFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> expression)
+        {
+            return TextAreaControlGroupFor<TModel, TProperty>(htmlHelper, expression, null);
+        }
+
         public static MvcHtmlString PasswordControlGroupFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> expression)
         {
             return PasswordControlGroupFor<TModel, TProperty>(htmlHelper, expression, null);
@@ -56,6 +61,23 @@ namespace MABMoney.Web.Helpers
             output.Append(System.Web.Mvc.Html.LabelExtensions.LabelFor(htmlHelper, expression, new { @class = "col-md-2 control-label" }));
             output.Append("<div class=\"col-md-4\">");
             output.Append(System.Web.Mvc.Html.InputExtensions.TextBoxFor(htmlHelper, expression, _baseClasses.CombineWith(htmlAttributes)));
+            output.Append("</div>");
+            output.Append("<div class=\"col-md-6\">");
+            output.Append(System.Web.Mvc.Html.ValidationExtensions.ValidationMessageFor(htmlHelper, expression));
+            output.Append("</div>");
+            output.Append("</div>");
+
+            return new MvcHtmlString(output.ToString());
+        }
+
+        public static MvcHtmlString TextAreaControlGroupFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> expression, object htmlAttributes)
+        {
+            var output = new StringBuilder();
+
+            output.Append("<div class=\"form-group\">");
+            output.Append(System.Web.Mvc.Html.LabelExtensions.LabelFor(htmlHelper, expression, new { @class = "col-md-2 control-label" }));
+            output.Append("<div class=\"col-md-4\">");
+            output.Append(System.Web.Mvc.Html.TextAreaExtensions.TextAreaFor(htmlHelper, expression, _baseClasses.CombineWith(htmlAttributes)));
             output.Append("</div>");
             output.Append("<div class=\"col-md-6\">");
             output.Append(System.Web.Mvc.Html.ValidationExtensions.ValidationMessageFor(htmlHelper, expression));

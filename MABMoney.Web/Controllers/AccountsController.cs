@@ -101,6 +101,8 @@ namespace MABMoney.Web.Controllers
         {
             var model = _accountServices.Get(id).MapTo<EditViewModel>();
             model.AccountTypes = DataHelpers.GetAccountTypeSelectOptions();
+            if (!string.IsNullOrWhiteSpace(model.TransactionDescriptionHistoryAsString))
+                model.TransactionDescriptionHistoryAsString = string.Join(Environment.NewLine, model.TransactionDescriptionHistoryAsString.Split('|').OrderBy(x => x));
             model.RedirectAfterSubmitUrl = _url.Action("Index");
             return View(model);
         }
@@ -118,6 +120,8 @@ namespace MABMoney.Web.Controllers
             }
 
             var dto = model.MapTo<AccountDTO>();
+            if (!string.IsNullOrWhiteSpace(model.TransactionDescriptionHistoryAsString))
+                dto.TransactionDescriptionHistory = model.TransactionDescriptionHistoryAsString.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToList();
             _accountServices.Save(dto);
 
             // Clear the user because current balance comes from User.Accounts property

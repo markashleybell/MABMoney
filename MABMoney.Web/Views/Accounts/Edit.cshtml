@@ -24,6 +24,8 @@
     @Html.TextControlGroupFor(x => x.DisplayOrder, new { type = "number", pattern = @"\d*" })
 
     @Html.CheckboxControlGroupFor(x => x.IncludeInNetWorth)
+    
+    @Html.TextAreaControlGroupFor(x => x.TransactionDescriptionHistoryAsString, new { rows = "6", cols = "60" })
 
     @Html.HiddenFor(x => x.AccountID)
 

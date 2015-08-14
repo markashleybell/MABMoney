@@ -29,5 +29,7 @@ namespace MABMoney.Web.Models.Accounts
         public bool Default { get; set; }
         [DisplayName("Include Balance In Net Worth")]
         public bool IncludeInNetWorth { get; set; }
+        [DisplayName("Transaction Description History")]
+        public string TransactionDescriptionHistoryAsString { get; set; }
     }
 }
