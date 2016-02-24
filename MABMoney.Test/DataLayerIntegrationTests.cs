@@ -704,7 +704,7 @@ namespace MABMoney.Test
             var session = new MABMoney.Domain.Session {
                 User_UserID = 1,
                 Key = "ADDED",
-                Expiry = new DateTime(2016, 1, 1)
+                Expiry = new DateTime(2020, 1, 1)
             };
 
             var result = repository.Add(session);
@@ -712,7 +712,7 @@ namespace MABMoney.Test
             Assert.IsTrue(result.SessionID == 5);
             Assert.IsTrue(result.User_UserID == 1);
             Assert.IsTrue(result.Key == "ADDED");
-            Assert.IsTrue(result.Expiry.Date == new DateTime(2016, 1, 1).Date);
+            Assert.IsTrue(result.Expiry.Date == new DateTime(2020, 1, 1).Date);
             Assert.IsTrue(result.CreatedBy == 1);
             Assert.IsTrue(result.CreatedDate.Date == DateTime.Now.Date);
             Assert.IsTrue(result.LastModifiedBy == 1);
@@ -798,12 +798,12 @@ namespace MABMoney.Test
             var session = repository.Get(1);
 
             session.Key = "UPDATED";
-            session.Expiry = new DateTime(2016, 2, 2);
+            session.Expiry = new DateTime(2020, 2, 2);
 
             var result = repository.Update(session);
 
             Assert.IsTrue(result.Key == "UPDATED");
-            Assert.IsTrue(result.Expiry.Date == new DateTime(2016, 2, 2).Date);
+            Assert.IsTrue(result.Expiry.Date == new DateTime(2020, 2, 2).Date);
             Assert.IsTrue(result.LastModifiedBy == 1);
             Assert.IsTrue(result.LastModifiedDate.Date == DateTime.Now.Date);
         }
@@ -814,10 +814,10 @@ namespace MABMoney.Test
         {
             var repository = new SessionRepository(_dataConnectionString, 1);
 
-            var result = repository.UpdateSessionExpiry("USER1SESSION", new DateTime(2016, 2, 2));
+            var result = repository.UpdateSessionExpiry("USER1SESSION", new DateTime(2020, 2, 2));
 
             Assert.IsTrue(result.Key == "USER1SESSION");
-            Assert.IsTrue(result.Expiry.Date == new DateTime(2016, 2, 2).Date);
+            Assert.IsTrue(result.Expiry.Date == new DateTime(2020, 2, 2).Date);
             Assert.IsTrue(result.LastModifiedBy == 1);
             Assert.IsTrue(result.LastModifiedDate.Date == DateTime.Now.Date);
         }

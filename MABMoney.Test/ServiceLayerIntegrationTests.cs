@@ -702,7 +702,7 @@ namespace MABMoney.Test
             Assert.IsTrue(data[0].SessionID == 1);
             Assert.IsTrue(data[0].User_UserID == 1);
             Assert.IsTrue(data[0].Key == "USER1SESSION");
-            Assert.IsTrue(data[0].Expiry == new DateTime(2016, 1, 1, 0, 0, 0));
+            Assert.IsTrue(data[0].Expiry == new DateTime(2020, 1, 1, 0, 0, 0));
         }
 
         [Test]
@@ -716,7 +716,7 @@ namespace MABMoney.Test
             Assert.IsTrue(result.SessionID == 1);
             Assert.IsTrue(result.User_UserID == 1);
             Assert.IsTrue(result.Key == "USER1SESSION");
-            Assert.IsTrue(result.Expiry == new DateTime(2016, 1, 1, 0, 0, 0));
+            Assert.IsTrue(result.Expiry == new DateTime(2020, 1, 1, 0, 0, 0));
         }
 
         [Test]
@@ -730,7 +730,7 @@ namespace MABMoney.Test
             Assert.IsTrue(result.SessionID == 1);
             Assert.IsTrue(result.User_UserID == 1);
             Assert.IsTrue(result.Key == "USER1SESSION");
-            Assert.IsTrue(result.Expiry == new DateTime(2016, 1, 1, 0, 0, 0));
+            Assert.IsTrue(result.Expiry == new DateTime(2020, 1, 1, 0, 0, 0));
         }
 
         [Test]
