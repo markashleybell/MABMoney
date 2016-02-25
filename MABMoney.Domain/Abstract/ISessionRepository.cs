@@ -1,11 +1,7 @@
-﻿using MABMoney.Domain;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace MABMoney.Data.Abstract
+namespace MABMoney.Domain.Abstract
 {
     public interface ISessionRepository
     {

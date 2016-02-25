@@ -1,6 +1,4 @@
-﻿using MABMoney.Domain;
-
-namespace MABMoney.Data.Abstract
+﻿namespace MABMoney.Domain.Abstract
 {
     public interface IUserRepository
     {

@@ -1,11 +1,6 @@
-﻿using MABMoney.Domain;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace MABMoney.Data.Abstract
+namespace MABMoney.Domain.Abstract
 {
     public interface ICategoryRepository
     {

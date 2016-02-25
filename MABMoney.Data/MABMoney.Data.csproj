@@ -65,13 +65,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Abstract\IBudgetRepository.cs" />
-    <Compile Include="Abstract\ICategoryRepository.cs" />
-    <Compile Include="Abstract\IUserRepository.cs" />
-    <Compile Include="Abstract\ISessionRepository.cs" />
-    <Compile Include="Abstract\ITransactionRepository.cs" />
-    <Compile Include="Abstract\ICategory_BudgetRepository.cs" />
-    <Compile Include="Abstract\IAccountRepository.cs" />
     <Compile Include="Concrete\BudgetRepository.cs" />
     <Compile Include="Concrete\CategoryRepository.cs" />
     <Compile Include="Concrete\Category_BudgetRepository.cs" />
