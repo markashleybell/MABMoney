@@ -1,14 +1,7 @@
-﻿using MABMoney.Data.Abstract;
+﻿using MABMoney.Domain;
+using MABMoney.Domain.Abstract;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MABMoney.Domain;
-using StackExchange.Profiling;
-using StackExchange.Profiling.Data;
-using Dapper;
-using System.Data;
 
 namespace MABMoney.Data.Concrete
 {

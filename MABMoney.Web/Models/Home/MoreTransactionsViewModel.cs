@@ -1,8 +1,6 @@
 ﻿using MABMoney.Services.DTO;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace MABMoney.Web.Models.Home
 {

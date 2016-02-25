@@ -1,20 +1,14 @@
 ﻿using MABMoney.Caching;
-using MABMoney.Data;
-using MABMoney.Data.Abstract;
+
 using MABMoney.Data.Concrete;
-using MABMoney.Domain;
+using MABMoney.Domain.Abstract;
 using MABMoney.Services;
-using MABMoney.Web.Helpers;
-using Ninject.Activation;
 using Ninject.Modules;
 using Ninject.Web.Common;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
 using System.Text;
 using System.Web;
-using System.Web.Mvc;
 
 namespace MABMoney.Web.Infrastructure
 {

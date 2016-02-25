@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using MABMoney.Services.DTO;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
-using MABMoney.Services.DTO;
-using System.ComponentModel;
 
 namespace MABMoney.Web.Models.Accounts
 {

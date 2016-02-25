@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using Dapper;
+using StackExchange.Profiling;
+using StackExchange.Profiling.Data;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using Dapper;
-using StackExchange.Profiling;
-using StackExchange.Profiling.Data;
 
 namespace MABMoney.Data.Concrete
 {

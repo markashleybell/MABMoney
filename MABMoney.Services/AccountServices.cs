@@ -1,12 +1,9 @@
-﻿using System;
+﻿using mab.lib.SimpleMapper;
+using MABMoney.Domain;
+using MABMoney.Domain.Abstract;
+using MABMoney.Services.DTO;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using MABMoney.Services.DTO;
-using MABMoney.Data;
-using MABMoney.Domain;
-using mab.lib.SimpleMapper;
-using MABMoney.Data.Abstract;
 
 namespace MABMoney.Services
 {

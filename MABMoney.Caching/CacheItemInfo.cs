@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace MABMoney.Caching
+﻿namespace MABMoney.Caching
 {
     public class CacheItemInfo
     {

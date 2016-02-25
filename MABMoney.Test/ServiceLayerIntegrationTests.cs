@@ -1,7 +1,8 @@
 ﻿using Dapper;
-using MABMoney.Data.Abstract;
+
 using MABMoney.Data.Concrete;
 using MABMoney.Domain;
+using MABMoney.Domain.Abstract;
 using MABMoney.Services;
 using MABMoney.Services.DTO;
 using NUnit.Framework;
