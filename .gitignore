@@ -253,3 +253,4 @@ db/all.sql
 db/recreate-db-and-import.sql
 db/procedures.sql
 db/permissions.sql
+!db/[Rr]eleases/
