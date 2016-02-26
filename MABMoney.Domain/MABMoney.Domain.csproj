@@ -54,13 +54,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Abstract\IAccountRepository.cs" />
+    <Compile Include="Abstract\IBudgetRepository.cs" />
+    <Compile Include="Abstract\ICategoryRepository.cs" />
+    <Compile Include="Abstract\ICategory_BudgetRepository.cs" />
+    <Compile Include="Abstract\ISessionRepository.cs" />
+    <Compile Include="Abstract\ITransactionRepository.cs" />
+    <Compile Include="Abstract\IUserRepository.cs" />
     <Compile Include="Account.cs" />
     <Compile Include="AccountType.cs" />
     <Compile Include="Budget.cs" />
     <Compile Include="Category.cs" />
     <Compile Include="CategoryType.cs" />
     <Compile Include="Category_Budget.cs" />
-    <Compile Include="AuditableEntityBase.cs" />
+    <Compile Include="Abstract\Auditable.cs" />
     <Compile Include="Session.cs" />
     <Compile Include="Transaction.cs" />
     <Compile Include="User.cs" />

@@ -1,8 +1,6 @@
-﻿using System;
+﻿using MABMoney.Services.DTO;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using MABMoney.Services.DTO;
 using System.Web.Mvc;
 
 namespace MABMoney.Web.Models.Transactions

@@ -1,16 +1,6 @@
-﻿using MABMoney.Data.Abstract;
-using mab.lib.SimpleMapper;
-using System;
+﻿using MABMoney.Domain;
+using MABMoney.Domain.Abstract;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MABMoney.Domain;
-using StackExchange.Profiling;
-using StackExchange.Profiling.Data;
-using Dapper;
-using System.Data;
-using System.Data.SqlClient;
 
 namespace MABMoney.Data.Concrete
 {

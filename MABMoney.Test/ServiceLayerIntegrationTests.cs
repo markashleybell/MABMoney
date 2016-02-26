@@ -1,21 +1,16 @@
-﻿using Microsoft.SqlServer.Management.Common;
-using Microsoft.SqlServer.Management.Smo;
+﻿using Dapper;
+
+using MABMoney.Data.Concrete;
+using MABMoney.Domain;
+using MABMoney.Domain.Abstract;
+using MABMoney.Services;
+using MABMoney.Services.DTO;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Dapper;
-using System.Configuration;
-using MABMoney.Data.Concrete;
-using MABMoney.Data.Abstract;
-using System.IO;
-using MABMoney.Services;
-using MABMoney.Services.DTO;
-using System.Data;
-using MABMoney.Domain;
 
 namespace MABMoney.Test
 {
@@ -33,25 +28,6 @@ namespace MABMoney.Test
         private ISessionRepository _sessionRepository;
         private ITransactionRepository _transactionRepository;
         private IUserRepository _userRepository;
-
-        private void DeleteTestDatabase(string connectionString)
-        {
-            // Delete the test database
-            using (var conn = new SqlConnection(connectionString))
-            {
-                conn.Open();
-
-                var serverConnection = new ServerConnection(conn);
-                var server = new Server(serverConnection);
-
-                var exists = conn.ExecuteScalar("SELECT name FROM master.dbo.sysdatabases WHERE name = N'MABMoney_TEST'");
-
-                if (exists != null)
-                {
-                    server.KillDatabase("MABMoney_TEST");
-                }
-            }
-        }
 
         private T GetSingle<T>(string sql)
         {
@@ -79,14 +55,14 @@ namespace MABMoney.Test
 
         #region SetUp
 
-        [TestFixtureSetUp]
-        public void TestFixtureSetUp()
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
         {
             _setupConnectionString = ConfigurationManager.AppSettings["SetUpDbConnectionString"];
             _dataConnectionString = ConfigurationManager.AppSettings["DataDbConnectionString"];
             _sqlScriptSource = ConfigurationManager.AppSettings["SqlScriptSource"];
 
-            DeleteTestDatabase(_setupConnectionString);
+            TestUtils.DeleteTestDatabase(_setupConnectionString);
 
             // TODO: Make sure SQL build scripts have been run
 
@@ -102,33 +78,8 @@ namespace MABMoney.Test
         [SetUp]
         public void SetUp()
         {
-            DeleteTestDatabase(_setupConnectionString);
-
-            // Create the test database
-            using (var conn = new SqlConnection(_setupConnectionString))
-            {
-                conn.Open();
-                conn.Execute("CREATE DATABASE [MABMoney_TEST]");
-            }
-
-            // Open the test database and create the schema
-            using (var conn = new SqlConnection(_dataConnectionString))
-            {
-                conn.Open();
-
-                var serverConnection = new ServerConnection(conn);
-                var server = new Server(serverConnection);
-
-                var schemaSql = File.ReadAllText(_sqlScriptSource + @"\all.sql");
-
-                server.ConnectionContext.ExecuteNonQuery(schemaSql);
-
-                var seedSql = File.ReadAllText(_sqlScriptSource + @"\test.sql");
-
-                server.ConnectionContext.ExecuteNonQuery(seedSql);
-
-                serverConnection.Disconnect();
-            }
+            TestUtils.DeleteTestDatabase(_setupConnectionString);
+            TestUtils.CreateTestDatabase(_setupConnectionString, _sqlScriptSource);
         }
 
         #endregion SetUp
@@ -702,7 +653,7 @@ namespace MABMoney.Test
             Assert.IsTrue(data[0].SessionID == 1);
             Assert.IsTrue(data[0].User_UserID == 1);
             Assert.IsTrue(data[0].Key == "USER1SESSION");
-            Assert.IsTrue(data[0].Expiry == new DateTime(2016, 1, 1, 0, 0, 0));
+            Assert.IsTrue(data[0].Expiry == new DateTime(2020, 1, 1, 0, 0, 0));
         }
 
         [Test]
@@ -716,7 +667,7 @@ namespace MABMoney.Test
             Assert.IsTrue(result.SessionID == 1);
             Assert.IsTrue(result.User_UserID == 1);
             Assert.IsTrue(result.Key == "USER1SESSION");
-            Assert.IsTrue(result.Expiry == new DateTime(2016, 1, 1, 0, 0, 0));
+            Assert.IsTrue(result.Expiry == new DateTime(2020, 1, 1, 0, 0, 0));
         }
 
         [Test]
@@ -730,7 +681,7 @@ namespace MABMoney.Test
             Assert.IsTrue(result.SessionID == 1);
             Assert.IsTrue(result.User_UserID == 1);
             Assert.IsTrue(result.Key == "USER1SESSION");
-            Assert.IsTrue(result.Expiry == new DateTime(2016, 1, 1, 0, 0, 0));
+            Assert.IsTrue(result.Expiry == new DateTime(2020, 1, 1, 0, 0, 0));
         }
 
         [Test]
@@ -1297,13 +1248,13 @@ namespace MABMoney.Test
         [TearDown]
         public void TearDown()
         {
-            DeleteTestDatabase(_setupConnectionString);
+            TestUtils.DeleteTestDatabase(_setupConnectionString);
         }
 
-        [TestFixtureTearDown]
-        public void TestFixtureTearDown()
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
         {
-            DeleteTestDatabase(_setupConnectionString);
+            TestUtils.DeleteTestDatabase(_setupConnectionString);
         }
 
         #endregion TearDown

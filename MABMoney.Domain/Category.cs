@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using MABMoney.Domain.Abstract;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MABMoney.Domain
 {
-    public class Category : AuditableEntityBase
+    public class Category : Auditable
     {
         public int CategoryID { get; set; }
         [Required]

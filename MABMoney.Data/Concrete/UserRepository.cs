@@ -1,7 +1,5 @@
-﻿using System;
-using mab.lib.SimpleMapper;
-using MABMoney.Data.Abstract;
-using MABMoney.Domain;
+﻿using MABMoney.Domain;
+using MABMoney.Domain.Abstract;
 
 namespace MABMoney.Data.Concrete
 {

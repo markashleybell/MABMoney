@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
+﻿using MABMoney.Domain.Abstract;
 
 namespace MABMoney.Domain
 {
-    public class Category_Budget : AuditableEntityBase
+    public class Category_Budget : Auditable
     {
         public int Budget_BudgetID { get; set; }
         public int Category_CategoryID { get; set; }
