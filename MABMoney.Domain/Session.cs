@@ -1,9 +1,10 @@
-﻿using System;
+﻿using MABMoney.Domain.Abstract;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace MABMoney.Domain
 {
-    public class Session : AuditableEntityBase
+    public class Session : Auditable
     {
         public int SessionID { get; set; }
         [Required]

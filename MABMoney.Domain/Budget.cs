@@ -1,8 +1,9 @@
-﻿using System;
+﻿using MABMoney.Domain.Abstract;
+using System;
 
 namespace MABMoney.Domain
 {
-    public class Budget : AuditableEntityBase
+    public class Budget : Auditable
     {
         public int BudgetID { get; set; }
         public DateTime Start { get; set; }

@@ -67,7 +67,7 @@
     <Compile Include="Category.cs" />
     <Compile Include="CategoryType.cs" />
     <Compile Include="Category_Budget.cs" />
-    <Compile Include="AuditableEntityBase.cs" />
+    <Compile Include="Abstract\Auditable.cs" />
     <Compile Include="Session.cs" />
     <Compile Include="Transaction.cs" />
     <Compile Include="User.cs" />

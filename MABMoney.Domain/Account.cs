@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MABMoney.Domain.Abstract;
+using System.ComponentModel.DataAnnotations;
 
 namespace MABMoney.Domain
 {
-    public class Account : AuditableEntityBase
+    public class Account : Auditable
     {
         public int AccountID { get; set; }
         [Required]

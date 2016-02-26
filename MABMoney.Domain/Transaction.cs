@@ -1,8 +1,9 @@
-﻿using System;
+﻿using MABMoney.Domain.Abstract;
+using System;
 
 namespace MABMoney.Domain
 {
-    public class Transaction : AuditableEntityBase
+    public class Transaction : Auditable
     {
         public int TransactionID { get; set; }
         public DateTime Date { get; set; }

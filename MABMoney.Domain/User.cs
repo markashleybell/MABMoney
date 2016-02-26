@@ -1,9 +1,10 @@
-﻿using System;
+﻿using MABMoney.Domain.Abstract;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace MABMoney.Domain
 {
-    public class User : AuditableEntityBase
+    public class User : Auditable
     {
         public int UserID { get; set; }
         public string Forename { get; set; }

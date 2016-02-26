@@ -1,6 +1,8 @@
-﻿namespace MABMoney.Domain
+﻿using MABMoney.Domain.Abstract;
+
+namespace MABMoney.Domain
 {
-    public class Category_Budget : AuditableEntityBase
+    public class Category_Budget : Auditable
     {
         public int Budget_BudgetID { get; set; }
         public int Category_CategoryID { get; set; }
