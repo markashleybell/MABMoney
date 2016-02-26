@@ -8,9 +8,9 @@ namespace MABMoney.Web
         {
             bundles.UseCdn = true;
 
-            var jqueryCdnUrl = "//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js";
-            var bootstrapJsCdnUrl = "//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js";
-            var bootstrapCssCdnUrl = "//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css";
+            var jqueryCdnUrl = "//ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js";
+            var bootstrapJsCdnUrl = "//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js";
+            var bootstrapCssCdnUrl = "//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css";
 
             bundles.Add(new ScriptBundle("~/Scripts/jquery", jqueryCdnUrl).Include(
                 "~/Scripts/jquery-{version}.js")
