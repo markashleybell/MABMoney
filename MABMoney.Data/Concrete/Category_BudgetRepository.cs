@@ -37,6 +37,7 @@ namespace MABMoney.Data.Concrete
         {
             return AddOrUpdate<Category_Budget>("mm_Categories_Budgets_Create", new {
                 UserID = _userId,
+                GUID = category_budget.GUID,
                 Budget_BudgetID = category_budget.Budget_BudgetID,
                 Category_CategoryID = category_budget.Category_CategoryID,
                 Amount = category_budget.Amount

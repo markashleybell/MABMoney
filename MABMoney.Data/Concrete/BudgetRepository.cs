@@ -23,6 +23,7 @@ namespace MABMoney.Data.Concrete
         {
             return AddOrUpdate<Budget>("mm_Budgets_Create", new {
                 UserID = _userId,
+                GUID = budget.GUID,
                 Account_AccountID = budget.Account_AccountID,
                 Start = budget.Start,
                 End = budget.End

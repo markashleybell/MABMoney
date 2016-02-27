@@ -14,6 +14,7 @@ AS
 
         SELECT 
             [UserID], 
+            [GUID],
             [Forename], 
             [Surname], 
             [Email], 
@@ -42,6 +43,7 @@ END
 GO
 
 CREATE PROC [dbo].[mm_Users_Create] 
+    @GUID uniqueidentifier,
     @Forename nvarchar(MAX) = NULL,
     @Surname nvarchar(MAX) = NULL,
     @Email nvarchar(MAX),
@@ -56,6 +58,7 @@ AS
     
         INSERT INTO 
             [dbo].[Users] (
+                [GUID],
                 [Forename], 
                 [Surname], 
                 [Email], 
@@ -66,6 +69,7 @@ AS
                 [LastModifiedDate]
             )
         SELECT 
+            @GUID,
             @Forename, 
             @Surname, 
             @Email, 
@@ -77,6 +81,7 @@ AS
         
         SELECT 
             [UserID], 
+            [GUID],
             [Forename], 
             [Surname], 
             [Email], 
@@ -118,8 +123,8 @@ AS
     
     BEGIN TRAN
 
-		DECLARE @Now datetime = GETDATE()
-		
+        DECLARE @Now datetime = GETDATE()
+        
         UPDATE 
             [dbo].[Users]
         SET    
@@ -136,6 +141,7 @@ AS
         
         SELECT 
             [UserID], 
+            [GUID],
             [Forename], 
             [Surname], 
             [Email], 
@@ -182,6 +188,7 @@ AS
             
         SELECT 
             [UserID], 
+            [GUID],
             [Forename], 
             [Surname], 
             [Email], 
@@ -219,6 +226,7 @@ AS
 
         SELECT 
             [UserID], 
+            [GUID],
             [Forename], 
             [Surname], 
             [Email], 
@@ -256,6 +264,7 @@ AS
 
         SELECT 
             [UserID], 
+            [GUID],
             [Forename], 
             [Surname], 
             [Email], 

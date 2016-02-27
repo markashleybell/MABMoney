@@ -17,6 +17,7 @@ AS
         SELECT 
             [cb].[Budget_BudgetID], 
             [cb].[Category_CategoryID], 
+            [cb].[GUID],
             [cb].[Amount], 
             [cb].[CreatedBy], 
             [cb].[CreatedDate], 
@@ -39,8 +40,8 @@ AS
             [a].[User_UserID] = @UserID
         AND
             [cb].[Budget_BudgetID] = @Budget_BudgetID
-	    AND 
-	        [cb].[Category_CategoryID] = CASE WHEN @Category_CategoryID IS NULL THEN [cb].[Category_CategoryID] ELSE @Category_CategoryID END
+        AND 
+            [cb].[Category_CategoryID] = CASE WHEN @Category_CategoryID IS NULL THEN [cb].[Category_CategoryID] ELSE @Category_CategoryID END
 
     COMMIT
 GO
@@ -63,6 +64,7 @@ AS
         SELECT 
             [cb].[Budget_BudgetID], 
             [cb].[Category_CategoryID], 
+            [cb].[GUID],
             [cb].[Amount], 
             [cb].[CreatedBy], 
             [cb].[CreatedDate], 
@@ -103,6 +105,7 @@ GO
 
 CREATE PROC [dbo].[mm_Categories_Budgets_Create] 
     @UserID int,
+    @GUID uniqueidentifier,
     @Budget_BudgetID int,
     @Category_CategoryID int,
     @Amount decimal(18, 2)
@@ -125,8 +128,8 @@ AS
                 [a].[User_UserID] = @UserID 
             AND
                 [b].[BudgetID] = @Budget_BudgetID
-	        AND 
-	            [c].[CategoryID] = @Category_CategoryID
+            AND 
+                [c].[CategoryID] = @Category_CategoryID
         )
         BEGIN
             
@@ -136,6 +139,7 @@ AS
                 [dbo].[Categories_Budgets] (
                     [Budget_BudgetID], 
                     [Category_CategoryID], 
+                    [GUID],
                     [Amount], 
                     [CreatedBy], 
                     [CreatedDate], 
@@ -145,6 +149,7 @@ AS
             SELECT 
                 @Budget_BudgetID, 
                 @Category_CategoryID, 
+                @GUID,
                 @Amount, 
                 @UserID, 
                 @Now, 
@@ -154,6 +159,7 @@ AS
             SELECT 
                 [cb].[Budget_BudgetID], 
                 [cb].[Category_CategoryID], 
+                [cb].[GUID],
                 [cb].[Amount], 
                 [cb].[CreatedBy], 
                 [cb].[CreatedDate], 
@@ -174,9 +180,9 @@ AS
                 [dbo].[vAccounts] [a] ON [a].[AccountID] = [c].[Account_AccountID] AND [a].[AccountID] = [b].[Account_AccountID]
             WHERE  
                 [cb].[Budget_BudgetID] = @Budget_BudgetID
-	        AND 
-	            [cb].[Category_CategoryID] = @Category_CategoryID
-	            
+            AND 
+                [cb].[Category_CategoryID] = @Category_CategoryID
+                
         END
            
     COMMIT
@@ -212,8 +218,8 @@ AS
                 [a].[User_UserID] = @UserID 
             AND
                 [b].[BudgetID] = @Budget_BudgetID
-	        AND 
-	            [c].[CategoryID] = @Category_CategoryID
+            AND 
+                [c].[CategoryID] = @Category_CategoryID
         )
         BEGIN
             
@@ -227,11 +233,12 @@ AS
                 [LastModifiedDate] = @Now
             WHERE  
                 [Budget_BudgetID] = @Budget_BudgetID
-	        AND 
-	            [Category_CategoryID] = @Category_CategoryID
+            AND 
+                [Category_CategoryID] = @Category_CategoryID
             
             SELECT 
                 [cb].[Budget_BudgetID], 
+                [cb].[GUID],
                 [cb].[Category_CategoryID], 
                 [cb].[Amount], 
                 [cb].[CreatedBy], 
@@ -253,9 +260,9 @@ AS
                 [dbo].[vAccounts] [a] ON [a].[AccountID] = [c].[Account_AccountID] AND [a].[AccountID] = [b].[Account_AccountID]
             WHERE  
                 [cb].[Budget_BudgetID] = @Budget_BudgetID
-	        AND 
-	            [cb].[Category_CategoryID] = @Category_CategoryID
-	        
+            AND 
+                [cb].[Category_CategoryID] = @Category_CategoryID
+            
         END
 
     COMMIT
@@ -290,8 +297,8 @@ AS
                 [a].[User_UserID] = @UserID 
             AND
                 [b].[BudgetID] = @Budget_BudgetID
-	        AND 
-	            [c].[CategoryID] = @Category_CategoryID
+            AND 
+                [c].[CategoryID] = @Category_CategoryID
         )
         BEGIN
         
@@ -313,12 +320,13 @@ AS
                 [a].[User_UserID] = @UserID
             AND
                 [cb].[Budget_BudgetID] = @Budget_BudgetID
-	        AND 
-	            [cb].[Category_CategoryID] = @Category_CategoryID
-	        
-	        SELECT 
+            AND 
+                [cb].[Category_CategoryID] = @Category_CategoryID
+            
+            SELECT 
                 [cb].[Budget_BudgetID], 
                 [cb].[Category_CategoryID], 
+                [cb].[GUID],
                 [cb].[Amount], 
                 [cb].[CreatedBy], 
                 [cb].[CreatedDate], 
@@ -339,9 +347,9 @@ AS
                 [dbo].[Accounts] [a] ON [a].[AccountID] = [c].[Account_AccountID] AND [a].[AccountID] = [b].[Account_AccountID]
             WHERE  
                 [cb].[Budget_BudgetID] = @Budget_BudgetID
-	        AND 
-	            [cb].[Category_CategoryID] = @Category_CategoryID
-	        
+            AND 
+                [cb].[Category_CategoryID] = @Category_CategoryID
+            
         END
 
     COMMIT

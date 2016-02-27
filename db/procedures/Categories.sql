@@ -16,6 +16,7 @@ AS
 
         SELECT 
             [c].[CategoryID], 
+            [c].[GUID],
             [c].[Name], 
             [c].[Account_AccountID], 
             [c].[Type], 
@@ -51,6 +52,7 @@ GO
 
 CREATE PROC [dbo].[mm_Categories_Create] 
     @UserID int,
+    @GUID uniqueidentifier,
     @Name nvarchar(MAX),
     @Account_AccountID int,
     @Type int
@@ -119,6 +121,7 @@ AS
                 
                 SELECT 
                     [c].[CategoryID], 
+                    [c].[GUID],
                     [c].[Name], 
                     [c].[Account_AccountID], 
                     [c].[Type], 
@@ -143,6 +146,7 @@ AS
             
                 INSERT INTO 
                     [dbo].[Categories] (
+                        [GUID],
                         [Name], 
                         [Account_AccountID], 
                         [Type], 
@@ -152,6 +156,7 @@ AS
                         [LastModifiedDate]
                     )
                 SELECT 
+                    @GUID,
                     @Name, 
                     @Account_AccountID, 
                     @Type, 
@@ -161,7 +166,8 @@ AS
                     @Now
                 
                 SELECT 
-                    [c].[CategoryID], 
+                    [c].[CategoryID],
+                    [c].[GUID], 
                     [c].[Name], 
                     [c].[Account_AccountID], 
                     [c].[Type], 
@@ -231,7 +237,8 @@ AS
                 [CategoryID] = @CategoryID
             
             SELECT 
-                [c].[CategoryID], 
+                [c].[CategoryID],
+                [c].[GUID], 
                 [c].[Name], 
                 [c].[Account_AccountID], 
                 [c].[Type], 
@@ -298,7 +305,8 @@ AS
                 [c].[CategoryID] = @CategoryID
                 
             SELECT 
-                [c].[CategoryID], 
+                [c].[CategoryID],
+                [c].[GUID], 
                 [c].[Name], 
                 [c].[Account_AccountID], 
                 [c].[Type], 

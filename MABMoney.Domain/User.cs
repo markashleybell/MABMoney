@@ -7,6 +7,7 @@ namespace MABMoney.Domain
     public class User : Auditable
     {
         public int UserID { get; set; }
+        public Guid GUID { get; set; }
         public string Forename { get; set; }
         public string Surname { get; set; }
         [Required]

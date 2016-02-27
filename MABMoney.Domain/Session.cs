@@ -7,6 +7,7 @@ namespace MABMoney.Domain
     public class Session : Auditable
     {
         public int SessionID { get; set; }
+        public Guid GUID { get; set; }
         [Required]
         public string Key { get; set; }
         public DateTime Expiry { get; set; }

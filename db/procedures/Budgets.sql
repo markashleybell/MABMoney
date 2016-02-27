@@ -15,6 +15,7 @@ AS
 
         SELECT 
             [b].[BudgetID], 
+            [b].[GUID],
             [b].[Start], 
             [b].[End], 
             [b].[Account_AccountID], 
@@ -55,7 +56,7 @@ AS
 
     BEGIN TRAN
     
-		IF EXISTS(
+        IF EXISTS(
             SELECT 
                 [AccountID] 
             FROM 
@@ -67,32 +68,33 @@ AS
         )
         BEGIN
 
-			SELECT TOP 1
-				[b].[BudgetID], 
-				[b].[Start], 
-				[b].[End], 
-				[b].[Account_AccountID], 
-				[b].[CreatedBy], 
-				[b].[CreatedDate], 
-				[b].[LastModifiedBy], 
-				[b].[LastModifiedDate], 
-				[b].[Deleted], 
-				[b].[DeletedBy], 
-				[b].[DeletedDate] 
-			FROM   
-				[dbo].[vBudgets] [b]
-			INNER JOIN
-				[dbo].[vAccounts] [a] ON [a].[AccountID] = [b].[Account_AccountID]
-			WHERE  
-				[a].[User_UserID] = @UserID
-			AND 
+            SELECT TOP 1
+                [b].[BudgetID], 
+                [b].[GUID],
+                [b].[Start], 
+                [b].[End], 
+                [b].[Account_AccountID], 
+                [b].[CreatedBy], 
+                [b].[CreatedDate], 
+                [b].[LastModifiedBy], 
+                [b].[LastModifiedDate], 
+                [b].[Deleted], 
+                [b].[DeletedBy], 
+                [b].[DeletedDate] 
+            FROM   
+                [dbo].[vBudgets] [b]
+            INNER JOIN
+                [dbo].[vAccounts] [a] ON [a].[AccountID] = [b].[Account_AccountID]
+            WHERE  
+                [a].[User_UserID] = @UserID
+            AND 
                 [a].[AccountID] = @AccountID
             AND
                 [b].[End] >= @Date
-			ORDER BY
-				[b].[BudgetID] DESC
-		
-		END
+            ORDER BY
+                [b].[BudgetID] DESC
+        
+        END
 
     COMMIT
 GO
@@ -112,7 +114,7 @@ AS
 
     BEGIN TRAN
     
-		IF EXISTS(
+        IF EXISTS(
             SELECT 
                 [AccountID] 
             FROM 
@@ -124,18 +126,18 @@ AS
         )
         BEGIN
 
-			SELECT 
-				COUNT(*) 
-			FROM   
-				[dbo].[vBudgets] [b]
-			INNER JOIN
-				[dbo].[vAccounts] [a] ON [a].[AccountID] = [b].[Account_AccountID]
-			WHERE  
-				[a].[User_UserID] = @UserID
-			AND 
+            SELECT 
+                COUNT(*) 
+            FROM   
+                [dbo].[vBudgets] [b]
+            INNER JOIN
+                [dbo].[vAccounts] [a] ON [a].[AccountID] = [b].[Account_AccountID]
+            WHERE  
+                [a].[User_UserID] = @UserID
+            AND 
                 [a].[AccountID] = @AccountID
                 
-		END
+        END
 
     COMMIT
 GO
@@ -148,6 +150,7 @@ GO
 
 CREATE PROC [dbo].[mm_Budgets_Create] 
     @UserID int,
+    @GUID uniqueidentifier,
     @Start datetime,
     @End datetime,
     @Account_AccountID int
@@ -173,6 +176,7 @@ AS
     
             INSERT INTO 
                 [dbo].[Budgets] (
+                    [GUID],
                     [Start], 
                     [End], 
                     [Account_AccountID], 
@@ -182,6 +186,7 @@ AS
                     [LastModifiedDate]
                 )
             SELECT 
+                @GUID,
                 @Start, 
                 @End, 
                 @Account_AccountID, 
@@ -192,6 +197,7 @@ AS
             
             SELECT 
                 [BudgetID], 
+                [GUID],
                 [Start], 
                 [End], 
                 [Account_AccountID], 
@@ -257,6 +263,7 @@ AS
             
             SELECT 
                 [BudgetID], 
+                [GUID],
                 [Start], 
                 [End], 
                 [Account_AccountID], 
@@ -321,6 +328,7 @@ AS
                 
             SELECT 
                 [b].[BudgetID], 
+                [b].[GUID],
                 [b].[Start], 
                 [b].[End], 
                 [b].[Account_AccountID], 

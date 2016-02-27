@@ -6,6 +6,7 @@ namespace MABMoney.Domain
     public class Transaction : Auditable
     {
         public int TransactionID { get; set; }
+        public Guid GUID { get; set; }
         public DateTime Date { get; set; }
         public string Description { get; set; }
         public string Note { get; set; }

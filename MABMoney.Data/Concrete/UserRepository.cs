@@ -18,6 +18,7 @@ namespace MABMoney.Data.Concrete
         public User Add(User user)
         {
             return AddOrUpdate<User>("mm_Users_Create", new {
+                GUID = user.GUID,
                 Forename = user.Forename,
                 Surname = user.Surname,
                 Email = user.Email,

@@ -1,98 +1,102 @@
 IF OBJECT_ID('[dbo].[Users]') IS NULL
 BEGIN
-	CREATE TABLE [dbo].[Users] (
-		[UserID] [int] IDENTITY(1,1) NOT NULL,
-		[Forename] [nvarchar](max) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
-		[Surname] [nvarchar](max) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
-		[Email] [nvarchar](max) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
-		[Password] [nvarchar](max) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
-		[CreatedBy] [int] NOT NULL,
-		[CreatedDate] [datetime] NOT NULL,
-		[LastModifiedBy] [int] NOT NULL,
-		[LastModifiedDate] [datetime] NOT NULL,
-		[Deleted] [bit] NOT NULL CONSTRAINT [DF_dbo.Users_Deleted] DEFAULT 0,
-		[DeletedBy] [int] NULL,
-		[DeletedDate] [datetime] NULL,
-		[PasswordResetGUID] [nvarchar](512) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
-		[PasswordResetExpiry] [datetime] NULL,
-		CONSTRAINT [PK_dbo.Users] PRIMARY KEY CLUSTERED (
-			[UserID] ASC
-		) WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
-	)
+    CREATE TABLE [dbo].[Users] (
+        [UserID] [int] IDENTITY(1,1) NOT NULL,
+        [GUID] [uniqueidentifier] NOT NULL,
+        [Forename] [nvarchar](max) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+        [Surname] [nvarchar](max) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+        [Email] [nvarchar](max) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
+        [Password] [nvarchar](max) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
+        [CreatedBy] [int] NOT NULL,
+        [CreatedDate] [datetime] NOT NULL,
+        [LastModifiedBy] [int] NOT NULL,
+        [LastModifiedDate] [datetime] NOT NULL,
+        [Deleted] [bit] NOT NULL CONSTRAINT [DF_dbo.Users_Deleted] DEFAULT 0,
+        [DeletedBy] [int] NULL,
+        [DeletedDate] [datetime] NULL,
+        [PasswordResetGUID] [nvarchar](512) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+        [PasswordResetExpiry] [datetime] NULL,
+        CONSTRAINT [PK_dbo.Users] PRIMARY KEY CLUSTERED (
+            [UserID] ASC
+        ) WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+    )
 END
 GO
 
 IF OBJECT_ID('[dbo].[Categories]') IS NULL
 BEGIN
-	CREATE TABLE [dbo].[Categories] (
-		[CategoryID] [int] IDENTITY(1,1) NOT NULL,
-		[Name] [nvarchar](max) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
-		[Account_AccountID] [int] NOT NULL,
-		[Type] [int] NOT NULL,
-		[CreatedBy] [int] NOT NULL,
-		[CreatedDate] [datetime] NOT NULL,
-		[LastModifiedBy] [int] NOT NULL,
-		[LastModifiedDate] [datetime] NOT NULL,
-		[Deleted] [bit] NOT NULL CONSTRAINT [DF_dbo.Categories_Deleted] DEFAULT 0,
-		[DeletedBy] [int] NULL,
-		[DeletedDate] [datetime] NULL,
-		CONSTRAINT [PK_dbo.Categories] PRIMARY KEY CLUSTERED (
-			[CategoryID] ASC
-		) WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
-	)
+    CREATE TABLE [dbo].[Categories] (
+        [CategoryID] [int] IDENTITY(1,1) NOT NULL,
+        [GUID] [uniqueidentifier] NOT NULL,
+        [Name] [nvarchar](max) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
+        [Account_AccountID] [int] NOT NULL,
+        [Type] [int] NOT NULL,
+        [CreatedBy] [int] NOT NULL,
+        [CreatedDate] [datetime] NOT NULL,
+        [LastModifiedBy] [int] NOT NULL,
+        [LastModifiedDate] [datetime] NOT NULL,
+        [Deleted] [bit] NOT NULL CONSTRAINT [DF_dbo.Categories_Deleted] DEFAULT 0,
+        [DeletedBy] [int] NULL,
+        [DeletedDate] [datetime] NULL,
+        CONSTRAINT [PK_dbo.Categories] PRIMARY KEY CLUSTERED (
+            [CategoryID] ASC
+        ) WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+    )
 END
 GO
 
 IF OBJECT_ID('[dbo].[Transactions]') IS NULL
 BEGIN
-	CREATE TABLE [dbo].[Transactions] (
-		[TransactionID] [int] IDENTITY(1,1) NOT NULL,
-		[Date] [datetime] NOT NULL,
-		[Description] [nvarchar](max) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
-		[Amount] [decimal](18, 2) NOT NULL,
-		[Category_CategoryID] [int] NULL,
-		[Account_AccountID] [int] NOT NULL,
-		[CreatedBy] [int] NOT NULL,
-		[CreatedDate] [datetime] NOT NULL,
-		[LastModifiedBy] [int] NOT NULL,
-		[LastModifiedDate] [datetime] NOT NULL,
-		[Deleted] [bit] NOT NULL CONSTRAINT [DF_dbo.Transactions_Deleted] DEFAULT 0,
-		[DeletedBy] [int] NULL,
-		[DeletedDate] [datetime] NULL,
-		[TransferGUID] [nvarchar](max) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
-		[Note] [nvarchar](max) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
-		CONSTRAINT [PK_dbo.Transactions] PRIMARY KEY CLUSTERED (
-			[TransactionID] ASC
-		) WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
-	)
+    CREATE TABLE [dbo].[Transactions] (
+        [TransactionID] [int] IDENTITY(1,1) NOT NULL,
+        [GUID] [uniqueidentifier] NOT NULL,
+        [Date] [datetime] NOT NULL,
+        [Description] [nvarchar](max) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+        [Amount] [decimal](18, 2) NOT NULL,
+        [Category_CategoryID] [int] NULL,
+        [Account_AccountID] [int] NOT NULL,
+        [CreatedBy] [int] NOT NULL,
+        [CreatedDate] [datetime] NOT NULL,
+        [LastModifiedBy] [int] NOT NULL,
+        [LastModifiedDate] [datetime] NOT NULL,
+        [Deleted] [bit] NOT NULL CONSTRAINT [DF_dbo.Transactions_Deleted] DEFAULT 0,
+        [DeletedBy] [int] NULL,
+        [DeletedDate] [datetime] NULL,
+        [TransferGUID] [nvarchar](max) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+        [Note] [nvarchar](max) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+        CONSTRAINT [PK_dbo.Transactions] PRIMARY KEY CLUSTERED (
+            [TransactionID] ASC
+        ) WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+    )
 END
 
-IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[Transactions]') AND name = N'IX_dbo.Transactions_Date_Account_AccountID_Deleted')
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[Transactions]') AND name = N'IX_dbo.Transactions')
 BEGIN
-	CREATE NONCLUSTERED INDEX [IX_dbo.Transactions_Date_Account_AccountID_Deleted] ON [dbo].[Transactions] (
-		[Date] ASC,
-		[Account_AccountID] ASC,
-		[Deleted] ASC
-	)
-	INCLUDE ( 
-		[TransactionID],
-		[Description],
-		[Amount],
-		[Category_CategoryID],
-		[CreatedBy],
-		[CreatedDate],
-		[LastModifiedBy],
-		[LastModifiedDate],
-		[DeletedBy],
-		[DeletedDate],
-		[TransferGUID]
-	) WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
+    CREATE NONCLUSTERED INDEX [IX_dbo.Transactions] ON [dbo].[Transactions] (
+        [Date] ASC,
+        [Account_AccountID] ASC,
+        [Deleted] ASC
+    )
+    INCLUDE ( 
+        [TransactionID],
+        [GUID],
+        [Description],
+        [Amount],
+        [Category_CategoryID],
+        [CreatedBy],
+        [CreatedDate],
+        [LastModifiedBy],
+        [LastModifiedDate],
+        [DeletedBy],
+        [DeletedDate],
+        [TransferGUID]
+    ) WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
 END
 GO
 
 IF OBJECT_ID(N'[dbo].[Transactions_UpdateAccountBalance]') IS NOT NULL
 BEGIN
-	DROP TRIGGER [dbo].[Transactions_UpdateAccountBalance]
+    DROP TRIGGER [dbo].[Transactions_UpdateAccountBalance]
 END
 GO
 
@@ -101,30 +105,30 @@ ON [dbo].[Transactions]
 FOR INSERT, UPDATE, DELETE
 AS
 BEGIN
-	
-	DECLARE @DeletedFromAccountIDs TABLE (AccountID int)
-	DECLARE @InsertedIntoAccountIDs TABLE (AccountID int)
+    
+    DECLARE @DeletedFromAccountIDs TABLE (AccountID int)
+    DECLARE @InsertedIntoAccountIDs TABLE (AccountID int)
 
     INSERT INTO
         @DeletedFromAccountIDs        
     SELECT 
-	    [Account_AccountID] 
+        [Account_AccountID] 
     FROM 
         DELETED
         
     INSERT INTO
-	    @InsertedIntoAccountIDs
+        @InsertedIntoAccountIDs
     SELECT 
-	    [Account_AccountID]
+        [Account_AccountID]
     FROM 
         INSERTED
 
-	UPDATE 
-	    [dbo].[Accounts]
-	SET 
-	    [CurrentBalance] = [StartingBalance] + ISNULL((
-	        SELECT 
-	            SUM([t].[Amount]) 
+    UPDATE 
+        [dbo].[Accounts]
+    SET 
+        [CurrentBalance] = [StartingBalance] + ISNULL((
+            SELECT 
+                SUM([t].[Amount]) 
             FROM 
                 [dbo].[vTransactions] [t] 
             WHERE 
@@ -134,41 +138,42 @@ BEGIN
         [AccountID] IN (SELECT [d].[AccountID] FROM @DeletedFromAccountIDs [d])
     OR 
         [AccountID] IN (SELECT [i].[AccountID] FROM @InsertedIntoAccountIDs [i])
-	
+    
 END
 GO
 
 IF OBJECT_ID(N'[dbo].[Accounts]') IS NULL
 BEGIN
-	CREATE TABLE [dbo].[Accounts] (
-		[AccountID] [int] IDENTITY(1,1) NOT NULL,
-		[Name] [nvarchar](max) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
-		[StartingBalance] [decimal](18, 2) NOT NULL,
-		[User_UserID] [int] NOT NULL,
-		[CreatedBy] [int] NOT NULL,
-		[CreatedDate] [datetime] NOT NULL,
-		[LastModifiedBy] [int] NOT NULL,
-		[LastModifiedDate] [datetime] NOT NULL,
-		[Deleted] [bit] NOT NULL CONSTRAINT [DF_dbo.Accounts_Deleted] DEFAULT 0,
-		[DeletedBy] [int] NULL,
-		[DeletedDate] [datetime] NULL,
-		[Default] [bit] NOT NULL,
-		[Type] [int] NOT NULL CONSTRAINT [DF_dbo.Accounts_Type] DEFAULT 0,
-		[TransactionDescriptionHistory] [nvarchar](max) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
-		[CurrentBalance] [decimal](18, 2) NOT NULL CONSTRAINT [DF_dbo.Transactions_CurrentBalance] DEFAULT 0,
-		[DisplayOrder] [int] NOT NULL CONSTRAINT [DF_dbo.Transactions_DisplayOrder] DEFAULT 0,
-		[IncludeInNetWorth] [bit] NOT NULL CONSTRAINT [DF_dbo.Transactions_IncludeInNetWorth] DEFAULT 1,
-		CONSTRAINT [PK_dbo.Accounts] PRIMARY KEY CLUSTERED (
-			[AccountID] ASC
-		) WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
-	)
+    CREATE TABLE [dbo].[Accounts] (
+        [AccountID] [int] IDENTITY(1,1) NOT NULL,
+        [GUID] [uniqueidentifier] NOT NULL,
+        [Name] [nvarchar](max) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
+        [StartingBalance] [decimal](18, 2) NOT NULL,
+        [User_UserID] [int] NOT NULL,
+        [CreatedBy] [int] NOT NULL,
+        [CreatedDate] [datetime] NOT NULL,
+        [LastModifiedBy] [int] NOT NULL,
+        [LastModifiedDate] [datetime] NOT NULL,
+        [Deleted] [bit] NOT NULL CONSTRAINT [DF_dbo.Accounts_Deleted] DEFAULT 0,
+        [DeletedBy] [int] NULL,
+        [DeletedDate] [datetime] NULL,
+        [Default] [bit] NOT NULL,
+        [Type] [int] NOT NULL CONSTRAINT [DF_dbo.Accounts_Type] DEFAULT 0,
+        [TransactionDescriptionHistory] [nvarchar](max) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+        [CurrentBalance] [decimal](18, 2) NOT NULL CONSTRAINT [DF_dbo.Transactions_CurrentBalance] DEFAULT 0,
+        [DisplayOrder] [int] NOT NULL CONSTRAINT [DF_dbo.Transactions_DisplayOrder] DEFAULT 0,
+        [IncludeInNetWorth] [bit] NOT NULL CONSTRAINT [DF_dbo.Transactions_IncludeInNetWorth] DEFAULT 1,
+        CONSTRAINT [PK_dbo.Accounts] PRIMARY KEY CLUSTERED (
+            [AccountID] ASC
+        ) WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+    )
 END
 GO
 
 IF OBJECT_ID(N'[dbo].[Accounts_UpdateAccountBalance]') IS NOT NULL
 IF EXISTS (SELECT * FROM sys.triggers WHERE object_id = OBJECT_ID(N'[dbo].[Accounts_UpdateAccountBalance]'))
 BEGIN
-	DROP TRIGGER [dbo].[Accounts_UpdateAccountBalance]
+    DROP TRIGGER [dbo].[Accounts_UpdateAccountBalance]
 END
 GO
 
@@ -177,26 +182,26 @@ ON [dbo].[Accounts]
 FOR INSERT, UPDATE, DELETE
 AS
 BEGIN
-	
-	DECLARE @DeletedFromAccountIDs TABLE (AccountID int)
-	DECLARE @InsertedIntoAccountIDs TABLE (AccountID int)
+    
+    DECLARE @DeletedFromAccountIDs TABLE (AccountID int)
+    DECLARE @InsertedIntoAccountIDs TABLE (AccountID int)
 
     INSERT INTO
         @DeletedFromAccountIDs        
     SELECT 
-	    [AccountID] 
+        [AccountID] 
     FROM 
         DELETED
         
     INSERT INTO
-	    @InsertedIntoAccountIDs
+        @InsertedIntoAccountIDs
     SELECT 
-	    [AccountID]
+        [AccountID]
     FROM 
         INSERTED
-		
-	UPDATE 
-	    [Accounts] 
+        
+    UPDATE 
+        [Accounts] 
     SET 
         [CurrentBalance] = [StartingBalance] + ISNULL((
             SELECT 
@@ -210,70 +215,73 @@ BEGIN
         [AccountID] IN (SELECT [d].[AccountID] FROM @DeletedFromAccountIDs [d])
     OR 
         [AccountID] IN (SELECT [i].[AccountID] FROM @InsertedIntoAccountIDs [i])
-	
+    
 END
 GO
 
 IF OBJECT_ID(N'[dbo].[Budgets]') IS NULL
 BEGIN
-	CREATE TABLE [dbo].[Budgets](
-		[BudgetID] [int] IDENTITY(1,1) NOT NULL,
-		[Start] [datetime] NOT NULL,
-		[End] [datetime] NOT NULL,
-		[Account_AccountID] [int] NOT NULL,
-		[CreatedBy] [int] NOT NULL,
-		[CreatedDate] [datetime] NOT NULL,
-		[LastModifiedBy] [int] NOT NULL,
-		[LastModifiedDate] [datetime] NOT NULL,
-		[Deleted] [bit] NOT NULL CONSTRAINT [DF_dbo.Budgets_Deleted] DEFAULT 0,
-		[DeletedBy] [int] NULL,
-		[DeletedDate] [datetime] NULL,
-		CONSTRAINT [PK_dbo.Budgets] PRIMARY KEY CLUSTERED (
-			[BudgetID] ASC
-		) WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
-	)
+    CREATE TABLE [dbo].[Budgets](
+        [BudgetID] [int] IDENTITY(1,1) NOT NULL,
+        [GUID] [uniqueidentifier] NOT NULL,
+        [Start] [datetime] NOT NULL,
+        [End] [datetime] NOT NULL,
+        [Account_AccountID] [int] NOT NULL,
+        [CreatedBy] [int] NOT NULL,
+        [CreatedDate] [datetime] NOT NULL,
+        [LastModifiedBy] [int] NOT NULL,
+        [LastModifiedDate] [datetime] NOT NULL,
+        [Deleted] [bit] NOT NULL CONSTRAINT [DF_dbo.Budgets_Deleted] DEFAULT 0,
+        [DeletedBy] [int] NULL,
+        [DeletedDate] [datetime] NULL,
+        CONSTRAINT [PK_dbo.Budgets] PRIMARY KEY CLUSTERED (
+            [BudgetID] ASC
+        ) WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+    )
 END
 GO
 
 IF OBJECT_ID(N'[dbo].[Categories_Budgets]') IS NULL
 BEGIN
-	CREATE TABLE [dbo].[Categories_Budgets](
-		[Budget_BudgetID] [int] NOT NULL,
-		[Category_CategoryID] [int] NOT NULL,
-		[Amount] [decimal](18, 2) NOT NULL,
-		[CreatedBy] [int] NOT NULL,
-		[CreatedDate] [datetime] NOT NULL,
-		[LastModifiedBy] [int] NOT NULL,
-		[LastModifiedDate] [datetime] NOT NULL,
-		[Deleted] [bit] NOT NULL CONSTRAINT [DF_dbo.Categories_Budgets_Deleted] DEFAULT 0,
-		[DeletedBy] [int] NULL,
-		[DeletedDate] [datetime] NULL,
-		CONSTRAINT [PK_dbo.Categories_Budgets] PRIMARY KEY CLUSTERED (
-			[Budget_BudgetID] ASC,
-			[Category_CategoryID] ASC
-		) WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
-	)
+    CREATE TABLE [dbo].[Categories_Budgets](
+        [Budget_BudgetID] [int] NOT NULL,
+        [Category_CategoryID] [int] NOT NULL,
+        [GUID] [uniqueidentifier] NOT NULL,
+        [Amount] [decimal](18, 2) NOT NULL,
+        [CreatedBy] [int] NOT NULL,
+        [CreatedDate] [datetime] NOT NULL,
+        [LastModifiedBy] [int] NOT NULL,
+        [LastModifiedDate] [datetime] NOT NULL,
+        [Deleted] [bit] NOT NULL CONSTRAINT [DF_dbo.Categories_Budgets_Deleted] DEFAULT 0,
+        [DeletedBy] [int] NULL,
+        [DeletedDate] [datetime] NULL,
+        CONSTRAINT [PK_dbo.Categories_Budgets] PRIMARY KEY CLUSTERED (
+            [Budget_BudgetID] ASC,
+            [Category_CategoryID] ASC
+        ) WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+    )
 END
 GO
 
 IF OBJECT_ID(N'[dbo].[Sessions]') IS NULL
 BEGIN
-	CREATE TABLE [dbo].[Sessions](
-		[SessionID] [int] IDENTITY(1,1) NOT NULL,
-		[Key] [nvarchar](max) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
-		[Expiry] [datetime] NOT NULL,
-		[User_UserID] [int] NOT NULL,
-		[CreatedBy] [int] NOT NULL,
-		[CreatedDate] [datetime] NOT NULL,
-		[LastModifiedBy] [int] NOT NULL,
-		[LastModifiedDate] [datetime] NOT NULL,
-		[Deleted] [bit] NOT NULL CONSTRAINT [DF_dbo.Sessions_Deleted] DEFAULT 0,
-		[DeletedBy] [int] NULL,
-		[DeletedDate] [datetime] NULL,
-		CONSTRAINT [PK_dbo.Sessions] PRIMARY KEY CLUSTERED (
-			[SessionID] ASC
-		) WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
-	)
+    CREATE TABLE [dbo].[Sessions](
+        [SessionID] [int] IDENTITY(1,1) NOT NULL,
+        [GUID] [uniqueidentifier] NOT NULL,
+        [Key] [nvarchar](max) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
+        [Expiry] [datetime] NOT NULL,
+        [User_UserID] [int] NOT NULL,
+        [CreatedBy] [int] NOT NULL,
+        [CreatedDate] [datetime] NOT NULL,
+        [LastModifiedBy] [int] NOT NULL,
+        [LastModifiedDate] [datetime] NOT NULL,
+        [Deleted] [bit] NOT NULL CONSTRAINT [DF_dbo.Sessions_Deleted] DEFAULT 0,
+        [DeletedBy] [int] NULL,
+        [DeletedDate] [datetime] NULL,
+        CONSTRAINT [PK_dbo.Sessions] PRIMARY KEY CLUSTERED (
+            [SessionID] ASC
+        ) WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+    )
 END
 GO
 

@@ -15,6 +15,7 @@ AS
 
         SELECT 
             [AccountID], 
+            [GUID],
             [Name], 
             [StartingBalance], 
             [User_UserID], 
@@ -51,6 +52,7 @@ GO
 
 CREATE PROC [dbo].[mm_Accounts_Create] 
     @UserID int,
+    @GUID uniqueidentifier,
     @Name nvarchar(MAX),
     @StartingBalance decimal(18, 2),
     @Default bit,
@@ -67,19 +69,21 @@ AS
     
         INSERT INTO 
             [dbo].[Accounts] (
-				[Name], 
-				[StartingBalance], 
-				[User_UserID], 
-				[CreatedBy], 
-				[CreatedDate], 
-				[LastModifiedBy], 
-				[LastModifiedDate], 
-				[Default], 
-				[Type], 
-				[DisplayOrder],
-				[IncludeInNetWorth]
-			)
+                [GUID],
+                [Name], 
+                [StartingBalance], 
+                [User_UserID], 
+                [CreatedBy], 
+                [CreatedDate], 
+                [LastModifiedBy], 
+                [LastModifiedDate], 
+                [Default], 
+                [Type], 
+                [DisplayOrder],
+                [IncludeInNetWorth]
+            )
         SELECT 
+            @GUID,
             @Name, 
             @StartingBalance, 
             @UserID, 
@@ -94,6 +98,7 @@ AS
         
         SELECT 
             [AccountID], 
+            [GUID],
             [Name], 
             [StartingBalance], 
             [User_UserID], 
@@ -163,6 +168,7 @@ AS
         
         SELECT 
             [AccountID], 
+            [GUID],
             [Name], 
             [StartingBalance], 
             [User_UserID], 
@@ -217,6 +223,7 @@ AS
             
         SELECT 
             [AccountID], 
+            [GUID],
             [Name], 
             [StartingBalance], 
             [User_UserID], 

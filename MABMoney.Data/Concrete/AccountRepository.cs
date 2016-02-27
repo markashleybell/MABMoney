@@ -22,6 +22,7 @@ namespace MABMoney.Data.Concrete
         {
             return AddOrUpdate<Account>("mm_Accounts_Create", new {
                 UserID = _userId,
+                GUID = account.GUID,
                 Name = account.Name,
                 StartingBalance = account.StartingBalance,
                 Default = account.Default,

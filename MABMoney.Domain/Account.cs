@@ -1,4 +1,5 @@
 ﻿using MABMoney.Domain.Abstract;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace MABMoney.Domain
@@ -6,6 +7,7 @@ namespace MABMoney.Domain
     public class Account : Auditable
     {
         public int AccountID { get; set; }
+        public Guid GUID { get; set; }
         [Required]
         public string Name { get; set; }
         public decimal StartingBalance { get; set; }

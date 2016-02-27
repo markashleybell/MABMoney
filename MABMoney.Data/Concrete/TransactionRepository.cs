@@ -23,6 +23,7 @@ namespace MABMoney.Data.Concrete
         {
             return AddOrUpdate<Transaction>("mm_Transactions_Create", new {
                 UserID = _userId,
+                GUID = transaction.GUID,
                 Account_AccountID = transaction.Account_AccountID,
                 Category_CategoryID = transaction.Category_CategoryID,
                 Date = transaction.Date,

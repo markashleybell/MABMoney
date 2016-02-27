@@ -16,6 +16,7 @@ AS
 
         SELECT 
             [SessionID], 
+            [GUID],
             [Key], 
             [Expiry], 
             [User_UserID], 
@@ -46,6 +47,7 @@ GO
 
 CREATE PROC [dbo].[mm_Sessions_Create] 
     @UserID int,
+    @GUID uniqueidentifier,
     @Key nvarchar(MAX),
     @Expiry datetime
 AS 
@@ -58,6 +60,7 @@ AS
         
         INSERT INTO 
             [dbo].[Sessions] (
+                [GUID],
                 [Key], 
                 [Expiry], 
                 [User_UserID], 
@@ -67,6 +70,7 @@ AS
                 [LastModifiedDate]
             )
         SELECT 
+            @GUID,
             @Key, 
             @Expiry, 
             @UserID, 
@@ -77,6 +81,7 @@ AS
         
         SELECT 
             [SessionID], 
+            [GUID],
             [Key], 
             [Expiry], 
             [User_UserID], 
@@ -130,6 +135,7 @@ AS
         
         SELECT 
             [SessionID], 
+            [GUID],
             [Key], 
             [Expiry], 
             [User_UserID], 
@@ -178,6 +184,7 @@ AS
             
         SELECT 
             [SessionID], 
+            [GUID],
             [Key], 
             [Expiry], 
             [User_UserID], 

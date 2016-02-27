@@ -33,7 +33,8 @@ AS
             [a].[AccountID] = CASE WHEN @AccountID IS NULL THEN [a].[AccountID] ELSE @AccountID END
             
         SELECT          
-            [t].[TransactionID], 
+            [t].[TransactionID],
+            [t].[GUID], 
             [t].[Date], 
             [t].[Description], 
             [t].[Amount], 
@@ -68,8 +69,8 @@ AS
             [t].[Date] <= CASE WHEN @To IS NULL THEN [t].[Date] ELSE @To END
         AND
             [t].[TransactionID] = CASE WHEN @TransactionID IS NULL THEN [t].[TransactionID] ELSE @TransactionID END
-		ORDER BY
-			[t].[Date] DESC
+        ORDER BY
+            [t].[Date] DESC
         
         IF @CategoryID IS NOT NULL
         BEGIN
@@ -155,6 +156,7 @@ GO
 
 CREATE PROC [dbo].[mm_Transactions_Create] 
     @UserID int,
+    @GUID uniqueidentifier,
     @Date datetime,
     @Description nvarchar(MAX) = NULL,
     @Amount decimal(18, 2),
@@ -184,6 +186,7 @@ AS
         
             INSERT INTO 
                 [dbo].[Transactions] (
+                    [GUID],
                     [Date], 
                     [Description], 
                     [Amount], 
@@ -197,6 +200,7 @@ AS
                     [Note]
                 )
             SELECT 
+                @GUID,
                 @Date, 
                 @Description, 
                 @Amount, 
@@ -211,6 +215,7 @@ AS
             
             SELECT 
                 [t].[TransactionID], 
+                [t].[GUID],
                 [t].[Date], 
                 [t].[Description], 
                 [t].[Amount], 
@@ -294,6 +299,7 @@ AS
                 
             SELECT 
                 [t].[TransactionID], 
+                [t].[GUID],
                 [t].[Date], 
                 [t].[Description], 
                 [t].[Amount], 
@@ -368,6 +374,7 @@ AS
                 
             SELECT 
                 [t].[TransactionID], 
+                [t].[GUID],
                 [t].[Date], 
                 [t].[Description], 
                 [t].[Amount], 

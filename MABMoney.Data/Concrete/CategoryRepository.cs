@@ -27,6 +27,7 @@ namespace MABMoney.Data.Concrete
         {
             return AddOrUpdate<Category>("mm_Categories_Create", new {
                 UserID = _userId,
+                GUID = category.GUID,
                 Account_AccountID = category.Account_AccountID,
                 Name = category.Name,
                 Type = category.Type

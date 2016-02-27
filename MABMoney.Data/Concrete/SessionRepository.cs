@@ -23,6 +23,7 @@ namespace MABMoney.Data.Concrete
         {
             return AddOrUpdate<Session>("mm_Sessions_Create", new {
                 UserID = session.User_UserID, // We must allow this to be passed in or login cannot work...
+                GUID = session.GUID,
                 Key = session.Key,
                 Expiry = session.Expiry
             });

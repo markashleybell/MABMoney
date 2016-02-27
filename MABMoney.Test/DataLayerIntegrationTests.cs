@@ -15,6 +15,7 @@ namespace MABMoney.Test
         private string _setupConnectionString;
         private string _dataConnectionString;
         private string _sqlScriptSource;
+        private Guid _testGuid;
 
         #region SetUp
 
@@ -24,6 +25,9 @@ namespace MABMoney.Test
             _setupConnectionString = ConfigurationManager.AppSettings["SetUpDbConnectionString"];
             _dataConnectionString = ConfigurationManager.AppSettings["DataDbConnectionString"];
             _sqlScriptSource = ConfigurationManager.AppSettings["SqlScriptSource"];
+
+            // Create a test GUID so we can check for equality later
+            _testGuid = Guid.NewGuid();
 
             TestUtils.DeleteTestDatabase(_setupConnectionString);
 
@@ -48,6 +52,7 @@ namespace MABMoney.Test
             var repository = new AccountRepository(_dataConnectionString, 1);
 
             var account = new MABMoney.Domain.Account {
+                GUID = _testGuid,
                 Name = "ADDED",
                 StartingBalance = 123.45M,
                 Default = true,
@@ -59,6 +64,7 @@ namespace MABMoney.Test
             var result = repository.Add(account);
 
             Assert.IsTrue(result.AccountID == 6);
+            Assert.IsTrue(result.GUID == _testGuid);
             Assert.IsTrue(result.Name == "ADDED");
             Assert.IsTrue(result.StartingBalance == 123.45M);
             Assert.IsTrue(result.Default == true);
@@ -84,10 +90,13 @@ namespace MABMoney.Test
             // There are 5 test accounts, but one is deleted and one is for another user
             Assert.IsTrue(data.Count == 3);
             Assert.IsTrue(data[0].AccountID == 1);
+            Assert.IsTrue(data[0].GUID == new Guid("4d13b539-625e-452a-91e0-245cff0e104f"));
             Assert.IsTrue(data[0].Name == "Current");
             Assert.IsTrue(data[1].AccountID == 2);
+            Assert.IsTrue(data[1].GUID == new Guid("490f7f94-f6ac-464d-854e-5f5e527fc7a2"));
             Assert.IsTrue(data[1].Name == "Savings");
             Assert.IsTrue(data[2].AccountID == 3);
+            Assert.IsTrue(data[2].GUID == new Guid("4a294f96-daf3-45d7-8389-8439259dff72"));
             Assert.IsTrue(data[2].Name == "Credit");
         }
 
@@ -100,6 +109,7 @@ namespace MABMoney.Test
             var data = repository.Get(1);
 
             Assert.IsTrue(data.AccountID == 1);
+            Assert.IsTrue(data.GUID == new Guid("4d13b539-625e-452a-91e0-245cff0e104f"));
             Assert.IsTrue(data.Name == "Current");
             Assert.IsTrue(data.StartingBalance == 100.00M);
             Assert.IsTrue(data.Default == true);
@@ -154,6 +164,7 @@ namespace MABMoney.Test
             var result = repository.Update(account);
 
             Assert.IsTrue(result.Name == "UPDATED");
+            Assert.IsTrue(result.GUID == new Guid("4d13b539-625e-452a-91e0-245cff0e104f"));
             Assert.IsTrue(result.StartingBalance == 256.12M);
             Assert.IsTrue(result.Default == false);
             Assert.IsTrue(result.Type == AccountType.CreditCard);
@@ -191,6 +202,7 @@ namespace MABMoney.Test
             var repository = new BudgetRepository(_dataConnectionString, 1);
 
             var budget = new MABMoney.Domain.Budget {
+                GUID = _testGuid,
                 Account_AccountID = 2,
                 Start = new DateTime(2015, 3, 1),
                 End = new DateTime(2015, 3, 31)
@@ -199,6 +211,7 @@ namespace MABMoney.Test
             var result = repository.Add(budget);
 
             Assert.IsTrue(result.BudgetID == 5);
+            Assert.IsTrue(result.GUID == _testGuid);
             Assert.IsTrue(result.Account_AccountID == 2);
             Assert.IsTrue(result.Start == new DateTime(2015, 3, 1));
             Assert.IsTrue(result.End == new DateTime(2015, 3, 31));
@@ -219,10 +232,12 @@ namespace MABMoney.Test
             // There are 4 test budgets, but one is deleted and one is for another user
             Assert.IsTrue(data.Count == 2);
             Assert.IsTrue(data[0].BudgetID == 2);
+            Assert.IsTrue(data[0].GUID == new Guid("d2aed6ee-871a-4f89-90d3-fcbf50f5f53d"));
             Assert.IsTrue(data[0].Account_AccountID == 1);
             Assert.IsTrue(data[0].Start == new DateTime(2015, 2, 1));
             Assert.IsTrue(data[0].End == new DateTime(2015, 2, 28));
             Assert.IsTrue(data[1].BudgetID == 1);
+            Assert.IsTrue(data[1].GUID == new Guid("d3820e22-43a1-4b91-8869-206538a2a9e2"));
             Assert.IsTrue(data[1].Account_AccountID == 1);
             Assert.IsTrue(data[1].Start == new DateTime(2015, 1, 1));
             Assert.IsTrue(data[1].End == new DateTime(2015, 1, 31));
@@ -237,6 +252,7 @@ namespace MABMoney.Test
             var data = repository.Get(2);
 
             Assert.IsTrue(data.BudgetID == 2);
+            Assert.IsTrue(data.GUID == new Guid("d2aed6ee-871a-4f89-90d3-fcbf50f5f53d"));
             Assert.IsTrue(data.Account_AccountID == 1);
             Assert.IsTrue(data.Start == new DateTime(2015, 2, 1));
             Assert.IsTrue(data.End == new DateTime(2015, 2, 28));
@@ -251,6 +267,7 @@ namespace MABMoney.Test
             var data = repository.GetLatest(1, new DateTime(2015, 2, 24, 23, 59, 59));
 
             Assert.IsTrue(data.BudgetID == 2);
+            Assert.IsTrue(data.GUID == new Guid("d2aed6ee-871a-4f89-90d3-fcbf50f5f53d"));
             Assert.IsTrue(data.Account_AccountID == 1);
             Assert.IsTrue(data.Start == new DateTime(2015, 2, 1));
             Assert.IsTrue(data.End == new DateTime(2015, 2, 28));
@@ -304,6 +321,7 @@ namespace MABMoney.Test
             var result = repository.Update(budget);
 
             Assert.IsTrue(result.BudgetID == 1);
+            Assert.IsTrue(result.GUID == new Guid("d3820e22-43a1-4b91-8869-206538a2a9e2"));
             Assert.IsTrue(result.Account_AccountID == 2);
             Assert.IsTrue(result.Start == new DateTime(2015, 4, 1));
             Assert.IsTrue(result.End == new DateTime(2015, 4, 30));
@@ -338,6 +356,7 @@ namespace MABMoney.Test
             var repository = new CategoryRepository(_dataConnectionString, 1);
 
             var category = new MABMoney.Domain.Category {
+                GUID = _testGuid,
                 Account_AccountID = 1,
                 Name = "ADDED",
                 Type = CategoryType.Income
@@ -346,6 +365,7 @@ namespace MABMoney.Test
             var result = repository.Add(category);
 
             Assert.IsTrue(result.CategoryID == 11);
+            Assert.IsTrue(result.GUID == _testGuid);
             Assert.IsTrue(result.Name == "ADDED");
             Assert.IsTrue(result.Type == CategoryType.Income);
             Assert.IsTrue(result.Account_AccountID == 1);
@@ -371,6 +391,7 @@ namespace MABMoney.Test
             var result = repository.Add(category);
 
             Assert.IsTrue(result.CategoryID == 5);
+            Assert.IsTrue(result.GUID == new Guid("38be3831-41fd-438f-9a5f-60839775166a"));
             Assert.IsTrue(result.Name == "Deleted");
             Assert.IsTrue(result.Type == CategoryType.Expense);
             Assert.IsTrue(result.Account_AccountID == 1);
@@ -393,26 +414,32 @@ namespace MABMoney.Test
             // There are 8 test categories for this user but 2 are deleted
             Assert.IsTrue(data.Count == 6);
             Assert.IsTrue(data[0].CategoryID == 1);
+            Assert.IsTrue(data[0].GUID == new Guid("3f8e71cd-8795-41f3-97bb-62c22dfc1d93"));
             Assert.IsTrue(data[0].Name == "Salary");
             Assert.IsTrue(data[0].Account_AccountID == 1);
             Assert.IsTrue(data[0].AccountName == "Current");
             Assert.IsTrue(data[1].CategoryID == 2);
+            Assert.IsTrue(data[1].GUID == new Guid("3a260769-3d34-41db-bc72-3d3880973a74"));
             Assert.IsTrue(data[1].Name == "Rent");
             Assert.IsTrue(data[1].Account_AccountID == 1);
             Assert.IsTrue(data[1].AccountName == "Current");
             Assert.IsTrue(data[2].CategoryID == 3);
+            Assert.IsTrue(data[2].GUID == new Guid("39f68e49-7a90-41a4-8cbf-e314b1209efb"));
             Assert.IsTrue(data[2].Name == "Food");
             Assert.IsTrue(data[2].Account_AccountID == 1);
             Assert.IsTrue(data[2].AccountName == "Current");
             Assert.IsTrue(data[3].CategoryID == 4);
+            Assert.IsTrue(data[3].GUID == new Guid("39446605-5ab6-45c3-84bd-36891a62fd6a"));
             Assert.IsTrue(data[3].Name == "Bills");
             Assert.IsTrue(data[3].Account_AccountID == 1);
             Assert.IsTrue(data[3].AccountName == "Current");
             Assert.IsTrue(data[4].CategoryID == 6);
+            Assert.IsTrue(data[4].GUID == new Guid("32f89841-ed64-43c0-8272-21e900b98dde"));
             Assert.IsTrue(data[4].Name == "Payments");
             Assert.IsTrue(data[4].Account_AccountID == 3);
             Assert.IsTrue(data[4].AccountName == "Credit");
             Assert.IsTrue(data[5].CategoryID == 7);
+            Assert.IsTrue(data[5].GUID == new Guid("2ce8aea8-3f97-4d85-9a30-36749989129d"));
             Assert.IsTrue(data[5].Name == "Bills");
             Assert.IsTrue(data[5].Account_AccountID == 3);
             Assert.IsTrue(data[5].AccountName == "Credit");
@@ -429,18 +456,22 @@ namespace MABMoney.Test
             // There are 10 test categories, but only 4 for this account and user
             Assert.IsTrue(data.Count == 4);
             Assert.IsTrue(data[0].CategoryID == 1);
+            Assert.IsTrue(data[0].GUID == new Guid("3f8e71cd-8795-41f3-97bb-62c22dfc1d93"));
             Assert.IsTrue(data[0].Name == "Salary");
             Assert.IsTrue(data[0].Account_AccountID == 1);
             Assert.IsTrue(data[0].AccountName == "Current");
             Assert.IsTrue(data[1].CategoryID == 2);
+            Assert.IsTrue(data[1].GUID == new Guid("3a260769-3d34-41db-bc72-3d3880973a74"));
             Assert.IsTrue(data[1].Name == "Rent");
             Assert.IsTrue(data[1].Account_AccountID == 1);
             Assert.IsTrue(data[1].AccountName == "Current");
             Assert.IsTrue(data[2].CategoryID == 3);
+            Assert.IsTrue(data[2].GUID == new Guid("39f68e49-7a90-41a4-8cbf-e314b1209efb"));
             Assert.IsTrue(data[2].Name == "Food");
             Assert.IsTrue(data[2].Account_AccountID == 1);
             Assert.IsTrue(data[2].AccountName == "Current");
             Assert.IsTrue(data[3].CategoryID == 4);
+            Assert.IsTrue(data[3].GUID == new Guid("39446605-5ab6-45c3-84bd-36891a62fd6a"));
             Assert.IsTrue(data[3].Name == "Bills");
             Assert.IsTrue(data[3].Account_AccountID == 1);
             Assert.IsTrue(data[3].AccountName == "Current");
@@ -455,6 +486,7 @@ namespace MABMoney.Test
             var data = repository.Get(1);
 
             Assert.IsTrue(data.CategoryID == 1);
+            Assert.IsTrue(data.GUID == new Guid("3f8e71cd-8795-41f3-97bb-62c22dfc1d93"));
             Assert.IsTrue(data.Name == "Salary");
             Assert.IsTrue(data.Account_AccountID == 1);
             Assert.IsTrue(data.AccountName == "Current");
@@ -496,6 +528,7 @@ namespace MABMoney.Test
 
             var result = repository.Update(category);
 
+            Assert.IsTrue(result.GUID == new Guid("3f8e71cd-8795-41f3-97bb-62c22dfc1d93"));
             Assert.IsTrue(result.Account_AccountID == 2);
             Assert.IsTrue(result.AccountName == "Savings");
             Assert.IsTrue(result.Name == "UPDATED");
@@ -531,6 +564,7 @@ namespace MABMoney.Test
             var repository = new Category_BudgetRepository(_dataConnectionString, 1);
 
             var category_budget = new MABMoney.Domain.Category_Budget {
+                GUID = _testGuid,
                 Budget_BudgetID = 1,
                 Category_CategoryID = 4,
                 Amount = 250.00M
@@ -539,6 +573,7 @@ namespace MABMoney.Test
             var result = repository.Add(category_budget);
 
             Assert.IsTrue(result.Budget_BudgetID == 1);
+            Assert.IsTrue(result.GUID == _testGuid);
             Assert.IsTrue(result.Category_CategoryID == 4);
             Assert.IsTrue(result.CategoryName == "Bills");
             Assert.IsTrue(result.CategoryType == CategoryType.Expense);
@@ -560,11 +595,13 @@ namespace MABMoney.Test
             Assert.IsTrue(data.Count == 2);
             Assert.IsTrue(data[0].Budget_BudgetID == 1);
             Assert.IsTrue(data[0].Category_CategoryID == 2);
+            Assert.IsTrue(data[0].GUID == new Guid("c829def5-6a51-48e2-b368-7bfba59d2038"));
             Assert.IsTrue(data[0].CategoryName == "Rent");
             Assert.IsTrue(data[0].CategoryType == CategoryType.Expense);
             Assert.IsTrue(data[0].Amount == 500.00M);
             Assert.IsTrue(data[1].Budget_BudgetID == 1);
             Assert.IsTrue(data[1].Category_CategoryID == 3);
+            Assert.IsTrue(data[1].GUID == new Guid("c3c3fb96-20e0-4de2-a635-20f43dc1f681"));
             Assert.IsTrue(data[1].Amount == 250.00M);
             Assert.IsTrue(data[1].CategoryName == "Food");
             Assert.IsTrue(data[1].CategoryType == CategoryType.Expense);
@@ -580,6 +617,7 @@ namespace MABMoney.Test
 
             Assert.IsTrue(data.Budget_BudgetID == 1);
             Assert.IsTrue(data.Category_CategoryID == 2);
+            Assert.IsTrue(data.GUID == new Guid("c829def5-6a51-48e2-b368-7bfba59d2038"));
             Assert.IsTrue(data.CategoryName == "Rent");
             Assert.IsTrue(data.CategoryType == CategoryType.Expense);
             Assert.IsTrue(data.Amount == 500.00M);
@@ -621,6 +659,7 @@ namespace MABMoney.Test
 
             Assert.IsTrue(result.Budget_BudgetID == 1);
             Assert.IsTrue(result.Category_CategoryID == 2);
+            Assert.IsTrue(result.GUID == new Guid("c829def5-6a51-48e2-b368-7bfba59d2038"));
             Assert.IsTrue(result.CategoryName == "Rent");
             Assert.IsTrue(result.CategoryType == CategoryType.Expense);
             Assert.IsTrue(result.Amount == 123.45M);
@@ -655,6 +694,7 @@ namespace MABMoney.Test
             var repository = new SessionRepository(_dataConnectionString, 1);
 
             var session = new MABMoney.Domain.Session {
+                GUID = _testGuid,
                 User_UserID = 1,
                 Key = "ADDED",
                 Expiry = new DateTime(2020, 1, 1)
@@ -663,6 +703,7 @@ namespace MABMoney.Test
             var result = repository.Add(session);
 
             Assert.IsTrue(result.SessionID == 5);
+            Assert.IsTrue(result.GUID == _testGuid);
             Assert.IsTrue(result.User_UserID == 1);
             Assert.IsTrue(result.Key == "ADDED");
             Assert.IsTrue(result.Expiry.Date == new DateTime(2020, 1, 1).Date);
@@ -683,6 +724,7 @@ namespace MABMoney.Test
             // There are 4 test sessions, but only 1 current for this user
             Assert.IsTrue(data.Count == 1);
             Assert.IsTrue(data[0].SessionID == 1);
+            Assert.IsTrue(data[0].GUID == new Guid("1d967121-6324-42cd-ad07-18b6ff8ff25c"));
             Assert.IsTrue(data[0].Key == "USER1SESSION");
         }
 
@@ -695,6 +737,7 @@ namespace MABMoney.Test
             var data = repository.Get(1);
 
             Assert.IsTrue(data.SessionID == 1);
+            Assert.IsTrue(data.GUID == new Guid("1d967121-6324-42cd-ad07-18b6ff8ff25c"));
             Assert.IsTrue(data.Key == "USER1SESSION");
         }
 
@@ -707,6 +750,7 @@ namespace MABMoney.Test
             var data = repository.GetByKey("USER1SESSION");
 
             Assert.IsTrue(data.SessionID == 1);
+            Assert.IsTrue(data.GUID == new Guid("1d967121-6324-42cd-ad07-18b6ff8ff25c"));
         }
 
         [Test]
@@ -755,6 +799,7 @@ namespace MABMoney.Test
 
             var result = repository.Update(session);
 
+            Assert.IsTrue(result.GUID == new Guid("1d967121-6324-42cd-ad07-18b6ff8ff25c"));
             Assert.IsTrue(result.Key == "UPDATED");
             Assert.IsTrue(result.Expiry.Date == new DateTime(2020, 2, 2).Date);
             Assert.IsTrue(result.LastModifiedBy == 1);
@@ -769,6 +814,7 @@ namespace MABMoney.Test
 
             var result = repository.UpdateSessionExpiry("USER1SESSION", new DateTime(2020, 2, 2));
 
+            Assert.IsTrue(result.GUID == new Guid("1d967121-6324-42cd-ad07-18b6ff8ff25c"));
             Assert.IsTrue(result.Key == "USER1SESSION");
             Assert.IsTrue(result.Expiry.Date == new DateTime(2020, 2, 2).Date);
             Assert.IsTrue(result.LastModifiedBy == 1);
@@ -843,6 +889,7 @@ namespace MABMoney.Test
             var repository = new TransactionRepository(_dataConnectionString, 1);
 
             var transaction = new MABMoney.Domain.Transaction {
+                GUID = _testGuid,
                 Account_AccountID = 1,
                 Category_CategoryID = 3,
                 Description = "ADDED",
@@ -855,6 +902,7 @@ namespace MABMoney.Test
             var result = repository.Add(transaction);
 
             Assert.IsTrue(result.TransactionID == 32);
+            Assert.IsTrue(result.GUID == _testGuid);
             Assert.IsTrue(result.Account_AccountID == 1);
             Assert.IsTrue(result.AccountName == "Current");
             Assert.IsTrue(result.Category_CategoryID == 3);
@@ -880,9 +928,11 @@ namespace MABMoney.Test
 
             // There are 19 test transactions for this user (and one deleted) in date descending order
             Assert.IsTrue(data.Count == 19);
+
             Assert.IsTrue(data[0].Account_AccountID == 1);
             Assert.IsTrue(data[0].AccountName == "Current");
             Assert.IsTrue(data[0].TransactionID == 31);
+            Assert.IsTrue(data[0].GUID == new Guid("d42678f8-8658-48d7-9910-841c6dfeb2b9"));
             Assert.IsTrue(data[0].Category_CategoryID == null);
             Assert.IsTrue(data[0].CategoryName == null);
             Assert.IsTrue(data[0].Description == "USER1CURRENT15");
@@ -890,6 +940,7 @@ namespace MABMoney.Test
             Assert.IsTrue(data[1].Account_AccountID == 1);
             Assert.IsTrue(data[1].AccountName == "Current");
             Assert.IsTrue(data[1].TransactionID == 14);
+            Assert.IsTrue(data[1].GUID == new Guid("f286b5f4-8db6-4873-a572-96e768ddea38"));
             Assert.IsTrue(data[1].Category_CategoryID == 4);
             Assert.IsTrue(data[1].CategoryName == "Bills");
             Assert.IsTrue(data[1].Description == "USER1CURRENT14");
@@ -898,6 +949,7 @@ namespace MABMoney.Test
             Assert.IsTrue(data[6].Account_AccountID == 2);
             Assert.IsTrue(data[6].AccountName == "Savings");
             Assert.IsTrue(data[6].TransactionID == 19);
+            Assert.IsTrue(data[6].GUID == new Guid("e50707b6-5d44-4c50-9b12-81f9fe0ddcf1"));
             Assert.IsTrue(data[6].Category_CategoryID == null);
             Assert.IsTrue(data[6].CategoryName == null);
             Assert.IsTrue(data[6].Description == "USER1SAVINGS19");
@@ -905,6 +957,7 @@ namespace MABMoney.Test
             Assert.IsTrue(data[18].Account_AccountID == 1);
             Assert.IsTrue(data[18].AccountName == "Current");
             Assert.IsTrue(data[18].TransactionID == 1);
+            Assert.IsTrue(data[18].GUID == new Guid("145b33af-9344-49bc-9ee7-44bdcf5eb19f"));
             Assert.IsTrue(data[18].Category_CategoryID == 1);
             Assert.IsTrue(data[18].CategoryName == "Salary");
             Assert.IsTrue(data[18].Description == "USER1CURRENT1");
@@ -922,11 +975,13 @@ namespace MABMoney.Test
             // There are 15 test transactions for this user (and one deleted) in date descending order
             Assert.IsTrue(data.Count == 15);
             Assert.IsTrue(data[0].TransactionID == 31);
+            Assert.IsTrue(data[0].GUID == new Guid("d42678f8-8658-48d7-9910-841c6dfeb2b9"));
             Assert.IsTrue(data[0].Category_CategoryID == null);
             Assert.IsTrue(data[0].CategoryName == null);
             Assert.IsTrue(data[0].Description == "USER1CURRENT15");
             Assert.IsTrue(data[0].Amount == -5.00M);
             Assert.IsTrue(data[14].TransactionID == 1);
+            Assert.IsTrue(data[14].GUID == new Guid("145b33af-9344-49bc-9ee7-44bdcf5eb19f"));
             Assert.IsTrue(data[14].Category_CategoryID == 1);
             Assert.IsTrue(data[14].CategoryName == "Salary");
             Assert.IsTrue(data[14].Description == "USER1CURRENT1");
@@ -943,11 +998,13 @@ namespace MABMoney.Test
 
             Assert.IsTrue(data.Count == 7);
             Assert.IsTrue(data[0].TransactionID == 10);
+            Assert.IsTrue(data[0].GUID == new Guid("f9646fac-6243-416a-9673-f3f39d15a933"));
             Assert.IsTrue(data[0].Category_CategoryID == 3);
             Assert.IsTrue(data[0].CategoryName == "Food");
             Assert.IsTrue(data[0].Description == "USER1CURRENT10");
             Assert.IsTrue(data[0].Note == null);
             Assert.IsTrue(data[6].TransactionID == 4);
+            Assert.IsTrue(data[6].GUID == new Guid("0d40cab7-1a51-42ad-9d99-16c3ecd44fd3"));
             Assert.IsTrue(data[6].Category_CategoryID == 4);
             Assert.IsTrue(data[6].CategoryName == "Bills");
             Assert.IsTrue(data[6].Description == "USER1CURRENT4");
@@ -964,21 +1021,25 @@ namespace MABMoney.Test
 
             Assert.IsTrue(data.Count == 4);
             Assert.IsTrue(data[0].TransactionID == 14);
+            Assert.IsTrue(data[0].GUID == new Guid("f286b5f4-8db6-4873-a572-96e768ddea38"));
             Assert.IsTrue(data[0].Category_CategoryID == 4);
             Assert.IsTrue(data[0].CategoryName == "Bills");
             Assert.IsTrue(data[0].Description == "USER1CURRENT14");
             Assert.IsTrue(data[0].Note == "Water");
             Assert.IsTrue(data[1].TransactionID == 11);
+            Assert.IsTrue(data[1].GUID == new Guid("f540fd66-07fd-4a7b-ac0a-45aacc2b5ceb"));
             Assert.IsTrue(data[1].Category_CategoryID == 4);
             Assert.IsTrue(data[1].CategoryName == "Bills");
             Assert.IsTrue(data[1].Description == "USER1CURRENT11");
             Assert.IsTrue(data[1].Note == "Electricity");
             Assert.IsTrue(data[2].TransactionID == 7);
+            Assert.IsTrue(data[2].GUID == new Guid("07c73e84-f654-4aea-8d76-cda72eba7eea"));
             Assert.IsTrue(data[2].Category_CategoryID == 4);
             Assert.IsTrue(data[2].CategoryName == "Bills");
             Assert.IsTrue(data[2].Description == "USER1CURRENT7");
             Assert.IsTrue(data[2].Note == "Mobile");
             Assert.IsTrue(data[3].TransactionID == 4);
+            Assert.IsTrue(data[3].GUID == new Guid("0d40cab7-1a51-42ad-9d99-16c3ecd44fd3"));
             Assert.IsTrue(data[3].Category_CategoryID == 4);
             Assert.IsTrue(data[3].CategoryName == "Bills");
             Assert.IsTrue(data[3].Description == "USER1CURRENT4");
@@ -1016,6 +1077,7 @@ namespace MABMoney.Test
             var data = repository.Get(1);
 
             Assert.IsTrue(data.TransactionID == 1);
+            Assert.IsTrue(data.GUID == new Guid("145b33af-9344-49bc-9ee7-44bdcf5eb19f"));
             Assert.IsTrue(data.Category_CategoryID == 1);
             Assert.IsTrue(data.CategoryName == "Salary");
             Assert.IsTrue(data.Description == "USER1CURRENT1");
@@ -1062,6 +1124,7 @@ namespace MABMoney.Test
             var result = repository.Update(transaction);
 
             Assert.IsTrue(result.TransactionID == 1);
+            Assert.IsTrue(result.GUID == new Guid("145b33af-9344-49bc-9ee7-44bdcf5eb19f"));
             Assert.IsTrue(result.Account_AccountID == 3);
             Assert.IsTrue(result.AccountName == "Credit");
             Assert.IsTrue(result.Category_CategoryID == 6);
@@ -1101,8 +1164,8 @@ namespace MABMoney.Test
         {
             var repository = new UserRepository(_dataConnectionString, 1);
 
-            var user = new MABMoney.Domain.User
-            {
+            var user = new MABMoney.Domain.User {
+                GUID = _testGuid,
                 Forename = "ADDEDFORENAME",
                 Surname = "ADDEDSURNAME",
                 Email = "added@test.com",
@@ -1112,6 +1175,7 @@ namespace MABMoney.Test
             var result = repository.Add(user);
 
             Assert.IsTrue(result.UserID == 3);
+            Assert.IsTrue(result.GUID == _testGuid);
             Assert.IsTrue(result.Forename == "ADDEDFORENAME");
             Assert.IsTrue(result.Surname == "ADDEDSURNAME");
             Assert.IsTrue(result.Email == "added@test.com");
@@ -1128,6 +1192,7 @@ namespace MABMoney.Test
             var data = repository.Get(1);
 
             Assert.IsTrue(data.UserID == 1);
+            Assert.IsTrue(data.GUID == new Guid("516d0b54-e1fd-47a7-89fe-551036506f6d"));
             Assert.IsTrue(data.Email == "user@test.com");
         }
 
@@ -1140,6 +1205,7 @@ namespace MABMoney.Test
             var data = repository.GetByEmailAddress("user@test.com");
 
             Assert.IsTrue(data.UserID == 1);
+            Assert.IsTrue(data.GUID == new Guid("516d0b54-e1fd-47a7-89fe-551036506f6d"));
             Assert.IsTrue(data.Forename == "Test");
             Assert.IsTrue(data.Surname == "User");
         }
@@ -1164,6 +1230,7 @@ namespace MABMoney.Test
             var data = repository.GetByPasswordResetGUID("7cc68dbb-3d12-487b-8295-e9b226cda017");
 
             Assert.IsTrue(data.UserID == 1);
+            Assert.IsTrue(data.GUID == new Guid("516d0b54-e1fd-47a7-89fe-551036506f6d"));
             Assert.IsTrue(data.Email == "user@test.com");
         }
 
@@ -1195,6 +1262,7 @@ namespace MABMoney.Test
 
             var result = repository.Update(user);
 
+            Assert.IsTrue(result.GUID == new Guid("516d0b54-e1fd-47a7-89fe-551036506f6d"));
             Assert.IsTrue(result.Forename == "UPDATEDFORENAME");
             Assert.IsTrue(result.Surname == "UPDATEDSURNAME");
             Assert.IsTrue(result.Email == "added@test.com");
