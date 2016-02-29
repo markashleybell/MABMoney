@@ -1,6 +1,6 @@
 IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Accounts' AND COLUMN_NAME = 'GUID') BEGIN
 
-	ALTER TABLE [dbo].[Accounts] ADD [GUID] [uniqueidentifier] NULL
+    ALTER TABLE [dbo].[Accounts] ADD [GUID] [uniqueidentifier] NULL
 
 END
 GO
