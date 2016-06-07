@@ -1,0 +1,9 @@
+IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Accounts' AND COLUMN_NAME = 'IsDefaultAccount') BEGIN
+
+	EXEC sp_RENAME 'Accounts.Default' , 'IsDefaultAccount', 'COLUMN'
+
+END
+GO
+
+
+
